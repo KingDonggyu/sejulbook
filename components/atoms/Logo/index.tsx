@@ -7,7 +7,11 @@ interface LogoProps {
 }
 
 const Logo = ({ isDark }: LogoProps) => (
-  <Image src={isDark ? logoDarkSrc : logoLightSrc} alt="로고 이미지" />
+  <Image
+    src={isDark ? logoDarkSrc : logoLightSrc}
+    alt="로고 이미지"
+    style={{ width: '100%' }}
+  />
 );
 
 export default Logo;

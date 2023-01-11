@@ -1,5 +1,5 @@
-import Logo from '@/components/atoms/Logo';
+import HeaderBar from '@/components/organisms/HeaderBar';
 
-const Home = () => <Logo isDark={false} />;
+const Home = () => <HeaderBar />;
 
 export default Home;

@@ -8,6 +8,16 @@ const globalStyle = css`
     box-sizing: border-box;
   }
 
+  html {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+  }
+
   button {
     cursor: pointer;
     background: none;

@@ -1,19 +1,25 @@
-import { Theme } from '@emotion/react';
-
-const lightModeColors = {
-  PRIMARY: '#5AB890',
-  TEXT: '#3E3E3E',
-  BACKGROUND: '#FCFCFC',
+const color = {
+  LIGHT_GREEN: '#5AB890',
+  WHITE: '#FCFCFC',
+  BLACK: '#3E3E3E',
+  LIGHT_GREY: '#DADCE0',
 };
 
-const darkModeColors = {
-  PRIMARY: '#5AB890',
-  TEXT: '#FCFCFC',
-  BACKGROUND: '#3E3E3E',
+const lightModeColor = {
+  PRIMARY: color.LIGHT_GREEN,
+  TEXT: color.BLACK,
+  BACKGROUND: color.WHITE,
+  LINE: color.LIGHT_GREY,
 };
 
-const theme: Theme = {
-  colors: lightModeColors,
+const darkModeColor = {
+  PRIMARY: color.LIGHT_GREEN,
+  TEXT: color.WHITE,
+  BACKGROUND: color.BLACK,
+};
+
+const theme = {
+  COLOR: lightModeColor,
 };
 
 export default theme;
