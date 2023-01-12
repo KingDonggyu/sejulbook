@@ -8,3 +8,9 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE};
 `;
+
+export const RightItemsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 50px;
+`;

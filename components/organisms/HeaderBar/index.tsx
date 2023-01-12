@@ -1,11 +1,15 @@
 import LogoButton from '@/components/molecules/LogoButton';
-import ProfileButton from '@/components/molecules/ProfileButton';
+import ProfileButton from '@/components/organisms/ProfileButton';
+import SearchButton from '@/components/molecules/SearchButton';
 import * as s from './style';
 
 const HeaderBar = () => (
   <s.Wrapper>
     <LogoButton />
-    <ProfileButton />
+    <s.RightItemsWrapper>
+      <ProfileButton />
+      <SearchButton />
+    </s.RightItemsWrapper>
   </s.Wrapper>
 );
 
