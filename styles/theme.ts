@@ -19,7 +19,7 @@ const darkModeColor = {
 };
 
 const theme = {
-  COLOR: lightModeColor,
+  COLOR: { ...color, ...lightModeColor },
 };
 
 export default theme;

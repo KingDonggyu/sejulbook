@@ -1,5 +1,6 @@
 import emotionReset from 'emotion-reset';
 import { css } from '@emotion/react';
+import theme from './theme';
 
 const globalStyle = css`
   ${emotionReset}
@@ -16,6 +17,7 @@ const globalStyle = css`
   body {
     width: 100%;
     height: 100%;
+    background-color: ${theme.COLOR.BACKGROUND};
   }
 
   button {
