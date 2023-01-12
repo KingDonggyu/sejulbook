@@ -6,6 +6,7 @@ import * as s from './style';
 type CustomButtonAttributes = {
   color?: Color;
   variant?: ButtonVariant;
+  hover?: boolean;
 };
 
 type ButtonProps = CustomButtonAttributes &
@@ -16,14 +17,16 @@ const Button = ({
   type = 'button',
   color = Color.INHERIT,
   variant = ButtonVariant.TEXT,
+  hover = true,
   css,
   style,
   ...buttonAttrs
 }: ButtonProps) => (
   <s.Button
+    type={type}
     color={color}
     variant={variant}
-    type={type}
+    hover={hover}
     css={css}
     style={style}
     {...buttonAttrs}

@@ -3,7 +3,7 @@ import Button from '@/components/atoms/Button';
 import Logo from '@/components/atoms/Logo';
 
 const LogoButton = ({ style, css }: StyleProps) => (
-  <Button style={style || { width: '140px' }} css={css}>
+  <Button hover={false} style={style || { width: '140px' }} css={css}>
     <Logo isDark={false} />
   </Button>
 );

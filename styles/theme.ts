@@ -1,3 +1,8 @@
+const maxWidth = {
+  DEFAULT: '1024px',
+  MOBILE: '480px',
+};
+
 const color = {
   LIGHT_GREEN: '#5AB890',
   WHITE: '#FCFCFC',
@@ -20,6 +25,7 @@ const darkModeColor = {
 
 const theme = {
   COLOR: { ...color, ...lightModeColor },
+  MAX_WIDTH: maxWidth,
 };
 
 export default theme;
