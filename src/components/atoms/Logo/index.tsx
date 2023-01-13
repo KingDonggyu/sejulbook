@@ -1,14 +1,14 @@
 import Image from 'next/image';
-import logoLightSrc from '@/public/images/logo-light.svg';
-import logoDarkSrc from '@/public/images/logo-dark.svg';
+import logoLightSrc from '@public/images/logo-light.svg';
+import logoDarkSrc from '@public/images/logo-dark.svg';
 
 interface LogoProps {
-  isDark: boolean;
+  isDarkMode: boolean;
 }
 
-const Logo = ({ isDark }: LogoProps) => (
+const Logo = ({ isDarkMode }: LogoProps) => (
   <Image
-    src={isDark ? logoDarkSrc : logoLightSrc}
+    src={isDarkMode ? logoDarkSrc : logoLightSrc}
     alt="로고 이미지"
     style={{ width: '100%' }}
   />

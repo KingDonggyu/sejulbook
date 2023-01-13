@@ -1,10 +1,12 @@
 import { ButtonHTMLAttributes } from 'react';
-import { StyleProps } from '@/src/types/style';
-import { Color, ButtonVariant } from '@/src/types/constants';
+import { ColorVariant, ButtonVariant } from '@/constants';
+import { StyleProps } from '@/types/style';
+import { useScreenModeContext } from '@/contexts/screenModeContext';
+import getColorByColorVariant from '@/utils/getColorByColorVariant';
 import * as s from './style';
 
 type CustomButtonAttributes = {
-  color?: Color;
+  color?: ColorVariant;
   variant?: ButtonVariant;
   hover?: boolean;
 };
@@ -15,22 +17,26 @@ type ButtonProps = CustomButtonAttributes &
 
 const Button = ({
   type = 'button',
-  color = Color.INHERIT,
+  color = ColorVariant.INHERIT,
   variant = ButtonVariant.TEXT,
   hover = true,
   css,
   style,
   ...buttonAttrs
-}: ButtonProps) => (
-  <s.Button
-    type={type}
-    color={color}
-    variant={variant}
-    hover={hover}
-    css={css}
-    style={style}
-    {...buttonAttrs}
-  />
-);
+}: ButtonProps) => {
+  const { theme } = useScreenModeContext();
+
+  return (
+    <s.Button
+      type={type}
+      color={getColorByColorVariant(color, theme)}
+      variant={variant}
+      hover={hover}
+      css={css}
+      style={style}
+      {...buttonAttrs}
+    />
+  );
+};
 
 export default Button;

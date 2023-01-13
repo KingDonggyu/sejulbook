@@ -1,5 +1,5 @@
-import Button from '@/src/components/atoms/Button';
-import { ButtonVariant } from '@/src/types/constants';
+import Button from '@/components/atoms/Button';
+import { ButtonVariant } from '@/constants';
 
 const ProfileButton = () => (
   <Button variant={ButtonVariant.OUTLINED} style={{ height: '30px' }}>

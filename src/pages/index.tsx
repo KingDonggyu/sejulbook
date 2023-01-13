@@ -1,4 +1,4 @@
-import HeaderBar from '@/src/components/organisms/HeaderBar';
+import HeaderBar from '@/components/organisms/HeaderBar';
 
 const Home = () => <HeaderBar />;
 

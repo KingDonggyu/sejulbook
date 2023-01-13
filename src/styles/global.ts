@@ -1,8 +1,7 @@
 import emotionReset from 'emotion-reset';
-import { css } from '@emotion/react';
-import theme from './theme';
+import { css, Theme } from '@emotion/react';
 
-const globalStyle = css`
+const globalStyle = (theme: Theme) => css`
   ${emotionReset}
 
   *, *::after, *::before {

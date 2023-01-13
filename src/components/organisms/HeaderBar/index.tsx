@@ -1,20 +1,25 @@
-import LogoButton from '@/src/components/molecules/LogoButton';
-import ProfileButton from '@/src/components/organisms/ProfileButton';
-import SearchButton from '@/src/components/molecules/SearchButton';
-import ScreenModeButton from '../SceenModeButton';
+import LogoButton from '@/components/molecules/LogoButton';
+import SearchButton from '@/components/molecules/SearchButton';
+import ProfileButton from '@/components/organisms/ProfileButton';
+import ScreenModeButton from '@/components/organisms/SceenModeButton';
+import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
-const HeaderBar = () => (
-  <s.Background>
-    <s.Wrapper>
-      <LogoButton />
-      <s.RightItemsWrapper>
-        <ProfileButton />
-        <SearchButton />
-        <ScreenModeButton />
-      </s.RightItemsWrapper>
-    </s.Wrapper>
-  </s.Background>
-);
+const HeaderBar = () => {
+  const { isDarkMode } = useScreenModeContext();
+
+  return (
+    <s.Background>
+      <s.Wrapper>
+        <LogoButton isDarkMode={isDarkMode} />
+        <s.RightItemsWrapper>
+          <ProfileButton />
+          <SearchButton />
+          <ScreenModeButton />
+        </s.RightItemsWrapper>
+      </s.Wrapper>
+    </s.Background>
+  );
+};
 
 export default HeaderBar;

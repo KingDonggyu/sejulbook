@@ -5,9 +5,8 @@ export const Background = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  height: 70px;
   margin: auto;
-  padding: 20px;
+  padding: 15px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;

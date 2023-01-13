@@ -15,7 +15,8 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"],
+      "@public/*": ["public/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",

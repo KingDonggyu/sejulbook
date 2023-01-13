@@ -1,7 +1,7 @@
 import '@emotion/react';
-import theme from '@/src/styles/theme';
+import { lightTheme } from '@/styles/theme';
 
-type ThemeType = typeof theme;
+type ThemeType = typeof lightTheme;
 
 declare module '@emotion/react' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

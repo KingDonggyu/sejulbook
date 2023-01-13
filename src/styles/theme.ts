@@ -7,6 +7,7 @@ const color = {
   LIGHT_GREEN: '#5AB890',
   WHITE: '#FCFCFC',
   BLACK: '#3E3E3E',
+  LIGHT_BLACK: '#4D4C4C',
   LIGHT_GREY: '#DADCE0',
 };
 
@@ -17,15 +18,32 @@ const lightModeColor = {
   LINE: color.LIGHT_GREY,
 };
 
-const darkModeColor = {
+const darkModeColor: typeof lightModeColor = {
   PRIMARY: color.LIGHT_GREEN,
   TEXT: color.WHITE,
   BACKGROUND: color.BLACK,
+  LINE: color.LIGHT_BLACK,
 };
 
-const theme = {
-  COLOR: { ...color, ...lightModeColor },
+const commonTheme = {
+  COLOR: color,
   MAX_WIDTH: maxWidth,
 };
 
-export default theme;
+const lightTheme = {
+  ...commonTheme,
+  COLOR: {
+    ...commonTheme.COLOR,
+    ...lightModeColor,
+  },
+};
+
+const darkTheme = {
+  ...commonTheme,
+  COLOR: {
+    ...commonTheme.COLOR,
+    ...darkModeColor,
+  },
+};
+
+export { lightTheme, darkTheme };

@@ -1,18 +1,20 @@
 import styled from '@emotion/styled';
-import { Color, ButtonVariant } from '@/src/types/constants';
+import { ButtonVariant } from '@/constants';
 
 interface ButtonStyleProps {
-  color: Color;
+  color: string;
   variant: ButtonVariant;
   hover: boolean;
 }
 
 export const Button = styled.button<ButtonStyleProps>`
-  padding: 10px;
   border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding: ${(props) =>
+    props.variant === ButtonVariant.OUTLINED ? '10px' : 0};
 
   background-color: ${(props) =>
     props.variant === ButtonVariant.CONTAINED ? props.color : 'inherit'};
