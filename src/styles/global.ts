@@ -19,6 +19,11 @@ const globalStyle = (theme: Theme) => css`
     background-color: ${theme.COLOR.BACKGROUND};
   }
 
+  #__next {
+    width: 100%;
+    height: 100%;
+  }
+
   button {
     cursor: pointer;
     background: none;
