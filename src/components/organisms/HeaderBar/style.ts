@@ -5,13 +5,13 @@ export const Background = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  max-width: ${({ theme }) => theme.MAX_WIDTH.DEFAULT};
   height: 70px;
   margin: auto;
   padding: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: ${({ theme }) => theme.MAX_WIDTH.DEFAULT};
 `;
 
 export const RightItemsWrapper = styled.div`

@@ -1,6 +1,6 @@
-import LogoButton from '@/components/molecules/LogoButton';
-import ProfileButton from '@/components/organisms/ProfileButton';
-import SearchButton from '@/components/molecules/SearchButton';
+import LogoButton from '@/src/components/molecules/LogoButton';
+import ProfileButton from '@/src/components/organisms/ProfileButton';
+import SearchButton from '@/src/components/molecules/SearchButton';
 import ScreenModeButton from '../SceenModeButton';
 import * as s from './style';
 

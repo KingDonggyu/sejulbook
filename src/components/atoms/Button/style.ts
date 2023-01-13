@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Color, ButtonVariant } from '@/types/constants';
+import { Color, ButtonVariant } from '@/src/types/constants';
 
 interface ButtonStyleProps {
   color: Color;

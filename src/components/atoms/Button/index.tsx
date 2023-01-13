@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from 'react';
-import { StyleProps } from '@/types/style';
-import { Color, ButtonVariant } from '@/types/constants';
+import { StyleProps } from '@/src/types/style';
+import { Color, ButtonVariant } from '@/src/types/constants';
 import * as s from './style';
 
 type CustomButtonAttributes = {

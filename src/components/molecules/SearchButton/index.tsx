@@ -1,4 +1,4 @@
-import Button from '@/components/atoms/Button';
+import Button from '@/src/components/atoms/Button';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 
 const SearchButton = () => (

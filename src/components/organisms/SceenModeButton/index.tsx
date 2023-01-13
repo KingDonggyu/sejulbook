@@ -1,7 +1,7 @@
 import { BsMoon } from '@react-icons/all-files/bs/BsMoon';
 import { BiSun } from '@react-icons/all-files/bi/BiSun';
-import Button from '@/components/atoms/Button';
-import theme from '@/styles/theme';
+import Button from '@/src/components/atoms/Button';
+import theme from '@/src/styles/theme';
 
 const ScreenModeButton = () => (
   <Button>
