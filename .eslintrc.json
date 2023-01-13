@@ -22,9 +22,16 @@
     "sourceType": "module"
   },
   "rules": {
+    "jsx-quotes": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
-    "jsx-quotes": "off",
-    "import/extensions": ["off"]
+    "react/require-default-props": "off",
+    "react/function-component-definition": [
+      2,
+      { "namedComponents": "arrow-function" }
+    ],
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
+    "import/extensions": ["off"],
+    "import/prefer-default-export": "off"
   }
 }
