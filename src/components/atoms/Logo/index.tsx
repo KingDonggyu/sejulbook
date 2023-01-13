@@ -10,7 +10,7 @@ const Logo = ({ isDarkMode }: LogoProps) => (
   <Image
     src={isDarkMode ? logoDarkSrc : logoLightSrc}
     alt="로고 이미지"
-    style={{ width: '100%' }}
+    style={{ width: '100%', height: 'auto' }}
   />
 );
 
