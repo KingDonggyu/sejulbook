@@ -5,13 +5,13 @@ import { useScreenModeContext } from '@/contexts/screenModeContext';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
 import * as s from './style';
 
-type CustomButtonAttributes = {
+type ButtonAttributes = {
   color?: ColorVariant;
   variant?: ButtonVariant;
   hover?: boolean;
 };
 
-type ButtonProps = CustomButtonAttributes &
+type ButtonProps = ButtonAttributes &
   ButtonHTMLAttributes<HTMLButtonElement> &
   StyleProps;
 
@@ -20,8 +20,6 @@ const Button = ({
   color = ColorVariant.INHERIT,
   variant = ButtonVariant.TEXT,
   hover = true,
-  css,
-  style,
   ...buttonAttrs
 }: ButtonProps) => {
   const { theme } = useScreenModeContext();
@@ -32,8 +30,6 @@ const Button = ({
       color={getColorByColorVariant(color, theme)}
       variant={variant}
       hover={hover}
-      css={css}
-      style={style}
       {...buttonAttrs}
     />
   );
