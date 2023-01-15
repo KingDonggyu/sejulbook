@@ -11,7 +11,7 @@ type BoxProps = {
 } & StyleProps;
 
 const Box = ({
-  variant = BoxVariant.OUTLINED,
+  variant = BoxVariant.ELEVATION,
   elevation = 2,
   radius = 4,
   children,

@@ -1,3 +1,5 @@
+export const MODAL_ELEMENT_ID = 'modal-root';
+
 export enum ColorVariant {
   INHERIT = 'inherit',
   PRIMARY = 'primary',
@@ -8,6 +10,11 @@ export enum ColorVariant {
 export enum ButtonVariant {
   TEXT = 'text',
   CONTAINED = 'contained',
+  OUTLINED = 'outlined',
+}
+
+export enum BoxVariant {
+  ELEVATION = 'elevation',
   OUTLINED = 'outlined',
 }
 

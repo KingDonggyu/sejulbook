@@ -11,6 +11,7 @@ const globalStyle = (theme: Theme) => css`
   html {
     width: 100vw;
     height: 100vh;
+    font-size: 80%;
   }
 
   body {
