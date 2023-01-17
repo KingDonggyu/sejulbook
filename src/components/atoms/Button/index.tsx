@@ -8,6 +8,7 @@ import * as s from './style';
 
 type ButtonAttributes = {
   color?: ColorVariant;
+  elevation?: number;
   variant?: ButtonVariant;
   hover?: boolean;
 };
@@ -18,6 +19,7 @@ type ButtonProps = ButtonAttributes &
 
 const Button = ({
   type = 'button',
+  elevation = 0,
   color = ColorVariant.INHERIT,
   variant = ButtonVariant.TEXT,
   hover = true,
@@ -28,6 +30,7 @@ const Button = ({
   return (
     <s.Button
       type={type}
+      elevation={elevation}
       color={getColorByColorVariant(color, theme)}
       variant={variant}
       hover={hover}
