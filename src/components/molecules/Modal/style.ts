@@ -23,5 +23,4 @@ export const ModalOverlay = styled.div`
 
 export const ModalWrapper = styled.div`
   z-index: 1;
-  width: 300px;
 `;

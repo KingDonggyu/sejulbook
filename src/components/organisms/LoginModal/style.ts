@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
-export const boxStyle = css`
-  padding: 30px;
+export const modalStyle = css`
+  padding: 20px;
+  width: 330px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +28,7 @@ export const EasyLoginText = styled.span`
 
 export const EasyLoginDivider = styled.hr`
   position: relative;
-  bottom: -8px;
+  bottom: -7px;
   width: 100%;
   height: 1px;
   margin: 0;
