@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
 export const Background = styled.div`
   position: fixed;
@@ -12,7 +13,6 @@ export const Background = styled.div`
 `;
 
 export const ModalOverlay = styled.div`
-  cursor: pointer;
   position: absolute;
   top: 0;
   left: 0;
@@ -23,4 +23,9 @@ export const ModalOverlay = styled.div`
 
 export const ModalWrapper = styled.div`
   z-index: 1;
+`;
+
+export const cancelButtonStyle = css`
+  margin-left: auto;
+  margin-bottom: 12px;
 `;

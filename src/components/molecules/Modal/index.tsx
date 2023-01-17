@@ -1,43 +1,49 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { HiX } from '@react-icons/all-files/hi/HiX';
 import { MODAL_ELEMENT_ID } from '@/constants';
 import { StyleProps } from '@/types/style';
 import Box from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
+import modalStore from '@/stores/modalStore';
 import * as s from './style';
 
 type ModalProps = {
+  modalKey: string;
   isShowCloseButton?: boolean;
-  closeModal: () => void;
+  isShowModalOverlay?: boolean;
   children: ReactNode;
 } & StyleProps;
 
 const Modal = ({
+  modalKey,
   isShowCloseButton = true,
-  closeModal,
+  isShowModalOverlay = true,
   children,
   ...boxStyles
 }: ModalProps) => {
+  const { modalSet, closeModal } = modalStore();
   const [portalElement, setPortalElement] = useState<Element | null>(null);
+
+  const handleClose = () => {
+    closeModal(modalKey);
+  };
 
   useEffect(() => {
     setPortalElement(document.getElementById(MODAL_ELEMENT_ID));
   }, []);
 
-  return portalElement
+  return portalElement && modalSet.has(modalKey)
     ? createPortal(
         <s.Background>
-          <s.ModalOverlay onClick={closeModal} />
+          {isShowModalOverlay && <s.ModalOverlay onClick={handleClose} />}
           <s.ModalWrapper>
             <Box {...boxStyles}>
               {isShowCloseButton && (
-                <Button
-                  style={{ marginLeft: 'auto', marginBottom: '12px' }}
-                  onClick={closeModal}
-                >
-                  <HiX size={20} />
-                </Button>
+                <Button.Cancel
+                  size={20}
+                  css={s.cancelButtonStyle}
+                  onClick={handleClose}
+                />
               )}
               {children}
             </Box>

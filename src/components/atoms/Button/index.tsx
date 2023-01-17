@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from 'react';
+import { HiX } from '@react-icons/all-files/hi/HiX';
 import { ColorVariant, ButtonVariant } from '@/constants';
 import { StyleProps } from '@/types/style';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
@@ -34,5 +35,18 @@ const Button = ({
     />
   );
 };
+
+const CancelButton = ({
+  size,
+  ...buttonProps
+}: {
+  size?: string | number;
+} & ButtonProps) => (
+  <Button {...buttonProps}>
+    <HiX size={size} />
+  </Button>
+);
+
+Button.Cancel = CancelButton;
 
 export default Button;
