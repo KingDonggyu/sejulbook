@@ -1,5 +1,3 @@
-import { ScreenModeState } from '@/constants';
-
 class ClientStorage<T> {
   private key;
 

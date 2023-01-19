@@ -1,3 +1,5 @@
+export const MODAL_ELEMENT_ID = 'modal-root';
+
 export enum ColorVariant {
   INHERIT = 'inherit',
   PRIMARY = 'primary',
@@ -11,7 +13,18 @@ export enum ButtonVariant {
   OUTLINED = 'outlined',
 }
 
+export enum BoxVariant {
+  ELEVATION = 'elevation',
+  OUTLINED = 'outlined',
+}
+
 export enum ScreenModeState {
   DARK = 'Y',
   LIGHT = 'N',
+}
+
+export enum OAuthName {
+  GOOGLE = 'google',
+  NAVER = 'naver',
+  KAKAO = 'kakao',
 }
