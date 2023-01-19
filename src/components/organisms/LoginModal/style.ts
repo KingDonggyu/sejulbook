@@ -23,7 +23,8 @@ export const EasyLoginText = styled.span`
   padding: 0 8px;
   margin-bottom: 30px;
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
-  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.LIGHT};
   background: ${({ theme }) => theme.COLOR.BACKGROUND};
 `;
 
@@ -31,7 +32,7 @@ export const EasyLoginDivider = styled.hr`
   position: relative;
   bottom: -7px;
   width: 100%;
-  height: 1px;
+  height: 0.5px;
   margin: 0;
   border: none;
   background: ${({ theme }) => theme.COLOR.SECOND_TEXT};

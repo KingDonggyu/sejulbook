@@ -37,7 +37,7 @@ const Modal = ({
         <s.Background>
           {isShowModalOverlay && <s.ModalOverlay onClick={handleClose} />}
           <s.ModalWrapper>
-            <Box {...boxStyles}>
+            <Box radius={8} {...boxStyles}>
               {isShowCloseButton && (
                 <Button.Cancel
                   size={20}
