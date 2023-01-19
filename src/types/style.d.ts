@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
-import { SerializedStyles } from '@emotion/react';
+import { SerializedStyles, Theme } from '@emotion/react';
 
 export type StyleProps = {
   style?: CSSProperties;
-  css?: SerializedStyles;
+  css?: ((theme: Theme) => SerializedStyles) | SerializedStyles;
 };

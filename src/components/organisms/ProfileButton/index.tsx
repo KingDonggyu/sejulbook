@@ -1,4 +1,5 @@
 import { useSession, signOut } from 'next-auth/react';
+import { css } from '@emotion/react';
 import { ButtonVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import Button from '@/components/atoms/Button';
@@ -20,9 +21,11 @@ const ProfileButton = () => {
     <Button
       variant={ButtonVariant.OUTLINED}
       onClick={handleClick}
-      style={{ height: '30px' }}
+      css={(theme) => css`
+        font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
+      `}
     >
-      {status !== 'authenticated' ? '시작하기' : '로그아웃'}
+      {status !== 'authenticated' ? '로그인' : '로그아웃'}
     </Button>
   );
 };
