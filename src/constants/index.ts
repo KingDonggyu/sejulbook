@@ -22,3 +22,9 @@ export enum ScreenModeState {
   DARK = 'Y',
   LIGHT = 'N',
 }
+
+export enum OAuthName {
+  GOOGLE = 'google',
+  NAVER = 'naver',
+  KAKAO = 'kakao',
+}
