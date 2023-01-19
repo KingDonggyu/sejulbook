@@ -23,7 +23,7 @@ export const EasyLoginText = styled.span`
   padding: 0 8px;
   margin-bottom: 30px;
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
-  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.LIGHT};
   background: ${({ theme }) => theme.COLOR.BACKGROUND};
 `;

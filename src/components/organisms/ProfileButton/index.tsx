@@ -22,7 +22,7 @@ const ProfileButton = () => {
       variant={ButtonVariant.OUTLINED}
       onClick={handleClick}
       css={(theme) => css`
-        font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
+        font-size: ${theme.FONT_SIZE.SMALL};
       `}
     >
       {status !== 'authenticated' ? '로그인' : '로그아웃'}

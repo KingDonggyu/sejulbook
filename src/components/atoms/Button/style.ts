@@ -14,8 +14,7 @@ export const Button = styled.button<ButtonStyleProps>`
   justify-content: center;
   align-items: center;
 
-  padding: ${(props) =>
-    props.variant === ButtonVariant.OUTLINED ? '7px 10px' : 0};
+  padding: ${(props) => (props.variant === ButtonVariant.OUTLINED ? '8px' : 0)};
 
   background-color: ${(props) =>
     props.variant === ButtonVariant.CONTAINED ? props.color : 'inherit'};
