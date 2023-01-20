@@ -9,12 +9,12 @@ interface BoxStyleProps {
 
 export const Box = styled.div<BoxStyleProps>`
   padding: 20px;
+  background: ${({ theme }) => theme.COLOR.BACKGROUND};
   border-radius: ${({ radius }) => `${radius}px`};
 
-  ${({ theme, variant, elevation }) =>
+  ${({ variant, elevation }) =>
     variant === BoxVariant.ELEVATION &&
     `
-    background: ${theme.COLOR.BACKGROUND};
     box-shadow: rgb(0 0 0 / ${elevation * 4}%) 2px 4px 12px;
   `};
 
