@@ -1,14 +1,15 @@
+import Link from 'next/link';
 import { css as emotionCSS } from '@emotion/react';
+import Route from '@/constants/routes';
 import { StyleProps } from '@/types/style';
-import Button from '@/components/atoms/Button';
 import Logo from '@/components/atoms/Logo';
 
 type LogoButtonProps = { isDarkMode: boolean } & StyleProps;
 
 const LogoButton = ({ isDarkMode, style, css }: LogoButtonProps) => (
-  <Button hover={false} css={css || emotionCSS`width: 120px;`} style={style}>
+  <Link href={Route.HOME} css={css || emotionCSS`width: 120px;`} style={style}>
     <Logo isDarkMode={isDarkMode} />
-  </Button>
+  </Link>
 );
 
 export default LogoButton;

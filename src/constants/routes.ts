@@ -1,6 +1,6 @@
 enum Route {
   HOME = '/',
-  LIBRARY = 'libraries',
+  LIBRARY = '/libraries',
 }
 
 export default Route;
