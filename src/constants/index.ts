@@ -1,3 +1,4 @@
+export const APP_NAME = '세 줄 독후감';
 export const MODAL_ELEMENT_ID = 'modal-root';
 
 export enum ColorVariant {

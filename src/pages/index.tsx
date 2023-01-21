@@ -1,12 +1,5 @@
-import { ModalKey } from '@/constants/keys';
-import HeaderBar from '@/components/organisms/HeaderBar';
-import LoginModal from '@/components/organisms/LoginModal';
+import DocumentTitle from '@/components/atoms/DocumentTitle';
 
-const HomePage = () => (
-  <>
-    <HeaderBar />
-    <LoginModal modalKey={ModalKey.LOGIN} />
-  </>
-);
+const HomePage = () => <DocumentTitle />;
 
 export default HomePage;

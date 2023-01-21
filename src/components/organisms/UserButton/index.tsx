@@ -10,19 +10,23 @@ import useLoginStatus from '@/hooks/useLoginStatus';
 import useDropdownMenu from '@/hooks/useDropdownMenu';
 import Button from '@/components/atoms/Button';
 import Menu from '@/components/molecules/Menu';
+import LoginModal from '@/components/organisms/LoginModal';
 import * as s from './style';
 
 const LoginButton = () => {
   const { openModal } = modalStore();
   return (
-    <Button
-      variant={ButtonVariant.OUTLINED}
-      color={ColorVariant.SECONDARY}
-      css={s.loginButtonStyle}
-      onClick={() => openModal(ModalKey.LOGIN)}
-    >
-      로그인
-    </Button>
+    <>
+      <Button
+        variant={ButtonVariant.OUTLINED}
+        color={ColorVariant.SECONDARY}
+        css={s.loginButtonStyle}
+        onClick={() => openModal(ModalKey.LOGIN)}
+      >
+        로그인
+      </Button>
+      <LoginModal modalKey={ModalKey.LOGIN} />
+    </>
   );
 };
 
@@ -32,7 +36,11 @@ const LogoutButton = () => (
   </Button>
 );
 
-const MyLibraryButton = () => <Link href={`${Route.LIBRARY}/1`}>내 서재</Link>;
+const MyLibraryButton = ({ handleClick }: { handleClick?: () => void }) => (
+  <Link href={`${Route.LIBRARY}/1`} onClick={handleClick}>
+    내 서재
+  </Link>
+);
 
 const UserInfoDropdownButton = () => {
   const { session } = useLoginStatus();
@@ -54,7 +62,7 @@ const UserInfoDropdownButton = () => {
         handleClose={handleMenuClose}
       >
         <s.MenuItem>
-          <MyLibraryButton />
+          <MyLibraryButton handleClick={handleMenuClose} />
         </s.MenuItem>
         <s.MenuItem>
           <LogoutButton />
