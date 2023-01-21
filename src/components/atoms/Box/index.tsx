@@ -3,7 +3,7 @@ import { BoxVariant } from '@/constants';
 import { StyleProps } from '@/types/style';
 import * as s from './style';
 
-type BoxProps = {
+export type BoxProps = {
   variant?: BoxVariant;
   elevation?: number;
   radius?: number;

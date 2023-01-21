@@ -25,7 +25,6 @@ export const EasyLoginText = styled.span`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.LIGHT};
-  background: ${({ theme }) => theme.COLOR.BACKGROUND};
 `;
 
 export const EasyLoginDivider = styled.hr`

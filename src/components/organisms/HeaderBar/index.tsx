@@ -1,6 +1,6 @@
 import LogoButton from '@/components/molecules/LogoButton';
 import SearchButton from '@/components/molecules/SearchButton';
-import ProfileButton from '@/components/organisms/ProfileButton';
+import UserButton from '@/components/organisms/UserButton';
 import ScreenModeButton from '@/components/organisms/SceenModeButton';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
@@ -13,7 +13,7 @@ const HeaderBar = () => {
       <s.Wrapper>
         <LogoButton isDarkMode={isDarkMode} />
         <s.RightItemsWrapper>
-          <ProfileButton />
+          <UserButton />
           <SearchButton />
           <ScreenModeButton />
         </s.RightItemsWrapper>

@@ -28,21 +28,18 @@ export const Wrapper = styled.div<MenuStyleProps>`
   ${({ left }) => left && `left: ${left}px`}
 `;
 
-export const MenuList = styled.ul`
+export const MenuList = styled.ul<{ divider: boolean }>`
   padding: 8px 10px;
-  & > li:last-child {
+
+  & > * {
+    padding: ${({ divider }) => (divider ? '15px' : '10px 15px')};
+    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+
+    ${({ divider, theme }) =>
+      divider && `border-bottom: 1px solid ${theme.COLOR.LINE}`}
+  }
+
+  & > *:last-child {
     border: none;
   }
-`;
-
-export const MenuItem = styled.li<{ divider: boolean }>`
-  padding: 15px;
-  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-
-  & * {
-    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  }
-
-  ${({ divider, theme }) =>
-    divider && `border-bottom: 1px solid ${theme.COLOR.LINE}`}
 `;

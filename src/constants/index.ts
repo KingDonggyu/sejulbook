@@ -3,6 +3,7 @@ export const MODAL_ELEMENT_ID = 'modal-root';
 export enum ColorVariant {
   INHERIT = 'inherit',
   PRIMARY = 'primary',
+  SECONDARY = 'secondary',
   ERROR = 'error',
   WARNING = 'warning',
 }

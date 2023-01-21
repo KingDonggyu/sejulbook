@@ -39,27 +39,30 @@ const fontWeight = {
 const color = {
   LIGHT_GREEN: '#5AB890',
   WHITE: '#FCFCFC',
-  BLACK: '#3E3E3E',
-  LIGHT_BLACK: '#4D4C4C',
+  BLUE_WHITE: '#FAFBFC',
+  BLACK: '#1E1F21',
+  LIGHT_BLACK: '#292A2D',
   GREY: '#abb0b5',
-  LIGHT_GREY: '#DADCE0',
-  DEEP_GREY: '#999',
+  LIGHT_GREY: '#E4E8EB',
+  DEEP_GREY: '#3A3B3D',
 };
 
 const lightModeColor = {
   PRIMARY: color.LIGHT_GREEN,
-  TEXT: color.BLACK,
+  TEXT: color.LIGHT_BLACK,
   SECOND_TEXT: color.GREY,
-  BACKGROUND: color.WHITE,
+  BACKGROUND: color.BLUE_WHITE,
+  BOX: color.WHITE,
   LINE: color.LIGHT_GREY,
 };
 
 const darkModeColor: typeof lightModeColor = {
   PRIMARY: color.LIGHT_GREEN,
-  TEXT: color.WHITE,
-  SECOND_TEXT: color.DEEP_GREY,
+  TEXT: color.BLUE_WHITE,
+  SECOND_TEXT: color.GREY,
   BACKGROUND: color.BLACK,
-  LINE: color.LIGHT_BLACK,
+  BOX: color.LIGHT_BLACK,
+  LINE: color.DEEP_GREY,
 };
 
 const commonTheme = {
