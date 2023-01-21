@@ -27,13 +27,13 @@ export const Button = styled.button<ButtonStyleProps>`
   color: ${(props) =>
     props.variant === ButtonVariant.CONTAINED
       ? props.theme.COLOR.WHITE
-      : props.color};
+      : props.theme.COLOR.TEXT};
 
   ${({ theme, elevation }) =>
     elevation &&
     `
     background: ${theme.COLOR.BACKGROUND};
-    box-shadow: rgb(0 0 0 / ${elevation * 5}%) 0px 1px 2px 0;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 /${elevation * 4}%);
   `};
 
   ${({ hover }) => hover && `&:hover { filter: opacity(0.8); }`}
