@@ -1,5 +1,3 @@
-const LibraryPage = () => {
-  return <div>test</div>;
-};
+const LibraryPage = () => {};
 
 export default LibraryPage;
