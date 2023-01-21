@@ -1,8 +1,10 @@
+import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { IoIosArrowDown } from '@react-icons/all-files/io/IoIosArrowDown';
 import { IoIosArrowUp } from '@react-icons/all-files/io/IoIosArrowUp';
 import { ButtonVariant, BoxVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
+import Route from '@/constants/routes';
 import modalStore from '@/stores/modalStore';
 import useLoginStatus from '@/hooks/useLoginStatus';
 import useDropdownMenu from '@/hooks/useDropdownMenu';
@@ -12,7 +14,6 @@ import * as s from './style';
 
 const LoginButton = () => {
   const { openModal } = modalStore();
-
   return (
     <Button
       variant={ButtonVariant.OUTLINED}
@@ -30,6 +31,8 @@ const LogoutButton = () => (
     로그아웃
   </Button>
 );
+
+const MyLibraryButton = () => <Link href={`${Route.LIBRARY}/1`}>내 서재</Link>;
 
 const UserInfoDropdownButton = () => {
   const { session } = useLoginStatus();
@@ -50,7 +53,9 @@ const UserInfoDropdownButton = () => {
         anchorEl={anchorEl}
         handleClose={handleMenuClose}
       >
-        <s.MenuItem>내 서재</s.MenuItem>
+        <s.MenuItem>
+          <MyLibraryButton />
+        </s.MenuItem>
         <s.MenuItem>
           <LogoutButton />
         </s.MenuItem>
@@ -61,12 +66,7 @@ const UserInfoDropdownButton = () => {
 
 const UserButton = () => {
   const { isLogin } = useLoginStatus();
-
   return isLogin ? <UserInfoDropdownButton /> : <LoginButton />;
 };
-
-UserButton.Login = LoginButton;
-UserButton.Logout = LogoutButton;
-UserButton.UserInfoDropdown = UserInfoDropdownButton;
 
 export default UserButton;
