@@ -1,19 +1,21 @@
 import { ReactNode } from 'react';
-import Head from 'next/head';
+import { css } from '@emotion/react';
 import HeaderBar from '@/components/organisms/HeaderBar';
 
 interface LayoutProps {
-  title?: string;
   children: ReactNode;
 }
 
-const Layout = ({ title, children }: LayoutProps) => (
+const mainStyle = css`
+  margin: auto;
+  padding: 5rem 20px;
+  max-width: 80rem;
+`;
+
+const Layout = ({ children }: LayoutProps) => (
   <>
-    <Head>
-      <title>{title && `${title} − `}세 줄 독후감</title>
-    </Head>
     <HeaderBar />
-    {children}
+    <main css={mainStyle}>{children}</main>
   </>
 );
 

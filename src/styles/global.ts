@@ -7,14 +7,14 @@ const globalStyle = (theme: Theme) => css`
   * {
     box-sizing: border-box;
     line-height: 1;
-    font-family: ${theme.FONT_FAMILY.notoSansKR};
+    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
   }
 
   html {
     width: 100vw;
     height: 100vh;
     font-size: 80%;
-    font-family: ${theme.FONT_FAMILY.notoSansKR};
+    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
   }
 
   body {

@@ -64,6 +64,7 @@ const UserInfoDropdownButton = () => {
         <s.MenuItem>
           <MyLibraryButton handleClick={handleMenuClose} />
         </s.MenuItem>
+        <s.MenuItem>독후감 쓰기</s.MenuItem>
         <s.MenuItem>
           <LogoutButton />
         </s.MenuItem>

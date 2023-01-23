@@ -5,7 +5,6 @@ export const Background = styled.header`
   position: fixed;
   background: ${({ theme }) => theme.COLOR.BOX};
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 12%);
-  /* border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE}; */
 `;
 
 export const Wrapper = styled.nav`

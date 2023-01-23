@@ -9,12 +9,13 @@ interface ButtonStyleProps {
 }
 
 export const Button = styled.button<ButtonStyleProps>`
+  width: fit-content;
   border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  padding: ${(props) => (props.variant === ButtonVariant.OUTLINED ? '8px' : 0)};
+  padding: ${(props) => (props.variant !== ButtonVariant.TEXT ? '8px' : 0)};
 
   background-color: ${(props) =>
     props.variant === ButtonVariant.CONTAINED ? props.color : 'inherit'};
@@ -27,7 +28,7 @@ export const Button = styled.button<ButtonStyleProps>`
   color: ${(props) =>
     props.variant === ButtonVariant.CONTAINED
       ? props.theme.COLOR.WHITE
-      : props.theme.COLOR.TEXT};
+      : props.color};
 
   ${({ theme, elevation }) =>
     elevation &&

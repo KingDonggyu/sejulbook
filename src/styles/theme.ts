@@ -24,7 +24,7 @@ const maxWidth = {
 };
 
 const fontSize = {
-  EXTRA_SMALL: '1rem',
+  EXTRA_SMALL: '0.9rem',
   SMALL: '1.2rem',
   MEDIUM: '1.5rem',
   LARGE: '1.8rem',
