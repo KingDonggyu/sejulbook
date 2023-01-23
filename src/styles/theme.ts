@@ -45,6 +45,7 @@ const color = {
   GREY: '#abb0b5',
   LIGHT_GREY: '#E4E8EB',
   DEEP_GREY: '#3A3B3D',
+  BROWN: '#B16464',
 };
 
 const lightModeColor = {
