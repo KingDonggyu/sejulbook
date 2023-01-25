@@ -12,10 +12,11 @@ export const editProfileStyle = (theme: Theme) => css`
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 `;
 
 export const Title = styled.h1`
+  margin-bottom: 10px;
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   & > span {
     font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
@@ -45,7 +46,6 @@ export const DetailWrapper = styled.dl`
 
 export const DatailItem = styled.dd`
   & > a:hover {
-    padding-bottom: 3px;
     border-bottom: 1px solid ${({ theme }) => theme.COLOR.TEXT};
   }
   & span {

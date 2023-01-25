@@ -23,6 +23,6 @@ export const RightItemsWrapper = styled.div`
   gap: 50px;
 
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.DEFAULT}) {
-    gap: 20px;
+    gap: 30px;
   }
 `;

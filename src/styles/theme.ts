@@ -20,7 +20,7 @@ const fontFamily = {
 
 const maxWidth = {
   DEFAULT: '1024px',
-  MOBILE: '480px',
+  MOBILE: '767px',
 };
 
 const fontSize = {

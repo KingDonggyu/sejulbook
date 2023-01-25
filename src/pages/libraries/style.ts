@@ -3,12 +3,12 @@ import styled from '@emotion/styled';
 
 export const pageStyle = (theme: Theme) => css`
   margin: auto;
-  max-width: 800px;
-  padding: 40px;
+  max-width: ${theme.MAX_WIDTH.DEFAULT};
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
-    padding: 40px 0;
+    padding: 20px 0;
   }
 `;
 
@@ -16,6 +16,6 @@ export const Divider = styled.div`
   height: 1px;
   width: 100%;
   margin-top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   background: ${({ theme }) => theme.COLOR.LINE};
 `;
