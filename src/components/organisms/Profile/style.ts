@@ -1,9 +1,18 @@
 import styled from '@emotion/styled';
+import { css, Theme } from '@emotion/react';
+
+export const editProfileStyle = (theme: Theme) => css`
+  padding-top: 5px;
+  padding-bottom: 5px;
+  @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
+    width: 100%;
+  }
+`;
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 `;
 
 export const Title = styled.h1`
@@ -22,6 +31,11 @@ export const BottomWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
 `;
 
 export const DetailWrapper = styled.dl`

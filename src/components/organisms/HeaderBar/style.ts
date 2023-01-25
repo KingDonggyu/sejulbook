@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 export const Background = styled.header`
+  z-index: 1;
   width: 100%;
   position: fixed;
   background: ${({ theme }) => theme.COLOR.BOX};

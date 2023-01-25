@@ -28,7 +28,11 @@ const Profile = () => (
           </Link>
         </s.DatailItem>
       </s.DetailWrapper>
-      <Button variant={ButtonVariant.OUTLINED} color={ColorVariant.PRIMARY}>
+      <Button
+        variant={ButtonVariant.OUTLINED}
+        color={ColorVariant.PRIMARY}
+        css={s.editProfileStyle}
+      >
         프로필 편집
       </Button>
     </s.BottomWrapper>

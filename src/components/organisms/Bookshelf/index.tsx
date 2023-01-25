@@ -14,7 +14,7 @@ const Bookshelf = () => (
         css={s.wrtieBookReviewButtonStyle}
       >
         <GiPencil size={40} />
-        <AiOutlinePlus size={20} />
+        <AiOutlinePlus size={15} />
       </Button>
       <BookReviewItem />
       <BookReviewItem />

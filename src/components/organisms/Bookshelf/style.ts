@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { css, Theme } from '@emotion/react';
+import { BookThumbnailStyle } from '@/styles/common';
 
 export const wrtieBookReviewButtonStyle = (theme: Theme) => css`
-  width: 170px;
-  height: 220px;
+  ${BookThumbnailStyle.STYLE(theme)}
   & > span {
     font-size: ${theme.FONT_SIZE.LARGE};
   }
@@ -15,9 +15,9 @@ export const wrtieBookReviewButtonStyle = (theme: Theme) => css`
 export const Wrapper = styled.div``;
 
 export const Row = styled.div`
-  padding: 0 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  gap: 10px;
 `;
 
 export const Divider = styled.div`
