@@ -11,11 +11,13 @@ export const editProfileButtonStyle = (theme: Theme) => css`
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 25px;
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    gap: 20px;
+  }
 `;
 
 export const Title = styled.h1`
-  margin-bottom: 10px;
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   & > span {
     font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
@@ -24,9 +26,6 @@ export const Title = styled.h1`
 
 export const Introduce = styled.p`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    margin-bottom: 10px;
-  }
 `;
 
 export const BottomWrapper = styled.div`
