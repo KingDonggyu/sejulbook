@@ -19,11 +19,11 @@ const LoginButton = () => {
     <>
       <Button
         variant={ButtonVariant.OUTLINED}
-        color={ColorVariant.SECONDARY}
+        color={ColorVariant.INHERIT}
         css={s.loginButtonStyle}
         onClick={() => openModal(ModalKey.LOGIN)}
       >
-        로그인
+        시작하기
       </Button>
       <LoginModal modalKey={ModalKey.LOGIN} />
     </>
@@ -64,6 +64,7 @@ const UserInfoDropdownButton = () => {
         <s.MenuItem>
           <MyLibraryButton handleClick={handleMenuClose} />
         </s.MenuItem>
+        <s.MenuItem>독후감 쓰기</s.MenuItem>
         <s.MenuItem>
           <LogoutButton />
         </s.MenuItem>

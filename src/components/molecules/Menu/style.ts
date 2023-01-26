@@ -8,6 +8,7 @@ interface MenuStyleProps {
 }
 
 export const Background = styled.div`
+  z-index: 1;
   position: relative;
 `;
 
@@ -23,16 +24,16 @@ export const Wrapper = styled.div<MenuStyleProps>`
   width: max-content;
   position: absolute;
   top: ${({ top }) => `${top}px`};
-  ${({ bottom }) => bottom && `bottom: ${bottom}px`}
-  ${({ right }) => right && `right: ${right}px`}
-  ${({ left }) => left && `left: ${left}px`}
+  ${({ bottom }) => bottom !== undefined && `bottom: ${bottom}px`}
+  ${({ right }) => right !== undefined && `right: ${right}px`}
+  ${({ left }) => left !== undefined && `left: ${left}px`}
 `;
 
 export const MenuList = styled.ul<{ divider: boolean }>`
   padding: 8px 10px;
 
   & > * {
-    padding: ${({ divider }) => (divider ? '15px' : '10px 15px')};
+    padding: ${({ divider }) => (divider ? '12px' : '10px 15px')};
     font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
 
     ${({ divider, theme }) =>

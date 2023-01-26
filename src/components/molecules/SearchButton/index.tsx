@@ -7,7 +7,6 @@ const SearchButton = () => (
   <Button
     css={css`
       ${iconButtonStyle};
-      width: 50px;
     `}
   >
     <AiOutlineSearch size={25} />
