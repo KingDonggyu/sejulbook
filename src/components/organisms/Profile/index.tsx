@@ -31,7 +31,7 @@ const Profile = () => (
       <Button
         variant={ButtonVariant.OUTLINED}
         color={ColorVariant.PRIMARY}
-        css={s.editProfileStyle}
+        css={s.editProfileButtonStyle}
       >
         프로필 편집
       </Button>

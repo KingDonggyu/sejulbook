@@ -20,20 +20,28 @@ const fontFamily = {
 
 const maxWidth = {
   DEFAULT: '1024px',
-  MOBILE: '767px',
+  CONTENT: '800px',
+  TABLET: '768px',
+  MOBILE: '480px',
 };
 
 const fontSize = {
-  EXTRA_SMALL: '0.9rem',
+  EXTRA_SMALL: '1rem',
   SMALL: '1.2rem',
-  MEDIUM: '1.5rem',
-  LARGE: '1.8rem',
+  MEDIUM: '1.4rem',
+  LARGE: '1.6rem',
 };
 
 const fontWeight = {
   LIGHT: 300,
   NORMAL: 400,
   BOLD: 700,
+};
+
+const BookThumbnailWidth = {
+  DEFAULT: 230,
+  TABLET: 140,
+  MOBILE: 100,
 };
 
 const color = {
@@ -73,6 +81,7 @@ const commonTheme = {
   FONT_SIZE: fontSize,
   FONT_WEIGHT: fontWeight,
   FONT_FAMILY: fontFamily,
+  BOOK_TUMBNAIL_WIDTH: BookThumbnailWidth,
 };
 
 const lightTheme = {

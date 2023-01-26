@@ -1,41 +1,35 @@
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { BookThumbnailStyle } from '@/styles/common';
+import { responsiveMaxWidthStyle, bookThumbnailStyle } from '@/styles/common';
 
 export const thumbnailStyle = (theme: Theme) => css`
-  ${BookThumbnailStyle.STYLE(theme)}
+  ${bookThumbnailStyle(theme)}
   object-fit: cover;
 `;
 
 export const Wrapper = styled.div`
-  max-width: ${BookThumbnailStyle.DEFAULT_WIDTH}px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 7px;
+  max-width: ${({ theme }) => theme.BOOK_TUMBNAIL_WIDTH.DEFAULT}px;
 `;
 
 export const Title = styled.h2`
-  max-width: ${BookThumbnailStyle.DEFAULT_WIDTH}px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    max-width: ${BookThumbnailStyle.SMALL_WIDTH}px;
-  }
+  ${({ theme }) => responsiveMaxWidthStyle(theme)};
 `;
 
 export const Author = styled.h3`
-  max-width: ${BookThumbnailStyle.DEFAULT_WIDTH}px;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    max-width: ${BookThumbnailStyle.SMALL_WIDTH}px;
-  }
 `;
 
 export const Rating = styled.div`
@@ -54,15 +48,17 @@ export const ThumnailWrapper = styled.div`
 
 export const SejulBookReview = styled.div`
   line-height: 1.5;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   white-space: pre-line;
   position: absolute;
   top: 0;
   left: 0;
   padding: 10px;
+  padding-bottom: 30px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  max-height: ${BookThumbnailStyle.DEFAULT_HEIGHT - 30}px;
+  height: 100%;
 `;
 
 export const TuhumbnailBottomWrapper = styled.div`

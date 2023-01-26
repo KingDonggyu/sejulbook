@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 import { css, Theme } from '@emotion/react';
 
-export const editProfileStyle = (theme: Theme) => css`
-  padding-top: 5px;
-  padding-bottom: 5px;
+export const editProfileButtonStyle = (theme: Theme) => css`
+  padding: 5px 0;
   @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
     width: 100%;
   }
@@ -25,6 +24,9 @@ export const Title = styled.h1`
 
 export const Introduce = styled.p`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    margin-bottom: 10px;
+  }
 `;
 
 export const BottomWrapper = styled.div`

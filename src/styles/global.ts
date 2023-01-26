@@ -4,29 +4,18 @@ import { css, Theme } from '@emotion/react';
 const globalStyle = (theme: Theme) => css`
   ${emotionReset}
 
-  * {
+  *, *:before, *:after {
     box-sizing: border-box;
     line-height: 1;
     font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
   }
 
   html {
-    width: 100vw;
-    height: 100vh;
     font-size: 80%;
-    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
-  }
-
-  body {
-    width: 100%;
-    height: 100%;
+    overflow-y: scroll;
     color: ${theme.COLOR.TEXT};
     background-color: ${theme.COLOR.BACKGROUND};
-  }
-
-  #__next {
-    width: 100%;
-    height: 100%;
+    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
   }
 
   button {
