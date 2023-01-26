@@ -4,9 +4,7 @@ import Button from '@/components/atoms/Button';
 
 const editProfileButtonStyle = (theme: Theme) => css`
   padding: 5px 8px;
-  @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
-    width: 100%;
-  }
+  font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
 `;
 
 const ProfileEditButton = () => (

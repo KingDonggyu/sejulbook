@@ -33,7 +33,14 @@ export const Author = styled.h3`
 `;
 
 export const Rating = styled.div`
-  display: flex;
+  /* display: flex;
+  gap: 2px;
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    & > svg {
+      width: 10px;
+      height: 10px;
+    }
+  } */
 `;
 
 export const Date = styled.p`

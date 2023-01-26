@@ -29,6 +29,20 @@ export const TopSectionWrapper = styled.div`
   }
 `;
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    width: 100%;
+    flex-direction: row;
+    & > button:first-child {
+      flex-grow: 1;
+    }
+  }
+`;
+
 export const Divider = styled.div`
   height: 1px;
   width: 100%;

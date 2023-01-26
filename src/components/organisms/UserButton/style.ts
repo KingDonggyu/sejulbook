@@ -6,8 +6,6 @@ export const loginButtonStyle = (theme: Theme) => css`
 `;
 
 export const nickNameButtonStyle = (theme: Theme) => css`
-  z-index: 1;
-  position: relative;
   font-size: ${theme.FONT_SIZE.SMALL};
 `;
 
