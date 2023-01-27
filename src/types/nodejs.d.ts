@@ -7,5 +7,7 @@ declare namespace NodeJS {
     KAKAO_CLIENT_SECRET: string;
     NAVER_CLIENT_ID: string;
     NAVER_CLIENT_SECRET: string;
+    NEXTAUTH_SECRET: string;
+    NEXT_PUBLIC_KAKAO_REST_API_KEY: string;
   }
 }
