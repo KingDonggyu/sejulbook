@@ -27,13 +27,13 @@ export const Button = styled.button<ButtonStyleProps>`
 
   color: ${(props) =>
     props.variant === ButtonVariant.CONTAINED
-      ? props.theme.COLOR.WHITE
+      ? props.theme.COLOR.TEXT
       : props.color};
 
   ${({ theme, elevation }) =>
     elevation &&
     `
-    background: ${theme.COLOR.BACKGROUND};
+    background: ${theme.COLOR.BOX};
     box-shadow: 0 1px 3px 0 rgb(0 0 0 /${elevation * 4}%);
   `};
 
