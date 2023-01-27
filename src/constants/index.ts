@@ -15,6 +15,11 @@ export enum ButtonVariant {
   OUTLINED = 'outlined',
 }
 
+export enum TextFieldVariant {
+  OUTLINED = 'outlined',
+  BOTTOM_LINED = 'bottomLined',
+}
+
 export enum BoxVariant {
   ELEVATION = 'elevation',
   OUTLINED = 'outlined',
@@ -23,6 +28,11 @@ export enum BoxVariant {
 export enum ScreenModeState {
   DARK = 'Y',
   LIGHT = 'N',
+}
+
+export enum Alignment {
+  ROW = 'r',
+  COLUMN = 'c',
 }
 
 export enum OAuthName {
