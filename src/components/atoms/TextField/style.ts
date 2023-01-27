@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { TextFieldVariant, Alignment } from '@/constants';
 
 interface TextFieldStyleProps {
+  hasIcon: boolean;
   color: string;
   variant: TextFieldVariant;
 }
@@ -13,27 +14,19 @@ export const Wrapper = styled.div<{ alignment: Alignment }>`
   ${({ alignment }) =>
     alignment === Alignment.COLUMN &&
     `
-    flex-direction: column;
-    align-items: flex-start;
-  `};
+  flex-direction: column;
+  align-items: flex-start;
+`};
 `;
 
-export const Label = styled.label`
-  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
-`;
-
-export const TextField = styled.input<TextFieldStyleProps>`
-  outline: none;
-  border: none;
-  background: inherit;
-  color: ${({ theme }) => theme.COLOR.TEXT};
-  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-
+export const TextFieldBorder = styled.div<TextFieldStyleProps>`
   ${({ theme, variant }) =>
     variant === TextFieldVariant.OUTLINED &&
     `
-    padding: 10px;
+    & > input {
+      padding: 10px;
+      border-radius: 5px;
+    }
     border-radius: 5px;
     background: ${theme.COLOR.BOX};
     border: 1px solid ${theme.COLOR.SECOND_TEXT};
@@ -42,11 +35,38 @@ export const TextField = styled.input<TextFieldStyleProps>`
   ${({ theme, variant }) =>
     variant === TextFieldVariant.BOTTOM_LINED &&
     `
-    padding: 7px 0;
+    & > input {
+      padding: 7px 0;
+    }
     border-bottom: 1px solid ${theme.COLOR.SECOND_TEXT};
   `};
 
-  &:focus {
+  ${({ hasIcon }) =>
+    hasIcon &&
+    `
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    & > input {
+      padding-left: 5px;
+    }
+  `}
+
+  &:focus-within {
     border-color: ${({ color }) => color};
   }
+`;
+
+export const Label = styled.label`
+  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+`;
+
+export const TextField = styled.input`
+  outline: none;
+  border: none;
+  background: inherit;
+  width: 100%;
+  color: ${({ theme }) => theme.COLOR.TEXT};
+  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
 `;

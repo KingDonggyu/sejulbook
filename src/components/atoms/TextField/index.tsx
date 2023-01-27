@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, ReactNode } from 'react';
 import { StyleProps } from '@/types/style';
 import { TextFieldVariant, ColorVariant, Alignment } from '@/constants';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
@@ -7,6 +7,7 @@ import * as s from './style';
 
 type TextFieldProps = {
   label?: string;
+  icon?: ReactNode;
   alignment?: Alignment;
   variant?: TextFieldVariant;
   color?: ColorVariant;
@@ -15,27 +16,26 @@ type TextFieldProps = {
 
 const TextField = ({
   label,
+  icon,
   alignment = Alignment.COLUMN,
   variant = TextFieldVariant.OUTLINED,
   color = ColorVariant.PRIMARY,
   ...textFieldAttrs
 }: TextFieldProps) => {
   const { theme } = useScreenModeContext();
-  const InputComponent = (
-    <s.TextField
-      variant={variant}
-      color={getColorByColorVariant(color, theme)}
-      {...textFieldAttrs}
-    />
-  );
 
-  return label ? (
+  return (
     <s.Wrapper alignment={alignment}>
-      <s.Label>{label}</s.Label>
-      {InputComponent}
+      {label && <s.Label>{label}</s.Label>}
+      <s.TextFieldBorder
+        hasIcon={Boolean(icon)}
+        variant={variant}
+        color={getColorByColorVariant(color, theme)}
+      >
+        {icon}
+        <s.TextField {...textFieldAttrs} />
+      </s.TextFieldBorder>
     </s.Wrapper>
-  ) : (
-    <> {InputComponent}</>
   );
 };
 
