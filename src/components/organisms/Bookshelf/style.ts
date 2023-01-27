@@ -3,8 +3,14 @@ import { css, Theme } from '@emotion/react';
 import { bookThumbnailStyle } from '@/styles/common';
 
 export const wrtieBookReviewButtonStyle = (theme: Theme) => css`
-  ${bookThumbnailStyle(theme)}
+  ${bookThumbnailStyle(theme)};
+  color: ${theme.COLOR.PRIMARY};
   margin: 0 auto !important;
+  border: 1px solid;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   & > span {
     font-size: ${theme.FONT_SIZE.LARGE};
   }

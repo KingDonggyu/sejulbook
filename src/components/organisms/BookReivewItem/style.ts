@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   max-width: ${({ theme }) => theme.BOOK_TUMBNAIL_WIDTH.DEFAULT}px;
 `;
 
@@ -32,16 +32,7 @@ export const Author = styled.h3`
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
 `;
 
-export const Rating = styled.div`
-  /* display: flex;
-  gap: 2px;
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    & > svg {
-      width: 10px;
-      height: 10px;
-    }
-  } */
-`;
+export const Rating = styled.div``;
 
 export const Date = styled.p`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
