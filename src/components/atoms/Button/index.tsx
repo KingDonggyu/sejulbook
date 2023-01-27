@@ -30,7 +30,9 @@ const Button = ({
   return (
     <s.Button
       type={type}
-      elevation={elevation}
+      elevation={
+        !elevation && variant === ButtonVariant.CONTAINED ? 4 : elevation
+      }
       color={getColorByColorVariant(color, theme)}
       variant={variant}
       hover={hover}

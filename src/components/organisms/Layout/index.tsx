@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 import HeaderBar from '@/components/organisms/HeaderBar';
+import ScreenModeButton from '../SceenModeButton';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ const Layout = ({ children }: LayoutProps) => (
   <>
     <HeaderBar />
     <main css={mainStyle}>{children}</main>
+    <ScreenModeButton />
   </>
 );
 
