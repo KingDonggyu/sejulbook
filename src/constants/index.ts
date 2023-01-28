@@ -40,3 +40,11 @@ export enum OAuthName {
   NAVER = 'naver',
   KAKAO = 'kakao',
 }
+
+export enum SearchType {
+  BOOK = 'book',
+  BOOK_REVIEW_BY_TITLE = 'bookReviewTitle',
+  BOOK_REVIEW_BY_AUTHOR = 'bookReviewAuthor',
+  BOOK_REVIEW_BY_TAG = 'bookReviewTag',
+  LIBRARY_BY_USERNAME = 'libraryUser',
+}

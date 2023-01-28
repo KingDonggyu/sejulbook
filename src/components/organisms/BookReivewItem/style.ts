@@ -5,6 +5,10 @@ import { responsiveMaxWidthStyle, bookThumbnailStyle } from '@/styles/common';
 export const thumbnailStyle = (theme: Theme) => css`
   ${bookThumbnailStyle(theme)}
   object-fit: cover;
+  box-shadow: 0 10px 10px 0 rgb(0 0 0 / 50%);
+  @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
+    box-shadow: 0 5px 5px 0 rgb(0 0 0 / 50%);
+  }
 `;
 
 export const Wrapper = styled.div`

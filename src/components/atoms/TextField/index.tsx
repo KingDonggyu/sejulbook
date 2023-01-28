@@ -1,11 +1,11 @@
 import { InputHTMLAttributes, ReactNode } from 'react';
 import { StyleProps } from '@/types/style';
-import { TextFieldVariant, ColorVariant, Alignment } from '@/constants';
+import { Alignment, TextFieldVariant, ColorVariant } from '@/constants';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
-type TextFieldProps = {
+export type TextFieldProps = {
   label?: string;
   icon?: ReactNode;
   alignment?: Alignment;

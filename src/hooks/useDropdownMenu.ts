@@ -1,17 +1,25 @@
-import { MouseEvent, useState } from 'react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
+
+type Events =
+  | MouseEvent<HTMLButtonElement | HTMLInputElement>
+  | ChangeEvent<HTMLInputElement>;
 
 const useDropdownMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleMenuOpen = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleMenuOpen = (e: Events) => {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const handleMenuClose = (_?: Events, isDelay = true) => {
+    if (!isDelay) {
+      setAnchorEl(null);
+      return;
+    }
+    setTimeout(() => setAnchorEl(null), 100);
   };
 
-  const handleMenuToggle = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleMenuToggle = (e: Events) => {
     if (anchorEl) {
       handleMenuClose();
       return;

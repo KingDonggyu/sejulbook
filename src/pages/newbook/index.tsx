@@ -1,17 +1,22 @@
 import DocumentTitle from '@/components/atoms/DocumentTitle';
-import TextField from '@/components/atoms/TextField';
-import { getBooksByTitle } from '@/services/api/book';
-import { useEffect } from 'react';
+import SearchTextField from '@/components/molecules/SearchTextField';
+import { ChangeEvent, useState } from 'react';
 
 const NewbookPage = () => {
-  useEffect(() => {
-    getBooksByTitle('브레이킹');
-  }, []);
+  const [text, setText] = useState('');
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
 
   return (
     <>
       <DocumentTitle title="독후감 쓰기" />
-      <TextField placeholder="원하는 책을 입력하세요." />
+      <SearchTextField
+        value={text}
+        searchedList={['가나다', '가나다', '가나다']}
+        onChange={handleChange}
+      />
     </>
   );
 };

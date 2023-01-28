@@ -49,7 +49,11 @@ const UserInfoDropdownButton = () => {
 
   return (
     <div>
-      <Button onClick={(e) => handleMenuToggle(e)} css={s.nickNameButtonStyle}>
+      <Button
+        onClick={handleMenuToggle}
+        onBlur={handleMenuClose}
+        css={s.nickNameButtonStyle}
+      >
         <s.Nickname>{session?.user?.name}</s.Nickname>
         {isShowMenu ? <IoIosArrowUp size={17} /> : <IoIosArrowDown size={17} />}
       </Button>

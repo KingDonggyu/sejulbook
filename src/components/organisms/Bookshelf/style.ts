@@ -25,18 +25,23 @@ export const Row = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  padding: 20px;
   & > * {
     margin: auto;
+  }
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    padding: 0px;
+    padding-bottom: 20px;
   }
 `;
 
 export const Divider = styled.div`
   width: 100%;
   height: 15px;
-  margin-top: 20px;
-  margin-bottom: 50px;
+  margin-top: 0px;
+  margin-bottom: 40px;
   background: ${({ theme }) => theme.COLOR.BROWN};
-  box-shadow: 0 3px 3px 0 rgb(0 0 0 / 30%);
+  box-shadow: 0 4px 4px 0 rgb(0 0 0 / 30%);
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     height: 10px;
   }

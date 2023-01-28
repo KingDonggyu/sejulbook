@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { AiFillStar } from '@react-icons/all-files/ai/AiFillStar';
+// import { AiFillStar } from '@react-icons/all-files/ai/AiFillStar';
 import { FaComment } from '@react-icons/all-files/fa/FaComment';
 import { FaHeart } from '@react-icons/all-files/fa/FaHeart';
 import { lightTheme } from '@/styles/theme';
@@ -56,14 +56,14 @@ const BookReviewItem = () => {
           </div>
         </s.TuhumbnailBottomWrapper>
       </s.ThumnailWrapper>
-      <s.Title>브레이킹 루틴</s.Title>
+      {/* <s.Title>브레이킹 루틴</s.Title>
       <s.Author>천인우 지음</s.Author>
       <s.Rating>
         {Array.from(Array(5), (_, key) => (
           <AiFillStar key={key} color={lightTheme.COLOR.PRIMARY} size={15} />
         ))}
       </s.Rating>
-      <s.Date>2023.01.10</s.Date>
+      <s.Date>2023.01.10</s.Date> */}
     </s.Wrapper>
   );
 };

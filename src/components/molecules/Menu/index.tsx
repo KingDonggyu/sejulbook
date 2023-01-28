@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { css } from '@emotion/react';
 import Box, { BoxProps } from '@/components/atoms/Box';
 import * as s from './style';
 
@@ -11,6 +10,7 @@ type MenuProps = {
   right?: number;
   left?: number;
   elevation?: number;
+  full?: boolean;
   handleClose: () => void;
   children: ReactNode;
 } & BoxProps;
@@ -19,6 +19,7 @@ const Menu = ({
   anchorEl,
   divider = true,
   top = 20,
+  full = false,
   bottom,
   right,
   left,
@@ -34,15 +35,15 @@ const Menu = ({
 
   return (
     <s.Background>
-      <s.Overlay onClick={handleClose} />
-      <s.Wrapper top={top} bottom={bottom} right={right} left={left}>
-        <Box
-          css={css`
-            width: fit-content;
-            padding: 0;
-          `}
-          {...boxProps}
-        >
+      {/* <s.Overlay onClick={handleClose} /> */}
+      <s.Wrapper
+        top={top}
+        bottom={bottom}
+        right={right}
+        left={left}
+        full={full}
+      >
+        <Box css={s.boxStyle} {...boxProps}>
           <s.MenuList divider={divider}>{children}</s.MenuList>
         </Box>
       </s.Wrapper>

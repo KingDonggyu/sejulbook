@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { TextFieldVariant, Alignment } from '@/constants';
+import { Alignment, TextFieldVariant } from '@/constants';
 
 interface TextFieldStyleProps {
   hasIcon: boolean;
@@ -20,6 +20,7 @@ export const Wrapper = styled.div<{ alignment: Alignment }>`
 `;
 
 export const TextFieldBorder = styled.div<TextFieldStyleProps>`
+  width: 100%;
   ${({ theme, variant }) =>
     variant === TextFieldVariant.OUTLINED &&
     `
