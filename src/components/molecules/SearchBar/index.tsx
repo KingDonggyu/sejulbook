@@ -4,15 +4,15 @@ import Menu from '@/components/molecules/Menu';
 import useDropdownMenu from '@/hooks/useDropdownMenu';
 import * as s from './style';
 
-type SearchTextFieldProps = {
+type SearchBarProps = {
   searchedList: string[];
 } & TextFieldProps;
 
-const SearchTextField = ({
+const SearchBar = ({
   searchedList,
   onChange,
   ...textFieldProps
-}: SearchTextFieldProps) => {
+}: SearchBarProps) => {
   const { anchorEl, handleMenuOpen, handleMenuClose } = useDropdownMenu();
 
   const handleClick = (e: MouseEvent<HTMLInputElement>) => {
@@ -46,4 +46,4 @@ const SearchTextField = ({
   );
 };
 
-export default SearchTextField;
+export default SearchBar;

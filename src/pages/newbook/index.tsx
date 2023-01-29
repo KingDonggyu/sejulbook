@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
-import SearchTextField from '@/components/molecules/SearchTextField';
+import SearchBar from '@/components/molecules/SearchBar';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
 
@@ -26,7 +26,7 @@ const NewbookPage = () => {
   return (
     <>
       <DocumentTitle title="독후감 쓰기" />
-      <SearchTextField searchedList={searchedList} onChange={handleChange} />
+      <SearchBar searchedList={searchedList} onChange={handleChange} />
     </>
   );
 };
