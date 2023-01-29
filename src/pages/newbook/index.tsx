@@ -1,37 +1,32 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import SearchTextField from '@/components/molecules/SearchTextField';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
 
 const NewbookPage = () => {
-  const [text, setText] = useState('');
+  const [keyword, setKeyword] = useState('');
   const [searchedList, setSearchedList] = useState<string[]>([]);
-  const searchText = useDebounce(text);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
+    setKeyword(e.target.value);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (!searchText) {
-        setSearchedList([]);
-        return;
-      }
-      const fetchData = await getBooksByTitle(searchText as string);
-      setSearchedList(fetchData.documents.map(({ title }) => title));
-    })();
-  }, [searchText]);
+  const onDebounce = useCallback(async (value: string) => {
+    if (!value) {
+      setSearchedList([]);
+      return;
+    }
+    const fetchData = await getBooksByTitle(value);
+    setSearchedList(fetchData.documents.map(({ title }) => title));
+  }, []);
+
+  useDebounce({ value: keyword, onDebounce });
 
   return (
     <>
       <DocumentTitle title="독후감 쓰기" />
-      <SearchTextField
-        value={text}
-        searchedList={searchedList}
-        onChange={handleChange}
-      />
+      <SearchTextField searchedList={searchedList} onChange={handleChange} />
     </>
   );
 };
