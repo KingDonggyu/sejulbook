@@ -47,6 +47,16 @@ export const MenuList = styled.ul<{ divider: boolean }>`
   & > *:last-child {
     border: none;
   }
+
+  & button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  & a {
+    display: block;
+    width: 100%;
+  }
 `;
 
 export const boxStyle = css`

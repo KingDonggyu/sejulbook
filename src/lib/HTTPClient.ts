@@ -6,7 +6,6 @@ const axiosInstance = axios.create({
 
 export const get = async (url: string, params = {}, headers = {}) => {
   const response = await axiosInstance.get(url, { params, headers });
-  console.log(response);
   return response.data;
 };
 

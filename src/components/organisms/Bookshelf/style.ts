@@ -31,18 +31,13 @@ export const Row = styled.div`
   }
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     padding: 0px;
-    padding-bottom: 20px;
   }
 `;
 
 export const Divider = styled.div`
   width: 100%;
-  height: 15px;
-  margin-top: 0px;
-  margin-bottom: 40px;
-  background: ${({ theme }) => theme.COLOR.BROWN};
-  box-shadow: 0 4px 4px 0 rgb(0 0 0 / 30%);
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    height: 10px;
-  }
+  height: 1px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: ${({ theme }) => theme.COLOR.LINE};
 `;

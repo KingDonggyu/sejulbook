@@ -11,5 +11,5 @@ export const getBooksByTitle = async (title: Title) => {
     { Authorization: AUTH_TOKEN },
   );
 
-  return response.data as BookResponse;
+  return response as BookResponse;
 };

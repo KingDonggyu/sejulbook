@@ -63,15 +63,12 @@ const UserInfoDropdownButton = () => {
         divider={false}
         variant={BoxVariant.OUTLINED}
         anchorEl={anchorEl}
-        handleClose={handleMenuClose}
       >
         <s.MenuItem>
-          <MyLibraryButton handleClick={handleMenuClose} />
+          <MyLibraryButton />
         </s.MenuItem>
         <s.MenuItem>
-          <Link href={Route.NEWBOOK} onClick={handleMenuClose}>
-            독후감 쓰기
-          </Link>
+          <Link href={Route.NEWBOOK}>독후감 쓰기</Link>
         </s.MenuItem>
         <s.MenuItem>
           <LogoutButton />

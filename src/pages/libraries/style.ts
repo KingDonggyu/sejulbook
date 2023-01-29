@@ -22,6 +22,7 @@ export const TopSectionWrapper = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  padding: 20px;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     flex-direction: column;
     align-items: flex-start;
@@ -46,6 +47,6 @@ export const ButtonWrapper = styled.div`
 export const Divider = styled.div`
   height: 1px;
   width: 100%;
-  margin: 30px 0;
+  margin: 20px 0;
   background: ${({ theme }) => theme.COLOR.LINE};
 `;

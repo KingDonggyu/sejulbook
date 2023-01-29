@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { MODAL_Z_INDEX } from '@/constants/zIndex';
 
 export const Background = styled.div`
+  z-index: ${MODAL_Z_INDEX};
   position: fixed;
   top: 0;
   left: 0;

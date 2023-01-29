@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
+import { HEADER_Z_INDEX } from '@/constants/zIndex';
 
 export const Background = styled.header`
+  z-index: ${HEADER_Z_INDEX};
   width: 100%;
   position: fixed;
   background: ${({ theme }) => theme.COLOR.BOX};

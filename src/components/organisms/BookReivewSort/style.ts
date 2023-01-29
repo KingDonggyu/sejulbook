@@ -9,4 +9,6 @@ export const sortButtonStyle = (theme: Theme) => css`
   }
 `;
 
-export const MenuItem = styled.li``;
+export const MenuItem = styled.li`
+  width: 100%;
+`;

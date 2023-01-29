@@ -19,13 +19,7 @@ const BookReivewSort = () => {
         <span>최신순</span>
         <TiArrowSortedDown />
       </Button>
-      <Menu
-        top={5}
-        right={0}
-        anchorEl={anchorEl}
-        variant={BoxVariant.OUTLINED}
-        handleClose={handleMenuClose}
-      >
+      <Menu top={5} right={0} anchorEl={anchorEl} variant={BoxVariant.OUTLINED}>
         <s.MenuItem>
           <Button>최신순</Button>
         </s.MenuItem>

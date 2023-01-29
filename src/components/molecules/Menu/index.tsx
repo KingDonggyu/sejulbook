@@ -11,7 +11,6 @@ type MenuProps = {
   left?: number;
   elevation?: number;
   full?: boolean;
-  handleClose: () => void;
   children: ReactNode;
 } & BoxProps;
 
@@ -23,7 +22,6 @@ const Menu = ({
   bottom,
   right,
   left,
-  handleClose,
   children,
   ...boxProps
 }: MenuProps) => {
@@ -35,7 +33,6 @@ const Menu = ({
 
   return (
     <s.Background>
-      {/* <s.Overlay onClick={handleClose} /> */}
       <s.Wrapper
         top={top}
         bottom={bottom}

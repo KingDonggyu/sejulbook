@@ -1,14 +1,11 @@
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { responsiveMaxWidthStyle, bookThumbnailStyle } from '@/styles/common';
+import { THUMBNAIL_Z_INDEX } from '@/constants/zIndex';
 
 export const thumbnailStyle = (theme: Theme) => css`
   ${bookThumbnailStyle(theme)}
   object-fit: cover;
-  box-shadow: 0 10px 10px 0 rgb(0 0 0 / 50%);
-  @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
-    box-shadow: 0 5px 5px 0 rgb(0 0 0 / 50%);
-  }
 `;
 
 export const Wrapper = styled.div`
@@ -46,6 +43,7 @@ export const Date = styled.p`
 export const ThumnailWrapper = styled.div`
   cursor: pointer;
   position: relative;
+  z-index: ${THUMBNAIL_Z_INDEX};
 `;
 
 export const SejulBookReview = styled.div`

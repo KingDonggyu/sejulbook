@@ -1,8 +1,9 @@
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, MouseEvent, FocusEvent, useState } from 'react';
 
 type Events =
-  | MouseEvent<HTMLButtonElement | HTMLInputElement>
-  | ChangeEvent<HTMLInputElement>;
+  | MouseEvent<HTMLElement>
+  | ChangeEvent<HTMLElement>
+  | FocusEvent<HTMLElement>;
 
 const useDropdownMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
