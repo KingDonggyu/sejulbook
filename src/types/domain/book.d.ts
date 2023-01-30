@@ -1,12 +1,16 @@
-export type Title = string;
+export type BookTitle = { title: string };
+export type BookThumbnail = { thumbnail: string };
+export type BookAuthors = { authors: string[] };
+export type BookPublisher = { publisher: string };
 
-export interface Book {
-  title: Title;
-  authors: string[];
-  publisher: string;
+export type BookSearchedItem = BookTitle &
+  BookThumbnail &
+  BookAuthors &
+  BookPublisher;
+
+export type Book = {
   datetime: string;
-  thumbnail: string;
-}
+} & BookSearchedItem;
 
 export interface BookResponse {
   documents: Book[];

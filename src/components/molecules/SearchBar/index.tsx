@@ -1,11 +1,25 @@
-import { ChangeEvent, MouseEvent } from 'react';
+import { ChangeEvent, MouseEvent, ReactNode } from 'react';
+import { css, Theme } from '@emotion/react';
+import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import TextField, { TextFieldProps } from '@/components/atoms/TextField';
 import Menu from '@/components/molecules/Menu';
 import useDropdownMenu from '@/hooks/useDropdownMenu';
-import * as s from './style';
+
+const MenuStyle = (theme: Theme) => css`
+  height: 60vh;
+  overflow-y: auto;
+  & li {
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+  }
+  & li:hover {
+    background: ${theme.COLOR.HOVER};
+  }
+`;
 
 type SearchBarProps = {
-  searchedList: string[];
+  searchedList: ReactNode[];
 } & TextFieldProps;
 
 const SearchBar = ({
@@ -32,14 +46,11 @@ const SearchBar = ({
         onClick={handleClick}
         onBlur={handleMenuClose}
         onChange={handleChange}
+        icon={<AiOutlineSearch size={20} />}
       />
       {Boolean(searchedList.length) && (
-        <Menu top={5} anchorEl={anchorEl} full>
-          {searchedList.map((name, key) => (
-            // 각 항목에 대한 수정, 삭제가 일어나지 않기에 index를 key로 허용한다.
-            // eslint-disable-next-line react/no-array-index-key
-            <s.SearchedItem key={key}>{name}</s.SearchedItem>
-          ))}
+        <Menu top={5} anchorEl={anchorEl} css={MenuStyle} full>
+          {searchedList.map((searchedItem) => searchedItem)}
         </Menu>
       )}
     </div>

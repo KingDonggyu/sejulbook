@@ -47,6 +47,7 @@ const BookThumbnailWidth = {
 const color = {
   LIGHT_GREEN: '#5AB890',
   WHITE: '#FCFCFC',
+  WHITE2: '#F6F6F6',
   BLUE_WHITE: '#FAFBFC',
   BLACK: '#1E1F21',
   LIGHT_BLACK: '#292A2D',
@@ -64,6 +65,7 @@ const lightModeColor = {
   BACKGROUND: color.BLUE_WHITE,
   BOX: color.WHITE,
   LINE: color.LIGHT_GREY,
+  HOVER: color.WHITE2,
 };
 
 const darkModeColor: typeof lightModeColor = {
@@ -73,6 +75,7 @@ const darkModeColor: typeof lightModeColor = {
   BACKGROUND: color.BLACK,
   BOX: color.LIGHT_BLACK,
   LINE: color.DEEP_GREY,
+  HOVER: color.DEEP_GREY,
 };
 
 const commonTheme = {

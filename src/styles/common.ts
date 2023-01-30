@@ -28,3 +28,13 @@ export const bookThumbnailStyle = (theme: Theme) => css`
     height: ${theme.BOOK_TUMBNAIL_WIDTH.MOBILE + 50}px;
   }
 `;
+
+export const searchedItemThumbnailSize = {
+  width: 60,
+  height: 90,
+};
+
+export const searchedItemThumbnailStyle = css`
+  width: ${searchedItemThumbnailSize.width};
+  height: ${searchedItemThumbnailSize.height};
+`;
