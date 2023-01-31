@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
-import BookInfoBox from '@/components/organisms/BookInfoBox';
+import BookInfoBox from '@/components/molecules/BookInfoBox';
 import { Book } from '@/types/domain/book';
 import * as s from './style';
 
