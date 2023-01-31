@@ -36,7 +36,8 @@ const fontSize = {
 const fontWeight = {
   LIGHT: 300,
   NORMAL: 400,
-  BOLD: 700,
+  BOLD: 500,
+  DISPLAY: 700,
 };
 
 const BookThumbnailWidth = {

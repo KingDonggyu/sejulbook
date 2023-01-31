@@ -4,6 +4,7 @@ import { searchedItemThumbnailStyle } from '@/styles/common';
 export const SearchedItemWrapper = styled.li`
   display: flex;
   gap: 10px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
 `;
 
 export const AltTumbnail = styled.div`
@@ -22,11 +23,12 @@ export const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  line-height: 1.3;
 `;
 
 export const BookTitle = styled.div`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY};
 `;
 
 export const BookAuthors = styled.div`

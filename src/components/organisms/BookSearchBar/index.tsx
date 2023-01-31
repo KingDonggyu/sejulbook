@@ -1,15 +1,19 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
 import BookSearchedItem from '@/components/organisms/BookSearchedItem';
+import { TextFieldProps } from '@/components/atoms/TextField';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
 import { Book } from '@/types/domain/book';
 
-interface BookSearchBarProps {
+interface BookSearchBarProps extends TextFieldProps {
   handleClickSearchedItem: (bookInfo: Book) => void;
 }
 
-const BookSearchBar = ({ handleClickSearchedItem }: BookSearchBarProps) => {
+const BookSearchBar = ({
+  handleClickSearchedItem,
+  ...textFieldProps
+}: BookSearchBarProps) => {
   const [keyword, setKeyword] = useState('');
   const [searchedList, setSearchedList] = useState<Book[]>([]);
 
@@ -29,7 +33,7 @@ const BookSearchBar = ({ handleClickSearchedItem }: BookSearchBarProps) => {
   useDebounce({ value: keyword, onDebounce });
 
   return (
-    <SearchBar onChange={handleChange}>
+    <SearchBar onChange={handleChange} {...textFieldProps}>
       {Boolean(searchedList.length) &&
         searchedList.map((bookInfo, i) => (
           <BookSearchedItem

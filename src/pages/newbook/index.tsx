@@ -12,8 +12,8 @@ const NewbookPage = () => {
     <s.Wrapper>
       <DocumentTitle title="독후감 쓰기" />
       <s.Title>독후감 쓰기</s.Title>
-      <s.BookSelectText>책을 선택해주세요.</s.BookSelectText>
       <BookSearchBar
+        placeholder="책을 선택해주세요."
         handleClickSearchedItem={(bookInfo: Book) => setSelectedBook(bookInfo)}
       />
       {selectedBook && (

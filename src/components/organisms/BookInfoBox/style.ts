@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
   border-radius: 5px;
   background: ${({ theme }) => theme.COLOR.BOX};
   box-shadow: 2px 4px 12px rgb(0 0 0 / 4%);
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
 `;
 
 export const InfoList = styled.dl`
@@ -25,7 +26,7 @@ export const InfoItem = styled.div`
 export const Label = styled.dt`
   text-align: end;
   min-width: 43px;
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY};
 `;
 
 export const Content = styled.dd``;

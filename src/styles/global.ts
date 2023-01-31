@@ -7,7 +7,7 @@ const globalStyle = (theme: Theme) => css`
   *, *:before, *:after {
     box-sizing: border-box;
     line-height: 1;
-    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
+    font-family: ${theme.FONT_FAMILY.notoSansKR};
   }
 
   html {
@@ -15,7 +15,7 @@ const globalStyle = (theme: Theme) => css`
     overflow-y: scroll;
     color: ${theme.COLOR.TEXT};
     background-color: ${theme.COLOR.BACKGROUND};
-    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
+    font-family: ${theme.FONT_FAMILY.notoSansKR};
   }
 
   button {

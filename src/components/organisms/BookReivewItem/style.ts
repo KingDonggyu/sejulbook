@@ -58,6 +58,7 @@ export const SejulBookReview = styled.div`
   padding-bottom: 30px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   height: 100%;
 `;
 

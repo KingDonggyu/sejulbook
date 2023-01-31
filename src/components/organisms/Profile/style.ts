@@ -12,6 +12,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     gap: 20px;
   }
@@ -20,7 +21,7 @@ export const Wrapper = styled.div`
 export const Title = styled.h1`
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   & > span {
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY};
   }
 `;
 
