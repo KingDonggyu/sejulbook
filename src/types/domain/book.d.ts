@@ -1,5 +1,5 @@
 export type BookTitle = { title: string };
-export type BookThumbnail = { thumbnail: string };
+export type BookThumbnail = { thumbnail: string | undefined };
 export type BookAuthors = { authors: string[] };
 export type BookPublisher = { publisher: string };
 

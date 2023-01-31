@@ -7,7 +7,7 @@ import { searchedItemThumbnailStyle } from '@/styles/common';
 const AltThumbnail = styled.div<{ width: number; height: number }>`
   ${searchedItemThumbnailStyle}
   width: ${({ width }) => `${width}px`};
-  height: $ ${({ height }) => `${height}px`};
+  height: ${({ height }) => `${height}px`};
   display: flex;
   justify-content: center;
   align-items: center;

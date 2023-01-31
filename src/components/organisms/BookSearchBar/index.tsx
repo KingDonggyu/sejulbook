@@ -4,7 +4,7 @@ import SearchBar from '@/components/molecules/SearchBar';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
 import { BookSearchedItem } from '@/types/domain/book';
-import { searchedItemThumbnailSize } from '@/styles/common';
+import { thumbnailSize } from '@/styles/common';
 import * as s from './style';
 
 const SearchedItem = ({
@@ -17,8 +17,8 @@ const SearchedItem = ({
     <Thumbnail
       src={thumbnail}
       alt={`${title} 표지 이미지`}
-      width={searchedItemThumbnailSize.width}
-      height={searchedItemThumbnailSize.height}
+      width={thumbnailSize.smallWidth}
+      height={thumbnailSize.smallHeight}
     />
     <s.TextWrapper>
       <s.BookTitle>{title}</s.BookTitle>

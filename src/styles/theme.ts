@@ -46,7 +46,7 @@ const BookThumbnailWidth = {
 
 const color = {
   LIGHT_GREEN: '#5AB890',
-  WHITE: '#FCFCFC',
+  WHITE: '#ffffff',
   WHITE2: '#F6F6F6',
   BLUE_WHITE: '#FAFBFC',
   BLACK: '#1E1F21',

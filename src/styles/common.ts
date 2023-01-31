@@ -29,12 +29,14 @@ export const bookThumbnailStyle = (theme: Theme) => css`
   }
 `;
 
-export const searchedItemThumbnailSize = {
-  width: 60,
-  height: 90,
+export const thumbnailSize = {
+  smallWidth: 60,
+  smallHeight: 90,
+  mediumWidth: 120,
+  mediumHeight: 174,
 };
 
 export const searchedItemThumbnailStyle = css`
-  width: ${searchedItemThumbnailSize.width};
-  height: ${searchedItemThumbnailSize.height};
+  width: ${thumbnailSize.smallWidth};
+  height: ${thumbnailSize.smallHeight};
 `;
