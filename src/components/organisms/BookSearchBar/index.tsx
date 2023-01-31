@@ -1,6 +1,5 @@
 import { ChangeEvent, ReactNode, useCallback, useState } from 'react';
-import Image from 'next/image';
-import { AiOutlineQuestionCircle } from '@react-icons/all-files/ai/AiOutlineQuestionCircle';
+import Thumbnail from '@/components/atoms/Thumbnail';
 import SearchBar from '@/components/molecules/SearchBar';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
@@ -15,18 +14,12 @@ const SearchedItem = ({
   publisher,
 }: BookSearchedItem) => (
   <s.SearchedItemWrapper>
-    {thumbnail ? (
-      <Image
-        src={thumbnail}
-        alt={`${title} 표지 이미지`}
-        width={searchedItemThumbnailSize.width}
-        height={searchedItemThumbnailSize.height}
-      />
-    ) : (
-      <s.AltTumbnail>
-        <AiOutlineQuestionCircle size={25} />
-      </s.AltTumbnail>
-    )}
+    <Thumbnail
+      src={thumbnail}
+      alt={`${title} 표지 이미지`}
+      width={searchedItemThumbnailSize.width}
+      height={searchedItemThumbnailSize.height}
+    />
     <s.TextWrapper>
       <s.BookTitle>{title}</s.BookTitle>
       <s.BookAuthors>{authors.join(', ')}</s.BookAuthors>
