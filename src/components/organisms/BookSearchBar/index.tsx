@@ -1,36 +1,17 @@
-import { ChangeEvent, ReactNode, useCallback, useState } from 'react';
-import Thumbnail from '@/components/atoms/Thumbnail';
+import { ChangeEvent, useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
+import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
-import { BookSearchedItem } from '@/types/domain/book';
-import { thumbnailSize } from '@/styles/common';
-import * as s from './style';
+import { Book } from '@/types/domain/book';
 
-const SearchedItem = ({
-  title,
-  authors,
-  thumbnail,
-  publisher,
-}: BookSearchedItem) => (
-  <s.SearchedItemWrapper>
-    <Thumbnail
-      src={thumbnail}
-      alt={`${title} 표지 이미지`}
-      width={thumbnailSize.smallWidth}
-      height={thumbnailSize.smallHeight}
-    />
-    <s.TextWrapper>
-      <s.BookTitle>{title}</s.BookTitle>
-      <s.BookAuthors>{authors.join(', ')}</s.BookAuthors>
-      <s.BookPublisher>{publisher}</s.BookPublisher>
-    </s.TextWrapper>
-  </s.SearchedItemWrapper>
-);
+interface BookSearchBarProps {
+  handleClickSearchedItem: (bookInfo: Book) => void;
+}
 
-const BookSearchBar = () => {
+const BookSearchBar = ({ handleClickSearchedItem }: BookSearchBarProps) => {
   const [keyword, setKeyword] = useState('');
-  const [searchedList, setSearchedList] = useState<ReactNode[]>([]);
+  const [searchedList, setSearchedList] = useState<Book[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -42,16 +23,25 @@ const BookSearchBar = () => {
       return;
     }
     const { documents } = await getBooksByTitle({ title: value });
-    setSearchedList(
-      // 각 항목에 대한 수정, 삭제가 일어나지 않기에 index를 key로 허용한다.
-      // eslint-disable-next-line react/no-array-index-key
-      documents.map((bookProps, i) => <SearchedItem key={i} {...bookProps} />),
-    );
+    setSearchedList(documents);
   }, []);
 
   useDebounce({ value: keyword, onDebounce });
 
-  return <SearchBar searchedList={searchedList} onChange={handleChange} />;
+  return (
+    <SearchBar onChange={handleChange}>
+      {Boolean(searchedList.length) &&
+        searchedList.map((bookInfo, i) => (
+          <BookSearchedItem
+            // 각 항목에 대한 수정, 삭제가 일어나지 않기에 index를 key로 허용한다.
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            handleClick={handleClickSearchedItem}
+            {...bookInfo}
+          />
+        ))}
+    </SearchBar>
+  );
 };
 
 export default BookSearchBar;

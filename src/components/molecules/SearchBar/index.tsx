@@ -6,7 +6,7 @@ import Menu from '@/components/molecules/Menu';
 import useDropdownMenu from '@/hooks/useDropdownMenu';
 
 const MenuStyle = (theme: Theme) => css`
-  height: 60vh;
+  max-height: 60vh;
   overflow-y: auto;
   & li {
     cursor: pointer;
@@ -19,11 +19,11 @@ const MenuStyle = (theme: Theme) => css`
 `;
 
 type SearchBarProps = {
-  searchedList: ReactNode[];
+  children: ReactNode;
 } & TextFieldProps;
 
 const SearchBar = ({
-  searchedList,
+  children,
   onChange,
   ...textFieldProps
 }: SearchBarProps) => {
@@ -48,9 +48,9 @@ const SearchBar = ({
         onChange={handleChange}
         icon={<AiOutlineSearch size={20} />}
       />
-      {Boolean(searchedList.length) && (
+      {Boolean(children) && (
         <Menu top={5} anchorEl={anchorEl} css={MenuStyle} full>
-          {searchedList.map((searchedItem) => searchedItem)}
+          {children}
         </Menu>
       )}
     </div>

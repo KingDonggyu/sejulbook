@@ -30,6 +30,7 @@ const fontSize = {
   SMALL: '1.2rem',
   MEDIUM: '1.4rem',
   LARGE: '1.6rem',
+  EXTRA_LARGE: '2rem',
 };
 
 const fontWeight = {
