@@ -4,7 +4,13 @@ import formatDateToKorean from '@/utils/formatDateToKorean';
 import { thumbnailSize } from '@/styles/common';
 import * as s from './style';
 
-const BookInfo = ({ title, authors, thumbnail, publisher, datetime }: Book) => {
+const BookInfoBox = ({
+  title,
+  authors,
+  thumbnail,
+  publisher,
+  datetime,
+}: Book) => {
   const bookInfoList = [
     { label: '제목', content: title },
     { label: '저자', content: authors.join(', ') },
@@ -42,9 +48,9 @@ const WritingTarget = () => {
     datetime: '2021-12-20T00:00:00.000+09:00',
   };
 
-  return <BookInfo {...targetBook} />;
+  return <BookInfoBox {...targetBook} />;
 };
 
-BookInfo.WritingTarget = WritingTarget;
+BookInfoBox.WritingTarget = WritingTarget;
 
-export default BookInfo;
+export default BookInfoBox;

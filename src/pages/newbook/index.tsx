@@ -1,6 +1,6 @@
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
-import BookInfo from '@/components/organisms/BookInfo';
+import BookInfoBox from '@/components/organisms/BookInfoBox';
 import * as s from './style';
 
 const NewbookPage = () => (
@@ -9,7 +9,7 @@ const NewbookPage = () => (
     <s.BookSelectText>책을 선택해주세요.</s.BookSelectText>
     <BookSearchBar />
     <s.HiddenWrapper>
-      <BookInfo.WritingTarget />
+      <BookInfoBox.WritingTarget />
     </s.HiddenWrapper>
   </s.Wrapper>
 );
