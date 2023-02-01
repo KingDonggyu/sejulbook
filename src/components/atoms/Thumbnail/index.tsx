@@ -5,7 +5,7 @@ import { StyleProps } from '@/types/style';
 import { searchedItemThumbnailStyle } from '@/styles/common';
 
 const AltThumbnail = styled.div<{ width: number; height: number }>`
-  ${searchedItemThumbnailStyle}
+  ${({ theme }) => searchedItemThumbnailStyle(theme)};
   width: ${({ width }) => `${width}px`};
   height: ${({ height }) => `${height}px`};
   display: flex;

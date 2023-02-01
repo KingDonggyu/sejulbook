@@ -38,5 +38,7 @@ export const Button = styled.button<ButtonStyleProps>`
     box-shadow: 0 1px 3px 0 rgb(0 0 0 /${elevation * 4}%);
   `};
 
+  ${({ variant }) => variant === ButtonVariant.TEXT && `background: inherit;`};
+
   ${({ hover }) => hover && `&:hover { filter: opacity(0.8); }`}
 `;

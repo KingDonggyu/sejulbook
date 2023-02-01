@@ -40,8 +40,8 @@ const BookReviewItem = () => {
           src={testThumbnailSrc}
           // src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbfiCtu%2FbtrGS4A2l6Y%2FtY8QoI1vSxYGl2tQrQkaH1%2Fimg.png"
           alt="책 섬네일 이미지"
-          width={lightTheme.BOOK_TUMBNAIL_WIDTH.DEFAULT}
-          height={lightTheme.BOOK_TUMBNAIL_WIDTH.DEFAULT + 70}
+          width={lightTheme.TUMBNAIL.DEFAULT.W}
+          height={lightTheme.TUMBNAIL.DEFAULT.H}
           css={s.thumbnailStyle}
         />
         {isShowSejulBookReview && (

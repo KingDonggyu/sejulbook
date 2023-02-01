@@ -1,7 +1,7 @@
 import { Book } from '@/types/domain/book';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import formatDateToKorean from '@/utils/formatDateToKorean';
-import { thumbnailSize } from '@/styles/common';
+import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
 const BookInfoBox = ({
@@ -23,8 +23,8 @@ const BookInfoBox = ({
       <Thumbnail
         src={thumbnail}
         alt={`${title} 표지 이미지`}
-        width={thumbnailSize.mediumWidth}
-        height={thumbnailSize.mediumHeight}
+        width={lightTheme.TUMBNAIL.MEDIUM.W}
+        height={lightTheme.TUMBNAIL.MEDIUM.H}
       />
       <s.InfoList>
         {bookInfoList.map(({ label, content }) => (

@@ -1,22 +1,16 @@
 import { ChangeEvent, useRef } from 'react';
-import { css, Theme } from '@emotion/react';
-import Button from '@/components/atoms/Button';
+import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
-import { StyleProps } from '@/types/style';
-
-const buttonStyle = (theme: Theme) => css`
-  border: 1px solid ${theme.COLOR.LINE};
-`;
 
 type UploadButtonProps = {
   handleUpload: (file: File) => void;
   onlyImage: boolean;
-} & StyleProps;
+} & ButtonProps;
 
 const UploadButton = ({
   handleUpload,
   onlyImage = false,
-  ...styleProps
+  ...buttonProps
 }: UploadButtonProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -42,9 +36,8 @@ const UploadButton = ({
       />
       <Button
         variant={ButtonVariant.OUTLINED}
-        css={buttonStyle}
         onClick={handleClickButton}
-        {...styleProps}
+        {...buttonProps}
       >
         파일 업로드
       </Button>

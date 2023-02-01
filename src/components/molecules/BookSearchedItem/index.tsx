@@ -1,6 +1,6 @@
 import Thumbnail from '@/components/atoms/Thumbnail';
 import { Book } from '@/types/domain/book';
-import { thumbnailSize } from '@/styles/common';
+import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
 interface BookSearchedItemProps extends Book {
@@ -23,8 +23,8 @@ const BookSearchedItem = ({
     <Thumbnail
       src={thumbnail}
       alt={`${title} 표지 이미지`}
-      width={thumbnailSize.smallWidth}
-      height={thumbnailSize.smallHeight}
+      width={lightTheme.TUMBNAIL.SMALL.W}
+      height={lightTheme.TUMBNAIL.SMALL.H}
     />
     <s.TextWrapper>
       <s.BookTitle>{title}</s.BookTitle>

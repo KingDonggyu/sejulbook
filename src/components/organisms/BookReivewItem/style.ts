@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  max-width: ${({ theme }) => theme.BOOK_TUMBNAIL_WIDTH.DEFAULT}px;
+  max-width: ${({ theme }) => theme.TUMBNAIL.DEFAULT}px;
 `;
 
 export const Title = styled.h2`

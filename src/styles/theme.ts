@@ -40,10 +40,27 @@ const fontWeight = {
   DISPLAY: 700,
 };
 
-const BookThumbnailWidth = {
-  DEFAULT: 230,
-  TABLET: 140,
-  MOBILE: 100,
+const thumbnail = {
+  DEFAULT: {
+    W: 230,
+    H: 300,
+  },
+  TABLET: {
+    W: 140,
+    H: 210,
+  },
+  MOBILE: {
+    W: 100,
+    H: 150,
+  },
+  MEDIUM: {
+    W: 120,
+    H: 174,
+  },
+  SMALL: {
+    W: 60,
+    H: 90,
+  },
 };
 
 const color = {
@@ -86,7 +103,7 @@ const commonTheme = {
   FONT_SIZE: fontSize,
   FONT_WEIGHT: fontWeight,
   FONT_FAMILY: fontFamily,
-  BOOK_TUMBNAIL_WIDTH: BookThumbnailWidth,
+  TUMBNAIL: thumbnail,
 };
 
 const lightTheme = {
