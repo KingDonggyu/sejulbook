@@ -2,6 +2,7 @@ import Button from '@/components/atoms/Button';
 import Modal from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
+import { Category } from '@/types/domain/bookReview';
 import * as s from './style';
 
 const categories = [
@@ -27,7 +28,11 @@ const categories = [
   '만화',
 ];
 
-const CategoryModal = () => (
+interface CategoryModalProps {
+  handleClickCategory: ({ category }: Category) => void;
+}
+
+const CategoryModal = ({ handleClickCategory }: CategoryModalProps) => (
   <Modal modalKey={ModalKey.CATEGORY}>
     <s.Title>카테고리</s.Title>
     <s.Wrapper>
@@ -37,6 +42,7 @@ const CategoryModal = () => (
           variant={ButtonVariant.OUTLINED}
           color={ColorVariant.LINE}
           css={s.buttonStyle}
+          onClick={() => handleClickCategory({ category })}
         >
           {category}
         </Button>

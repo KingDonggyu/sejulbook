@@ -14,7 +14,7 @@ export const Button = styled.button<ButtonStyleProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-
+  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
   padding: ${(props) => (props.variant !== ButtonVariant.TEXT ? '8px' : 0)};
 
   border: ${(props) =>
