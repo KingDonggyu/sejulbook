@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import BookInfoBox from '@/components/molecules/BookInfoBox';
-import ImageUploader from '@/components/molecules/ImageUploader';
+import BookThumbnailUploader from '@/components/molecules/BookThumbnailUploader';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
 import { Book } from '@/types/domain/book';
 import { BookReview } from '@/types/domain/bookReview';
@@ -54,7 +54,7 @@ const NewbookPage = () => {
           </div>
           <s.Label>평점</s.Label> */}
           <s.Label>책 표지 사진</s.Label>
-          <ImageUploader />
+          <BookThumbnailUploader thumbnail={newbook.thumbnail} />
           <s.Label>세 줄 독후감</s.Label>
           <s.Label>추가 내용 (선택)</s.Label>
         </s.HiddenWrapper>

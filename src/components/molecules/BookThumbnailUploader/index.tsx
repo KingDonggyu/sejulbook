@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { css, Theme } from '@emotion/react';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import UploadButton from '@/components/molecules/UploadButton';
-import { lightTheme } from '@/styles/theme';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
+import { BookThumbnail } from '@/types/domain/book';
+import { lightTheme } from '@/styles/theme';
 
 const thumbnailStyle = (theme: Theme) => css`
   object-fit: cover;
@@ -18,23 +19,30 @@ const buttonStyle = (theme: Theme) => css`
   border-color: ${theme.COLOR.LINE};
 `;
 
-const ImageUploader = () => {
-  const [imageFile, setImageFIle] = useState<File | null>(null);
+type BookThumbnailUploaderProps = BookThumbnail;
+
+const BookThumbnailUploader = ({
+  thumbnail: originThumbnail,
+}: BookThumbnailUploaderProps) => {
+  const [imageSrc, setImageSrc] = useState(originThumbnail);
+
   const handleUpload = (file: File) => {
-    setImageFIle(file);
+    setImageSrc(URL.createObjectURL(file));
+  };
+
+  const handleClickOriginThumbnailButton = () => {
+    setImageSrc(originThumbnail);
   };
 
   return (
     <>
-      {imageFile && (
-        <Thumbnail
-          src={URL.createObjectURL(imageFile)}
-          alt="책 표지 이미지"
-          width={lightTheme.TUMBNAIL.DEFAULT.W}
-          height={lightTheme.TUMBNAIL.DEFAULT.H}
-          css={thumbnailStyle}
-        />
-      )}
+      <Thumbnail
+        src={imageSrc}
+        alt="책 표지 이미지"
+        width={lightTheme.TUMBNAIL.DEFAULT.W}
+        height={lightTheme.TUMBNAIL.DEFAULT.H}
+        css={thumbnailStyle}
+      />
       <UploadButton
         variant={ButtonVariant.OUTLINED}
         handleUpload={handleUpload}
@@ -44,6 +52,7 @@ const ImageUploader = () => {
       <Button
         variant={ButtonVariant.OUTLINED}
         color={ColorVariant.SECONDARY}
+        onClick={handleClickOriginThumbnailButton}
         css={buttonStyle}
       >
         원본 사진 사용
@@ -52,4 +61,4 @@ const ImageUploader = () => {
   );
 };
 
-export default ImageUploader;
+export default BookThumbnailUploader;
