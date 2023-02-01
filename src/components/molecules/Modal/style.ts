@@ -25,6 +25,7 @@ export const ModalOverlay = styled.div`
 
 export const ModalWrapper = styled.div`
   z-index: ${MODAL_Z_INDEX};
+  margin: 0 20px;
 `;
 
 export const cancelButtonStyle = css`

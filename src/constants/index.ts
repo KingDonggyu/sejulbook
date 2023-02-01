@@ -5,6 +5,7 @@ export enum ColorVariant {
   INHERIT = 'inherit',
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
+  LINE = 'line',
   ERROR = 'error',
   WARNING = 'warning',
 }

@@ -8,6 +8,7 @@ const globalStyle = (theme: Theme) => css`
     box-sizing: border-box;
     line-height: 1;
     font-family: ${theme.FONT_FAMILY.notoSansKR};
+    -webkit-font-smoothing: antialiased;
   }
 
   html {
