@@ -53,7 +53,10 @@ const NewbookPage = () => {
             </Button>
           </div>
           <s.Label>평점</s.Label> */}
-          <s.Label>책 표지 사진</s.Label>
+          <s.Label>책 표지 이미지</s.Label>
+          <s.ThumbnailSubText>
+            *독후감의 대표 이미지로 사용됩니다.
+          </s.ThumbnailSubText>
           <BookThumbnailUploader thumbnail={newbook.thumbnail} />
           <s.Label>세 줄 독후감</s.Label>
           <s.Label>추가 내용 (선택)</s.Label>

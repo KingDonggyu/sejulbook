@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { css, Theme } from '@emotion/react';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import UploadButton from '@/components/molecules/UploadButton';
@@ -33,6 +33,10 @@ const BookThumbnailUploader = ({
   const handleClickOriginThumbnailButton = () => {
     setImageSrc(originThumbnail);
   };
+
+  useEffect(() => {
+    setImageSrc(originThumbnail);
+  }, [originThumbnail]);
 
   return (
     <>

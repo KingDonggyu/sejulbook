@@ -20,7 +20,13 @@ export const HiddenWrapper = styled.div`
 
 export const Label = styled.h2`
   margin-top: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+`;
+
+export const ThumbnailSubText = styled.p`
+  margin-bottom: 15px;
+  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
+  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
 `;
