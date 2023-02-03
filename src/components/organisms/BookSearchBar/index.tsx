@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
-import BookSearchedItem from '@/components/molecules/BookSearchedItem';
+import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import { TextFieldProps } from '@/components/atoms/TextField';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';

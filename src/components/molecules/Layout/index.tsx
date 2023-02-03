@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 import HeaderBar from '@/components/organisms/HeaderBar';
-import ScreenModeButton from '../SceenModeButton';
+import ScreenModeButton from '../../organisms/SceenModeButton';
 
 interface LayoutProps {
   children: ReactNode;

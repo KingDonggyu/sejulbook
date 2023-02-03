@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
-import BookInfoBox from '@/components/molecules/BookInfoBox';
-import BookThumbnailUploader from '@/components/molecules/BookThumbnailUploader';
+import BookInfoBox from '@/components/organisms/BookInfoBox';
+import BookThumbnailUploader from '@/components/organisms/BookThumbnailUploader';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
 import { Book } from '@/types/domain/book';
 import { BookReview } from '@/types/domain/bookReview';
