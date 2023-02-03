@@ -26,11 +26,6 @@ export enum BoxVariant {
   OUTLINED = 'outlined',
 }
 
-export enum ScreenModeState {
-  DARK = 'Y',
-  LIGHT = 'N',
-}
-
 export enum Alignment {
   ROW = 'r',
   COLUMN = 'c',

@@ -1,10 +1,13 @@
 import LogoButton from '@/components/molecules/LogoButton';
 import SearchButton from '@/components/molecules/SearchButton';
-import UserButton from '@/components/organisms/UserButton';
+import NavDropdown from '@/components/organisms/NavDropdown';
+import AccountButton from '@/components/organisms/AccountButton';
+import useLoginStatus from '@/hooks/useLoginStatus';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
 const HeaderBar = () => {
+  const { isLogin } = useLoginStatus();
   const { isDarkMode } = useScreenModeContext();
 
   return (
@@ -12,7 +15,7 @@ const HeaderBar = () => {
       <s.Wrapper>
         <LogoButton isDarkMode={isDarkMode} />
         <s.RightItemsWrapper>
-          <UserButton />
+          {isLogin ? <NavDropdown /> : <AccountButton.Login />}
           <SearchButton />
         </s.RightItemsWrapper>
       </s.Wrapper>
