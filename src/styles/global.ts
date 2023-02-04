@@ -29,6 +29,13 @@ const globalStyle = (theme: Theme) => css`
     text-decoration: none;
     color: inherit;
   }
+
+  input::placeholder {
+    color: ${theme.COLOR.SECOND_TEXT};
+  }
+  textarea::placeholder {
+    color: ${theme.COLOR.SECOND_TEXT};
+  }
 `;
 
 export default globalStyle;

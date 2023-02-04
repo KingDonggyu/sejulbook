@@ -30,7 +30,7 @@ export const TextFieldBorder = styled.div<TextFieldStyleProps>`
     }
     border-radius: 5px;
     background: ${theme.COLOR.BOX};
-    border: 1px solid ${theme.COLOR.SECOND_TEXT};
+    border: 1px solid ${theme.COLOR.LINE};
   `};
 
   ${({ theme, variant }) =>

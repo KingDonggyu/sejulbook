@@ -49,13 +49,13 @@ const thumbnail = {
     W: 140,
     H: 210,
   },
-  MOBILE: {
-    W: 100,
-    H: 150,
-  },
   MEDIUM: {
     W: 120,
     H: 174,
+  },
+  MOBILE: {
+    W: 100,
+    H: 150,
   },
   SMALL: {
     W: 60,

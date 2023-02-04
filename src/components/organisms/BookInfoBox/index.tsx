@@ -1,6 +1,8 @@
 import { Book } from '@/types/domain/book';
+import Box from '@/components/atoms/Box';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import formatDateToKorean from '@/utils/formatDateToKorean';
+import { BoxVariant } from '@/constants';
 import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
@@ -12,14 +14,13 @@ const BookInfoBox = ({
   datetime,
 }: Book) => {
   const bookInfoList = [
-    { label: '제목', content: title },
     { label: '저자', content: authors.join(', ') },
-    { label: '출판사', content: publisher },
-    { label: '출판일', content: formatDateToKorean(datetime) },
+    { label: '출판', content: publisher },
+    { label: '발매', content: formatDateToKorean(datetime) },
   ];
 
   return (
-    <s.Wrapper>
+    <Box variant={BoxVariant.OUTLINED} css={s.boxStyle}>
       <Thumbnail
         src={thumbnail}
         alt={`${title} 표지 이미지`}
@@ -27,6 +28,7 @@ const BookInfoBox = ({
         height={lightTheme.TUMBNAIL.MEDIUM.H}
       />
       <s.InfoList>
+        <s.BookTitle>{title}</s.BookTitle>
         {bookInfoList.map(({ label, content }) => (
           <s.InfoItem key={label}>
             <s.Label>{label}</s.Label>
@@ -34,7 +36,7 @@ const BookInfoBox = ({
           </s.InfoItem>
         ))}
       </s.InfoList>
-    </s.Wrapper>
+    </Box>
   );
 };
 

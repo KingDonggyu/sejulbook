@@ -3,6 +3,7 @@ import DocumentTitle from '@/components/atoms/DocumentTitle';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
 import BookThumbnailUploader from '@/components/organisms/BookThumbnailUploader';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
+import SejulTextarea from '@/components/organisms/SejulTextarea';
 import { Book } from '@/types/domain/book';
 import { BookReview } from '@/types/domain/bookReview';
 import * as s from './style';
@@ -53,13 +54,14 @@ const NewbookPage = () => {
             </Button>
           </div>
           <s.Label>평점</s.Label> */}
-          <s.Label>책 표지 이미지</s.Label>
+          {/* <s.Label>책 표지 이미지</s.Label>
           <s.ThumbnailSubText>
             *독후감의 대표 이미지로 사용됩니다.
           </s.ThumbnailSubText>
-          <BookThumbnailUploader thumbnail={newbook.thumbnail} />
-          <s.Label>세 줄 독후감</s.Label>
-          <s.Label>추가 내용 (선택)</s.Label>
+          <BookThumbnailUploader thumbnail={newbook.thumbnail} /> */}
+          <s.Label />
+          <SejulTextarea />
+          {/* <s.Label>추가 내용 (선택)</s.Label> */}
         </s.HiddenWrapper>
       )}
       {/* <CategoryModal
