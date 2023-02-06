@@ -27,6 +27,7 @@ export const TopSectionWrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;
     gap: 25px;
+    padding: 0;
   }
 `;
 
