@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
+import SejulTextarea from '@/components/organisms/SejulTextarea';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import * as s from './style';
 
@@ -21,6 +22,7 @@ const NewbookWritePage = () => {
       </s.ButtonWrapper>
       <s.Wrapper>
         <s.BookName>브레이킹 루틴</s.BookName>
+        <SejulTextarea />
       </s.Wrapper>
     </>
   );
