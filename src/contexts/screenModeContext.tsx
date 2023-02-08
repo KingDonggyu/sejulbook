@@ -10,7 +10,7 @@ import { ThemeProvider, Theme } from '@emotion/react';
 import ClientStorage from '@/lib/ClientStorage';
 import { lightTheme, darkTheme } from '@/styles/theme';
 
-const SEJULBOOK_DARK = 'SEJULBOOL_DARK';
+const STORAGE_KEY = 'SEJULBOOL_DARK';
 
 enum ScreenModeState {
   DARK = 'Y',
@@ -55,7 +55,7 @@ const ScreenModeProvider = ({ children }: { children: ReactNode }) => {
   useEffect(
     () =>
       setScreenModeStrage(
-        new ClientStorage<ScreenModeState>(SEJULBOOK_DARK, localStorage),
+        new ClientStorage<ScreenModeState>(STORAGE_KEY, localStorage),
       ),
     [],
   );

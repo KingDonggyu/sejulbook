@@ -1,10 +1,11 @@
+import { MouseEvent } from 'react';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import { Book } from '@/types/domain/book';
 import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
 interface BookSearchedItemProps extends Book {
-  handleClick: (bookInfo: Book) => void;
+  handleClick: (e: MouseEvent<HTMLElement>, bookInfo: Book) => void;
 }
 
 const BookSearchedItem = ({
@@ -16,8 +17,8 @@ const BookSearchedItem = ({
   handleClick,
 }: BookSearchedItemProps) => (
   <s.SearchedItemWrapper
-    onClick={() =>
-      handleClick({ title, authors, thumbnail, publisher, datetime })
+    onClick={(e) =>
+      handleClick(e, { title, authors, thumbnail, publisher, datetime })
     }
   >
     <Thumbnail

@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, MouseEvent, useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
 import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import { TextFieldProps } from '@/components/atoms/TextField';
@@ -7,7 +7,7 @@ import { getBooksByTitle } from '@/services/api/book';
 import { Book } from '@/types/domain/book';
 
 interface BookSearchBarProps extends TextFieldProps {
-  handleClickSearchedItem: (bookInfo: Book) => void;
+  handleClickSearchedItem: (e: MouseEvent<HTMLElement>, bookInfo: Book) => void;
 }
 
 const BookSearchBar = ({

@@ -11,12 +11,16 @@ const mainStyle = (isVisibleHeaderBar: boolean) => css`
 
 interface LayoutContextProps {
   isVisibleHeaderBar: boolean;
+  showHeaderBar: () => void;
+  showScreenModeButton: () => void;
   hideHeaderBar: () => void;
   hideScreenModeButton: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextProps>({
   isVisibleHeaderBar: true,
+  showHeaderBar: () => {},
+  showScreenModeButton: () => {},
   hideHeaderBar: () => {},
   hideScreenModeButton: () => {},
 });
@@ -29,7 +33,9 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const contextProps: LayoutContextProps = useMemo(
     () => ({
       isVisibleHeaderBar,
+      showHeaderBar: () => setIsVisible(true),
       hideHeaderBar: () => setIsVisible(false),
+      showScreenModeButton: () => setIsVisibleScreenModeButton(true),
       hideScreenModeButton: () => setIsVisibleScreenModeButton(false),
     }),
     [isVisibleHeaderBar],

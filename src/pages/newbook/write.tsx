@@ -1,18 +1,38 @@
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
 import SejulTextarea from '@/components/organisms/SejulTextarea';
 import ContentTextarea from '@/components/organisms/ContentTextarea';
 import { ButtonVariant, ColorVariant } from '@/constants';
+import newbookStore from '@/stores/newbookStore';
 import * as s from './style';
 
 const NewbookWritePage = () => {
-  const { hideHeaderBar, hideScreenModeButton } = useLayoutContext();
+  const { newbook } = newbookStore();
+
+  console.log(useRouter());
+
+  const {
+    showHeaderBar,
+    hideHeaderBar,
+    showScreenModeButton,
+    hideScreenModeButton,
+  } = useLayoutContext();
 
   useEffect(() => {
     hideHeaderBar();
     hideScreenModeButton();
-  }, [hideHeaderBar, hideScreenModeButton]);
+    return () => {
+      showHeaderBar();
+      showScreenModeButton();
+    };
+  }, [
+    hideHeaderBar,
+    hideScreenModeButton,
+    showHeaderBar,
+    showScreenModeButton,
+  ]);
 
   return (
     <>
@@ -23,7 +43,7 @@ const NewbookWritePage = () => {
         </Button>
       </s.ButtonWrapper>
       <s.Wrapper>
-        <s.BookName>브레이킹 루틴</s.BookName>
+        <s.BookName>{newbook.title}</s.BookName>
         <SejulTextarea />
         <ContentTextarea />
       </s.Wrapper>
