@@ -1,5 +1,5 @@
-import LibraryTemplate from '@/components/templates/LibraryTemplate';
+import Library from '@/components/templates/Library';
 
-const LibraryPage = () => <LibraryTemplate />;
+const LibraryPage = () => <Library />;
 
 export default LibraryPage;

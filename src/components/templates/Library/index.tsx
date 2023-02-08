@@ -5,7 +5,7 @@ import Bookshelf from '@/components/organisms/Bookshelf';
 import BookReivewSort from '@/components/organisms/BookReivewSort';
 import * as s from './style';
 
-const LibraryTemplate = () => (
+const Library = () => (
   <s.Wrapper>
     <DocumentTitle title="김동규의 서재" />
     <s.TopSectionWrapper>
@@ -20,4 +20,4 @@ const LibraryTemplate = () => (
   </s.Wrapper>
 );
 
-export default LibraryTemplate;
+export default Library;
