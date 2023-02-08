@@ -26,12 +26,12 @@ class ClientStorage<T> {
 
     const data = this.storage.getItem(this.key);
 
-    if (data === null) {
+    try {
+      return JSON.parse(data as string);
+    } catch {
       this.onException();
       return null;
     }
-
-    return JSON.parse(data as string);
   }
 
   set(data: T) {

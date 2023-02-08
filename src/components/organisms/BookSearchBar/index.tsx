@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
 import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import { TextFieldProps } from '@/components/atoms/TextField';
@@ -6,14 +6,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
 import { Book } from '@/types/domain/book';
 
-interface BookSearchBarProps extends TextFieldProps {
-  handleClickSearchedItem: (e: MouseEvent<HTMLElement>, bookInfo: Book) => void;
-}
-
-const BookSearchBar = ({
-  handleClickSearchedItem,
-  ...textFieldProps
-}: BookSearchBarProps) => {
+const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   const [keyword, setKeyword] = useState('');
   const [searchedList, setSearchedList] = useState<Book[]>([]);
 
@@ -40,7 +33,6 @@ const BookSearchBar = ({
             // 각 항목에 대한 수정, 삭제가 일어나지 않기에 index를 key로 허용한다.
             // eslint-disable-next-line react/no-array-index-key
             key={i}
-            handleClick={handleClickSearchedItem}
             {...bookInfo}
           />
         ))}
