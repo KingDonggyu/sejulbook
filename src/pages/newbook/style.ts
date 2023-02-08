@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const ButtonWrapper = styled.div`
   position: fixed;
   top: 20px;
-  right: 50px;
+  right: 20px;
   display: flex;
   gap: 10px;
   & > button {
@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 
 export const BookName = styled.h1`
   width: 100%;
-  padding-bottom: 40px;
+  padding: 40px 0;
   margin: auto;
   text-align: center;
   border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE};

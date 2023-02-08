@@ -31,6 +31,7 @@ const fontSize = {
   MEDIUM: '1.4rem',
   LARGE: '1.6rem',
   EXTRA_LARGE: '2rem',
+  DISPLAY: '2.4rem',
 };
 
 const fontWeight = {

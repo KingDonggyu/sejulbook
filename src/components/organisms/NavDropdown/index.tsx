@@ -16,7 +16,7 @@ const MyLibraryLink = ({ handleClick }: { handleClick: () => void }) => (
   </Link>
 );
 
-const NewbookLink = () => <Link href={Route.NEWBOOK}>독후감 쓰기</Link>;
+const NewbookLink = () => <Link href={Route.NEWBOOK_SEARCH}>독후감 쓰기</Link>;
 
 const NavDropdown = () => {
   const { session } = useLoginStatus();

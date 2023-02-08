@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 13px;
   max-width: ${({ theme }) => theme.TUMBNAIL.DEFAULT}px;
 `;
 
@@ -21,7 +21,7 @@ export const Title = styled.h2`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   ${({ theme }) => responsiveMaxWidthStyle(theme)};
 `;
 

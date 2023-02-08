@@ -8,7 +8,7 @@ import * as s from './style';
 const Bookshelf = () => (
   <s.Wrapper>
     <s.Row>
-      <Link href={Route.NEWBOOK} css={s.wrtieBookReviewButtonStyle}>
+      <Link href={Route.NEWBOOK_SEARCH} css={s.wrtieBookReviewButtonStyle}>
         <GiPencil size={40} />
         <AiOutlinePlus size={20} />
       </Link>

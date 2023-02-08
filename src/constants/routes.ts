@@ -1,7 +1,7 @@
 enum Route {
   HOME = '/',
   LIBRARY = '/libraries',
-  NEWBOOK = '/newbook',
+  NEWBOOK_SEARCH = '/newbook/search',
 }
 
 export default Route;

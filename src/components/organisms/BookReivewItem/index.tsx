@@ -58,8 +58,8 @@ const BookReviewItem = () => {
           </div>
         </s.TuhumbnailBottomWrapper>
       </s.ThumnailWrapper>
-      {/* <s.Title>브레이킹 루틴</s.Title>
-      <s.Author>천인우 지음</s.Author>
+      <s.Title>&apos;없던 오늘&apos;</s.Title>
+      {/* <s.Author>천인우 지음</s.Author>
       <s.Rating>
         {Array.from(Array(5), (_, key) => (
           <AiFillStar key={key} color={lightTheme.COLOR.PRIMARY} size={15} />

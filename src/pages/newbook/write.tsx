@@ -2,15 +2,17 @@ import { useEffect } from 'react';
 import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
 import SejulTextarea from '@/components/organisms/SejulTextarea';
+import ContentTextarea from '@/components/organisms/ContentTextarea';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import * as s from './style';
 
 const NewbookWritePage = () => {
-  const { hideHeaderBar } = useLayoutContext();
+  const { hideHeaderBar, hideScreenModeButton } = useLayoutContext();
 
   useEffect(() => {
     hideHeaderBar();
-  }, [hideHeaderBar]);
+    hideScreenModeButton();
+  }, [hideHeaderBar, hideScreenModeButton]);
 
   return (
     <>
@@ -23,6 +25,7 @@ const NewbookWritePage = () => {
       <s.Wrapper>
         <s.BookName>브레이킹 루틴</s.BookName>
         <SejulTextarea />
+        <ContentTextarea />
       </s.Wrapper>
     </>
   );

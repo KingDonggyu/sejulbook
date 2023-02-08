@@ -33,6 +33,7 @@ const globalStyle = (theme: Theme) => css`
   input::placeholder {
     color: ${theme.COLOR.SECOND_TEXT};
   }
+
   textarea::placeholder {
     color: ${theme.COLOR.SECOND_TEXT};
   }
