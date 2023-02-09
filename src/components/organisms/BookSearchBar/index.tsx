@@ -28,13 +28,8 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   return (
     <SearchBar onChange={handleChange} {...textFieldProps}>
       {Boolean(searchedList.length) &&
-        searchedList.map((bookInfo, i) => (
-          <BookSearchedItem
-            // 각 항목에 대한 수정, 삭제가 일어나지 않기에 index를 key로 허용한다.
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
-            {...bookInfo}
-          />
+        searchedList.map((book) => (
+          <BookSearchedItem.Newbook key={book.title} book={book} />
         ))}
     </SearchBar>
   );

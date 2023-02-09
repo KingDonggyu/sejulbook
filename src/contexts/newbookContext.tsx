@@ -1,74 +1,51 @@
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-import { useRouter } from 'next/router';
 import { Book } from '@/types/domain/book';
 import ClientStorage from '@/lib/ClientStorage';
-import Route from '@/constants/routes';
 
 const STORAGE_KEY = 'SEJULBOOK_NEWBOOK';
 
 interface NewbookContextProps {
-  newbook: Book | null;
-  setNewbook: (nextNewbook: Book) => void;
+  getNewbook: () => Book | null;
+  setNewbook: (book: Book) => void;
   removeNewbook: () => void;
-  handleClickSearchedItem: (selectedBook: Book) => void;
 }
 
 const NewbookContext = createContext<NewbookContextProps>({
-  newbook: null,
+  getNewbook: () => null,
   setNewbook: () => {},
   removeNewbook: () => {},
-  handleClickSearchedItem: () => {},
 });
 
 const NewbookProvider = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
-  const [book, setBook] = useState<Book | null>(null);
   const [bookStorage, setBookStorage] = useState<ClientStorage<Book> | null>(
     null,
   );
 
-  const setNewbook = useCallback(
-    (nextNewbook: Book) => {
-      bookStorage?.set(nextNewbook);
-      setBook(book);
-    },
-    [book, bookStorage],
-  );
-
   const contextProps: NewbookContextProps = useMemo(
     () => ({
-      newbook: book,
-      setNewbook,
-      removeNewbook: () => {
-        bookStorage?.remove();
-        setBook(null);
+      getNewbook: () => {
+        if (bookStorage) {
+          return bookStorage.get();
+        }
+        return null;
       },
-      handleClickSearchedItem: (selectedBook) => {
-        setNewbook(selectedBook);
-        router.push(Route.NEWBOOK_WRITE);
-      },
+      setNewbook: (book: Book) => bookStorage?.set(book),
+      removeNewbook: () => bookStorage?.remove(),
     }),
-    [book, bookStorage, router, setNewbook],
+    [bookStorage],
   );
 
   useEffect(
     () => setBookStorage(new ClientStorage<Book>(STORAGE_KEY, localStorage)),
     [],
   );
-
-  useEffect(() => {
-    if (bookStorage && bookStorage.has()) {
-      setBook(bookStorage.get());
-    }
-  }, [bookStorage]);
 
   return (
     <NewbookContext.Provider value={contextProps}>

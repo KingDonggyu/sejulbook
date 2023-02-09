@@ -27,3 +27,22 @@ export const BookName = styled.h1`
   font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
 `;
+
+export const ExceptionWrapper = styled.div`
+  height: 50vh;
+  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+
+  & > button {
+    padding-bottom: 5px;
+    border-radius: 0;
+    border-bottom: 1px solid;
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  }
+`;

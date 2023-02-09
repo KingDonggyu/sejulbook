@@ -1,9 +1,12 @@
 import { ReactNode, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useLayoutContext } from '@/contexts/layoutContext';
+import Button from '@/components/atoms/Button';
+import Route from '@/constants/routes';
 import * as s from './style';
 
 interface NewbookWriteProps {
-  bookName: string;
+  bookName?: string;
   sejulTextarea: ReactNode;
   contentTextarea: ReactNode;
   publishButton: ReactNode;
@@ -23,20 +26,35 @@ const NewbookWrite = ({
     showScreenModeButton,
     hideScreenModeButton,
   } = useLayoutContext();
+  const router = useRouter();
 
   useEffect(() => {
-    hideHeaderBar();
-    hideScreenModeButton();
+    if (bookName) {
+      hideHeaderBar();
+      hideScreenModeButton();
+    }
     return () => {
       showHeaderBar();
       showScreenModeButton();
     };
   }, [
+    bookName,
     hideHeaderBar,
     hideScreenModeButton,
     showHeaderBar,
     showScreenModeButton,
   ]);
+
+  if (!bookName) {
+    return (
+      <s.ExceptionWrapper>
+        <div>책 선택 후 독후감을 쓸 수 있어요.</div>
+        <Button onClick={() => router.push(Route.NEWBOOK_SEARCH)}>
+          책 선택하러 가기
+        </Button>
+      </s.ExceptionWrapper>
+    );
+  }
 
   return (
     <>
