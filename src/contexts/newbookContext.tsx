@@ -1,13 +1,6 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, ReactNode, useContext, useMemo } from 'react';
 import { Book } from '@/types/domain/book';
-import ClientStorage from '@/lib/ClientStorage';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 const STORAGE_KEY = 'SEJULBOOK_NEWBOOK';
 
@@ -24,9 +17,7 @@ const NewbookContext = createContext<NewbookContextProps>({
 });
 
 const NewbookProvider = ({ children }: { children: ReactNode }) => {
-  const [bookStorage, setBookStorage] = useState<ClientStorage<Book> | null>(
-    null,
-  );
+  const bookStorage = useLocalStorage<Book>(STORAGE_KEY);
 
   const contextProps: NewbookContextProps = useMemo(
     () => ({
@@ -40,11 +31,6 @@ const NewbookProvider = ({ children }: { children: ReactNode }) => {
       removeNewbook: () => bookStorage?.remove(),
     }),
     [bookStorage],
-  );
-
-  useEffect(
-    () => setBookStorage(new ClientStorage<Book>(STORAGE_KEY, localStorage)),
-    [],
   );
 
   return (

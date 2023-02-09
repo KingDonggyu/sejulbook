@@ -7,7 +7,7 @@ import {
   ReactNode,
 } from 'react';
 import { ThemeProvider, Theme } from '@emotion/react';
-import ClientStorage from '@/lib/ClientStorage';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import { lightTheme, darkTheme } from '@/styles/theme';
 
 const STORAGE_KEY = 'SEJULBOOL_DARK';
@@ -32,8 +32,7 @@ const ScreenModeContext = createContext<ScreenModeContextProps>({
 const ScreenModeProvider = ({ children }: { children: ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [theme, setTheme] = useState(lightTheme);
-  const [screenModeStorage, setScreenModeStrage] =
-    useState<ClientStorage<ScreenModeState> | null>(null);
+  const screenModeStorage = useLocalStorage<ScreenModeState>(STORAGE_KEY);
 
   const contextProps: ScreenModeContextProps = useMemo(
     () => ({
@@ -50,14 +49,6 @@ const ScreenModeProvider = ({ children }: { children: ReactNode }) => {
       },
     }),
     [isDarkMode, screenModeStorage],
-  );
-
-  useEffect(
-    () =>
-      setScreenModeStrage(
-        new ClientStorage<ScreenModeState>(STORAGE_KEY, localStorage),
-      ),
-    [],
   );
 
   useEffect(
