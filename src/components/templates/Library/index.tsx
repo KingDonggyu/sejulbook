@@ -1,22 +1,30 @@
-import DocumentTitle from '@/components/atoms/DocumentTitle';
-import ProfileEditButton from '@/components/molecules/ProfileEditButton';
-import Profile from '@/components/organisms/Profile';
-import Bookshelf from '@/components/organisms/Bookshelf';
-import BookReivewSort from '@/components/organisms/BookReivewSort';
+import { ReactNode } from 'react';
+
 import * as s from './style';
 
-const Library = () => (
+interface LibraryProps {
+  profile: ReactNode;
+  profileEditButton: ReactNode;
+  bookReivewSortButton: ReactNode;
+  bookshelf: ReactNode;
+}
+
+const Library = ({
+  profile,
+  profileEditButton,
+  bookReivewSortButton,
+  bookshelf,
+}: LibraryProps) => (
   <s.Wrapper>
-    <DocumentTitle title="김동규의 서재" />
     <s.TopSectionWrapper>
-      <Profile />
+      {profile}
       <s.ButtonWrapper>
-        <ProfileEditButton />
-        <BookReivewSort />
+        {profileEditButton}
+        {bookReivewSortButton}
       </s.ButtonWrapper>
     </s.TopSectionWrapper>
     <s.Divider />
-    <Bookshelf />
+    {bookshelf}
   </s.Wrapper>
 );
 
