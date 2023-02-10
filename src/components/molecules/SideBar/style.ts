@@ -21,6 +21,7 @@ export const SideBarOverlay = styled.div`
 `;
 
 interface SideBarProps {
+  isShow: boolean;
   position: SideBarPosition;
 }
 
@@ -37,6 +38,28 @@ export const SideBarWrapper = styled.div<SideBarProps>`
 
   ${({ position }) =>
     position === SideBarPosition.LEFT ? `left: 0;` : `right: 0;`}
+
+  animation-duration: 0.3s;
+  animation-name: ${({ position }) =>
+    position === SideBarPosition.LEFT ? `rightSlide` : `leftSlide`};
+
+  @keyframes leftSlide {
+    from {
+      right: -100px;
+    }
+    to {
+      right: 0;
+    }
+  }
+
+  @keyframes rightSlide {
+    from {
+      left: -100px;
+    }
+    to {
+      left: 0;
+    }
+  }
 `;
 
 export const cancelButtonStyle = css`

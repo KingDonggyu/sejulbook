@@ -26,7 +26,7 @@ const SideBar = ({
   return (
     <s.Background>
       <s.SideBarOverlay onClick={handleClose} />
-      <s.SideBarWrapper position={position}>
+      <s.SideBarWrapper isShow={isShowSideBar} position={position}>
         <Box elevation={4}>
           <Button.Cancel
             size={20}
