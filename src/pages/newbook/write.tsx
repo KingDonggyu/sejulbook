@@ -24,7 +24,9 @@ const NewbookWritePage = () => {
         bookName={targetBook ? targetBook.title : undefined}
         sejulTextarea={<SejulTextarea />}
         contentTextarea={<ContentTextarea />}
-        publishButton={<PublishSideBar.Button />}
+        publishButton={
+          targetBook && <PublishSideBar.Button newbook={targetBook} />
+        }
         draftSaveButton={
           <Button variant={ButtonVariant.OUTLINED}>임시 저장</Button>
         }

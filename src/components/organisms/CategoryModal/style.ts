@@ -23,7 +23,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const buttonStyle = (theme: Theme) => css`
+export const categoryItemStyle = (theme: Theme) => css`
   width: 130px;
   height: 50px;
   color: ${theme.COLOR.TEXT};
@@ -32,4 +32,8 @@ export const buttonStyle = (theme: Theme) => css`
     color: ${theme.COLOR.PRIMARY};
     border-color: ${theme.COLOR.PRIMARY};
   }
+`;
+
+export const categoryButtonStyle = css`
+  padding: 6px 8px;
 `;

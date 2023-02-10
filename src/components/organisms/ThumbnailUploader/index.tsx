@@ -9,7 +9,6 @@ import { lightTheme } from '@/styles/theme';
 
 const thumbnailStyle = (theme: Theme) => css`
   object-fit: cover;
-  margin-bottom: 10px;
   border: 1px solid ${theme.COLOR.LINE};
 `;
 

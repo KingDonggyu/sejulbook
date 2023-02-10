@@ -1,22 +1,34 @@
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
+import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
+import CategoryModal from '@/components/organisms/CategoryModal';
 import { ButtonVariant, ColorVariant } from '@/constants';
+import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
+import { Book } from '@/types/domain/book';
 import * as s from './style';
 
 interface PublishSideBarProps {
+  newbook: Book;
   anchorEl: HTMLElement | null;
   handleClose: () => void;
 }
 
-const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => (
+const PublishSideBar = ({
+  newbook,
+  anchorEl,
+  handleClose,
+}: PublishSideBarProps) => (
   <SideBar anchorEl={anchorEl} handleClose={handleClose}>
     <s.Wrapper>
       <div>
         <s.Label>책 표지 사진</s.Label>
+        <s.ExplainText>* 대표 이미지로 사용됩니다.</s.ExplainText>
+        <ThumbnailUploader thumbnail={newbook.thumbnail} />
       </div>
       <div>
         <s.Label>카테고리</s.Label>
+        <CategoryModal.Button handleClickCategory={() => {}} />
       </div>
       <div>
         <s.Label>평점</s.Label>
@@ -35,7 +47,7 @@ const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => (
   </SideBar>
 );
 
-const PublishButton = () => {
+const PublishButton = ({ newbook }: { newbook: Book }) => {
   const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   return (
@@ -47,7 +59,11 @@ const PublishButton = () => {
       >
         발행
       </Button>
-      <PublishSideBar anchorEl={anchorEl} handleClose={handleClose} />
+      <PublishSideBar
+        newbook={newbook}
+        anchorEl={anchorEl}
+        handleClose={handleClose}
+      />
     </>
   );
 };
