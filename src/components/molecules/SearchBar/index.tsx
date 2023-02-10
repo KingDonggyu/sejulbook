@@ -34,6 +34,7 @@ const SearchBar = ({
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleMenuOpen(e);
     if (onChange) {
       onChange(e);
     }
@@ -44,12 +45,17 @@ const SearchBar = ({
       <TextField
         {...textFieldProps}
         onClick={handleClick}
-        onBlur={handleMenuClose}
         onChange={handleChange}
         icon={<AiOutlineSearch size={20} />}
       />
       {Boolean(children) && (
-        <Menu top={5} anchorEl={anchorEl} css={MenuStyle} full>
+        <Menu
+          full
+          top={5}
+          anchorEl={anchorEl}
+          css={MenuStyle}
+          handleClose={handleMenuClose}
+        >
           {children}
         </Menu>
       )}

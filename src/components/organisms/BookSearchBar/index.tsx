@@ -29,7 +29,7 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
     <SearchBar onChange={handleChange} {...textFieldProps}>
       {Boolean(searchedList.length) &&
         searchedList.map((book) => (
-          <BookSearchedItem.Newbook key={book.title} book={book} />
+          <BookSearchedItem.Newbook key={book.isbn} book={book} />
         ))}
     </SearchBar>
   );

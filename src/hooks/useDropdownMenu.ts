@@ -6,18 +6,15 @@ type Events =
   | FocusEvent<HTMLElement>;
 
 const useDropdownMenu = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleMenuOpen = (e: Events) => {
+    e.stopPropagation();
     setAnchorEl(e.currentTarget);
   };
 
-  const handleMenuClose = (_?: Events, isDelay = true) => {
-    if (!isDelay) {
-      setAnchorEl(null);
-      return;
-    }
-    setTimeout(() => setAnchorEl(null), 100);
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const handleMenuToggle = (e: Events) => {

@@ -16,7 +16,11 @@ const MyLibraryLink = ({ handleClick }: { handleClick: () => void }) => (
   </Link>
 );
 
-const NewbookLink = () => <Link href={Route.NEWBOOK_SEARCH}>독후감 쓰기</Link>;
+const NewbookLink = ({ handleClick }: { handleClick: () => void }) => (
+  <Link href={Route.NEWBOOK_SEARCH} onClick={handleClick}>
+    독후감 쓰기
+  </Link>
+);
 
 const NavDropdown = () => {
   const { session } = useLoginStatus();
@@ -25,11 +29,7 @@ const NavDropdown = () => {
 
   return (
     <div>
-      <Button
-        onClick={handleMenuToggle}
-        onBlur={handleMenuClose}
-        css={s.nickNameButtonStyle}
-      >
+      <Button onClick={handleMenuToggle} css={s.nickNameButtonStyle}>
         <s.Nickname>{session?.user?.name}</s.Nickname>
         {isShowMenu ? <IoIosArrowUp size={17} /> : <IoIosArrowDown size={17} />}
       </Button>
@@ -39,10 +39,11 @@ const NavDropdown = () => {
         divider={false}
         variant={BoxVariant.OUTLINED}
         anchorEl={anchorEl}
+        handleClose={handleMenuClose}
       >
         {[
           <MyLibraryLink handleClick={handleMenuClose} />,
-          <NewbookLink />,
+          <NewbookLink handleClick={handleMenuClose} />,
           <AccountButton.Logout />,
         ].map((component) => (
           <s.MenuItem key={component.type}>{component}</s.MenuItem>

@@ -14,12 +14,17 @@ const BookReivewSort = () => {
         variant={ButtonVariant.OUTLINED}
         css={s.sortButtonStyle}
         onClick={handleMenuToggle}
-        onBlur={handleMenuClose}
       >
         <span>최신순</span>
         <TiArrowSortedDown />
       </Button>
-      <Menu top={5} right={0} anchorEl={anchorEl} variant={BoxVariant.OUTLINED}>
+      <Menu
+        top={5}
+        right={0}
+        anchorEl={anchorEl}
+        variant={BoxVariant.OUTLINED}
+        handleClose={handleMenuClose}
+      >
         <s.MenuItem>
           <Button>최신순</Button>
         </s.MenuItem>

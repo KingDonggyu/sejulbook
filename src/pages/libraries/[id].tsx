@@ -2,7 +2,7 @@ import Library from '@/components/templates/Library';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import Profile from '@/components/organisms/Profile';
 import ProfileEditButton from '@/components/molecules/ProfileEditButton';
-import BookReivewSort from '@/components/organisms/BookReivewSort';
+import BookReivewSort from '@/components/organisms/BookReivewSortButton';
 import Bookshelf from '@/components/organisms/Bookshelf';
 
 const LibraryPage = () => (

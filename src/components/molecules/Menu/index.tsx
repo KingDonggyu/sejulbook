@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import Box, { BoxProps } from '@/components/atoms/Box';
+import useClickOutside from '@/hooks/useClickOutside';
 import * as s from './style';
 
 type MenuProps = {
@@ -12,20 +13,25 @@ type MenuProps = {
   elevation?: number;
   full?: boolean;
   children: ReactNode;
+  handleClose: () => void;
 } & BoxProps;
 
 const Menu = ({
   anchorEl,
   divider = true,
-  top = 20,
   full = false,
+  top = 20,
   bottom,
   right,
   left,
   children,
+  handleClose,
   ...boxProps
 }: MenuProps) => {
+  const menuRef = useRef<HTMLDivElement>(null);
   const isShowMenu = Boolean(anchorEl);
+
+  useClickOutside(menuRef, handleClose);
 
   if (!isShowMenu) {
     return null;
@@ -34,6 +40,7 @@ const Menu = ({
   return (
     <s.Background>
       <s.Wrapper
+        ref={menuRef}
         top={top}
         bottom={bottom}
         right={right}
