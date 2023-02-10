@@ -1,6 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { MODAL_ELEMENT_ID } from '@/constants';
+import { ReactNode } from 'react';
 import { StyleProps } from '@/types/style';
 import Box from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
@@ -22,36 +20,32 @@ const Modal = ({
   ...boxStyles
 }: ModalProps) => {
   const { modalSet, closeModal } = modalStore();
-  const [portalElement, setPortalElement] = useState<Element | null>(null);
 
   const handleClose = () => {
     closeModal(modalKey);
   };
 
-  useEffect(() => {
-    setPortalElement(document.getElementById(MODAL_ELEMENT_ID));
-  }, []);
+  if (!modalSet.has(modalKey)) {
+    return null;
+  }
 
-  return portalElement && modalSet.has(modalKey)
-    ? createPortal(
-        <s.Background>
-          {isShowModalOverlay && <s.ModalOverlay onClick={handleClose} />}
-          <s.ModalWrapper>
-            <Box radius={8} {...boxStyles}>
-              {isShowCloseButton && (
-                <Button.Cancel
-                  size={20}
-                  css={s.cancelButtonStyle}
-                  onClick={handleClose}
-                />
-              )}
-              {children}
-            </Box>
-          </s.ModalWrapper>
-        </s.Background>,
-        portalElement,
-      )
-    : null;
+  return (
+    <s.Background>
+      {isShowModalOverlay && <s.ModalOverlay onClick={handleClose} />}
+      <s.ModalWrapper>
+        <Box radius={8} {...boxStyles}>
+          {isShowCloseButton && (
+            <Button.Cancel
+              size={20}
+              css={s.cancelButtonStyle}
+              onClick={handleClose}
+            />
+          )}
+          {children}
+        </Box>
+      </s.ModalWrapper>
+    </s.Background>
+  );
 };
 
 export default Modal;
