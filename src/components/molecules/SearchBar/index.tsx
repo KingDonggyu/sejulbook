@@ -3,7 +3,7 @@ import { css, Theme } from '@emotion/react';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import TextField, { TextFieldProps } from '@/components/atoms/TextField';
 import Menu from '@/components/molecules/Menu';
-import useDropdownMenu from '@/hooks/useDropdownMenu';
+import useOpenClose from '@/hooks/useOpenClose';
 
 const MenuStyle = (theme: Theme) => css`
   max-height: 60vh;
@@ -27,14 +27,14 @@ const SearchBar = ({
   onChange,
   ...textFieldProps
 }: SearchBarProps) => {
-  const { anchorEl, handleMenuOpen, handleMenuClose } = useDropdownMenu();
+  const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   const handleClick = (e: MouseEvent<HTMLInputElement>) => {
-    handleMenuOpen(e);
+    handleOpen(e);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleMenuOpen(e);
+    handleOpen(e);
     if (onChange) {
       onChange(e);
     }
@@ -54,7 +54,7 @@ const SearchBar = ({
           top={5}
           anchorEl={anchorEl}
           css={MenuStyle}
-          handleClose={handleMenuClose}
+          handleClose={handleClose}
         >
           {children}
         </Menu>

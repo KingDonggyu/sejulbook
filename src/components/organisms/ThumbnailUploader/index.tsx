@@ -19,11 +19,7 @@ const buttonStyle = (theme: Theme) => css`
   border-color: ${theme.COLOR.LINE};
 `;
 
-type BookThumbnailUploaderProps = BookThumbnail;
-
-const BookThumbnailUploader = ({
-  thumbnail: originThumbnail,
-}: BookThumbnailUploaderProps) => {
+const ThumbnailUploader = ({ thumbnail: originThumbnail }: BookThumbnail) => {
   const [imageSrc, setImageSrc] = useState(originThumbnail);
 
   const handleUpload = (file: File) => {
@@ -65,4 +61,4 @@ const BookThumbnailUploader = ({
   );
 };
 
-export default BookThumbnailUploader;
+export default ThumbnailUploader;

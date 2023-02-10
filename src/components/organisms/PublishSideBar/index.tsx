@@ -1,7 +1,7 @@
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import useDropdownMenu from '@/hooks/useDropdownMenu';
+import useOpenClose from '@/hooks/useOpenClose';
 import * as s from './style';
 
 interface PublishSideBarProps {
@@ -36,18 +36,18 @@ const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => (
 );
 
 const PublishButton = () => {
-  const { anchorEl, handleMenuOpen, handleMenuClose } = useDropdownMenu();
+  const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   return (
     <>
       <Button
         variant={ButtonVariant.OUTLINED}
         color={ColorVariant.PRIMARY}
-        onClick={handleMenuOpen}
+        onClick={handleOpen}
       >
         발행
       </Button>
-      <PublishSideBar anchorEl={anchorEl} handleClose={handleMenuClose} />
+      <PublishSideBar anchorEl={anchorEl} handleClose={handleClose} />
     </>
   );
 };

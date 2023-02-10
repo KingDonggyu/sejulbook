@@ -2,18 +2,18 @@ import { TiArrowSortedDown } from '@react-icons/all-files/ti/TiArrowSortedDown';
 import { ButtonVariant, BoxVariant } from '@/constants';
 import Button from '@/components/atoms/Button';
 import Menu from '@/components/molecules/Menu';
-import useDropdownMenu from '@/hooks/useDropdownMenu';
+import useOpenClose from '@/hooks/useOpenClose';
 import * as s from './style';
 
 const BookReivewSort = () => {
-  const { anchorEl, handleMenuToggle, handleMenuClose } = useDropdownMenu();
+  const { anchorEl, handleToggle, handleClose } = useOpenClose();
 
   return (
     <div>
       <Button
         variant={ButtonVariant.OUTLINED}
         css={s.sortButtonStyle}
-        onClick={handleMenuToggle}
+        onClick={handleToggle}
       >
         <span>최신순</span>
         <TiArrowSortedDown />
@@ -23,7 +23,7 @@ const BookReivewSort = () => {
         right={0}
         anchorEl={anchorEl}
         variant={BoxVariant.OUTLINED}
-        handleClose={handleMenuClose}
+        handleClose={handleClose}
       >
         <s.MenuItem>
           <Button>최신순</Button>

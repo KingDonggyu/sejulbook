@@ -4,7 +4,7 @@ import { IoIosArrowUp } from '@react-icons/all-files/io/IoIosArrowUp';
 import { BoxVariant } from '@/constants';
 import Route from '@/constants/routes';
 import useLoginStatus from '@/hooks/useLoginStatus';
-import useDropdownMenu from '@/hooks/useDropdownMenu';
+import useOpenClose from '@/hooks/useOpenClose';
 import Button from '@/components/atoms/Button';
 import Menu from '@/components/molecules/Menu';
 import AccountButton from '../AccountButton';
@@ -24,12 +24,12 @@ const NewbookLink = ({ handleClick }: { handleClick: () => void }) => (
 
 const NavDropdown = () => {
   const { session } = useLoginStatus();
-  const { anchorEl, handleMenuToggle, handleMenuClose } = useDropdownMenu();
+  const { anchorEl, handleToggle, handleClose } = useOpenClose();
   const isShowMenu = Boolean(anchorEl);
 
   return (
     <div>
-      <Button onClick={handleMenuToggle} css={s.nickNameButtonStyle}>
+      <Button onClick={handleToggle} css={s.nickNameButtonStyle}>
         <s.Nickname>{session?.user?.name}</s.Nickname>
         {isShowMenu ? <IoIosArrowUp size={17} /> : <IoIosArrowDown size={17} />}
       </Button>
@@ -39,11 +39,11 @@ const NavDropdown = () => {
         divider={false}
         variant={BoxVariant.OUTLINED}
         anchorEl={anchorEl}
-        handleClose={handleMenuClose}
+        handleClose={handleClose}
       >
         {[
-          <MyLibraryLink handleClick={handleMenuClose} />,
-          <NewbookLink handleClick={handleMenuClose} />,
+          <MyLibraryLink handleClick={handleClose} />,
+          <NewbookLink handleClick={handleClose} />,
           <AccountButton.Logout />,
         ].map((component) => (
           <s.MenuItem key={component.type}>{component}</s.MenuItem>
