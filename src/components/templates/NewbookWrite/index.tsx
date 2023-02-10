@@ -2,7 +2,6 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
-import SideBar from '@/components/molecules/SideBar';
 import Route from '@/constants/routes';
 import * as s from './style';
 

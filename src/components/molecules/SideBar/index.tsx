@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { SideBarPosition } from '@/constants';
 import Box from '@/components/atoms/Box';
+import Button from '@/components/atoms/Button';
 import * as s from './style';
 
 interface SideBarProps {
@@ -26,7 +27,14 @@ const SideBar = ({
     <s.Background>
       <s.SideBarOverlay onClick={handleClose} />
       <s.SideBarWrapper position={position}>
-        <Box elevation={4}>{children}</Box>
+        <Box elevation={4}>
+          <Button.Cancel
+            size={20}
+            onClick={handleClose}
+            css={s.cancelButtonStyle}
+          />
+          {children}
+        </Box>
       </s.SideBarWrapper>
     </s.Background>
   );

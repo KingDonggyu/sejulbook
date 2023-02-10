@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
+import { SIDEBAR_Z_INDEX } from '@/constants/zIndex';
 
 export const ButtonWrapper = styled.div`
+  z-index: ${SIDEBAR_Z_INDEX};
   position: fixed;
   top: 20px;
   right: 20px;

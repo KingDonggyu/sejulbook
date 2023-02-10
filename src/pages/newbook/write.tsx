@@ -4,7 +4,8 @@ import DocumentTitle from '@/components/atoms/DocumentTitle';
 import Button from '@/components/atoms/Button';
 import SejulTextarea from '@/components/organisms/SejulTextarea';
 import ContentTextarea from '@/components/organisms/ContentTextarea';
-import { ButtonVariant, ColorVariant } from '@/constants';
+import PublishSideBar from '@/components/organisms/PublishSideBar';
+import { ButtonVariant } from '@/constants';
 import { useNewbookContext } from '@/contexts/newbookContext';
 import { Book } from '@/types/domain/book';
 
@@ -23,11 +24,7 @@ const NewbookWritePage = () => {
         bookName={targetBook ? targetBook.title : undefined}
         sejulTextarea={<SejulTextarea />}
         contentTextarea={<ContentTextarea />}
-        publishButton={
-          <Button variant={ButtonVariant.OUTLINED} color={ColorVariant.PRIMARY}>
-            발행
-          </Button>
-        }
+        publishButton={<PublishSideBar.Button />}
         draftSaveButton={
           <Button variant={ButtonVariant.OUTLINED}>임시 저장</Button>
         }

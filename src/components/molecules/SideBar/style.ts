@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { SIDEBAR_Z_INDEX } from '@/constants/zIndex';
 import { SideBarPosition } from '@/constants';
+import { css } from '@emotion/react';
 
 export const Background = styled.div`
   z-index: ${SIDEBAR_Z_INDEX};
@@ -25,15 +26,19 @@ interface SideBarProps {
 
 export const SideBarWrapper = styled.div<SideBarProps>`
   z-index: ${SIDEBAR_Z_INDEX};
+  top: 0;
+  bottom: 0;
+  position: fixed;
   width: fit-content;
-  height: 100%;
 
   & > div {
     height: 100%;
   }
 
   ${({ position }) =>
-    position === SideBarPosition.LEFT
-      ? `margin-right: auto;`
-      : `margin-left: auto;`}
+    position === SideBarPosition.LEFT ? `left: 0;` : `right: 0;`}
+`;
+
+export const cancelButtonStyle = css`
+  margin-left: auto;
 `;
