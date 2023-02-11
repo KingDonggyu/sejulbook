@@ -18,15 +18,26 @@ const buttonStyle = (theme: Theme) => css`
   border-color: ${theme.COLOR.LINE};
 `;
 
-const ThumbnailUploader = ({ thumbnail: originThumbnail }: BookThumbnail) => {
+interface ThumbnailUploaderProps {
+  thumbnail: BookThumbnail;
+  handleChangeThumbnail: (thumbnail: BookThumbnail) => void;
+}
+
+const ThumbnailUploader = ({
+  thumbnail: originThumbnail,
+  handleChangeThumbnail,
+}: ThumbnailUploaderProps) => {
   const [imageSrc, setImageSrc] = useState(originThumbnail);
 
   const handleUpload = (file: File) => {
-    setImageSrc(URL.createObjectURL(file));
+    const newImageSrc = URL.createObjectURL(file);
+    setImageSrc(newImageSrc);
+    handleChangeThumbnail(newImageSrc);
   };
 
   const handleClickOriginThumbnailButton = () => {
     setImageSrc(originThumbnail);
+    handleChangeThumbnail(originThumbnail);
   };
 
   useEffect(() => {

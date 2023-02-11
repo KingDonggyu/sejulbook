@@ -19,7 +19,7 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
       setSearchedList([]);
       return;
     }
-    const { documents } = await getBooksByTitle({ title: value });
+    const { documents } = await getBooksByTitle(value);
     setSearchedList(documents);
   }, []);
 

@@ -1,14 +1,16 @@
-type BookISBN = { isbn: string };
-export type BookTitle = { title: string };
-export type BookThumbnail = { thumbnail: string | undefined };
-export type BookAuthors = { authors: string[] };
-export type BookPublisher = { publisher: string };
+type BookISBN = string;
+export type BookTitle = string;
+export type BookThumbnail = string | undefined;
+export type BookAuthors = string[];
+export type BookPublisher = string;
 
-export type BookSearchedItem = BookISBN &
-  BookTitle &
-  BookThumbnail &
-  BookAuthors &
-  BookPublisher;
+export type BookSearchedItem = {
+  isbn: BookISBN;
+  title: BookTitle;
+  thumbnail: BookThumbnail;
+  authors: BookAuthors;
+  publisher: BookPublisher;
+};
 
 export type Book = {
   datetime: string;

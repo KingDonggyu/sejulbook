@@ -35,5 +35,6 @@ export const categoryItemStyle = (theme: Theme) => css`
 `;
 
 export const categoryButtonStyle = css`
-  padding: 6px 8px;
+  /* padding: 6px 8px; */
+  padding: 0;
 `;

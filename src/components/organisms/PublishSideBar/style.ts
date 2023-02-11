@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
   width: 270px;
   height: 100%;
   padding: 10px;

@@ -59,7 +59,7 @@ const NewbookWrite = ({
   return (
     <>
       <s.ButtonWrapper>
-        {draftSaveButton}
+        {/* {draftSaveButton} */}
         {publishButton}
       </s.ButtonWrapper>
       <s.Wrapper>

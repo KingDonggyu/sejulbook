@@ -12,6 +12,7 @@ type RatingProps = {
   init?: number;
   activeColor?: string;
   deactiveColor?: string;
+  handleClickRating: (rating: number) => void;
 } & StyleProps;
 
 const Rating = ({
@@ -21,12 +22,14 @@ const Rating = ({
   init = 3,
   activeColor = theme.COLOR.PRIMARY,
   deactiveColor = theme.COLOR.SECOND_TEXT,
+  handleClickRating,
 }: RatingProps) => {
   const [rating, setRating] = useState(init);
   const [selectedRating, setSelectedRating] = useState(max);
 
   const handleClick = (clickedRating: number) => {
     setSelectedRating(clickedRating);
+    handleClickRating(clickedRating);
   };
 
   const handleMouseOver = (hoveredRating: number) => {

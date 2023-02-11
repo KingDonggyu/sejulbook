@@ -2,12 +2,18 @@ import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import TextField from '@/components/atoms/TextField';
 import Button from '@/components/atoms/Button';
 import { TextFieldVariant } from '@/constants';
-import { Tag, TagList } from '@/types/domain/bookReview';
 import * as s from './style';
 
+type Tag = string;
+type TagList = Set<Tag>;
+
 interface TagItemProps {
-  tag: Tag;
+  tag: string;
   handleDelete: (tag: Tag) => void;
+}
+
+interface TagInputProps {
+  handleUpdate: (tagList: TagList) => void;
 }
 
 const TagItem = ({ tag, handleDelete }: TagItemProps) => (
@@ -17,7 +23,7 @@ const TagItem = ({ tag, handleDelete }: TagItemProps) => (
   </s.HashTag>
 );
 
-const TagInput = () => {
+const TagInput = ({ handleUpdate }: TagInputProps) => {
   const [currentTag, setCurrentTag] = useState<Tag>('');
   const [tagList, setTagList] = useState<TagList>(new Set<Tag>());
 
@@ -26,6 +32,7 @@ const TagInput = () => {
       const newTagList = new Set(tagList);
       newTagList.add(currentTag);
       setTagList(newTagList);
+      handleUpdate(newTagList);
     }
     setCurrentTag('');
   };
@@ -49,6 +56,7 @@ const TagInput = () => {
     const newTagList = new Set(tagList);
     newTagList.delete(targetTag);
     setTagList(newTagList);
+    handleUpdate(newTagList);
   };
 
   return (

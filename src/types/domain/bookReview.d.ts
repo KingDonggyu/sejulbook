@@ -1,4 +1,4 @@
-import { Book } from './book';
+import { Book, BookThumbnail } from './book';
 
 export type Category =
   | '소설'
@@ -20,13 +20,20 @@ export type Category =
   | '취업/수험서'
   | '여행'
   | '컴퓨터/IT'
-  | '만화';
+  | '만화'
+  | null;
+
+export type Rating = number;
 
 export type Tag = string;
 
 export type TagList = Set<Tag>;
 
-export type BookReview = {
+export type PublishInfo = {
+  thumbnail: BookThumbnail;
   category: Category;
+  rating: Rating;
   tag: TagList;
-} & Book;
+};
+
+export type BookReview = Book & PublishInfo;
