@@ -1,6 +1,7 @@
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
 import Rating from '@/components/molecules/Rating';
+import TagInput from '@/components/organisms/TagInput';
 import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
 import CategoryModal from '@/components/organisms/CategoryModal';
 import { ButtonVariant, ColorVariant } from '@/constants';
@@ -36,6 +37,7 @@ const PublishSideBar = ({
       </div>
       <div>
         <s.Label>태그</s.Label>
+        <TagInput />
       </div>
       <Button
         variant={ButtonVariant.OUTLINED}

@@ -22,6 +22,11 @@ export type Category =
   | '컴퓨터/IT'
   | '만화';
 
+export type Tag = string;
+
+export type TagList = Set<Tag>;
+
 export type BookReview = {
   category: Category;
+  tag: TagList;
 } & Book;

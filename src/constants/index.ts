@@ -33,6 +33,7 @@ export enum ButtonVariant {
 }
 
 export enum TextFieldVariant {
+  TEXT = 'text',
   OUTLINED = 'outlined',
   BOTTOM_LINED = 'bottomLined',
 }

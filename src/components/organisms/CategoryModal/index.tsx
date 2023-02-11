@@ -67,7 +67,7 @@ const CategoryButton = ({ handleClickCategory }: CategoryModalProps) => {
     <>
       <Button
         variant={ButtonVariant.OUTLINED}
-        color={category ? ColorVariant.PRIMARY : ColorVariant.INHERIT}
+        color={category ? ColorVariant.PRIMARY : ColorVariant.SECONDARY}
         css={s.categoryButtonStyle}
         onClick={() => openModal(ModalKey.CATEGORY)}
       >

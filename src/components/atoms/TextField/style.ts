@@ -42,12 +42,12 @@ export const TextFieldBorder = styled.div<TextFieldStyleProps>`
     border-bottom: 1px solid ${theme.COLOR.SECOND_TEXT};
   `};
 
-  ${({ hasIcon }) =>
+  ${({ hasIcon, variant }) =>
     hasIcon &&
     `
     display: flex;
     align-items: center;
-    padding-left: 8px;
+    ${variant === TextFieldVariant.OUTLINED && `padding-left: 8px;`}
     & > input {
       padding-left: 5px;
     }
