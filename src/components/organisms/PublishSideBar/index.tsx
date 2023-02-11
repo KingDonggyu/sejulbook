@@ -1,9 +1,9 @@
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
+import Rating from '@/components/molecules/Rating';
 import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
 import CategoryModal from '@/components/organisms/CategoryModal';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
 import { Book } from '@/types/domain/book';
 import * as s from './style';
@@ -32,6 +32,7 @@ const PublishSideBar = ({
       </div>
       <div>
         <s.Label>평점</s.Label>
+        <Rating size={17} gap={4} />
       </div>
       <div>
         <s.Label>태그</s.Label>

@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
   height: 100%;
   padding: 10px;
   padding-bottom: 30px;
@@ -14,8 +14,8 @@ export const Wrapper = styled.div`
 
 export const Label = styled.label`
   display: block;
-  margin-bottom: 15px;
-  font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
+  margin-bottom: 10px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
 `;
 
