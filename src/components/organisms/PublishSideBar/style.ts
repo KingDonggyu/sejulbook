@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
@@ -6,7 +5,7 @@ export const Wrapper = styled.div`
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   width: 270px;
   height: 100%;
   padding: 10px;
@@ -26,7 +25,11 @@ export const ExplainText = styled.div`
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
 `;
 
-export const buttonStyle = css`
-  width: 100%;
+export const ButtonWrapper = styled.div`
   margin-top: auto;
+  display: flex;
+  gap: 10px;
+  & > button {
+    width: 100%;
+  }
 `;

@@ -29,11 +29,19 @@ export type Tag = string;
 
 export type TagList = Set<Tag>;
 
-export type PublishInfo = {
+export type Sejul = string;
+
+export type Content = string;
+
+export interface PublishInfo {
   thumbnail: BookThumbnail;
   category: Category;
   rating: Rating;
   tag: TagList;
-};
+  sejul: Sejul;
+  content: Content;
+}
 
-export type BookReview = Book & PublishInfo;
+export interface BookReview extends PublishInfo {
+  book: Book;
+}

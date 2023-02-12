@@ -25,7 +25,7 @@ const Rating = ({
   handleClickRating,
 }: RatingProps) => {
   const [rating, setRating] = useState(init);
-  const [selectedRating, setSelectedRating] = useState(max);
+  const [selectedRating, setSelectedRating] = useState(init);
 
   const handleClick = (clickedRating: number) => {
     setSelectedRating(clickedRating);

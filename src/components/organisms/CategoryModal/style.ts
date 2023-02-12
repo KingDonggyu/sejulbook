@@ -34,7 +34,8 @@ export const categoryItemStyle = (theme: Theme) => css`
   }
 `;
 
-export const categoryButtonStyle = css`
+export const categoryButtonStyle = (theme: Theme) => css`
   /* padding: 6px 8px; */
   padding: 0;
+  font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
 `;

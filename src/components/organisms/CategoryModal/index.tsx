@@ -1,4 +1,4 @@
-import Button from '@/components/atoms/Button';
+import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
@@ -53,7 +53,9 @@ const CategoryModal = ({ handleClickCategory }: CategoryModalProps) => (
   </Modal>
 );
 
-const CategoryButton = ({ handleClickCategory }: CategoryModalProps) => {
+const CategoryButton = ({
+  handleClickCategory,
+}: CategoryModalProps & ButtonProps) => {
   const [category, setCategory] = useState<Category | null>(null);
   const { openModal, closeModal } = modalStore();
 

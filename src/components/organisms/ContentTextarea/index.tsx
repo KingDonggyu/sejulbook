@@ -1,15 +1,16 @@
-import { Editor } from '@tinymce/tinymce-react';
-import { useScreenModeContext } from '@/contexts/screenModeContext';
-
 import { useState } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
+import bookReviewStore from '@/stores/bookReviewStore';
+import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
 const ContentTextarea = () => {
+  const { setContent } = bookReviewStore();
   const { isDarkMode, theme } = useScreenModeContext();
   const [isVisibleToolBar, setIsVisibleToolbar] = useState(false);
 
   const handleEditorChange = (content: string) => {
-    // console.log(content);
+    setContent(content);
   };
 
   return (

@@ -23,6 +23,7 @@ export const HashTag = styled.span`
   display: flex;
   align-items: flex-start;
   gap: 1px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
   & > button {
     color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
   }

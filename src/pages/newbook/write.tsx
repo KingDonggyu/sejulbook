@@ -1,21 +1,27 @@
 import { useEffect, useState } from 'react';
 import NewbookWrite from '@/components/templates/NewbookWrite';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
-import Button from '@/components/atoms/Button';
 import SejulTextarea from '@/components/organisms/SejulTextarea';
 import ContentTextarea from '@/components/organisms/ContentTextarea';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
-import { ButtonVariant } from '@/constants';
+import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { useNewbookContext } from '@/contexts/newbookContext';
+import bookReviewStore from '@/stores/bookReviewStore';
 import { Book } from '@/types/domain/book';
 
 const NewbookWritePage = () => {
   const { getNewbook } = useNewbookContext();
+  const { setBook, setThumbnail } = bookReviewStore();
   const [targetBook, setTargetBook] = useState<Book | null>(null);
 
   useEffect(() => {
-    setTargetBook(getNewbook());
-  }, [getNewbook]);
+    const book = getNewbook();
+    setTargetBook(book);
+    if (book) {
+      setBook(book);
+      setThumbnail(book.thumbnail);
+    }
+  }, [getNewbook, setBook, setThumbnail]);
 
   return (
     <>
@@ -27,9 +33,7 @@ const NewbookWritePage = () => {
         publishButton={
           targetBook && <PublishSideBar.Button newbook={targetBook} />
         }
-        draftSaveButton={
-          <Button variant={ButtonVariant.OUTLINED}>임시 저장</Button>
-        }
+        draftSaveButton={<DraftSaveButton />}
       />
     </>
   );
