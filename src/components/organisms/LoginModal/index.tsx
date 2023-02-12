@@ -15,7 +15,7 @@ const LoginModal = ({ modalKey }: { modalKey: string }) => {
   return (
     <Modal modalKey={modalKey} css={s.modalStyle}>
       <s.Title>{APP_NAME} 시작하기</s.Title>
-      <s.EasyLoginText>SNS 계정으로 간편 로그인/회원가입</s.EasyLoginText>
+      <s.EasyLoginText>SNS 계정으로 간편 로그인</s.EasyLoginText>
       <s.LoginButtonWrapper>
         <Button elevation={4} onClick={() => handleLogin(OAuthName.KAKAO)}>
           <Image src={kakaoButtonSrc} alt="카카오 로그인 버튼" />

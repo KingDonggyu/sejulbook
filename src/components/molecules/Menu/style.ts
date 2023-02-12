@@ -1,14 +1,17 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { MENU_Z_INDEX } from '@/constants/zIndex';
 
 interface MenuStyleProps {
   top: number;
   bottom?: number;
   right?: number;
   left?: number;
+  full: boolean;
 }
 
 export const Background = styled.div`
-  z-index: 1;
+  z-index: ${MENU_Z_INDEX};
   position: relative;
 `;
 
@@ -21,12 +24,13 @@ export const Overlay = styled.div`
 `;
 
 export const Wrapper = styled.div<MenuStyleProps>`
-  width: max-content;
+  width: ${({ full }) => (full ? '100%' : 'max-content')};
   position: absolute;
   top: ${({ top }) => `${top}px`};
   ${({ bottom }) => bottom !== undefined && `bottom: ${bottom}px`}
   ${({ right }) => right !== undefined && `right: ${right}px`}
   ${({ left }) => left !== undefined && `left: ${left}px`}
+  ${({ full }) => full && `& > div { width: 100% !important; }`};
 `;
 
 export const MenuList = styled.ul<{ divider: boolean }>`
@@ -43,4 +47,19 @@ export const MenuList = styled.ul<{ divider: boolean }>`
   & > *:last-child {
     border: none;
   }
+
+  & button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  & a {
+    display: block;
+    width: 100%;
+  }
+`;
+
+export const boxStyle = css`
+  width: fit-content;
+  padding: 0;
 `;

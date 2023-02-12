@@ -30,23 +30,44 @@ const fontSize = {
   SMALL: '1.2rem',
   MEDIUM: '1.4rem',
   LARGE: '1.6rem',
+  EXTRA_LARGE: '2rem',
+  DISPLAY: '2.4rem',
 };
 
 const fontWeight = {
   LIGHT: 300,
   NORMAL: 400,
-  BOLD: 700,
+  BOLD: 500,
+  DISPLAY: 700,
 };
 
-const BookThumbnailWidth = {
-  DEFAULT: 230,
-  TABLET: 140,
-  MOBILE: 100,
+const thumbnail = {
+  DEFAULT: {
+    W: 230,
+    H: 300,
+  },
+  TABLET: {
+    W: 140,
+    H: 210,
+  },
+  MEDIUM: {
+    W: 120,
+    H: 174,
+  },
+  MOBILE: {
+    W: 100,
+    H: 150,
+  },
+  SMALL: {
+    W: 60,
+    H: 90,
+  },
 };
 
 const color = {
   LIGHT_GREEN: '#5AB890',
-  WHITE: '#FCFCFC',
+  WHITE: '#ffffff',
+  WHITE2: '#F6F6F6',
   BLUE_WHITE: '#FAFBFC',
   BLACK: '#1E1F21',
   LIGHT_BLACK: '#292A2D',
@@ -64,6 +85,7 @@ const lightModeColor = {
   BACKGROUND: color.BLUE_WHITE,
   BOX: color.WHITE,
   LINE: color.LIGHT_GREY,
+  HOVER: color.WHITE2,
 };
 
 const darkModeColor: typeof lightModeColor = {
@@ -73,6 +95,7 @@ const darkModeColor: typeof lightModeColor = {
   BACKGROUND: color.BLACK,
   BOX: color.LIGHT_BLACK,
   LINE: color.DEEP_GREY,
+  HOVER: color.DEEP_GREY,
 };
 
 const commonTheme = {
@@ -81,7 +104,7 @@ const commonTheme = {
   FONT_SIZE: fontSize,
   FONT_WEIGHT: fontWeight,
   FONT_FAMILY: fontFamily,
-  BOOK_TUMBNAIL_WIDTH: BookThumbnailWidth,
+  TUMBNAIL: thumbnail,
 };
 
 const lightTheme = {

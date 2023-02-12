@@ -13,7 +13,7 @@ type ButtonAttributes = {
   hover?: boolean;
 };
 
-type ButtonProps = ButtonAttributes &
+export type ButtonProps = ButtonAttributes &
   ButtonHTMLAttributes<HTMLButtonElement> &
   StyleProps;
 

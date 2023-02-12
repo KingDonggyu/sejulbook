@@ -1,6 +1,7 @@
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { responsiveMaxWidthStyle, bookThumbnailStyle } from '@/styles/common';
+import { THUMBNAIL_Z_INDEX } from '@/constants/zIndex';
 
 export const thumbnailStyle = (theme: Theme) => css`
   ${bookThumbnailStyle(theme)}
@@ -11,8 +12,8 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
-  max-width: ${({ theme }) => theme.BOOK_TUMBNAIL_WIDTH.DEFAULT}px;
+  gap: 13px;
+  max-width: ${({ theme }) => theme.TUMBNAIL.DEFAULT}px;
 `;
 
 export const Title = styled.h2`
@@ -20,7 +21,7 @@ export const Title = styled.h2`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   ${({ theme }) => responsiveMaxWidthStyle(theme)};
 `;
 
@@ -32,16 +33,7 @@ export const Author = styled.h3`
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
 `;
 
-export const Rating = styled.div`
-  /* display: flex;
-  gap: 2px;
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    & > svg {
-      width: 10px;
-      height: 10px;
-    }
-  } */
-`;
+export const Rating = styled.div``;
 
 export const Date = styled.p`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
@@ -51,6 +43,7 @@ export const Date = styled.p`
 export const ThumnailWrapper = styled.div`
   cursor: pointer;
   position: relative;
+  z-index: ${THUMBNAIL_Z_INDEX};
 `;
 
 export const SejulBookReview = styled.div`
@@ -65,6 +58,7 @@ export const SejulBookReview = styled.div`
   padding-bottom: 30px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   height: 100%;
 `;
 

@@ -3,8 +3,14 @@ import { css, Theme } from '@emotion/react';
 import { bookThumbnailStyle } from '@/styles/common';
 
 export const wrtieBookReviewButtonStyle = (theme: Theme) => css`
-  ${bookThumbnailStyle(theme)}
+  ${bookThumbnailStyle(theme)};
+  color: ${theme.COLOR.PRIMARY};
   margin: 0 auto !important;
+  border: 1px solid;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   & > span {
     font-size: ${theme.FONT_SIZE.LARGE};
   }
@@ -19,19 +25,19 @@ export const Row = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  padding: 20px;
   & > * {
     margin: auto;
+  }
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    padding: 0px;
   }
 `;
 
 export const Divider = styled.div`
   width: 100%;
-  height: 15px;
+  height: 1px;
   margin-top: 20px;
-  margin-bottom: 50px;
-  background: ${({ theme }) => theme.COLOR.BROWN};
-  box-shadow: 0 3px 3px 0 rgb(0 0 0 / 30%);
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    height: 10px;
-  }
+  margin-bottom: 20px;
+  background: ${({ theme }) => theme.COLOR.LINE};
 `;
