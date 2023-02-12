@@ -32,19 +32,19 @@ const PublishSideBar = ({
   return (
     <SideBar anchorEl={anchorEl} handleClose={handleClose}>
       <s.Wrapper>
-        <div>
+        <s.PublishInfoItem>
           <s.Label>책 표지 사진</s.Label>
           <s.ExplainText>* 대표 이미지로 사용됩니다.</s.ExplainText>
           <ThumbnailUploader
             thumbnail={newbook.thumbnail}
             handleChangeThumbnail={setThumbnail}
           />
-        </div>
-        <div>
+        </s.PublishInfoItem>
+        <s.PublishInfoItem>
           <s.Label>카테고리</s.Label>
           <CategoryModal.Button handleClickCategory={setCategory} />
-        </div>
-        <div>
+        </s.PublishInfoItem>
+        <s.PublishInfoItem>
           <s.Label>평점</s.Label>
           <Rating
             size={17}
@@ -52,11 +52,11 @@ const PublishSideBar = ({
             init={bookReview.rating}
             handleClickRating={setRating}
           />
-        </div>
-        <div>
+        </s.PublishInfoItem>
+        <s.PublishInfoItem>
           <s.Label>태그</s.Label>
           <TagInput handleUpdate={setTag} />
-        </div>
+        </s.PublishInfoItem>
         <s.ButtonWrapper>
           <DraftSaveButton />
           <Button

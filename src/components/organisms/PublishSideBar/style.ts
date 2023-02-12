@@ -12,6 +12,11 @@ export const Wrapper = styled.div`
   padding-bottom: 30px;
 `;
 
+export const PublishInfoItem = styled.div`
+  padding-bottom: 20px;
+  border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE};
+`;
+
 export const Label = styled.label`
   display: block;
   margin-bottom: 10px;
