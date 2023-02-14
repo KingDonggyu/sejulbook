@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 
 export const Textarea = styled.textarea`
   width: 100%;
-  line-height: 1.5;
+  line-height: 2;
   outline: none;
   border: none;
   resize: none;

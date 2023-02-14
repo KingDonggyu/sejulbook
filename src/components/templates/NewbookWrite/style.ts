@@ -14,10 +14,12 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const Wrapper = styled.div`
+  margin: auto;
   margin-top: 5rem;
   gap: 50px;
   display: flex;
   flex-direction: column;
+  max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
 `;
 
 export const BookName = styled.h1`

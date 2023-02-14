@@ -1,5 +1,6 @@
 import emotionReset from 'emotion-reset';
 import { css, Theme } from '@emotion/react';
+import { editorToolbarStyle } from './editor';
 
 const globalStyle = (theme: Theme) => css`
   ${emotionReset}
@@ -37,6 +38,8 @@ const globalStyle = (theme: Theme) => css`
   textarea::placeholder {
     color: ${theme.COLOR.SECOND_TEXT};
   }
+
+  ${editorToolbarStyle};
 `;
 
 export default globalStyle;
