@@ -23,6 +23,9 @@ export const Title = styled.h2`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   ${({ theme }) => responsiveMaxWidthStyle(theme)};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+  }
 `;
 
 export const Author = styled.h3`
