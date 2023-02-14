@@ -4,7 +4,7 @@ import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { editorContentStyle } from '@/styles/editor';
 import * as s from './style';
 
-const ContentTextarea = () => {
+const ContentEditor = () => {
   const editorId = 'sejulbookEditor';
   const { setContent } = bookReviewStore();
   const { isDarkMode } = useScreenModeContext();
@@ -39,4 +39,4 @@ const ContentTextarea = () => {
   );
 };
 
-export default ContentTextarea;
+export default ContentEditor;

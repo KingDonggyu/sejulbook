@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import NewbookWrite from '@/components/templates/NewbookWrite';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import SejulTextarea from '@/components/organisms/SejulTextarea';
-import ContentTextarea from '@/components/organisms/ContentTextarea';
+import ContentEditor from '@/components/organisms/ContentEditor';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { useNewbookContext } from '@/contexts/newbookContext';
@@ -29,7 +29,7 @@ const NewbookWritePage = () => {
       <NewbookWrite
         bookName={targetBook ? targetBook.title : undefined}
         sejulTextarea={<SejulTextarea />}
-        contentTextarea={<ContentTextarea />}
+        contentTextarea={<ContentEditor />}
         publishButton={
           targetBook && <PublishSideBar.Button newbook={targetBook} />
         }
