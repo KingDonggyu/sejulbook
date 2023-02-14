@@ -24,3 +24,11 @@ export const Textarea = styled.textarea`
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
 `;
+
+export const Viewer = styled.div`
+  line-height: 2;
+  text-align: center;
+  white-space: pre-line;
+  font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+`;

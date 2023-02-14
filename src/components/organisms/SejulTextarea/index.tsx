@@ -6,7 +6,12 @@ import useAutoResizeTextarea from '@/hooks/useAutoResizeTextarea';
 import bookReviewStore from '@/stores/bookReviewStore';
 import * as s from './style';
 
-const SejulTextarea = () => {
+interface SejulTextareaProps {
+  value?: string;
+  readonly?: boolean;
+}
+
+const SejulTextarea = ({ value, readonly = false }: SejulTextareaProps) => {
   const { setSejul } = bookReviewStore();
   const { textareaRef, handleChange: handleResize } = useAutoResizeTextarea();
 
@@ -18,11 +23,16 @@ const SejulTextarea = () => {
   return (
     <s.Wrapper>
       <Image src={quotesLeftSrc} alt="왼쪽 큰따옴표 아이콘" />
-      <s.Textarea
-        ref={textareaRef}
-        onChange={handleChange}
-        placeholder="세 줄 독후감 작성"
-      />
+      {readonly ? (
+        <s.Viewer>{value}</s.Viewer>
+      ) : (
+        <s.Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={handleChange}
+          placeholder="세 줄 독후감 작성"
+        />
+      )}
       <Image src={quotesRightSrc} alt="오른쪽 큰따옴표 아이콘" />
     </s.Wrapper>
   );
