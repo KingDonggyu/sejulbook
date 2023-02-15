@@ -25,7 +25,7 @@ interface SideBarProps {
   position: SideBarPosition;
 }
 
-export const SideBarWrapper = styled.div<SideBarProps>`
+export const SideBarWrapper = styled.aside<SideBarProps>`
   z-index: ${SIDEBAR_Z_INDEX};
   top: 0;
   bottom: 0;

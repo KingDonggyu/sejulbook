@@ -40,7 +40,7 @@ const ContentEditor = ({ value, readonly = false }: ContentEditorProps) => {
             'blocks | forecolor backcolor | bold italic underline strikethrough | link blockquote codesample | align bullist numlist ',
           toolbar_location: 'bottom',
           placeholder: '[선택] 추가 내용 작성',
-          block_formats: `본문=p;제목 1=h2;제목 2=h3;`,
+          block_formats: `본문=p;제목 1=h1;제목 2=h2;제목 3=h3;`,
         }}
       />
     </s.EditorContainer>

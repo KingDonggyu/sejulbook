@@ -4,16 +4,20 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 80%;
+  margin: auto;
   gap: 25px;
   & > img {
     width: 30px;
+  }
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    width: 100%;
   }
 `;
 
 export const Textarea = styled.textarea`
   width: 100%;
-  line-height: 2;
+  line-height: 1.6;
   outline: none;
   border: none;
   resize: none;
@@ -26,7 +30,7 @@ export const Textarea = styled.textarea`
 `;
 
 export const Viewer = styled.div`
-  line-height: 2;
+  line-height: 1.6;
   text-align: center;
   white-space: pre-line;
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};

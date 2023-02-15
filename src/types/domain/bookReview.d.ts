@@ -45,3 +45,8 @@ export interface PublishInfo {
 export interface BookReview extends PublishInfo {
   book: Book;
 }
+
+export interface BookReviewPost extends BookReview {
+  writer: string;
+  createdAt: string;
+}

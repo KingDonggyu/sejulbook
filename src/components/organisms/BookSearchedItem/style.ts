@@ -28,7 +28,7 @@ export const TextWrapper = styled.div`
 
 export const BookTitle = styled.div`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
 `;
 
 export const BookAuthors = styled.div`

@@ -32,7 +32,7 @@ export const InfoList = styled.dl`
 export const BookTitle = styled.dd`
   line-height: 1.3;
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   }
@@ -51,7 +51,7 @@ export const InfoItem = styled.div`
 export const Label = styled.dt`
   min-width: 25px;
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
-  /* font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY}; */
+  /* font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD}; */
 `;
 
 export const Content = styled.dd``;

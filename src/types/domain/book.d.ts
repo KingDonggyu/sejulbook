@@ -5,7 +5,7 @@ export type BookAuthors = string[];
 export type BookPublisher = string;
 
 export interface BookSearchedItem {
-  isbn: BookISBN;
+  isbn?: BookISBN;
   title: BookTitle;
   thumbnail: BookThumbnail;
   authors: BookAuthors;

@@ -12,7 +12,8 @@ type RatingProps = {
   init?: number;
   activeColor?: string;
   deactiveColor?: string;
-  handleClickRating: (rating: number) => void;
+  readonly?: boolean;
+  handleClickRating?: (rating: number) => void;
 } & StyleProps;
 
 const Rating = ({
@@ -22,26 +23,38 @@ const Rating = ({
   init = 3,
   activeColor = theme.COLOR.PRIMARY,
   deactiveColor = theme.COLOR.SECOND_TEXT,
+  readonly = false,
   handleClickRating,
 }: RatingProps) => {
   const [rating, setRating] = useState(init);
   const [selectedRating, setSelectedRating] = useState(init);
 
   const handleClick = (clickedRating: number) => {
+    if (readonly) {
+      return;
+    }
+
     setSelectedRating(clickedRating);
-    handleClickRating(clickedRating);
+
+    if (handleClickRating) {
+      handleClickRating(clickedRating);
+    }
   };
 
   const handleMouseOver = (hoveredRating: number) => {
-    setRating(hoveredRating);
+    if (!readonly) {
+      setRating(hoveredRating);
+    }
   };
 
   const handleMouseLeave = () => {
-    setRating(selectedRating);
+    if (!readonly) {
+      setRating(selectedRating);
+    }
   };
 
   return (
-    <s.Wrapper gap={gap} onMouseLeave={handleMouseLeave}>
+    <s.Wrapper readonly={readonly} gap={gap} onMouseLeave={handleMouseLeave}>
       {Array.from(Array(rating), (_, i) => (
         <BsStarFill
           key={i}

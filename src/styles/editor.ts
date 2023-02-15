@@ -15,9 +15,14 @@ export const editorContentStyle = (theme: Theme) => css`
     padding: revert;
   }
 
+  h1,
   h2,
   h3 {
-    font-weight: ${theme.FONT_WEIGHT.DISPLAY};
+    font-weight: ${theme.FONT_WEIGHT.BOLD};
+  }
+
+  h1 {
+    font-size: ${theme.FONT_SIZE.EXTRA_LARGE};
   }
 
   h2 {
@@ -57,7 +62,11 @@ export const editorContentStyle = (theme: Theme) => css`
   }
 
   strong {
-    font-weight: ${theme.FONT_WEIGHT.DISPLAY};
+    font-weight: ${theme.FONT_WEIGHT.MYEONGJO_BOLD};
+  }
+
+  img {
+    max-width: 100%;
   }
 `;
 
