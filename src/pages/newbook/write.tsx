@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import NewbookWrite from '@/components/templates/NewbookWrite';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
-import SejulTextarea from '@/components/organisms/SejulTextarea';
+import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
@@ -28,7 +28,7 @@ const NewbookWritePage = () => {
       <DocumentTitle title="독후감 쓰기" />
       <NewbookWrite
         bookName={targetBook ? targetBook.title : undefined}
-        sejulTextarea={<SejulTextarea />}
+        sejulTextarea={<SejulTextArea />}
         contentTextarea={<ContentEditor />}
         publishButton={
           targetBook && <PublishSideBar.Button newbook={targetBook} />

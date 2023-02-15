@@ -1,8 +1,9 @@
 import BookReviewTemplate from '@/components/templates/BookReivew';
-import SejulTextarea from '@/components/organisms/SejulTextarea';
+import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
 import TagList from '@/components/molecules/TagList';
+import Comment from '@/components/organisms/Comment';
 import { BookReviewPost } from '@/types/domain/bookReview';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
 
@@ -41,13 +42,14 @@ const bookReview: BookReviewPost = {
 const BookreviewPage = () => (
   <BookReviewTemplate
     bookReivew={bookReview}
-    sejulViewer={<SejulTextarea value={bookReview.sejul} readonly />}
+    sejulViewer={<SejulTextArea value={bookReview.sejul} readonly />}
     contentViewer={<ContentEditor value={bookReview.content} readonly />}
     bookInfoButton={
       <BookInfoBox.Button {...bookReview.book}>책정보</BookInfoBox.Button>
     }
     ratingViewer={<Rating size={17} gap={3} readonly />}
     tagList={<TagList tag={Array.from(bookReview.tag)} />}
+    comment={<Comment />}
   />
 );
 

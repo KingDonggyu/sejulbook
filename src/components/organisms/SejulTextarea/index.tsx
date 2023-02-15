@@ -1,23 +1,22 @@
 import { ChangeEvent } from 'react';
 import Image from 'next/image';
+import TextArea from '@/components/atoms/TextArea';
 import quotesLeftSrc from '@public/images/icon-quotes-left.svg';
 import quotesRightSrc from '@public/images/icon-quotes-right.svg';
-import useAutoResizeTextarea from '@/hooks/useAutoResizeTextarea';
 import bookReviewStore from '@/stores/bookReviewStore';
+import { TextFieldVariant } from '@/constants';
 import * as s from './style';
 
-interface SejulTextareaProps {
+interface SejulTextAreaProps {
   value?: string;
   readonly?: boolean;
 }
 
-const SejulTextarea = ({ value, readonly = false }: SejulTextareaProps) => {
+const SejulTextArea = ({ value, readonly = false }: SejulTextAreaProps) => {
   const { setSejul } = bookReviewStore();
-  const { textareaRef, handleChange: handleResize } = useAutoResizeTextarea();
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setSejul(e.target.value);
-    handleResize(e);
   };
 
   return (
@@ -26,9 +25,9 @@ const SejulTextarea = ({ value, readonly = false }: SejulTextareaProps) => {
       {readonly ? (
         <s.Viewer>{value}</s.Viewer>
       ) : (
-        <s.Textarea
-          ref={textareaRef}
-          value={value}
+        <TextArea
+          variant={TextFieldVariant.TEXT}
+          css={s.textAreaStyle}
           onChange={handleChange}
           placeholder="세 줄 독후감 작성"
         />
@@ -38,4 +37,4 @@ const SejulTextarea = ({ value, readonly = false }: SejulTextareaProps) => {
   );
 };
 
-export default SejulTextarea;
+export default SejulTextArea;
