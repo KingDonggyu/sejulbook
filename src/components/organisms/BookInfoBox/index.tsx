@@ -3,7 +3,7 @@ import Box from '@/components/atoms/Box';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import Menu from '@/components/molecules/Menu';
-import formatDateToKorean from '@/utils/formatDateToKorean';
+import formatDate from '@/utils/formatDateToKorean';
 import useOpenClose from '@/hooks/useOpenClose';
 import { BoxVariant } from '@/constants';
 import { lightTheme } from '@/styles/theme';
@@ -19,7 +19,7 @@ const BookInfoBox = ({
   const bookInfoList = [
     { label: '저자', content: authors.join(', ') },
     { label: '출판', content: publisher },
-    { label: '발매', content: formatDateToKorean(datetime) },
+    { label: '발매', content: formatDate(datetime) },
   ];
 
   return (

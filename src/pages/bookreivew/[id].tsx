@@ -3,9 +3,10 @@ import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
 import TagList from '@/components/molecules/TagList';
-import Comment from '@/components/organisms/Comment';
+import CommentContainer from '@/components/organisms/CommentContainer';
 import { BookReviewPost } from '@/types/domain/bookReview';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
+import { Comment } from '@/types/domain/comment';
 
 const sejul = `"익숙하고 안전한 길 대신 낯설고 불확실한 길을 선택하는 이유는 나의 가치와 가능성을 발견하며 나답게 살고 싶기 때문이다."\n
   "오늘이 인생의 마지막 날이라면 이미 실패한 일을 후회할 것인가, 아니면 시도하지 않은 일을 후회할 것인가?"\n
@@ -39,6 +40,24 @@ const bookReview: BookReviewPost = {
   createdAt: '2021-06-21T00:00:00.000+09:00',
 };
 
+const comments: Comment[] = [
+  {
+    writer: '동쪽별',
+    content: '잘 읽었습니다',
+    createdAt: '2023-02-11T13:00:00',
+  },
+  {
+    writer: '강무진',
+    content: '감동이네요',
+    createdAt: '2023-02-12T09:00:00',
+  },
+  {
+    writer: '배준형',
+    content: '별로네요..',
+    createdAt: '2023-02-12T19:00:00',
+  },
+];
+
 const BookreviewPage = () => (
   <BookReviewTemplate
     bookReivew={bookReview}
@@ -49,7 +68,7 @@ const BookreviewPage = () => (
     }
     ratingViewer={<Rating size={17} gap={3} readonly />}
     tagList={<TagList tag={Array.from(bookReview.tag)} />}
-    comment={<Comment />}
+    comment={<CommentContainer comments={comments} />}
   />
 );
 

@@ -1,4 +1,5 @@
 import { Book, BookThumbnail } from './book';
+import { UserName } from './user';
 
 export type Category =
   | '소설'
@@ -47,6 +48,6 @@ export interface BookReview extends PublishInfo {
 }
 
 export interface BookReviewPost extends BookReview {
-  writer: string;
+  writer: UserName;
   createdAt: string;
 }

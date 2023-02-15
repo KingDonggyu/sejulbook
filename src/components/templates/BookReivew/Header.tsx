@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 import { BookReviewPost } from '@/types/domain/bookReview';
 import Route from '@/constants/routes';
-import formatDateToKorean from '@/utils/formatDateToKorean';
+import formatDate from '@/utils/formatDateToKorean';
 import * as s from './style';
 
 export interface BookReviewHeaderProps {
@@ -25,9 +25,7 @@ const BookReviewHeader = ({
           <Link href={`${Route.LIBRARY}/1`}>{bookReivew.writer}</Link>의 독후감
         </s.Writer>
         <span>·</span>
-        <s.DateCreated>
-          {formatDateToKorean(bookReivew.createdAt)}
-        </s.DateCreated>
+        <s.DateCreated>{formatDate(bookReivew.createdAt)}</s.DateCreated>
       </s.WritingInfo>
       {bookInfoButton}
     </s.HeaderBottom>

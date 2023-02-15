@@ -6,7 +6,7 @@ import getColorByColorVariant from '@/utils/getColorByColorVariant';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
-type TextAreaProps = {
+export type TextAreaProps = {
   label?: string;
   alignment?: Alignment;
   variant?: TextFieldVariant;
