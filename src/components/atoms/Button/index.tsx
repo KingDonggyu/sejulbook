@@ -22,7 +22,7 @@ const Button = ({
   type = 'button',
   color = ColorVariant.INHERIT,
   variant = ButtonVariant.TEXT,
-  elevation,
+  elevation = 0,
   radius,
   hover = true,
   ...buttonAttrs
@@ -32,9 +32,7 @@ const Button = ({
   return (
     <s.Button
       type={type}
-      elevation={
-        elevation === undefined && variant === ButtonVariant.CONTAINED ? 4 : 0
-      }
+      elevation={elevation}
       color={getColorByColorVariant(color, theme)}
       variant={variant}
       radius={radius}

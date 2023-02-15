@@ -1,4 +1,3 @@
-import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Wrapper = styled.section`
@@ -27,6 +26,10 @@ export const TitleWrapper = styled.div`
 export const HeaderBottom = styled.div`
   display: flex;
   justify-content: space-between;
+  button {
+    font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  }
 `;
 
 export const WritingInfo = styled.div`
@@ -82,8 +85,3 @@ export const RatingWrapper = styled.div`
 `;
 
 export const Rating = styled.div``;
-
-export const bookInfoButtonStyle = (theme: Theme) => css`
-  font-size: ${theme.FONT_SIZE.SMALL};
-  font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
-`;

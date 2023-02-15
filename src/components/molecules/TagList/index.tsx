@@ -21,7 +21,6 @@ const TagList = ({ tag, handleTagClick }: TagListProps) => (
       <Button
         key={name}
         elevation={0}
-        radius={10}
         variant={ButtonVariant.CONTAINED}
         color={ColorVariant.LINE}
         onClick={handleTagClick}
