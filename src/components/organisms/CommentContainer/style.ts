@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 export const TextAreaWrapper = styled.div`
   padding: 10px;
+  margin-bottom: 15px;
   border: 1px solid ${({ theme }) => theme.COLOR.LINE};
   &:focus-within {
     border-color: ${({ theme }) => theme.COLOR.PRIMARY};
