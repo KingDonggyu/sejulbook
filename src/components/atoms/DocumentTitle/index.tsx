@@ -3,10 +3,7 @@ import { APP_NAME } from '@/constants';
 
 const DocumentTitle = ({ title }: { title?: string }) => (
   <Head>
-    <title>
-      {title && `${title} − `}
-      {APP_NAME}
-    </title>
+    <title>{(title ? `${title} − ` : '') + APP_NAME}</title>
   </Head>
 );
 
