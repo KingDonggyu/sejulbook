@@ -1,7 +1,5 @@
-import { FaHeart } from '@react-icons/all-files/fa/FaHeart';
-import { FaRegHeart } from '@react-icons/all-files/fa/FaRegHeart';
 import Button from '@/components/atoms/Button';
-import { lightTheme as theme } from '@/styles/theme';
+import { HeartIcon } from '@/components/atoms/Icon';
 import { iconButtonStyle } from '@/styles/common';
 
 interface LikeButtonProps {
@@ -16,17 +14,8 @@ const LikeButton = ({
   handleClick: handleClickLikeButton,
 }: LikeButtonProps) => (
   <Button css={iconButtonStyle} onClick={handleClickLikeButton}>
-    {active ? (
-      <>
-        <FaHeart size={size} color={theme.COLOR.RUBY} />
-        좋아요 취소
-      </>
-    ) : (
-      <>
-        <FaRegHeart size={size} color={theme.COLOR.RUBY} />
-        좋아요
-      </>
-    )}
+    <HeartIcon size={size} active={active} />
+    {active ? '좋아요 취소' : '좋아요'}
   </Button>
 );
 

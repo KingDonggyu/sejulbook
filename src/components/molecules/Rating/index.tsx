@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { BsStar } from '@react-icons/all-files/bs/BsStar';
-import { BsStarFill } from '@react-icons/all-files/bs/BsStarFill';
+import { StarIcon } from '@/components/atoms/Icon';
 import { StyleProps } from '@/types/style';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';
@@ -56,7 +55,8 @@ const Rating = ({
   return (
     <s.Wrapper readonly={readonly} gap={gap} onMouseLeave={handleMouseLeave}>
       {Array.from(Array(rating), (_, i) => (
-        <BsStarFill
+        <StarIcon
+          active
           key={i}
           size={size}
           color={activeColor}
@@ -65,7 +65,7 @@ const Rating = ({
         />
       ))}
       {Array.from(Array(max - rating), (_, i) => (
-        <BsStar
+        <StarIcon
           key={i}
           size={size}
           color={deactiveColor}

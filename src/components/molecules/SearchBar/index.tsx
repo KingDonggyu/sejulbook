@@ -1,6 +1,6 @@
 import { ChangeEvent, MouseEvent, ReactNode } from 'react';
 import { css, Theme } from '@emotion/react';
-import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
+import { SearchIcon } from '@/components/atoms/Icon';
 import TextField, { TextFieldProps } from '@/components/atoms/TextField';
 import Menu from '@/components/molecules/Menu';
 import useOpenClose from '@/hooks/useOpenClose';
@@ -46,7 +46,7 @@ const SearchBar = ({
         {...textFieldProps}
         onClick={handleClick}
         onChange={handleChange}
-        icon={<AiOutlineSearch size={20} />}
+        icon={<SearchIcon size={20} />}
       />
       {Boolean(children) && (
         <Menu

@@ -1,6 +1,6 @@
-import { FaRegComment } from '@react-icons/all-files/fa/FaRegComment';
 import Box from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
+import { CommentIcon } from '@/components/atoms/Icon';
 import LikeButton from '@/components/molecules/LikeButton';
 import * as s from './style';
 
@@ -22,7 +22,7 @@ const LikeCommentWidget = ({
         </s.WidgetItem>
         <s.WidgetItem>
           <Button css={s.buttonStyle} onClick={handleClickCommentButton}>
-            <FaRegComment />
+            <CommentIcon />
             댓글
           </Button>
           <s.Count>3</s.Count>
