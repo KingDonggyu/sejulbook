@@ -10,6 +10,7 @@ type BookReivewProps = BookReviewHeaderProps &
 const BookReivew = ({
   bookReivew,
   bookInfoButton,
+  likeCommentWidget,
   sejulViewer,
   contentViewer,
   ratingViewer,
@@ -17,7 +18,11 @@ const BookReivew = ({
   comment,
 }: BookReivewProps) => (
   <s.Wrapper>
-    <BookReviewHeader bookReivew={bookReivew} bookInfoButton={bookInfoButton} />
+    <BookReviewHeader
+      bookReivew={bookReivew}
+      bookInfoButton={bookInfoButton}
+      likeCommentWidget={likeCommentWidget}
+    />
     <BookReviewArticle
       sejulViewer={sejulViewer}
       contentViewer={contentViewer}

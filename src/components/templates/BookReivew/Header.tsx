@@ -8,11 +8,13 @@ import * as s from './style';
 export interface BookReviewHeaderProps {
   bookReivew: BookReviewPost;
   bookInfoButton: ReactNode;
+  likeCommentWidget: ReactNode;
 }
 
 const BookReviewHeader = ({
   bookReivew,
   bookInfoButton,
+  likeCommentWidget,
 }: BookReviewHeaderProps) => (
   <s.Header>
     <s.TitleWrapper>
@@ -29,6 +31,7 @@ const BookReviewHeader = ({
       </s.WritingInfo>
       {bookInfoButton}
     </s.HeaderBottom>
+    {likeCommentWidget}
   </s.Header>
 );
 

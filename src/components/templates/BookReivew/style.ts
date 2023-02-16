@@ -54,11 +54,17 @@ export const DateCreated = styled.time`
 
 export const BookName = styled.h1`
   font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
+  }
 `;
 
 export const Category = styled.div`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+  }
 `;
 
 export const Article = styled.article`
