@@ -1,21 +1,26 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { iconButtonStyle } from '@/styles/common';
 import styled from '@emotion/styled';
 
 const RESPONSIVE_WIDTH = '1080px';
 
-export const boxStyle = css`
-  position: relative;
+export const boxStyle = (theme: Theme) => css`
   width: fit-content;
-  right: 11rem;
+  position: fixed;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
+
   @media screen and (max-width: ${RESPONSIVE_WIDTH}) {
     flex-direction: row;
-    right: auto;
-    padding: 8px 10px;
+    padding: 8px 12px;
+    left: 30px;
+    top: 5rem;
+  }
+
+  @media screen and (max-width: ${theme.MAX_WIDTH.TABLET}) {
+    left: 10px;
   }
 `;
 
@@ -24,14 +29,12 @@ export const buttonStyle = css`
 `;
 
 export const Wrapper = styled.div`
-  position: fixed;
-  @media screen and (max-width: ${RESPONSIVE_WIDTH}) {
-    left: 30px;
-    top: 5rem;
-  }
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
-    left: 10px;
-  }
+  position: relative;
+`;
+
+export const Widget = styled.div`
+  position: absolute;
+  left: -10rem;
 `;
 
 export const WidgetItem = styled.div`

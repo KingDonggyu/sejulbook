@@ -14,19 +14,21 @@ const LikeCommentWidget = ({
   handleClickCommentButton,
 }: LikeCommentWidgetProps) => (
   <s.Wrapper>
-    <Box radius={30} css={s.boxStyle}>
-      <s.WidgetItem>
-        <LikeButton handleClick={handleClickLikeButton} />
-        <s.Count>13</s.Count>
-      </s.WidgetItem>
-      <s.WidgetItem>
-        <Button css={s.buttonStyle} onClick={handleClickCommentButton}>
-          <FaRegComment />
-          댓글
-        </Button>
-        <s.Count>3</s.Count>
-      </s.WidgetItem>
-    </Box>
+    <s.Widget>
+      <Box radius={30} css={s.boxStyle}>
+        <s.WidgetItem>
+          <LikeButton handleClick={handleClickLikeButton} />
+          <s.Count>13</s.Count>
+        </s.WidgetItem>
+        <s.WidgetItem>
+          <Button css={s.buttonStyle} onClick={handleClickCommentButton}>
+            <FaRegComment />
+            댓글
+          </Button>
+          <s.Count>3</s.Count>
+        </s.WidgetItem>
+      </Box>
+    </s.Widget>
   </s.Wrapper>
 );
 
