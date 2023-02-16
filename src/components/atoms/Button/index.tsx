@@ -9,6 +9,7 @@ import * as s from './style';
 type ButtonAttributes = {
   color?: ColorVariant;
   elevation?: number;
+  radius?: number;
   variant?: ButtonVariant;
   hover?: boolean;
 };
@@ -19,9 +20,10 @@ export type ButtonProps = ButtonAttributes &
 
 const Button = ({
   type = 'button',
-  elevation = 0,
   color = ColorVariant.INHERIT,
   variant = ButtonVariant.TEXT,
+  elevation = 0,
+  radius,
   hover = true,
   ...buttonAttrs
 }: ButtonProps) => {
@@ -30,11 +32,10 @@ const Button = ({
   return (
     <s.Button
       type={type}
-      elevation={
-        !elevation && variant === ButtonVariant.CONTAINED ? 4 : elevation
-      }
+      elevation={elevation}
       color={getColorByColorVariant(color, theme)}
       variant={variant}
+      radius={radius}
       hover={hover}
       {...buttonAttrs}
     />

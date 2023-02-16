@@ -4,13 +4,15 @@ import { ButtonVariant } from '@/constants';
 interface ButtonStyleProps {
   color: string;
   elevation: number;
+  radius?: number;
   variant: ButtonVariant;
   hover: boolean;
 }
 
 export const Button = styled.button<ButtonStyleProps>`
   width: fit-content;
-  border-radius: 4px;
+  border-radius: ${({ radius }) =>
+    radius === undefined ? '4px' : `${radius}px`};
   display: flex;
   justify-content: center;
   align-items: center;

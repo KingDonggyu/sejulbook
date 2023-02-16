@@ -1,3 +1,5 @@
+const checkSSR = () => typeof window === 'undefined';
+
 class ClientStorage<T> {
   private key;
 
@@ -12,7 +14,7 @@ class ClientStorage<T> {
   }
 
   has(): boolean {
-    if (typeof window === 'undefined') {
+    if (checkSSR()) {
       return false;
     }
 
@@ -20,7 +22,7 @@ class ClientStorage<T> {
   }
 
   get(): T | null {
-    if (typeof window === 'undefined') {
+    if (checkSSR()) {
       return null;
     }
 
@@ -35,13 +37,13 @@ class ClientStorage<T> {
   }
 
   set(data: T) {
-    if (typeof window !== 'undefined') {
+    if (!checkSSR()) {
       this.storage.setItem(this.key, JSON.stringify(data));
     }
   }
 
   remove() {
-    if (typeof window !== 'undefined') {
+    if (!checkSSR()) {
       this.storage.removeItem(this.key);
     }
   }

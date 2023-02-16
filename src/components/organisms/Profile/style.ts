@@ -21,7 +21,7 @@ export const Wrapper = styled.div`
 export const Title = styled.h1`
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   & > span {
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.DISPLAY};
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   }
 `;
 

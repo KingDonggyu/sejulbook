@@ -30,7 +30,7 @@ const fontSize = {
   SMALL: '1.2rem',
   MEDIUM: '1.4rem',
   LARGE: '1.6rem',
-  EXTRA_LARGE: '2rem',
+  EXTRA_LARGE: '1.8rem',
   DISPLAY: '2.4rem',
 };
 
@@ -38,7 +38,7 @@ const fontWeight = {
   LIGHT: 300,
   NORMAL: 400,
   BOLD: 500,
-  DISPLAY: 700,
+  MYEONGJO_BOLD: 700,
 };
 
 const thumbnail = {
@@ -71,7 +71,7 @@ const color = {
   BLUE_WHITE: '#FAFBFC',
   BLACK: '#1E1F21',
   LIGHT_BLACK: '#292A2D',
-  GREY: '#abb0b5',
+  GREY: '#9a9ea3',
   LIGHT_GREY: '#E4E8EB',
   DEEP_GREY: '#3A3B3D',
   BROWN: '#B16464',

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import Button from '@/components/atoms/Button';
+import { SearchIcon } from '@/components/atoms/Icon';
 import { iconButtonStyle } from '@/styles/common';
 
 const SearchButton = () => (
@@ -9,7 +9,7 @@ const SearchButton = () => (
       ${iconButtonStyle};
     `}
   >
-    <AiOutlineSearch size={25} />
+    <SearchIcon size={25} />
     검색
   </Button>
 );
