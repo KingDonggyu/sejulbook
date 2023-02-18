@@ -44,7 +44,7 @@ const NavDropdown = () => {
         {[
           <MyLibraryLink handleClick={handleClose} />,
           <NewbookLink handleClick={handleClose} />,
-          <AccountButton.Logout />,
+          <AccountButton isLogin />,
         ].map((component) => (
           <s.MenuItem key={component.type}>{component}</s.MenuItem>
         ))}

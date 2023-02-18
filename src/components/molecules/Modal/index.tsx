@@ -1,23 +1,24 @@
 import { ReactNode } from 'react';
 import { StyleProps } from '@/types/style';
-import Box from '@/components/atoms/Box';
+import Box, { BoxProps } from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
 import modalStore from '@/stores/modalStore';
 import * as s from './style';
 
-type ModalProps = {
+export type ModalProps = {
   modalKey: string;
   isShowCloseButton?: boolean;
   isShowModalOverlay?: boolean;
   children: ReactNode;
-} & StyleProps;
+} & BoxProps &
+  StyleProps;
 
 const Modal = ({
   modalKey,
   isShowCloseButton = true,
   isShowModalOverlay = true,
   children,
-  ...boxStyles
+  ...boxProps
 }: ModalProps) => {
   const { modalSet, closeModal } = modalStore();
 
@@ -33,7 +34,7 @@ const Modal = ({
     <s.Background>
       {isShowModalOverlay && <s.ModalOverlay onClick={handleClose} />}
       <s.ModalWrapper>
-        <Box radius={8} {...boxStyles}>
+        <Box radius={8} {...boxProps}>
           {isShowCloseButton && (
             <Button.Cancel
               size={20}

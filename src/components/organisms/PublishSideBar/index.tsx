@@ -6,6 +6,7 @@ import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
 import CategoryModal from '@/components/organisms/CategoryModal';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { ButtonVariant, ColorVariant } from '@/constants';
+import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
 import { Book } from '@/types/domain/book';
 import bookReviewStore from '@/stores/bookReviewStore';
@@ -42,7 +43,10 @@ const PublishSideBar = ({
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>카테고리</s.Label>
-          <CategoryModal.Button handleClickCategory={setCategory} />
+          <CategoryModal.Button
+            modalKey={ModalKey.CATEGORY}
+            handleClickCategory={setCategory}
+          />
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>평점</s.Label>
