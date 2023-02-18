@@ -31,9 +31,9 @@ const Modal = ({
   }
 
   return (
-    <s.Background>
+    <s.Background isShowOverlay={isShowModalOverlay}>
       {isShowModalOverlay && <s.ModalOverlay onClick={handleClose} />}
-      <s.ModalWrapper>
+      <s.ModalWrapper isShowOverlay={isShowModalOverlay}>
         <Box radius={8} {...boxProps}>
           {isShowCloseButton && (
             <Button.Cancel
