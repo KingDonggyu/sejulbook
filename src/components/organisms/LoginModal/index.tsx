@@ -13,8 +13,8 @@ type LoginModalProps = { modalKey: string };
 const LoginModal = ({
   modalKey,
 }: LoginModalProps & Omit<ModalProps, 'children'>) => {
-  const handleLogin = (oAuthName: OAuthName) => {
-    signIn(oAuthName);
+  const handleLogin = async (oAuthName: OAuthName) => {
+    await signIn(oAuthName);
   };
 
   return (
