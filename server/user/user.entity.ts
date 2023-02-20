@@ -6,9 +6,8 @@ interface UserEntity {
   email: string;
   nick: string;
   intoroduce: string;
+  age: string | null;
   gender: Gender;
-  birth: Date;
-  joindated: Date;
 }
 
 export default UserEntity;

@@ -6,9 +6,8 @@ interface UserDTO {
   email: string;
   name: string;
   intoroduce: string;
+  age: string | null;
   gender: Gender;
-  birth: Date;
-  joindated: Date;
 }
 
 export default UserDTO;

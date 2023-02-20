@@ -6,6 +6,13 @@ const UserService = {
     const result = await UserModel.getUserId({ sub });
     return result;
   },
+
+  signUp: async (user: UserDTO) => {
+    await UserModel.insertUser({
+      ...user,
+      nick: user.name,
+    });
+  },
 };
 
 export default UserService;
