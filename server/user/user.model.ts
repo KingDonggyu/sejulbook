@@ -20,7 +20,7 @@ const UserModel = {
   },
 
   getUserId: async ({ sub }: Pick<UserEntity, 'sub'>) => {
-    const sql = `SELECT ${User.ID} FROM ${User.TABLE_NAME} WHERE ${User.SUB} = ${sub};`;
+    const sql = `SELECT ${User.ID} FROM ${User.TABLE_NAME} WHERE ${User.SUB} = "${sub}";`;
     const result = await query<number>(sql);
 
     if (result.length) {
