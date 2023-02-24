@@ -1,7 +1,6 @@
 export const APP_NAME = '세 줄 독후감';
 
 export enum OAuthName {
-  GOOGLE = 'google',
   NAVER = 'naver',
   KAKAO = 'kakao',
 }

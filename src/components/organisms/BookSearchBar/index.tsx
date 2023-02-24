@@ -4,7 +4,7 @@ import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import { TextFieldProps } from '@/components/atoms/TextField';
 import useDebounce from '@/hooks/useDebounce';
 import { getBooksByTitle } from '@/services/api/book';
-import { Book } from '@/types/domain/book';
+import { Book } from '@/types/features/book';
 
 const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   const [keyword, setKeyword] = useState('');

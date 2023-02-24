@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { BookReviewPost } from '@/types/domain/bookReview';
+import { BookReviewPost } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
 import * as s from './style';
 

@@ -4,7 +4,7 @@ import Thumbnail from '@/components/atoms/Thumbnail';
 import UploadButton from '@/components/molecules/UploadButton';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { BookThumbnail } from '@/types/domain/book';
+import { BookThumbnail } from '@/types/features/book';
 import { lightTheme } from '@/styles/theme';
 
 const thumbnailStyle = (theme: Theme) => css`

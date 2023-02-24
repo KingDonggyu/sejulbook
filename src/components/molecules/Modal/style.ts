@@ -1,9 +1,14 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { MODAL_Z_INDEX } from '@/constants/zIndex';
+import { MODAL_Z_INDEX, NON_MODAL_Z_INDEX } from '@/constants/zIndex';
 
-export const Background = styled.div`
-  z-index: ${MODAL_Z_INDEX};
+interface ModalStyleProps {
+  isShowOverlay: boolean;
+}
+
+export const Background = styled.div<ModalStyleProps>`
+  z-index: ${({ isShowOverlay }) =>
+    isShowOverlay ? MODAL_Z_INDEX : NON_MODAL_Z_INDEX};
   position: fixed;
   top: 0;
   left: 0;
@@ -23,8 +28,9 @@ export const ModalOverlay = styled.div`
   background: rgba(11, 19, 30, 0.37);
 `;
 
-export const ModalWrapper = styled.div`
-  z-index: ${MODAL_Z_INDEX};
+export const ModalWrapper = styled.div<ModalStyleProps>`
+  z-index: ${({ isShowOverlay }) =>
+    isShowOverlay ? MODAL_Z_INDEX : NON_MODAL_Z_INDEX};
   margin: 0 20px;
 `;
 

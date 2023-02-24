@@ -15,7 +15,7 @@ const HeaderBar = () => {
       <s.Wrapper>
         <LogoButton isDarkMode={isDarkMode} />
         <s.RightItemsWrapper>
-          {isLogin ? <NavDropdown /> : <AccountButton.Login />}
+          {isLogin ? <NavDropdown /> : <AccountButton isLogin={false} />}
           <SearchButton />
         </s.RightItemsWrapper>
       </s.Wrapper>

@@ -1,15 +1,20 @@
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
-import { APP_NAME, OAuthName } from '@/constants';
-import Button from '@/components/atoms/Button';
-import Modal from '@/components/molecules/Modal';
 import kakaoButtonSrc from '@public/images/btn-kakao.svg';
 import naverButtonSrc from '@public/images/btn-naver.svg';
+import { APP_NAME, OAuthName } from '@/constants';
+import Button, { ButtonProps } from '@/components/atoms/Button';
+import Modal, { ModalProps } from '@/components/molecules/Modal';
+import modalStore from '@/stores/modalStore';
 import * as s from './style';
 
-const LoginModal = ({ modalKey }: { modalKey: string }) => {
-  const handleLogin = (oAuthName: OAuthName) => {
-    signIn(oAuthName);
+type LoginModalProps = { modalKey: string };
+
+const LoginModal = ({
+  modalKey,
+}: LoginModalProps & Omit<ModalProps, 'children'>) => {
+  const handleLogin = async (oAuthName: OAuthName) => {
+    await signIn(oAuthName);
   };
 
   return (
@@ -27,5 +32,24 @@ const LoginModal = ({ modalKey }: { modalKey: string }) => {
     </Modal>
   );
 };
+
+const LoginButton = ({
+  modalKey,
+  children,
+  ...buttonProps
+}: LoginModalProps & ButtonProps) => {
+  const { openModal } = modalStore();
+
+  return (
+    <>
+      <Button onClick={() => openModal(modalKey)} {...buttonProps}>
+        {children}
+      </Button>
+      <LoginModal modalKey={modalKey} />
+    </>
+  );
+};
+
+LoginModal.Button = LoginButton;
 
 export default LoginModal;

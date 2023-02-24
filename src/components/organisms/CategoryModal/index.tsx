@@ -1,9 +1,8 @@
 import Button, { ButtonProps } from '@/components/atoms/Button';
-import Modal from '@/components/molecules/Modal';
+import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { ModalKey } from '@/constants/keys';
 import modalStore from '@/stores/modalStore';
-import { Category } from '@/types/domain/bookReview';
+import { Category } from '@/types/features/bookReview';
 import { useState } from 'react';
 import * as s from './style';
 
@@ -30,12 +29,17 @@ const categories: Category[] = [
   '만화',
 ];
 
-interface CategoryModalProps {
+type CategoryModalProps = {
+  modalKey: string;
   handleClickCategory: (category: Category) => void;
-}
+};
 
-const CategoryModal = ({ handleClickCategory }: CategoryModalProps) => (
-  <Modal modalKey={ModalKey.CATEGORY}>
+const CategoryModal = ({
+  modalKey,
+  handleClickCategory,
+  ...modalProps
+}: CategoryModalProps & Omit<ModalProps, 'children'>) => (
+  <Modal modalKey={modalKey} {...modalProps}>
     <s.Title>카테고리</s.Title>
     <s.Wrapper>
       {categories.map((category) => (
@@ -54,7 +58,9 @@ const CategoryModal = ({ handleClickCategory }: CategoryModalProps) => (
 );
 
 const CategoryButton = ({
+  modalKey,
   handleClickCategory,
+  ...buttonProps
 }: CategoryModalProps & ButtonProps) => {
   const [category, setCategory] = useState<Category | null>(null);
   const { openModal, closeModal } = modalStore();
@@ -62,23 +68,20 @@ const CategoryButton = ({
   const handleClick = (selectedCategory: Category) => {
     setCategory(selectedCategory);
     handleClickCategory(selectedCategory);
-    closeModal(ModalKey.CATEGORY);
+    closeModal(modalKey);
   };
 
   return (
     <>
       <Button
-        // variant={ButtonVariant.OUTLINED}
         color={category ? ColorVariant.PRIMARY : ColorVariant.SECONDARY}
         css={s.categoryButtonStyle}
-        onClick={() => openModal(ModalKey.CATEGORY)}
+        onClick={() => openModal(modalKey)}
+        {...buttonProps}
       >
         {category || '선택'}
       </Button>
-      <CategoryModal
-        key={ModalKey.CATEGORY}
-        handleClickCategory={handleClick}
-      />
+      <CategoryModal modalKey={modalKey} handleClickCategory={handleClick} />
     </>
   );
 };

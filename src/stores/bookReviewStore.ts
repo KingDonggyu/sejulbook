@@ -8,8 +8,8 @@ import {
   Sejul,
   Tag,
   TagList,
-} from '@/types/domain/bookReview';
-import { Book, BookThumbnail } from '@/types/domain/book';
+} from '@/types/features/bookReview';
+import { Book, BookThumbnail } from '@/types/features/book';
 
 const initlializedBook: Book = {
   isbn: '',

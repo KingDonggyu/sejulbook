@@ -3,7 +3,7 @@ import Button from '@/components/atoms/Button';
 import TextArea, { TextAreaProps } from '@/components/atoms/TextArea';
 import { ButtonVariant, ColorVariant, TextFieldVariant } from '@/constants';
 import Route from '@/constants/routes';
-import { Comment } from '@/types/domain/comment';
+import { Comment } from '@/types/features/comment';
 import formatDate from '@/utils/formatDateToKorean';
 import * as s from './style';
 

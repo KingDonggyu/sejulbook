@@ -6,9 +6,9 @@ import Rating from '@/components/molecules/Rating';
 import TagList from '@/components/molecules/TagList';
 import CommentContainer from '@/components/organisms/CommentContainer';
 import LikeCommentWidget from '@/components/organisms/LikeCommentWidget';
-import { BookReviewPost } from '@/types/domain/bookReview';
+import { BookReviewPost } from '@/types/features/bookReview';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
-import { Comment } from '@/types/domain/comment';
+import { Comment } from '@/types/features/comment';
 
 const sejul = `"익숙하고 안전한 길 대신 낯설고 불확실한 길을 선택하는 이유는 나의 가치와 가능성을 발견하며 나답게 살고 싶기 때문이다."\n
   "오늘이 인생의 마지막 날이라면 이미 실패한 일을 후회할 것인가, 아니면 시도하지 않은 일을 후회할 것인가?"\n

@@ -30,7 +30,7 @@ const NavDropdown = () => {
   return (
     <div>
       <Button onClick={handleToggle} css={s.nickNameButtonStyle}>
-        <s.Nickname>{session?.user?.name}</s.Nickname>
+        <s.Nickname>{session.id}</s.Nickname>
         {isShowMenu ? <IoIosArrowUp size={17} /> : <IoIosArrowDown size={17} />}
       </Button>
       <Menu
@@ -44,7 +44,7 @@ const NavDropdown = () => {
         {[
           <MyLibraryLink handleClick={handleClose} />,
           <NewbookLink handleClick={handleClose} />,
-          <AccountButton.Logout />,
+          <AccountButton isLogin />,
         ].map((component) => (
           <s.MenuItem key={component.type}>{component}</s.MenuItem>
         ))}

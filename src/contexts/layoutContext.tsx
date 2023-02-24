@@ -1,7 +1,9 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { css } from '@emotion/react';
 import HeaderBar from '@/components/organisms/HeaderBar';
 import ScreenModeButton from '@/components/organisms/SceenModeButton';
+import 'react-toastify/dist/ReactToastify.css';
 
 const mainStyle = (isVisibleHeaderBar: boolean) => css`
   margin: auto;
@@ -46,6 +48,11 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
       {isVisibleHeaderBar && <HeaderBar />}
       <main css={mainStyle(isVisibleHeaderBar)}>{children}</main>
       {isVisibleScreenModeButton && <ScreenModeButton />}
+      <ToastContainer
+        theme="colored"
+        position="bottom-left"
+        style={{ lineHeight: 1.4 }}
+      />
     </LayoutContext.Provider>
   );
 };
