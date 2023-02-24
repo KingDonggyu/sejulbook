@@ -2,7 +2,7 @@ import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import modalStore from '@/stores/modalStore';
-import { Category } from '@/types/domain/bookReview';
+import { Category } from '@/types/features/bookReview';
 import { useState } from 'react';
 import * as s from './style';
 

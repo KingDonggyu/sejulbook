@@ -1,4 +1,4 @@
-import { Book } from '@/types/domain/book';
+import { Book } from '@/types/features/book';
 import Box from '@/components/atoms/Box';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Thumbnail from '@/components/atoms/Thumbnail';

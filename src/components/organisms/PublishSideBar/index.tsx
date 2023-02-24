@@ -8,7 +8,7 @@ import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
-import { Book } from '@/types/domain/book';
+import { Book } from '@/types/features/book';
 import bookReviewStore from '@/stores/bookReviewStore';
 import * as s from './style';
 

@@ -1,4 +1,4 @@
-import { Gender } from '@/types/domain/user';
+import { Gender } from '@/types/features/user';
 
 const formatGenderToNumber = (gender?: string): Gender => {
   if (!gender) {

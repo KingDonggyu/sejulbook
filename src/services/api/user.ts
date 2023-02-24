@@ -1,6 +1,6 @@
 import { post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
-import { SignUpRequset } from '@/types/domain/user';
+import { SignUpRequset } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { UserError } from '../errors';
 

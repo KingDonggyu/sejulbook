@@ -7,7 +7,7 @@ import { ModalKey } from '@/constants/keys';
 import useLoginStatus from '@/hooks/useLoginStatus';
 import modalStore from '@/stores/modalStore';
 import { signUp } from '@/services/api/user';
-import { Introduce, UserName } from '@/types/domain/user';
+import { Introduce, UserName } from '@/types/features/user';
 import { UserError } from '@/services/errors';
 
 const HomePage = () => {

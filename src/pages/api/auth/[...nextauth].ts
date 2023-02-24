@@ -7,7 +7,7 @@ import NextAuth, {
 } from 'next-auth';
 import KakaoProvider, { KakaoProfile } from 'next-auth/providers/kakao';
 import NaverProvider, { NaverProfile } from 'next-auth/providers/naver';
-import UserService from 'server/user/user.service';
+import UserService from 'server/features/user/user.service';
 import Session from '@/types/session';
 import formatGenderToNumber from '@/utils/formatGenderToNumber';
 import formatAgeRange from '@/utils/formatAgeRange';

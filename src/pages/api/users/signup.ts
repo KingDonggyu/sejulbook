@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import UserService from 'server/user/user.service';
+import UserService from 'server/features/user/user.service';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const result = await UserService.signUp(req.body);

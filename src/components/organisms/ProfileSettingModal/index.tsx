@@ -3,7 +3,7 @@ import Button from '@/components/atoms/Button';
 import TextField from '@/components/atoms/TextField';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { UserName, Introduce } from '@/types/domain/user';
+import { UserName, Introduce } from '@/types/features/user';
 import * as s from './style';
 
 interface ProfileSettingModalProps {

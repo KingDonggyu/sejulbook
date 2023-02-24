@@ -7,7 +7,7 @@ import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { useNewbookContext } from '@/contexts/newbookContext';
 import bookReviewStore from '@/stores/bookReviewStore';
-import { Book } from '@/types/domain/book';
+import { Book } from '@/types/features/book';
 
 const NewbookWritePage = () => {
   const { getNewbook } = useNewbookContext();

@@ -1,4 +1,4 @@
-import { InitilaizedUser } from './domain/user';
+import { InitilaizedUser } from './features/user';
 
 type Session = InitilaizedUser | Pick<InitilaizedUser, 'id'>;
 

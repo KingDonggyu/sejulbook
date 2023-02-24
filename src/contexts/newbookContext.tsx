@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react';
-import { Book } from '@/types/domain/book';
+import { Book } from '@/types/features/book';
 import useLocalStorage from '@/hooks/useLocalStorage';
 
 const STORAGE_KEY = 'SEJULBOOK_NEWBOOK';
