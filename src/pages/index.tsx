@@ -1,14 +1,18 @@
 import { useEffect } from 'react';
+import { GetServerSidePropsContext } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { signIn, signOut } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 import { ModalKey } from '@/constants/keys';
 import useLoginStatus from '@/hooks/useLoginStatus';
 import modalStore from '@/stores/modalStore';
-import { signUp } from '@/services/api/user';
+import { getUser, signUp } from '@/services/api/user';
 import { Introduce, UserName } from '@/types/features/user';
 import { UserError } from '@/services/errors';
+import Session from '@/types/session';
 
 const HomePage = () => {
   const { session, isSignupRequired } = useLoginStatus();
@@ -50,6 +54,27 @@ const HomePage = () => {
       />
     </>
   );
+};
+
+export const getServerSideProps = async ({
+  req,
+  res,
+}: GetServerSidePropsContext) => {
+  const session = (await getServerSession(req, res, authOptions)) as Session;
+
+  if (!session || session.id === null) {
+    return {
+      props: {
+        user: null,
+      },
+    };
+  }
+
+  const user = await getUser(session.id);
+
+  return {
+    props: { user },
+  };
 };
 
 export default HomePage;

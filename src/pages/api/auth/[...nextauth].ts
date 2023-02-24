@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { NextApiHandler } from 'next';
 import NextAuth, {
-  AuthOptions,
+  NextAuthOptions,
   Session as OriginSession,
   Profile as OriginProfile,
 } from 'next-auth';
@@ -17,7 +17,7 @@ type Profile = OriginProfile & Session;
 
 const isKakaoProfile = (profile: OriginProfile) => 'kakao_account' in profile;
 
-const options: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID,
@@ -106,7 +106,7 @@ const authHandler: NextApiHandler = (req, res) => {
     res.redirect('/');
     return;
   }
-  NextAuth(req, res, options);
+  NextAuth(req, res, authOptions);
 };
 
 export default authHandler;

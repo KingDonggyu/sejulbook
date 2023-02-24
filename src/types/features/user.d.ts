@@ -19,3 +19,9 @@ export interface SignUpRequset extends Omit<InitilaizedUser, 'oAuth'> {
   name: UserName;
   introduce: Introduce;
 }
+
+export interface User {
+  id: UserId;
+  name: UserName;
+  introduce: Introduce;
+}
