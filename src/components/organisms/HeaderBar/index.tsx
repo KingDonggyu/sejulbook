@@ -7,7 +7,7 @@ import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
 const HeaderBar = () => {
-  const { isLogin } = useLoginStatus();
+  const { session, isLogin } = useLoginStatus();
   const { isDarkMode } = useScreenModeContext();
 
   return (
@@ -15,7 +15,11 @@ const HeaderBar = () => {
       <s.Wrapper>
         <LogoButton isDarkMode={isDarkMode} />
         <s.RightItemsWrapper>
-          {isLogin ? <NavDropdown /> : <AccountButton isLogin={false} />}
+          {isLogin ? (
+            <NavDropdown userId={session.id} />
+          ) : (
+            <AccountButton isLogin={false} />
+          )}
           <SearchButton />
         </s.RightItemsWrapper>
       </s.Wrapper>

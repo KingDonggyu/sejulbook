@@ -1,5 +1,8 @@
-import { InitilaizedUser } from './features/user';
+import { InitilaizedUser, UserId } from './features/user';
 
-type Session = InitilaizedUser | Pick<InitilaizedUser, 'id'>;
+export type SessionAfterLogin = { id: UserId };
+export type SessionBeforeLogin = InitilaizedUser;
+
+type Session = SessionAfterLogin | SessionAfterLogin;
 
 export default Session;

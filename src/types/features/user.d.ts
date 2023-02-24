@@ -7,7 +7,7 @@ export type Introduce = string;
 export type Gender = 0 | 1 | 2;
 
 export interface InitilaizedUser {
-  id: UserId | null;
+  id: null;
   sub: Sub;
   gender: Gender;
   email: string;
