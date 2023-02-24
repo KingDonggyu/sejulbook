@@ -15,8 +15,19 @@ enum Column {
 }
 
 const UserModel = {
-  getUser: async ({ id }: Pick<UserEntity, 'id'>) => {
+  getUserById: async ({ id }: Pick<UserEntity, 'id'>) => {
     const sql = `select * from ${TABLE_NAME} where ${Column.ID} = ${id};`;
+    const result = await query<UserEntity>(sql);
+
+    if (result.length) {
+      return result[0];
+    }
+
+    return null;
+  },
+
+  getUserByName: async ({ nick }: Pick<UserEntity, 'nick'>) => {
+    const sql = `select * from ${TABLE_NAME} where ${Column.NICK} = ${nick};`;
     const result = await query<UserEntity>(sql);
 
     if (result.length) {
@@ -37,9 +48,8 @@ const UserModel = {
     return null;
   },
 
-  insertUser: async (user: UserEntity) => {
+  createUser: async (user: Omit<UserEntity, 'id'>) => {
     const sql = `insert into ${TABLE_NAME} (
-      ${Column.ID}, 
       ${Column.EMAIL}, 
       ${Column.NICK}, 
       ${Column.GENDER}, 
@@ -48,13 +58,12 @@ const UserModel = {
       ${Column.INTRODUCE}, 
       ${Column.SUB}
     ) values (
-      ${user.id}, 
       "${user.email}", 
       "${user.nick}", 
       "${user.gender}", 
       "${user.age}", 
       default, 
-      "${user.intoroduce}", 
+      "${user.introduce}", 
       "${user.sub}"
     );`;
 

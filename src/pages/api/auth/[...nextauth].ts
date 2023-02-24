@@ -2,17 +2,17 @@
 import { NextApiHandler } from 'next';
 import NextAuth, {
   AuthOptions,
-  Session,
+  Session as OriginSession,
   Profile as OriginProfile,
 } from 'next-auth';
 import KakaoProvider, { KakaoProfile } from 'next-auth/providers/kakao';
 import NaverProvider, { NaverProfile } from 'next-auth/providers/naver';
 import UserService from 'server/user/user.service';
-import { InitilaizedUser } from '@/types/domain/user';
+import Session from '@/types/session';
 import formatGenderToNumber from '@/utils/formatGenderToNumber';
 import formatAgeRange from '@/utils/formatAgeRange';
 
-type Profile = OriginProfile & InitilaizedUser;
+type Profile = OriginProfile & Session;
 
 const isKakaoProfile = (profile: OriginProfile) => 'kakao_account' in profile;
 
@@ -39,7 +39,11 @@ const options: AuthOptions = {
         ? (profile as KakaoProfile).id.toString()
         : (profile as NaverProfile).response.id;
 
-      userInfo.id = await UserService.getUserId({ sub: userInfo.sub });
+      const response = await UserService.getUserId({ sub: userInfo.sub });
+
+      if (!response.error) {
+        userInfo.id = response.data.id;
+      }
 
       (profile as Profile).id = userInfo.id;
       (profile as Profile).sub = userInfo.sub;
@@ -60,6 +64,7 @@ const options: AuthOptions = {
         return {
           id: profile.id,
           sub: profile.sub,
+          email: kakao?.email,
           gender: formatGenderToNumber(kakao?.gender),
           age: kakao?.age_range ? formatAgeRange(kakao?.age_range) : null,
         };
@@ -70,6 +75,7 @@ const options: AuthOptions = {
       return {
         id: profile.id,
         sub: profile.sub,
+        email: naver.email,
         gender: formatGenderToNumber(naver.gender),
         age: naver.age ? formatAgeRange(naver.age) : null,
       };
@@ -77,7 +83,7 @@ const options: AuthOptions = {
 
     session: ({ token }) => {
       if (token.id) {
-        return { id: token.id } as unknown as Session;
+        return { id: token.id } as unknown as OriginSession;
       }
 
       return {
@@ -86,7 +92,7 @@ const options: AuthOptions = {
         email: token.email,
         gender: token.gender,
         age: token.age,
-      } as unknown as Session;
+      } as unknown as OriginSession;
     },
   },
 };

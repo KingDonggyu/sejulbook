@@ -1,11 +1,11 @@
 type Gender = 0 | 1 | 2;
 
 interface UserDTO {
-  id: number;
+  id: number | null;
   sub: string;
   email: string;
   name: string;
-  intoroduce: string;
+  introduce: string;
   age: string | null;
   gender: Gender;
 }

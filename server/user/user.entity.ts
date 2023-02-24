@@ -5,7 +5,7 @@ interface UserEntity {
   sub: string;
   email: string;
   nick: string;
-  intoroduce: string;
+  introduce: string;
   age: string | null;
   gender: Gender;
 }

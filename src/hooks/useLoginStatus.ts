@@ -1,18 +1,16 @@
 import { useSession } from 'next-auth/react';
-import { InitilaizedUser } from '@/types/domain/user';
+import Session from '@/types/session';
 
 const useLoginStatus = () => {
   const { data, status } = useSession();
-  const isLogin = status === 'authenticated';
-  const session = data as unknown as
-    | InitilaizedUser
-    | Pick<InitilaizedUser, 'id'>;
+  const isAuth = status === 'authenticated';
+  const session = data as unknown as Session;
 
   return {
     session,
-    isLogin,
+    isLogin: isAuth && session && session.id !== null,
     isLoading: status === 'loading',
-    isSignupRequired: isLogin && session && session.id === null,
+    isSignupRequired: isAuth && session && session.id === null,
   };
 };
 

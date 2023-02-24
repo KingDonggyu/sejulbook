@@ -1,58 +1,65 @@
-import Button, { ButtonProps } from '@/components/atoms/Button';
+import { useState } from 'react';
+import Button from '@/components/atoms/Button';
 import TextField from '@/components/atoms/TextField';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import modalStore from '@/stores/modalStore';
+import { UserName, Introduce } from '@/types/domain/user';
 import * as s from './style';
 
 interface ProfileSettingModalProps {
   title: string;
   modalKey: string;
+  handleComplete: ({
+    name,
+    introduce,
+  }: {
+    name: UserName;
+    introduce: Introduce;
+  }) => void;
 }
 
 const ProfileSettingModal = ({
   title,
   modalKey,
+  handleComplete,
   ...modalProps
-}: ProfileSettingModalProps & Omit<ModalProps, 'children'>) => (
-  <Modal
-    modalKey={modalKey}
-    elevation={4}
-    isShowModalOverlay={false}
-    css={s.modalStyle}
-    {...modalProps}
-  >
-    <s.Title>{title}</s.Title>
-    <TextField label="이름" />
-    <TextField label="소개" />
-    <Button
-      color={ColorVariant.PRIMARY}
-      variant={ButtonVariant.CONTAINED}
-      css={s.buttonStyle}
-    >
-      완료
-    </Button>
-  </Modal>
-);
+}: ProfileSettingModalProps & Omit<ModalProps, 'children'>) => {
+  const [name, setName] = useState<UserName>('');
+  const [introduce, setIntroduce] = useState<Introduce>('');
 
-const ProfileSettingButton = ({
-  title,
-  modalKey,
-  children,
-  ...buttinProps
-}: ProfileSettingModalProps & ButtonProps) => {
-  const { openModal } = modalStore();
+  const handleClick = () => {
+    handleComplete({ name, introduce });
+  };
 
   return (
-    <>
-      <Button onClick={() => openModal(modalKey)} {...buttinProps}>
-        {children}
+    <Modal
+      modalKey={modalKey}
+      elevation={4}
+      isShowModalOverlay={false}
+      css={s.modalStyle}
+      {...modalProps}
+    >
+      <s.Title>{title}</s.Title>
+      <TextField
+        label="이름"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        label="소개"
+        value={introduce}
+        onChange={(e) => setIntroduce(e.target.value)}
+      />
+      <Button
+        color={ColorVariant.PRIMARY}
+        variant={ButtonVariant.CONTAINED}
+        css={s.buttonStyle}
+        onClick={handleClick}
+      >
+        완료
       </Button>
-      <ProfileSettingModal title={title} modalKey={modalKey} />
-    </>
+    </Modal>
   );
 };
-
-ProfileSettingModal.Button = ProfileSettingButton;
 
 export default ProfileSettingModal;

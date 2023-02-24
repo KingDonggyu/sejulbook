@@ -1,6 +1,7 @@
 export type UserId = number;
 export type UserName = string;
 export type Sub = string;
+export type Introduce = string;
 export type Gender = 0 | 1 | 2;
 
 export interface InitilaizedUser {
@@ -13,6 +14,5 @@ export interface InitilaizedUser {
 
 export interface SignUpRequset extends InitilaizedUser {
   name: UserName;
-  intoroduce: string;
-  joindated: Date;
+  introduce: Introduce;
 }
