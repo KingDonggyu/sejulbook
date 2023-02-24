@@ -39,10 +39,10 @@ const UserModel = {
 
   getUserId: async ({ sub }: Pick<UserEntity, 'sub'>) => {
     const sql = `select ${Column.ID} from ${TABLE_NAME} where ${Column.SUB} = "${sub}";`;
-    const result = await query<number>(sql);
+    const result = await query<Pick<UserEntity, 'id'>>(sql);
 
     if (result.length) {
-      return result[0];
+      return result[0].id;
     }
 
     return null;

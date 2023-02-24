@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { signIn, signOut } from 'next-auth/react';
+import { toast } from 'react-toastify';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 import { ModalKey } from '@/constants/keys';
@@ -27,7 +28,7 @@ const HomePage = () => {
       }
     } catch (error) {
       if (error instanceof UserError) {
-        alert(error.message);
+        toast.error(error.message);
       }
     }
   };

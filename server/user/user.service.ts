@@ -10,6 +10,7 @@ const UserService = {
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<HttpSuccess<UserId> | HttpFailed> => {
     const result = await UserModel.getUserId({ sub });
+
     return {
       error: false,
       data: { id: result },
@@ -50,8 +51,26 @@ const UserService = {
       };
     }
 
+    const name = user.name.toLowerCase();
+
+    if (name.length < 2 || name.length > 10) {
+      return {
+        error: true,
+        code: 400,
+        message: userError.LIMIT_REACHED_NAME,
+      };
+    }
+
+    if (!/^[가-힣|a-z|0-9|]+$/.test(name)) {
+      return {
+        error: true,
+        code: 400,
+        message: userError.NOT_MATCHED_PATTERN_NAME,
+      };
+    }
+
     const isDuplicateName = Boolean(
-      await UserModel.getUserByName({ nick: user.name }),
+      await UserModel.getUserByName({ nick: name }),
     );
 
     if (isDuplicateName) {
@@ -62,10 +81,7 @@ const UserService = {
       };
     }
 
-    await UserModel.createUser({
-      ...user,
-      nick: user.name,
-    });
+    await UserModel.createUser({ ...user, nick: name });
 
     return { error: false, data: undefined };
   },
