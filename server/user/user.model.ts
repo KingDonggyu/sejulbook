@@ -27,7 +27,7 @@ const UserModel = {
   },
 
   getUserByName: async ({ nick }: Pick<UserEntity, 'nick'>) => {
-    const sql = `select * from ${TABLE_NAME} where ${Column.NICK} = ${nick};`;
+    const sql = `select * from ${TABLE_NAME} where ${Column.NICK} = "${nick}";`;
     const result = await query<UserEntity>(sql);
 
     if (result.length) {

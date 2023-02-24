@@ -9,6 +9,7 @@ export type ModalProps = {
   modalKey: string;
   isShowCloseButton?: boolean;
   isShowModalOverlay?: boolean;
+  handleCancel?: () => void;
   children: ReactNode;
 } & BoxProps &
   StyleProps;
@@ -17,12 +18,16 @@ const Modal = ({
   modalKey,
   isShowCloseButton = true,
   isShowModalOverlay = true,
+  handleCancel,
   children,
   ...boxProps
 }: ModalProps) => {
   const { modalSet, closeModal } = modalStore();
 
   const handleClose = () => {
+    if (handleCancel) {
+      handleCancel();
+    }
     closeModal(modalKey);
   };
 

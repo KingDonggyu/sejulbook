@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 import { ModalKey } from '@/constants/keys';
@@ -23,6 +23,7 @@ const HomePage = () => {
     try {
       if ('email' in session) {
         await signUp({ name, introduce, ...session });
+        await signIn(session.oAuth);
       }
     } catch (error) {
       if (error instanceof UserError) {
@@ -44,6 +45,7 @@ const HomePage = () => {
         modalKey={ModalKey.PROFILE_SETTING}
         title="회원가입"
         handleComplete={handleSignUp}
+        handleCancel={() => signOut()}
       />
     </>
   );

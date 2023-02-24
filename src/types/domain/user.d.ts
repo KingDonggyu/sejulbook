@@ -1,3 +1,5 @@
+import { OAuthName } from '@/constants';
+
 export type UserId = number;
 export type UserName = string;
 export type Sub = string;
@@ -10,9 +12,10 @@ export interface InitilaizedUser {
   gender: Gender;
   email: string;
   age: string?;
+  oAuth: OAuthName;
 }
 
-export interface SignUpRequset extends InitilaizedUser {
+export interface SignUpRequset extends Omit<InitilaizedUser, 'oAuth'> {
   name: UserName;
   introduce: Introduce;
 }

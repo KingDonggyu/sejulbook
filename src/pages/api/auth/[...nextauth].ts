@@ -11,6 +11,7 @@ import UserService from 'server/user/user.service';
 import Session from '@/types/session';
 import formatGenderToNumber from '@/utils/formatGenderToNumber';
 import formatAgeRange from '@/utils/formatAgeRange';
+import { OAuthName } from '@/constants';
 
 type Profile = OriginProfile & Session;
 
@@ -67,6 +68,7 @@ const options: AuthOptions = {
           email: kakao?.email,
           gender: formatGenderToNumber(kakao?.gender),
           age: kakao?.age_range ? formatAgeRange(kakao?.age_range) : null,
+          oAuth: OAuthName.KAKAO,
         };
       }
 
@@ -78,6 +80,7 @@ const options: AuthOptions = {
         email: naver.email,
         gender: formatGenderToNumber(naver.gender),
         age: naver.age ? formatAgeRange(naver.age) : null,
+        oAuth: OAuthName.NAVER,
       };
     },
 
@@ -92,6 +95,7 @@ const options: AuthOptions = {
         email: token.email,
         gender: token.gender,
         age: token.age,
+        oAuth: token.oAuth,
       } as unknown as OriginSession;
     },
   },
