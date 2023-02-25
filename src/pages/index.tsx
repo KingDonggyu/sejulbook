@@ -15,7 +15,6 @@ import { signUp } from '@/services/api/user';
 import { UserError } from '@/services/errors';
 import { getUserQuery } from '@/services/queries/user';
 import { Introduce, UserName } from '@/types/features/user';
-import Session from '@/types/session';
 import prefetchQuery from '@/utils/prefetchQuery';
 
 const HomePage = () => {
@@ -64,7 +63,7 @@ export const getServerSideProps = async ({
   req,
   res,
 }: GetServerSidePropsContext) => {
-  const session = (await getServerSession(req, res, authOptions)) as Session;
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session || session.id === null) {
     return {

@@ -1,8 +1,5 @@
 import { useSession } from 'next-auth/react';
-import Session, {
-  SessionAfterLogin,
-  SessionBeforeLogin,
-} from '@/types/session';
+import { SessionAfterLogin, SessionBeforeLogin } from '@/types/session';
 
 interface LoggedStatus {
   session: SessionAfterLogin;
@@ -19,11 +16,10 @@ interface NotLoggedStatus {
 }
 
 const useLoginStatus = () => {
-  const { data, status } = useSession();
+  const { data: session, status } = useSession();
 
   const isLoading = status === 'loading';
   const isAuth = status === 'authenticated';
-  const session = data as unknown as Session;
   const isLogin = isAuth && session && session.id !== null;
 
   if (isLogin) {

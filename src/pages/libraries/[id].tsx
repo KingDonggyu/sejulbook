@@ -6,7 +6,6 @@ import { dehydrate } from '@tanstack/react-query';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prefetchQuery from '@/utils/prefetchQuery';
 import { getUserQuery } from '@/services/queries/user';
-import Session from '@/types/session';
 import useUser from '@/hooks/services/queries/useUser';
 
 import Library from '@/components/templates/Library';
@@ -37,7 +36,7 @@ export const getServerSideProps = async ({
   req,
   res,
 }: GetServerSidePropsContext) => {
-  const session = (await getServerSession(req, res, authOptions)) as Session;
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session || session.id === null) {
     return {
