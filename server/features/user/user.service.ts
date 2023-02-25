@@ -4,6 +4,7 @@ import UserDTO from './user.dto';
 import UserModel from './user.model';
 
 type UserId = Pick<UserDTO, 'id'>;
+type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
 
 const UserService = {
   getUserId: async ({
@@ -17,11 +18,40 @@ const UserService = {
     };
   },
 
+  getUserById: async ({
+    id,
+  }: UserId): Promise<HttpSuccess<User> | HttpFailed> => {
+    if (id === null) {
+      return {
+        error: true,
+        code: 404,
+        message: userError.USER_NOT_FOUND,
+      };
+    }
+
+    const result = await UserModel.getUserById({ id });
+
+    if (result === null) {
+      return {
+        error: true,
+        code: 404,
+        message: userError.USER_NOT_FOUND,
+      };
+    }
+
+    return {
+      error: false,
+      data: {
+        id: result.id,
+        name: result.nick,
+        introduce: result.introduce,
+      },
+    };
+  },
+
   getUserByName: async ({
     name,
-  }: Pick<UserDTO, 'name'>): Promise<
-    HttpSuccess<UserDTO | null> | HttpFailed
-  > => {
+  }: Pick<UserDTO, 'name'>): Promise<HttpSuccess<User | null> | HttpFailed> => {
     const result = await UserModel.getUserByName({ nick: name });
 
     if (!result) {
@@ -34,8 +64,9 @@ const UserService = {
     return {
       error: false,
       data: {
-        ...result,
+        id: result.id,
         name: result.nick,
+        introduce: result.introduce,
       },
     };
   },

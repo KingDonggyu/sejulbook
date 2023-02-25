@@ -7,7 +7,7 @@ export type Introduce = string;
 export type Gender = 0 | 1 | 2;
 
 export interface InitilaizedUser {
-  id: UserId | null;
+  id: null;
   sub: Sub;
   gender: Gender;
   email: string;
@@ -16,6 +16,12 @@ export interface InitilaizedUser {
 }
 
 export interface SignUpRequset extends Omit<InitilaizedUser, 'oAuth'> {
+  name: UserName;
+  introduce: Introduce;
+}
+
+export interface User {
+  id: UserId;
   name: UserName;
   introduce: Introduce;
 }

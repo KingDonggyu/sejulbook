@@ -39,7 +39,7 @@ export const ButtonWrapper = styled.div`
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     width: 100%;
     flex-direction: row;
-    & > button:first-child {
+    & > button:first-of-type {
       flex-grow: 1;
     }
   }

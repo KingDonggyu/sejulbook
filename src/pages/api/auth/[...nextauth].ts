@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
 import { NextApiHandler } from 'next';
 import NextAuth, {
-  AuthOptions,
-  Session as OriginSession,
+  Session,
+  NextAuthOptions,
   Profile as OriginProfile,
+  OriginSession,
 } from 'next-auth';
 import KakaoProvider, { KakaoProfile } from 'next-auth/providers/kakao';
 import NaverProvider, { NaverProfile } from 'next-auth/providers/naver';
 import UserService from 'server/features/user/user.service';
-import Session from '@/types/session';
 import formatGenderToNumber from '@/utils/formatGenderToNumber';
 import formatAgeRange from '@/utils/formatAgeRange';
 import { OAuthName } from '@/constants';
@@ -17,7 +17,7 @@ type Profile = OriginProfile & Session;
 
 const isKakaoProfile = (profile: OriginProfile) => 'kakao_account' in profile;
 
-const options: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID,
@@ -59,34 +59,39 @@ const options: AuthOptions = {
 
       const profile = originProfile as Profile;
 
+      if (profile.id) {
+        return { id: profile.id };
+      }
+
+      const user: Partial<Session> = {
+        id: null,
+        sub: String(profile.sub),
+      };
+
       if (isKakaoProfile(profile)) {
         const { kakao_account: kakao } = originProfile as KakaoProfile;
 
-        return {
-          id: profile.id,
-          sub: profile.sub,
-          email: kakao?.email,
-          gender: formatGenderToNumber(kakao?.gender),
-          age: kakao?.age_range ? formatAgeRange(kakao?.age_range) : null,
-          oAuth: OAuthName.KAKAO,
-        };
+        user.email = kakao?.email;
+        user.gender = formatGenderToNumber(kakao?.gender);
+        user.age = kakao?.age_range ? formatAgeRange(kakao?.age_range) : null;
+        user.oAuth = OAuthName.KAKAO;
+
+        return user;
       }
 
       const { response: naver } = originProfile as NaverProfile;
 
-      return {
-        id: profile.id,
-        sub: profile.sub,
-        email: naver.email,
-        gender: formatGenderToNumber(naver.gender),
-        age: naver.age ? formatAgeRange(naver.age) : null,
-        oAuth: OAuthName.NAVER,
-      };
+      user.email = naver.email;
+      user.gender = formatGenderToNumber(naver.gender);
+      user.age = naver.age ? formatAgeRange(naver.age) : null;
+      user.oAuth = OAuthName.NAVER;
+
+      return user;
     },
 
     session: ({ token }) => {
       if (token.id) {
-        return { id: token.id } as unknown as OriginSession;
+        return { id: token.id } as OriginSession;
       }
 
       return {
@@ -96,7 +101,7 @@ const options: AuthOptions = {
         gender: token.gender,
         age: token.age,
         oAuth: token.oAuth,
-      } as unknown as OriginSession;
+      } as OriginSession;
     },
   },
 };
@@ -106,7 +111,7 @@ const authHandler: NextApiHandler = (req, res) => {
     res.redirect('/');
     return;
   }
-  NextAuth(req, res, options);
+  NextAuth(req, res, authOptions);
 };
 
 export default authHandler;

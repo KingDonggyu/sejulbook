@@ -1,5 +1,12 @@
-import { InitilaizedUser } from './features/user';
+import nextAuth from 'next-auth';
+import { InitilaizedUser, UserId } from './features/user';
 
-type Session = InitilaizedUser | Pick<InitilaizedUser, 'id'>;
+export type SessionAfterLogin = { id: UserId };
+export type SessionBeforeLogin = InitilaizedUser;
 
-export default Session;
+type CustomSession = SessionBeforeLogin | SessionAfterLogin;
+
+declare module 'next-auth' {
+  export type OriginSession = nextAuth.Session;
+  export type Session = CustomSession;
+}
