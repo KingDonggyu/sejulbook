@@ -12,11 +12,11 @@ import { ModalKey } from '@/constants/keys';
 import useLoginStatus from '@/hooks/useLoginStatus';
 import modalStore from '@/stores/modalStore';
 import { signUp } from '@/services/api/user';
-import { Introduce, UserName } from '@/types/features/user';
 import { UserError } from '@/services/errors';
+import { getUserQuery } from '@/services/queries/user';
+import { Introduce, UserName } from '@/types/features/user';
 import Session from '@/types/session';
 import prefetchQuery from '@/utils/prefetchQuery';
-import { getUserQuery } from '@/services/queries/user';
 
 const HomePage = () => {
   const { session, isSignupRequired } = useLoginStatus();
@@ -30,7 +30,7 @@ const HomePage = () => {
     introduce: Introduce;
   }) => {
     try {
-      if ('email' in session) {
+      if (isSignupRequired) {
         await signUp({ name, introduce, ...session });
         await signIn(session.oAuth);
       }
@@ -68,9 +68,7 @@ export const getServerSideProps = async ({
 
   if (!session || session.id === null) {
     return {
-      props: {
-        user: null,
-      },
+      props: { dehydratedState: null },
     };
   }
 

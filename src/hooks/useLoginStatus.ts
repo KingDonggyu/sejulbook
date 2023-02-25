@@ -5,42 +5,42 @@ import Session, {
 } from '@/types/session';
 
 interface LoggedStatus {
+  session: SessionAfterLogin;
+  isLoading: boolean;
   isLogin: true;
   isSignupRequired: false;
-  isLoading: false;
-  session: SessionAfterLogin;
 }
 
 interface NotLoggedStatus {
+  session: SessionBeforeLogin;
+  isLoading: boolean;
   isLogin: false;
   isSignupRequired: boolean;
-  isLoading: boolean;
-  session: SessionBeforeLogin;
 }
 
 const useLoginStatus = () => {
   const { data, status } = useSession();
+
+  const isLoading = status === 'loading';
   const isAuth = status === 'authenticated';
   const session = data as unknown as Session;
-
   const isLogin = isAuth && session && session.id !== null;
-  const isSignupRequired = isAuth && session && session.id === null;
 
-  if (isLogin && !isSignupRequired) {
+  if (isLogin) {
     return {
-      session,
+      session: session as SessionAfterLogin,
+      isLoading,
       isLogin: true,
       isSignupRequired: false,
-      isLoading: false,
     } as LoggedStatus;
   }
 
   return {
-    session,
-    isLogin,
-    isLoading: status === 'loading',
-    isSignupRequired,
-  } as unknown as NotLoggedStatus;
+    session: session as SessionBeforeLogin,
+    isLoading,
+    isLogin: false,
+    isSignupRequired: isAuth && session && session.id === null,
+  } as NotLoggedStatus;
 };
 
 export default useLoginStatus;

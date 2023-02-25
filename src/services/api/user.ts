@@ -4,7 +4,7 @@ import { SignUpRequset, User, UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { UserError } from '../errors';
 
-const API_URL = `${process.env.BASE_URL}/api/users`;
+const API_URL = `http://localhost:3000/api/users`;
 
 export const signUp = async (user: SignUpRequset) => {
   try {

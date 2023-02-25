@@ -11,18 +11,6 @@ import AccountButton from '@/components/organisms/AccountButton';
 import { UserId } from '@/types/features/user';
 import * as s from './style';
 
-const MyLibraryLink = ({ handleClick }: { handleClick: () => void }) => (
-  <Link href={`${Route.LIBRARY}/1`} onClick={handleClick}>
-    내 서재
-  </Link>
-);
-
-const NewbookLink = ({ handleClick }: { handleClick: () => void }) => (
-  <Link href={Route.NEWBOOK_SEARCH} onClick={handleClick}>
-    독후감 쓰기
-  </Link>
-);
-
 const NavDropdown = ({ userId }: { userId: UserId }) => {
   const user = useUser(userId);
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
@@ -42,13 +30,19 @@ const NavDropdown = ({ userId }: { userId: UserId }) => {
         anchorEl={anchorEl}
         handleClose={handleClose}
       >
-        {[
-          <MyLibraryLink handleClick={handleClose} />,
-          <NewbookLink handleClick={handleClose} />,
-          <AccountButton isLogin />,
-        ].map((component) => (
-          <s.MenuItem key={component.type}>{component}</s.MenuItem>
-        ))}
+        <s.MenuItem>
+          <Link href={`${Route.LIBRARY}/${userId}`} onClick={handleClose}>
+            내 서재
+          </Link>
+        </s.MenuItem>
+        <s.MenuItem>
+          <Link href={Route.NEWBOOK_SEARCH} onClick={handleClose}>
+            독후감 쓰기
+          </Link>
+        </s.MenuItem>
+        <s.MenuItem>
+          <AccountButton isLogin />
+        </s.MenuItem>
       </Menu>
     </div>
   );
