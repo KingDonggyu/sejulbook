@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
     Expires: 600, // seconds
     Conditions: [
-      ['content-length-range', 0, 1048576], // up to 1 MB
+      ['content-length-range', 0, 10485760], // up to 10 MB
     ],
   });
 
