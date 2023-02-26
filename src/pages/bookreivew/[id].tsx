@@ -77,7 +77,9 @@ const BookreviewPage = () => {
         />
       }
       sejulViewer={<SejulTextArea value={bookReview.sejul} readonly />}
-      contentViewer={<ContentEditor value={bookReview.content} readonly />}
+      contentViewer={
+        <ContentEditor initialValue={bookReview.content} readonly />
+      }
       bookInfoButton={
         <BookInfoBox.Button {...bookReview.book}>책정보</BookInfoBox.Button>
       }

@@ -12,7 +12,7 @@ import { ModalKey } from '@/constants/keys';
 import useLoginStatus from '@/hooks/useLoginStatus';
 import modalStore from '@/stores/modalStore';
 import { signUp } from '@/services/api/user';
-import { UserError } from '@/services/errors';
+import UserError from '@/services/errors/UserError';
 import { getUserQuery } from '@/services/queries/user';
 import { Introduce, UserName } from '@/types/features/user';
 import prefetchQuery from '@/utils/prefetchQuery';
