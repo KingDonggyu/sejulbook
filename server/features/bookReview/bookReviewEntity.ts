@@ -1,4 +1,5 @@
 import { UserId } from '../user/user.entity';
+import { CategoryId } from '../category/category.entity';
 
 type Grade = 1 | 2 | 3 | 4 | 5;
 type Devide = 0 | 1;
@@ -13,7 +14,7 @@ interface BookReviewEntity {
   sejul: string;
   sejulplus: string;
   user_id: UserId;
-  category_id: number;
+  category_id: CategoryId;
   divide: Devide;
 }
 
