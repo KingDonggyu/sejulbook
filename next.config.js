@@ -5,7 +5,10 @@ const nextConfig = {
     forceSwcTransforms: true,
   },
   images: {
-    domains: ['img1.daumcdn.net', 'search1.kakaocdn.net'],
+    domains: [
+      'sejulbook.s3.ap-northeast-2.amazonaws.com',
+      'search1.kakaocdn.net',
+    ],
   },
   async rewrites() {
     return [

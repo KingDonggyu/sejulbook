@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { css, Theme } from '@emotion/react';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import UploadButton from '@/components/molecules/UploadButton';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { BookThumbnail } from '@/types/features/book';
+import { uploadLocalImage } from '@/services/api/bookReview';
+import { BookReviewError } from '@/services/errors/BookReviewError';
 import { lightTheme } from '@/styles/theme';
 
 const thumbnailStyle = (theme: Theme) => css`
@@ -29,10 +32,17 @@ const ThumbnailUploader = ({
 }: ThumbnailUploaderProps) => {
   const [imageSrc, setImageSrc] = useState(originThumbnail);
 
-  const handleUpload = (file: File) => {
-    const newImageSrc = URL.createObjectURL(file);
-    setImageSrc(newImageSrc);
-    handleChangeThumbnail(newImageSrc);
+  const handleUpload = async (file: File) => {
+    try {
+      const url = await uploadLocalImage(file);
+      console.log(url);
+      setImageSrc(url);
+      handleChangeThumbnail(url);
+    } catch (error) {
+      if (error instanceof BookReviewError) {
+        toast.error(error.message);
+      }
+    }
   };
 
   const handleClickOriginThumbnailButton = () => {

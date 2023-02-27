@@ -3,6 +3,7 @@ import { css, Theme } from '@emotion/react';
 export const editorContentStyle = (theme: Theme) => css`
   cursor: text;
   outline: none;
+  min-height: 300px;
   color: ${theme.COLOR.TEXT};
   font-size: ${theme.FONT_SIZE.SMALL};
 

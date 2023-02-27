@@ -26,9 +26,7 @@ const PublishSideBar = ({
   const { bookReview, setThumbnail, setCategory, setRating, setTag } =
     bookReviewStore();
 
-  const handleComplete = () => {
-    // 발행
-  };
+  const handleComplete = () => {};
 
   return (
     <SideBar anchorEl={anchorEl} handleClose={handleClose}>

@@ -1,3 +1,3 @@
 export const bookReviewError = {
-  WrongFileFormat: '잘못된 파일입니다.',
+  WrongFileFormat: '지원하지 않는 파일 형식입니다.',
 };

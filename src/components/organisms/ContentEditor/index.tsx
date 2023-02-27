@@ -1,11 +1,10 @@
 import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { toast } from 'react-toastify';
-import { post } from '@/lib/HTTPClient';
 import bookReviewStore from '@/stores/bookReviewStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { editorContentStyle } from '@/styles/editor';
-import { uploadImage } from '@/services/api/bookReview';
+import { uploadLocalImage } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 import * as s from './style';
 
@@ -24,6 +23,7 @@ const editorOption = {
     'blocks | forecolor backcolor | bold italic underline strikethrough | link blockquote codesample | align bullist numlist ',
   placeholder: '[선택] 추가 내용 작성',
   blockFormats: `본문=p;제목 1=h1;제목 2=h2;제목 3=h3;`,
+  imageFileTypes: 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp,svg',
 };
 
 const ContentEditor = ({
@@ -37,24 +37,10 @@ const ContentEditor = ({
     setContent(content);
   };
 
-  const handleUploadLocalImage = async (blob: Blob) => {
+  const handleUploadLoacalImage = async (blob: Blob) => {
     try {
-      const response = await uploadImage({
-        fileName: blob.name,
-        fileType: blob.type,
-      });
-      const { url, fields } = response;
-      const formData = new FormData();
-
-      Object.entries(fields).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-
-      formData.append('file', new File([blob], blob.name));
-
-      await post(url, formData);
-
-      return `${url}${fields.key}`;
+      const url = await uploadLocalImage(blob);
+      return url;
     } catch (error) {
       if (error instanceof BookReviewError) {
         toast.error(error.message);
@@ -83,10 +69,9 @@ const ContentEditor = ({
           toolbar_location: 'bottom',
           placeholder: editorOption.placeholder,
           block_formats: editorOption.blockFormats,
-          images_upload_handler: async (blobInfo) => {
-            const url = await handleUploadLocalImage(blobInfo.blob());
-            return url;
-          },
+          images_file_types: editorOption.imageFileTypes,
+          images_upload_handler: async (blobInfo) =>
+            handleUploadLoacalImage(blobInfo.blob()),
         }}
       />
     </s.EditorContainer>
