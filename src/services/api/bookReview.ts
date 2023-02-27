@@ -1,6 +1,7 @@
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
+import { Category } from '@/types/features/bookReview';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';
 import { BookReviewError } from '../errors/BookReviewError';
@@ -54,5 +55,25 @@ export const uploadLocalImage = async (blob: Blob) => {
       name: 'IMAGE_UPLOAD_ERROR',
       message: bookReviewError.WRONG_FILE_FORMAT,
     });
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await get<HttpResponse<Category[]>>(
+      `${API_URL}/categories`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_CATEGORIES_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_CATEGORIES_ERROR', message });
   }
 };

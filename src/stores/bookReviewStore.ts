@@ -23,7 +23,7 @@ const initlializedBook: Book = {
 const initlializedBookReview: BookReview = {
   book: initlializedBook,
   thumbnail: undefined,
-  category: null,
+  category: { id: 0, category: '' },
   rating: 3,
   tag: new Set<Tag>(),
   sejul: '',
