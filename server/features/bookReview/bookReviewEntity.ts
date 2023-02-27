@@ -2,7 +2,7 @@ import { UserId } from '../user/user.entity';
 import { CategoryId } from '../category/category.entity';
 
 type Grade = 1 | 2 | 3 | 4 | 5;
-type Devide = 0 | 1;
+type Devide = 0 | 1; // 0 = 임시 저장, 1 = 발행
 
 interface BookReviewEntity {
   id: number;

@@ -1,5 +1,7 @@
+export type CategoryId = number;
+
 interface CategoryDTO {
-  id: number;
+  id: CategoryId;
   category: string;
 }
 
