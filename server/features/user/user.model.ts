@@ -14,7 +14,7 @@ enum Column {
   INTRODUCE = 'introduce',
 }
 
-const UserModel = {
+const userModel = {
   getUserById: async ({ id }: Pick<UserEntity, 'id'>) => {
     const sql = `select * from ${TABLE_NAME} where ${Column.ID} = ${id};`;
 
@@ -72,4 +72,4 @@ const UserModel = {
   },
 };
 
-export default UserModel;
+export default userModel;
