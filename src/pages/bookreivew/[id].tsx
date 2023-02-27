@@ -32,7 +32,7 @@ const bookReview: BookReviewPost = {
     datetime: '2021-06-21T00:00:00.000+09:00',
     thumbnail,
   },
-  category: '자기계발',
+  category: { id: 0, category: '자기계발' },
   rating: 4,
   tag: new Set(['세줄독후감', '없던오늘', '유병욱']),
   thumbnail,

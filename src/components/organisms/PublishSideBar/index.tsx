@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
 import Rating from '@/components/molecules/Rating';
@@ -8,8 +9,11 @@ import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
+import useLoginStatus from '@/hooks/useLoginStatus';
 import { Book } from '@/types/features/book';
 import bookReviewStore from '@/stores/bookReviewStore';
+import { publishBookReview } from '@/services/api/bookReview';
+import { BookReviewError } from '@/services/errors/BookReviewError';
 import * as s from './style';
 
 interface PublishSideBarProps {
@@ -23,10 +27,25 @@ const PublishSideBar = ({
   anchorEl,
   handleClose,
 }: PublishSideBarProps) => {
+  const { session, isLogin } = useLoginStatus();
   const { bookReview, setThumbnail, setCategory, setRating, setTag } =
     bookReviewStore();
 
-  const handleComplete = () => {};
+  const handleComplete = async () => {
+    try {
+      if (!isLogin) {
+        return;
+      }
+      await publishBookReview({
+        bookReview,
+        userId: session.id,
+      });
+    } catch (error) {
+      if (error instanceof BookReviewError) {
+        toast.error(error.message);
+      }
+    }
+  };
 
   return (
     <SideBar anchorEl={anchorEl} handleClose={handleClose}>

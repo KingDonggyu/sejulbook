@@ -1,7 +1,12 @@
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
-import { Category } from '@/types/features/bookReview';
+import {
+  BookReview,
+  Category,
+  PublishRequest,
+} from '@/types/features/bookReview';
+import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';
 import { BookReviewError } from '../errors/BookReviewError';
@@ -75,5 +80,41 @@ export const getCategories = async () => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'GET_CATEGORIES_ERROR', message });
+  }
+};
+
+export const publishBookReview = async ({
+  bookReview,
+  userId,
+}: {
+  bookReview: BookReview;
+  userId: UserId;
+}) => {
+  try {
+    const publishRequest: PublishRequest = {
+      ...bookReview,
+      bookname: bookReview.book.title,
+      authors: bookReview.book.authors.join(', '),
+      publication: bookReview.book.datetime,
+      publisher: bookReview.book.publisher,
+      categoryId: bookReview.category.id,
+      isDraftSave: false,
+      userId,
+    };
+
+    const response = await post<HttpResponse<undefined>>(
+      `${API_URL}/publish`,
+      publishRequest,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'PUBLISH_ERROR',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'PUBLISH_ERROR', message });
   }
 };

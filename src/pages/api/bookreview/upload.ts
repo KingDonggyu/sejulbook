@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const presignedPost = await createPresignedPost(s3Client, {
     Bucket: process.env.S3_BUCKET_NAME,
-    Key: `${fileName}_${v1().replace('-', '')}`,
+    Key: `${v1().replace(/-/g, '')}.${fileType.split('/')[1]}`,
     Fields: {
       acl: 'public-read',
       'Content-Type': fileType,

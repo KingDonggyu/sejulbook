@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import categoryService from 'server/features/category/category.service';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (_: NextApiRequest, res: NextApiResponse) => {
   const result = await categoryService.getCategories();
 
   if (!result.error) {
