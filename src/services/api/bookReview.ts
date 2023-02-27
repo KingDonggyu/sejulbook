@@ -52,7 +52,7 @@ export const uploadLocalImage = async (blob: Blob) => {
   } catch (error) {
     throw new BookReviewError({
       name: 'IMAGE_UPLOAD_ERROR',
-      message: bookReviewError.WrongFileFormat,
+      message: bookReviewError.WRONG_FILE_FORMAT,
     });
   }
 };

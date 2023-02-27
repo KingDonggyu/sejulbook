@@ -1,7 +1,8 @@
+export type UserId = number;
 type Gender = 0 | 1 | 2;
 
 interface UserEntity {
-  id: number;
+  id: UserId;
   sub: string;
   email: string;
   nick: string;

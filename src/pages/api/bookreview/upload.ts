@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const response: HttpFailed = {
       error: true,
       code: 400,
-      message: bookReviewError.WrongFileFormat,
+      message: bookReviewError.WRONG_FILE_FORMAT,
     };
 
     res.status(response.code).json(response);
