@@ -8,7 +8,7 @@ import NextAuth, {
 } from 'next-auth';
 import KakaoProvider, { KakaoProfile } from 'next-auth/providers/kakao';
 import NaverProvider, { NaverProfile } from 'next-auth/providers/naver';
-import UserService from 'server/features/user/user.service';
+import userService from 'server/features/user/user.service';
 import formatGenderToNumber from '@/utils/formatGenderToNumber';
 import formatAgeRange from '@/utils/formatAgeRange';
 import { OAuthName } from '@/constants';
@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
         ? (profile as KakaoProfile).id.toString()
         : (profile as NaverProfile).response.id;
 
-      const response = await UserService.getUserId({ sub: userInfo.sub });
+      const response = await userService.getUserId({ sub: userInfo.sub });
 
       if (!response.error) {
         userInfo.id = response.data.id;

@@ -1,7 +1,8 @@
+export type UserId = number;
 type Gender = 0 | 1 | 2;
 
 interface UserDTO {
-  id: number | null;
+  id: UserId | null;
   sub: string;
   email: string;
   name: string;

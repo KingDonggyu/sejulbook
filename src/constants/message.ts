@@ -1,5 +1,5 @@
-export const error = {
-  PUBLISH_THUMBNAIL: '책 표지 사진을 업로드해주세요.',
-  PUBLISH_CATEGORY: '카테고리를 선택해주세요.',
-  PUBLISH_RATING: '평점을 선택해주세요.',
-} as const;
+export const bookReviewError = {
+  WRONG_FILE_FORMAT: '지원하지 않는 파일 형식입니다.',
+  NO_AUTH: '사용자 인증에 실패했습니다.',
+  NOT_LOGGED: '로그인 후 이용해주세요.',
+};

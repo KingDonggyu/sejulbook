@@ -16,6 +16,10 @@ const NavDropdown = ({ userId }: { userId: UserId }) => {
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
   const isShowMenu = Boolean(anchorEl);
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <div>
       <Button onClick={handleToggle} css={s.nickNameButtonStyle}>

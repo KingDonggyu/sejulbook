@@ -1,37 +1,21 @@
-import { Book, BookThumbnail } from './book';
-import { UserName } from './user';
+import {
+  Book,
+  BookAuthor,
+  BookPublication,
+  BookPublisher,
+  BookThumbnail,
+  BookTitle,
+} from './book';
+import { UserId, UserName } from './user';
 
-export type Category =
-  | '소설'
-  | '시/에세이'
-  | '인문'
-  | '가정/육아'
-  | '요리'
-  | '건강'
-  | '취미/실용/스포츠'
-  | '경제/경영'
-  | '자기계발'
-  | '정치/사회'
-  | '역사/문화'
-  | '종교'
-  | '예술/대중문화'
-  | '기술/공학'
-  | '외국어'
-  | '과학'
-  | '취업/수험서'
-  | '여행'
-  | '컴퓨터/IT'
-  | '만화'
-  | null;
+type CategoryId = number;
 
+export type BookReviewId = number;
+export type Category = { id: CategoryId; category: string };
 export type Rating = number;
-
 export type Tag = string;
-
 export type TagList = Set<Tag>;
-
 export type Sejul = string;
-
 export type Content = string;
 
 export interface PublishInfo {
@@ -50,4 +34,18 @@ export interface BookReview extends PublishInfo {
 export interface BookReviewPost extends BookReview {
   writer: UserName;
   createdAt: string;
+}
+
+export interface PublishRequest {
+  bookname: BookTitle;
+  authors: BookAuthor;
+  publication: BookPublication;
+  publisher: BookPublisher;
+  thumbnail: BookThumbnail;
+  rating: Rating;
+  tags: Tag[];
+  sejul: Sejul;
+  content: Content;
+  userId: UserId;
+  categoryId: CategoryId;
 }

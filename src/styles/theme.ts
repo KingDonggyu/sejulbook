@@ -22,6 +22,7 @@ const maxWidth = {
   DEFAULT: '1024px',
   CONTENT: '800px',
   TABLET: '768px',
+  POST: '720px',
   MOBILE: '480px',
 };
 

@@ -1,16 +1,16 @@
 import { HttpSuccess, HttpFailed } from 'server/types/http';
 import { userError } from 'server/constants/message';
 import UserDTO from './user.dto';
-import UserModel from './user.model';
+import userModel from './user.model';
 
 type UserId = Pick<UserDTO, 'id'>;
 type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
 
-const UserService = {
+const userService = {
   getUserId: async ({
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<HttpSuccess<UserId> | HttpFailed> => {
-    const result = await UserModel.getUserId({ sub });
+    const result = await userModel.getUserId({ sub });
 
     return {
       error: false,
@@ -29,7 +29,7 @@ const UserService = {
       };
     }
 
-    const result = await UserModel.getUserById({ id });
+    const result = await userModel.getUserById({ id });
 
     if (result === null) {
       return {
@@ -52,7 +52,7 @@ const UserService = {
   getUserByName: async ({
     name,
   }: Pick<UserDTO, 'name'>): Promise<HttpSuccess<User | null> | HttpFailed> => {
-    const result = await UserModel.getUserByName({ nick: name });
+    const result = await userModel.getUserByName({ nick: name });
 
     if (!result) {
       return {
@@ -101,7 +101,7 @@ const UserService = {
     }
 
     const isDuplicateName = Boolean(
-      await UserModel.getUserByName({ nick: name }),
+      await userModel.getUserByName({ nick: name }),
     );
 
     if (isDuplicateName) {
@@ -112,10 +112,10 @@ const UserService = {
       };
     }
 
-    await UserModel.createUser({ ...user, nick: name });
+    await userModel.createUser({ ...user, nick: name });
 
     return { error: false, data: undefined };
   },
 };
 
-export default UserService;
+export default userService;

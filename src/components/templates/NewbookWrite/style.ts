@@ -19,7 +19,7 @@ export const Wrapper = styled.div`
   gap: 50px;
   display: flex;
   flex-direction: column;
-  max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
+  max-width: ${({ theme }) => theme.MAX_WIDTH.POST};
 `;
 
 export const BookName = styled.h1`

@@ -1,8 +1,10 @@
 type BookISBN = string;
 export type BookTitle = string;
+export type BookAuthor = string;
 export type BookThumbnail = string | undefined;
-export type BookAuthors = string[];
+export type BookAuthors = BookAuthor[];
 export type BookPublisher = string;
+export type BookPublication = string;
 
 export interface BookSearchedItem {
   isbn?: BookISBN;
@@ -13,7 +15,7 @@ export interface BookSearchedItem {
 }
 
 export interface Book extends BookSearchedItem {
-  datetime: string;
+  datetime: BookPublication;
 }
 
 export interface BookResponse {

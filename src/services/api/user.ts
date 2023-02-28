@@ -2,7 +2,7 @@ import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import { SignUpRequset, User, UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
-import { UserError } from '../errors';
+import UserError from '../errors/UserError';
 
 const API_URL = `http://localhost:3000/api/users`;
 

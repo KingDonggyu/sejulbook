@@ -5,3 +5,12 @@ export const userError = {
   NOT_MATCHED_PATTERN_NAME: '이름에는 문자와 숫자만 사용할 수 있습니다.',
   USER_NOT_FOUND: '사용자를 찾을 수 없습니다.',
 };
+
+export const bookReviewError = {
+  EMPTY_BOOK: '책을 선택해주세요.',
+  EMPTY_SEJUL: '세 줄 독후감을 작성해주세요.',
+  EMPTY_THUMBNAIL: '책 표지 사진을 설정해주세요.',
+  EMPTY_CATEGORY: '카테고리를 선택해주세요.',
+  EMPTY_RATING: '평점을 선택해주세요.',
+  LIMIT_REACHED_RATING: '평점은 1 이상 5 이하만 선택할 수 있습니다.',
+};
