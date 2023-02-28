@@ -1,11 +1,12 @@
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { useRouter } from 'next/router';
-import { dehydrate } from '@tanstack/react-query';
+import { dehydrate, useQuery } from '@tanstack/react-query';
 
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prefetchQuery from '@/utils/prefetchQuery';
 import { getUserQuery } from '@/services/queries/user';
+import { getBookReviewListQuery } from '@/services/queries/bookReview';
 import useUser from '@/hooks/services/queries/useUser';
 
 import Library from '@/components/templates/Library';
@@ -18,6 +19,11 @@ import Bookshelf from '@/components/organisms/Bookshelf';
 const LibraryPage = () => {
   const router = useRouter();
   const user = useUser(Number(router.query.id));
+  const { data: bookReviewList } = useQuery(
+    getBookReviewListQuery(Number(router.query.id)),
+  );
+
+  console.log(bookReviewList);
 
   return (
     <>
@@ -44,7 +50,10 @@ export const getServerSideProps = async ({
     };
   }
 
-  const queryClient = await prefetchQuery(getUserQuery(session.id));
+  const queryClient = await prefetchQuery([
+    getUserQuery(session.id),
+    getBookReviewListQuery(session.id),
+  ]);
 
   return {
     props: { dehydratedState: dehydrate(queryClient) },

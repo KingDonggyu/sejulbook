@@ -49,3 +49,7 @@ export interface PublishRequest {
   userId: UserId;
   categoryId: CategoryId;
 }
+
+export interface BookReviewResponse extends PublishRequest {
+  id: BookReviewId;
+}

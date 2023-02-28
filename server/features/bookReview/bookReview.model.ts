@@ -19,6 +19,17 @@ enum Column {
 }
 
 const bookReviewModel = {
+  getBookReviewList: async ({ user_id }: Pick<BookReviewEntity, 'user_id'>) => {
+    const sql = `
+      select ${Column.ID}, ${Column.BOOK_NAME} 
+      from ${TABLE_NAME} 
+      where ${Column.USER_ID} = ${user_id}
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id' | 'bookname'>>(sql);
+    return result;
+  },
+
   createBookReview: async (
     bookReview: Omit<BookReviewEntity, 'id' | 'devide'>,
   ) => {

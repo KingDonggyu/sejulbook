@@ -3,7 +3,18 @@ import { HttpSuccess, HttpFailed } from 'server/types/http';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 
+type BookReivewList = Pick<BookReviewDTO, 'id' | 'bookname'>[];
+
 const bookReviewService = {
+  getBookReviewList: async ({
+    userId,
+  }: Pick<BookReviewDTO, 'userId'>): Promise<
+    HttpSuccess<BookReivewList> | HttpFailed
+  > => {
+    const data = await bookReviewModel.getBookReviewList({ user_id: userId });
+    return { error: false, data };
+  },
+
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id'>,
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {

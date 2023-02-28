@@ -4,6 +4,7 @@ import { HttpResponse } from '@/types/http';
 import {
   BookReview,
   BookReviewId,
+  BookReviewResponse,
   Category,
   PublishRequest,
 } from '@/types/features/bookReview';
@@ -119,5 +120,28 @@ export const publishBookReview = async ({
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'PUBLISH_ERROR', message });
+  }
+};
+
+type BookReivewList = Pick<BookReviewResponse, 'id' | 'bookname'>[];
+
+export const getBookReviewList = async (userId: UserId) => {
+  try {
+    const response = await get<HttpResponse<BookReivewList[]>>(
+      `${API_URL}/list`,
+      { userId },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_BOOKREIVEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_BOOKREIVEW_LIST_ERROR', message });
   }
 };
