@@ -1,4 +1,14 @@
 import { toast } from 'react-toastify';
+import { ButtonVariant, ColorVariant } from '@/constants';
+import { ModalKey } from '@/constants/keys';
+import useOpenClose from '@/hooks/useOpenClose';
+import useLoginStatus from '@/hooks/useLoginStatus';
+import { Book } from '@/types/features/book';
+import { BookReviewId } from '@/types/features/bookReview';
+import bookReviewStore from '@/stores/bookReviewStore';
+import { publishBookReview } from '@/services/api/bookReview';
+import { BookReviewError } from '@/services/errors/BookReviewError';
+
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
 import Rating from '@/components/molecules/Rating';
@@ -6,40 +16,41 @@ import TagInput from '@/components/molecules/TagInput';
 import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
 import CategoryModal from '@/components/organisms/CategoryModal';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
-import { ButtonVariant, ColorVariant } from '@/constants';
-import { ModalKey } from '@/constants/keys';
-import useOpenClose from '@/hooks/useOpenClose';
-import useLoginStatus from '@/hooks/useLoginStatus';
-import { Book } from '@/types/features/book';
-import bookReviewStore from '@/stores/bookReviewStore';
-import { publishBookReview } from '@/services/api/bookReview';
-import { BookReviewError } from '@/services/errors/BookReviewError';
 import * as s from './style';
+
+type CompleteHandler = (bookReviewId: BookReviewId) => void;
 
 interface PublishSideBarProps {
   newbook: Book;
   anchorEl: HTMLElement | null;
   handleClose: () => void;
+  handleComplete?: CompleteHandler;
 }
 
 const PublishSideBar = ({
   newbook,
   anchorEl,
   handleClose,
+  handleComplete,
 }: PublishSideBarProps) => {
   const { session, isLogin } = useLoginStatus();
   const { bookReview, setThumbnail, setCategory, setRating, setTag } =
     bookReviewStore();
 
-  const handleComplete = async () => {
+  const handlePublish = async () => {
     try {
       if (!isLogin) {
         return;
       }
-      await publishBookReview({
+
+      const bookReviewId = await publishBookReview({
         bookReview,
         userId: session.id,
       });
+
+      if (handleComplete) {
+        handleComplete(bookReviewId);
+      }
     } catch (error) {
       if (error instanceof BookReviewError) {
         toast.error(error.message);
@@ -83,7 +94,7 @@ const PublishSideBar = ({
           <Button
             variant={ButtonVariant.OUTLINED}
             color={ColorVariant.PRIMARY}
-            onClick={handleComplete}
+            onClick={handlePublish}
           >
             발행
           </Button>
@@ -93,7 +104,13 @@ const PublishSideBar = ({
   );
 };
 
-const PublishButton = ({ newbook }: { newbook: Book }) => {
+const PublishButton = ({
+  newbook,
+  handleComplete,
+}: {
+  newbook: Book;
+  handleComplete?: CompleteHandler;
+}) => {
   const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   return (
@@ -109,6 +126,7 @@ const PublishButton = ({ newbook }: { newbook: Book }) => {
         newbook={newbook}
         anchorEl={anchorEl}
         handleClose={handleClose}
+        handleComplete={handleComplete}
       />
     </>
   );

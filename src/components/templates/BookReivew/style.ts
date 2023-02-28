@@ -6,7 +6,7 @@ export const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
   gap: 50px;
-  max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
+  max-width: ${({ theme }) => theme.MAX_WIDTH.POST};
 `;
 
 export const Header = styled.header`

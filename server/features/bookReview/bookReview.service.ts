@@ -1,12 +1,12 @@
 import { bookReviewError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
-import BookReviewDTO from './bookReview.dto';
+import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 
 const bookReviewService = {
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id'>,
-  ): Promise<HttpSuccess<undefined> | HttpFailed> => {
+  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
     if (!bookReview.bookname) {
       return {
         error: true,
@@ -55,17 +55,18 @@ const bookReviewService = {
       };
     }
 
-    await bookReviewModel.createBookReview({
+    const data = await bookReviewModel.createBookReview({
       ...bookReview,
       writer: bookReview.authors,
       grade: bookReview.rating,
-      sejulplus: bookReview.content,
+      sejul: bookReview.sejul.replace(/"/g, '""'),
+      sejulplus: bookReview.content.replace(/"/g, '""'),
       user_id: bookReview.userId,
       category_id: bookReview.categoryId,
       divide: bookReview.isDraftSave ? 0 : 1,
     });
 
-    return { error: false, data: undefined };
+    return { error: false, data };
   },
 };
 

@@ -1,3 +1,4 @@
+import { ResultSetHeader } from 'mysql2';
 import query from 'server/database/query';
 import BookReviewEntity from './bookReviewEntity';
 
@@ -22,11 +23,13 @@ const bookReviewModel = {
     bookReview: Omit<BookReviewEntity, 'id' | 'devide'>,
   ) => {
     const sql = `insert into ${TABLE_NAME} values (
+      null,
       "${bookReview.bookname}",
       "${bookReview.writer}",
       "${bookReview.publication}",
       "${bookReview.publisher}",
       ${bookReview.grade},
+      "${bookReview.thumbnail}",
       "${bookReview.sejul}",
       "${bookReview.sejulplus}",
       default,
@@ -35,7 +38,8 @@ const bookReviewModel = {
       ${1}
     )`;
 
-    await query(sql);
+    const result = await query(sql);
+    return (result as unknown as ResultSetHeader).insertId;
   },
 };
 

@@ -3,7 +3,6 @@ import { css, Theme } from '@emotion/react';
 export const editorContentStyle = (theme: Theme) => css`
   cursor: text;
   outline: none;
-  min-height: 300px;
   color: ${theme.COLOR.TEXT};
   font-size: ${theme.FONT_SIZE.SMALL};
 
@@ -14,6 +13,15 @@ export const editorContentStyle = (theme: Theme) => css`
   * {
     margin: revert;
     padding: revert;
+    -webkit-font-smoothing: auto;
+  }
+
+  p,
+  h1,
+  h2,
+  h3 {
+    margin: 20px 0;
+    line-height: 1.7;
   }
 
   h1,

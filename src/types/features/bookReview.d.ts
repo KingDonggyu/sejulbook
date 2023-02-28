@@ -10,6 +10,7 @@ import { UserId, UserName } from './user';
 
 type CategoryId = number;
 
+export type BookReviewId = number;
 export type Category = { id: CategoryId; category: string };
 export type Rating = number;
 export type Tag = string;
@@ -42,9 +43,9 @@ export interface PublishRequest {
   publisher: BookPublisher;
   thumbnail: BookThumbnail;
   rating: Rating;
+  tags: Tag[];
   sejul: Sejul;
   content: Content;
   userId: UserId;
   categoryId: CategoryId;
-  isDraftSave: false;
 }

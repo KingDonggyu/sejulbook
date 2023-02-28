@@ -3,6 +3,7 @@ import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import {
   BookReview,
+  BookReviewId,
   Category,
   PublishRequest,
 } from '@/types/features/bookReview';
@@ -95,14 +96,14 @@ export const publishBookReview = async ({
       ...bookReview,
       bookname: bookReview.book.title,
       authors: bookReview.book.authors.join(', '),
-      publication: bookReview.book.datetime,
+      publication: bookReview.book.datetime.slice(0, 10),
       publisher: bookReview.book.publisher,
       categoryId: bookReview.category.id,
-      isDraftSave: false,
+      tags: Array.from(bookReview.tag),
       userId,
     };
 
-    const response = await post<HttpResponse<undefined>>(
+    const response = await post<HttpResponse<BookReviewId>>(
       `${API_URL}/publish`,
       publishRequest,
     );
@@ -113,6 +114,8 @@ export const publishBookReview = async ({
         message: response.message,
       });
     }
+
+    return response.data;
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'PUBLISH_ERROR', message });
