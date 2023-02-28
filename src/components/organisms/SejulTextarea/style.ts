@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%;
+  width: 100%;
   margin: auto;
   gap: 25px;
   & > img {
@@ -22,10 +22,16 @@ export const Viewer = styled.div`
   white-space: pre-line;
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  }
 `;
 
 export const textAreaStyle = (theme: Theme) => css`
   text-align: center;
   font-size: ${theme.FONT_SIZE.MEDIUM};
   font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
+  @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${theme.FONT_SIZE.SMALL};
+  }
 `;

@@ -13,7 +13,6 @@ export const editorContentStyle = (theme: Theme) => css`
   * {
     margin: revert;
     padding: revert;
-    -webkit-font-smoothing: auto;
   }
 
   p,
@@ -71,11 +70,14 @@ export const editorContentStyle = (theme: Theme) => css`
   }
 
   strong {
-    font-weight: ${theme.FONT_WEIGHT.MYEONGJO_BOLD};
+    font-weight: ${theme.FONT_WEIGHT.BOLD};
   }
 
   img {
+    object-fit: cover;
     max-width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 `;
 

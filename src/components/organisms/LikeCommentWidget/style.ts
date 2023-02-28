@@ -58,7 +58,6 @@ export const WidgetItem = styled.div`
 
 export const Count = styled.span`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
   font-family: ${({ theme }) => theme.FONT_FAMILY.notoSansKR};
   @media screen and (max-width: ${RESPONSIVE_WIDTH}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};

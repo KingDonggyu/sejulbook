@@ -18,7 +18,7 @@ const BookReviewHeader = ({
 }: BookReviewHeaderProps) => (
   <s.Header>
     <s.TitleWrapper>
-      <s.Category>{bookReivew.category}</s.Category>
+      <s.Category>{bookReivew.category.category}</s.Category>
       <s.BookName>{bookReivew.book.title}</s.BookName>
     </s.TitleWrapper>
     <s.HeaderBottom>
