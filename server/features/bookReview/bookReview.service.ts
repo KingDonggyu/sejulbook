@@ -1,17 +1,46 @@
 import { bookReviewError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
+import commentModel from '../comment/comment.model';
+import likeModel from '../like/like.model';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 
-type BookReivewList = Pick<BookReviewDTO, 'id' | 'bookname'>[];
+type BookReviewSummary = Pick<
+  BookReviewDTO,
+  'id' | 'bookname' | 'sejul' | 'thumbnail'
+>;
 
 const bookReviewService = {
   getBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<BookReivewList> | HttpFailed
+    HttpSuccess<BookReviewSummary[]> | HttpFailed
   > => {
-    const data = await bookReviewModel.getBookReviewList({ user_id: userId });
+    const bookReviewList = await bookReviewModel.getBookReviewList({
+      user_id: userId,
+    });
+
+    const promises = bookReviewList.map(
+      async ({ id, ...bookReviewSummary }) => {
+        const likeResult = await likeModel.getLikeCountByBookReview({
+          sejulbook_id: id,
+        });
+
+        const commentResult = await commentModel.getCommentCountByBookReview({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          likeCount: likeResult.count,
+          commentCount: commentResult.count,
+          ...bookReviewSummary,
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+
     return { error: false, data };
   },
 

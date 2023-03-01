@@ -11,6 +11,7 @@ enum Column {
   PUBLICATION = 'publication',
   PUBLISHER = 'publisher',
   GRADE = 'grade',
+  THUMBNAIL = 'thumbnail',
   SEJUL = 'sejul',
   SEJUL_PLUS = 'sejulplus',
   USER_ID = 'user_id',
@@ -18,15 +19,20 @@ enum Column {
   DEVIDE = 'devide',
 }
 
+type BookReviewSummary = Pick<
+  BookReviewEntity,
+  'id' | 'bookname' | 'sejul' | 'thumbnail'
+>;
+
 const bookReviewModel = {
   getBookReviewList: async ({ user_id }: Pick<BookReviewEntity, 'user_id'>) => {
     const sql = `
-      select ${Column.ID}, ${Column.BOOK_NAME} 
+      select ${Column.ID}, ${Column.BOOK_NAME}, ${Column.SEJUL}, ${Column.THUMBNAIL}
       from ${TABLE_NAME} 
       where ${Column.USER_ID} = ${user_id}
     `;
 
-    const result = await query<Pick<BookReviewEntity, 'id' | 'bookname'>>(sql);
+    const result = await query<BookReviewSummary[]>(sql);
     return result;
   },
 
@@ -49,8 +55,8 @@ const bookReviewModel = {
       ${1}
     )`;
 
-    const result = await query(sql);
-    return (result as unknown as ResultSetHeader).insertId;
+    const { insertId } = await query<ResultSetHeader>(sql);
+    return insertId;
   },
 };
 

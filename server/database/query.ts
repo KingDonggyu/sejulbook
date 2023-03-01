@@ -7,7 +7,7 @@ const query = async <T>(sql: string) => {
     [result] = await conn.query(sql);
   });
 
-  return result as unknown as T[];
+  return result as unknown as T;
 };
 
 export default query;
