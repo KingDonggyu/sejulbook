@@ -1,3 +1,4 @@
+import { ForwardedRef, forwardRef } from 'react';
 import Image, { ImageProps } from 'next/image';
 import styled from '@emotion/styled';
 import { AiOutlineQuestionCircle } from '@react-icons/all-files/ai/AiOutlineQuestionCircle';
@@ -22,13 +23,24 @@ type ExtendedImageProps =
 
 type ThumbnailProps = ExtendedImageProps & StyleProps;
 
-const Thumbnail = ({ src, width, height, ...imageProps }: ThumbnailProps) =>
-  src ? (
-    <Image src={src} width={width} height={height} {...imageProps} />
-  ) : (
-    <AltThumbnail width={width as number} height={height as number}>
-      <AiOutlineQuestionCircle size={25} />
-    </AltThumbnail>
-  );
+const Thumbnail = forwardRef(
+  (
+    { src, width, height, ...imageProps }: ThumbnailProps,
+    ref: ForwardedRef<HTMLImageElement>,
+  ) =>
+    src ? (
+      <Image
+        ref={ref}
+        src={src}
+        width={width}
+        height={height}
+        {...imageProps}
+      />
+    ) : (
+      <AltThumbnail width={width as number} height={height as number}>
+        <AiOutlineQuestionCircle size={25} />
+      </AltThumbnail>
+    ),
+);
 
 export default Thumbnail;

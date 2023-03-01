@@ -3,16 +3,16 @@ import bookReviewService from 'server/features/bookReview/bookReview.service';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { userId } = req.query;
-  const result = await bookReviewService.getBookReviewList({
+  const bookReviewListresult = await bookReviewService.getBookReviewList({
     userId: Number(userId),
   });
 
-  if (!result.error) {
-    res.status(200).json(result);
+  if (!bookReviewListresult.error) {
+    res.status(200).json(bookReviewListresult);
     return;
   }
 
-  res.status(result.code).json(result);
+  res.status(bookReviewListresult.code).json(bookReviewListresult);
 };
 
 export default handler;

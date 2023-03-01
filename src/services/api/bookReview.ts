@@ -2,9 +2,9 @@ import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import {
-  BookReview,
+  BookReivewList,
+  NewBookReview,
   BookReviewId,
-  BookReviewResponse,
   Category,
   PublishRequest,
 } from '@/types/features/bookReview';
@@ -89,7 +89,7 @@ export const publishBookReview = async ({
   bookReview,
   userId,
 }: {
-  bookReview: BookReview;
+  bookReview: NewBookReview;
   userId: UserId;
 }) => {
   try {
@@ -123,11 +123,9 @@ export const publishBookReview = async ({
   }
 };
 
-type BookReivewList = Pick<BookReviewResponse, 'id' | 'bookname'>[];
-
 export const getBookReviewList = async (userId: UserId) => {
   try {
-    const response = await get<HttpResponse<BookReivewList[]>>(
+    const response = await get<HttpResponse<BookReivewList>>(
       `${API_URL}/list`,
       { userId },
     );

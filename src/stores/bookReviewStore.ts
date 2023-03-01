@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import {
-  BookReview,
+  NewBookReview,
   Category,
   Content,
   PublishInfo,
@@ -20,7 +20,7 @@ const initlializedBook: Book = {
   datetime: '',
 };
 
-const initlializedBookReview: BookReview = {
+const initlializedBookReview: NewBookReview = {
   book: initlializedBook,
   thumbnail: undefined,
   category: { id: 0, category: '' },
@@ -31,7 +31,7 @@ const initlializedBookReview: BookReview = {
 };
 
 interface BookReviewState {
-  bookReview: BookReview;
+  bookReview: NewBookReview;
   setBook: (book: Book) => void;
   setThumbnail: (thumbnail: BookThumbnail) => void;
   setCategory: (category: Category) => void;
@@ -40,7 +40,7 @@ interface BookReviewState {
   setSejul: (sejul: Sejul) => void;
   setContent: (content: Content) => void;
   setPublishInfo: (publishInfo: PublishInfo) => void;
-  setBookReivew: (bookReview: BookReview) => void;
+  setBookReivew: (bookReview: NewBookReview) => void;
 }
 
 const bookReviewStore = create<BookReviewState>((set) => ({
@@ -78,7 +78,7 @@ const bookReviewStore = create<BookReviewState>((set) => ({
     set((state) => ({ bookReview: { ...state.bookReview, ...publishInfo } }));
   },
 
-  setBookReivew: (bookReview: BookReview) => {
+  setBookReivew: (bookReview: NewBookReview) => {
     set({ bookReview });
   },
 }));

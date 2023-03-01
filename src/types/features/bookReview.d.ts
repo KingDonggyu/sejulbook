@@ -27,13 +27,8 @@ export interface PublishInfo {
   content: Content;
 }
 
-export interface BookReview extends PublishInfo {
+export interface NewBookReview extends PublishInfo {
   book: Book;
-}
-
-export interface BookReviewPost extends BookReview {
-  writer: UserName;
-  createdAt: string;
 }
 
 export interface PublishRequest {
@@ -52,4 +47,19 @@ export interface PublishRequest {
 
 export interface BookReviewResponse extends PublishRequest {
   id: BookReviewId;
+}
+
+export type BookReviewSummary = Pick<
+  BookReviewResponse,
+  'id' | 'bookname' | 'sejul' | 'thumbnail'
+> & {
+  likeCount: number;
+  commentCount: number;
+};
+
+export type BookReivewList = BookReviewSummary[];
+
+export interface BookReviewPost extends NewBookReview {
+  writer: UserName;
+  createdAt: string;
 }
