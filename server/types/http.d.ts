@@ -8,3 +8,5 @@ export interface HttpFailed {
   code: number;
   message: string;
 }
+
+export type HttpResponse<T> = PromiseConstructor<HttpSuccess<T> | HttpFailed>;

@@ -14,9 +14,13 @@ import LikeCommentWidget from '@/components/organisms/LikeCommentWidget';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
 
 import { BookReviewResponse } from '@/types/features/bookReview';
+import { Tag } from '@/types/features/tag';
 import { Comment } from '@/types/features/comment';
 import prefetchQuery from '@/utils/prefetchQuery';
-import { getBookReviewQuery } from '@/services/queries/bookReview';
+import {
+  getBookReviewQuery,
+  getTagsQuery,
+} from '@/services/queries/bookReview';
 import useQuery from '@/hooks/useQuery';
 import { authOptions } from '../api/auth/[...nextauth]';
 
@@ -40,11 +44,14 @@ const comments: Comment[] = [
 
 const BookreviewPage = () => {
   const router = useRouter();
+  const bookReviewId = Number(router.query.id);
   const commentRef = useRef<HTMLDivElement>(null);
 
   const { data: bookReview } = useQuery<BookReviewResponse>(
-    getBookReviewQuery(Number(router.query.id)),
+    getBookReviewQuery(bookReviewId),
   );
+
+  const { data: tags } = useQuery<Tag[]>(getTagsQuery(bookReviewId));
 
   const handleClickCommentButton = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,8 +86,10 @@ const BookreviewPage = () => {
           책정보
         </BookInfoBox.Button>
       }
-      ratingViewer={<Rating size={17} gap={3} readonly />}
-      // tagList={<TagList tag={Array.from(bookReview.tag)} />}
+      ratingViewer={
+        <Rating init={Number(bookReview.rating)} size={17} gap={3} readonly />
+      }
+      tagList={tags && <TagList tags={tags} />}
       comment={
         <div ref={commentRef}>
           <CommentContainer comments={comments} />
@@ -105,6 +114,7 @@ export const getServerSideProps = async ({
 
   const queryClient = await prefetchQuery([
     getBookReviewQuery(Number(query.id)),
+    getTagsQuery(Number(query.id)),
   ]);
 
   return {

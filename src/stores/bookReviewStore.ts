@@ -6,9 +6,8 @@ import {
   PublishInfo,
   Rating,
   Sejul,
-  Tag,
-  TagList,
 } from '@/types/features/bookReview';
+import { Tag, TagList } from '@/types/features/tag';
 import { Book, BookThumbnail } from '@/types/features/book';
 
 const initlializedBook: Book = {

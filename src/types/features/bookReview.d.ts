@@ -13,8 +13,6 @@ type CategoryId = number;
 export type BookReviewId = number;
 export type Category = { id: CategoryId; category: string };
 export type Rating = number;
-export type Tag = string;
-export type TagList = Set<Tag>;
 export type Sejul = string;
 export type Content = string;
 
