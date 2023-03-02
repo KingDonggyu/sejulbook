@@ -35,7 +35,6 @@ const ThumbnailUploader = ({
   const handleUpload = async (file: File) => {
     try {
       const url = await uploadLocalImage(file);
-      console.log(url);
       setImageSrc(url);
       handleChangeThumbnail(url);
     } catch (error) {
