@@ -10,9 +10,7 @@ enum Column {
 }
 
 const likeModel = {
-  getLikeCountByBookReview: async ({
-    sejulbook_id,
-  }: Pick<LikeEntity, 'sejulbook_id'>) => {
+  getLikeCount: async ({ sejulbook_id }: Pick<LikeEntity, 'sejulbook_id'>) => {
     const sql = `
       select count(${Column.ID}) as count
       from ${TABLE_NAME}

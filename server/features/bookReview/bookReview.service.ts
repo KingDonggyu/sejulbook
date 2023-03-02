@@ -1,14 +1,22 @@
 import { bookReviewError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
+import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
 import likeModel from '../like/like.model';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
+import formatEntityToDTO from './utils/formatEntityToDTO';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
   'id' | 'bookname' | 'sejul' | 'thumbnail'
 >;
+
+interface PublishedBookReview
+  extends Omit<BookReviewDTO, 'categoryId' | 'isDraftSave'> {
+  category: string;
+  likeCount: number;
+}
 
 const bookReviewService = {
   getBookReviewList: async ({
@@ -22,11 +30,11 @@ const bookReviewService = {
 
     const promises = bookReviewList.map(
       async ({ id, ...bookReviewSummary }) => {
-        const likeResult = await likeModel.getLikeCountByBookReview({
+        const likeResult = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
 
-        const commentResult = await commentModel.getCommentCountByBookReview({
+        const commentResult = await commentModel.getCommentCount({
           sejulbook_id: id,
         });
 
@@ -40,6 +48,51 @@ const bookReviewService = {
     );
 
     const data = await Promise.all(promises);
+
+    return { error: false, data };
+  },
+
+  getBookReivew: async ({
+    id,
+  }: Pick<BookReviewDTO, 'id'>): Promise<
+    HttpSuccess<PublishedBookReview> | HttpFailed
+  > => {
+    const [bookReviewData] = await bookReviewModel.getBookReivew({ id });
+
+    if (!bookReviewData) {
+      return {
+        error: true,
+        code: 404,
+        message: bookReviewError.NOT_EXIST_BOOKREVIEW,
+      };
+    }
+
+    const bookReview = formatEntityToDTO(bookReviewData);
+
+    if (bookReview.isDraftSave) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.NOT_PUBLISHED_BOOKREVIEW,
+      };
+    }
+
+    const { category } = await categoryModel.getCategory({
+      id: bookReview.categoryId,
+    });
+
+    const { count: likeCount } = await likeModel.getLikeCount({
+      sejulbook_id: id,
+    });
+
+    delete (bookReview as Partial<BookReviewDTO>).categoryId;
+    delete (bookReview as Partial<BookReviewDTO>).isDraftSave;
+
+    const data: PublishedBookReview = {
+      ...bookReview,
+      category,
+      likeCount,
+    };
 
     return { error: false, data };
   },

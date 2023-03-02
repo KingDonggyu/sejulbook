@@ -36,8 +36,15 @@ const bookReviewModel = {
     return result;
   },
 
+  getBookReivew: async ({ id }: Pick<BookReviewEntity, 'id'>) => {
+    const sql = `select * from ${TABLE_NAME} where ${Column.ID} = ${id}`;
+
+    const result = await query<BookReviewEntity[]>(sql);
+    return result;
+  },
+
   createBookReview: async (
-    bookReview: Omit<BookReviewEntity, 'id' | 'devide'>,
+    bookReview: Omit<BookReviewEntity, 'id' | 'devide' | 'datecreated'>,
   ) => {
     const sql = `insert into ${TABLE_NAME} values (
       null,

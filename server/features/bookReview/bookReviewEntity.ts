@@ -18,6 +18,7 @@ interface BookReviewEntity {
   user_id: UserId;
   category_id: CategoryId;
   divide: Devide;
+  datecreated: string;
 }
 
 export default BookReviewEntity;

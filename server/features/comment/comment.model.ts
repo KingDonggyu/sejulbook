@@ -11,7 +11,7 @@ enum Column {
 }
 
 const commentModel = {
-  getCommentCountByBookReview: async ({
+  getCommentCount: async ({
     sejulbook_id,
   }: Pick<CommentEntity, 'sejulbook_id'>) => {
     const sql = `
@@ -21,6 +21,19 @@ const commentModel = {
     `;
 
     const [result] = await query<{ count: number }[]>(sql);
+    return result;
+  },
+
+  getComments: async ({
+    sejulbook_id,
+  }: Pick<CommentEntity, 'sejulbook_id'>) => {
+    const sql = `
+      select *
+      from ${TABLE_NAME}
+      where ${Column.BOOKREVIEW_ID} = ${sejulbook_id}
+    `;
+
+    const result = await query<CommentEntity[]>(sql);
     return result;
   },
 };
