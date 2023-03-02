@@ -6,13 +6,14 @@ import * as s from './style';
 
 interface LikeCommentWidgetProps {
   likeCount: number;
-  // commentCount: number;
+  commentCount: number;
   handleClickLikeButton: () => void;
   handleClickCommentButton: () => void;
 }
 
 const LikeCommentWidget = ({
   likeCount,
+  commentCount,
   handleClickLikeButton,
   handleClickCommentButton,
 }: LikeCommentWidgetProps) => (
@@ -28,7 +29,7 @@ const LikeCommentWidget = ({
             <CommentIcon />
             댓글
           </Button>
-          <s.Count>3</s.Count>
+          <s.Count>{commentCount}</s.Count>
         </s.WidgetItem>
       </Box>
     </s.Widget>

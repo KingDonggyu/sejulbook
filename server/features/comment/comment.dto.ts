@@ -5,7 +5,7 @@ interface CommentDTO {
   bookReviewId: BookReviewId;
   commenterId: UserId;
   content: string;
-  createAt: string;
+  createdAt: string;
 }
 
 export default CommentDTO;

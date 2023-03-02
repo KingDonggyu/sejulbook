@@ -20,6 +20,7 @@ import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
 const LibraryPage = () => {
   const router = useRouter();
   const userId = Number(router.query.id);
+
   const user = useUser(userId);
   const bookReviewList = useBookReviewList(userId);
 
@@ -27,7 +28,12 @@ const LibraryPage = () => {
     <>
       <DocumentTitle title={`${user.name}의 서재`} />
       <Library
-        profile={<Profile userId={Number(router.query.id)} />}
+        profile={
+          <Profile
+            userId={userId}
+            bookReviewCount={bookReviewList ? bookReviewList.length : 0}
+          />
+        }
         profileEditButton={<ProfileEditButton />}
         bookReivewSortButton={<BookReivewSort />}
         bookshelf={

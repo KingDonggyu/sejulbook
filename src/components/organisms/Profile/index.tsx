@@ -3,7 +3,12 @@ import useUser from '@/hooks/services/queries/useUser';
 import { UserId } from '@/types/features/user';
 import * as s from './style';
 
-const Profile = ({ userId }: { userId: UserId }) => {
+interface ProfileProps {
+  userId: UserId;
+  bookReviewCount: number;
+}
+
+const Profile = ({ userId, bookReviewCount }: ProfileProps) => {
   const user = useUser(userId);
 
   return (
@@ -15,7 +20,7 @@ const Profile = ({ userId }: { userId: UserId }) => {
       <s.DetailWrapper>
         <s.DatailItem>
           <span>읽은 책</span>
-          <em>3</em>
+          <em>{bookReviewCount}</em>
         </s.DatailItem>
         <s.DatailItem>
           <Link href="/">

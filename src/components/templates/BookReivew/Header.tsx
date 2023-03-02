@@ -24,7 +24,7 @@ const BookReviewHeader = ({
     <s.HeaderBottom>
       <s.WritingInfo>
         <s.Writer>
-          <Link href={`${Route.LIBRARY}/${bookReivew.id}`}>
+          <Link href={`${Route.LIBRARY}/${bookReivew.userId}`}>
             {bookReivew.writer}
           </Link>
           의 독후감

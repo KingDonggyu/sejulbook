@@ -9,4 +9,4 @@ export interface HttpFailed {
   message: string;
 }
 
-export type HttpResponse<T> = PromiseConstructor<HttpSuccess<T> | HttpFailed>;
+export type HttpResponse<T> = HttpSuccess<T> | HttpFailed;

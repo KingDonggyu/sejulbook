@@ -19,31 +19,17 @@ import {
 import prefetchQuery from '@/services/prefetchQuery';
 import useBookReview from '@/hooks/services/queries/useBookReview';
 import useTags from '@/hooks/services/queries/useTags';
-
-const comments = [
-  {
-    writer: '동쪽별',
-    content: '잘 읽었습니다',
-    createdAt: '2023-02-11T13:00:00',
-  },
-  {
-    writer: '강무진',
-    content: '감동이네요',
-    createdAt: '2023-02-12T09:00:00',
-  },
-  {
-    writer: '배준형',
-    content: '별로네요..',
-    createdAt: '2023-02-12T19:00:00',
-  },
-];
+import useComments from '@/hooks/services/queries/useComments';
+import { getCommentsQuery } from '@/services/queries/comment';
 
 const BookreviewPage = () => {
   const router = useRouter();
   const bookReviewId = Number(router.query.id);
   const commentRef = useRef<HTMLDivElement>(null);
+
   const bookReview = useBookReview(bookReviewId);
   const tags = useTags(bookReviewId);
+  const comments = useComments(bookReviewId);
 
   const handleClickCommentButton = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,6 +45,7 @@ const BookreviewPage = () => {
       likeCommentWidget={
         <LikeCommentWidget
           likeCount={bookReview.likeCount}
+          commentCount={comments.length}
           handleClickLikeButton={() => {}}
           handleClickCommentButton={handleClickCommentButton}
         />
@@ -94,9 +81,12 @@ const BookreviewPage = () => {
 export const getServerSideProps = async ({
   query,
 }: GetServerSidePropsContext) => {
+  const bookReviewId = Number(query.id);
+
   const queryClient = await prefetchQuery([
-    getBookReviewQuery(Number(query.id)),
-    getTagsQuery(Number(query.id)),
+    getBookReviewQuery(bookReviewId),
+    getTagsQuery(bookReviewId),
+    getCommentsQuery(bookReviewId),
   ]);
 
   return {
