@@ -6,17 +6,19 @@ import {
   BookThumbnail,
   BookTitle,
 } from './book';
-import { UserId, UserName } from './user';
-
-type CategoryId = number;
+import { CategoryId, Category } from './category';
+import { Tag, TagList } from './tag';
+import { UserId } from './user';
 
 export type BookReviewId = number;
-export type Category = { id: CategoryId; category: string };
 export type Rating = number;
 export type Sejul = string;
 export type Content = string;
 
-export interface PublishInfo {
+/**
+ * 새 독후감 관련 타입
+ */
+export interface NewPublishInfo {
   thumbnail: BookThumbnail;
   category: Category;
   rating: Rating;
@@ -25,10 +27,13 @@ export interface PublishInfo {
   content: Content;
 }
 
-export interface NewBookReview extends PublishInfo {
+export interface NewBookReview extends NewPublishInfo {
   book: Book;
 }
 
+/**
+ * 독후감 생성 요청 타입
+ */
 export interface PublishRequest {
   bookname: BookTitle;
   authors: BookAuthor;
@@ -43,6 +48,9 @@ export interface PublishRequest {
   categoryId: CategoryId;
 }
 
+/**
+ * 독후감 정보 응답 타입
+ */
 export interface BookReviewResponse
   extends Omit<PublishRequest, 'tags' | 'categoryId'> {
   id: BookReviewId;
@@ -60,8 +68,3 @@ export type BookReviewSummary = Pick<
 };
 
 export type BookReivewList = BookReviewSummary[];
-
-export interface BookReviewPost extends NewBookReview {
-  writer: UserName;
-  createdAt: string;
-}

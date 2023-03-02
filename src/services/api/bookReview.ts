@@ -5,9 +5,9 @@ import {
   BookReivewList,
   NewBookReview,
   BookReviewId,
-  Category,
   PublishRequest,
 } from '@/types/features/bookReview';
+import { Category } from '@/types/features/category';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';

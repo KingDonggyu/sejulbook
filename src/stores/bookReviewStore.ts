@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import {
   NewBookReview,
-  Category,
   Content,
-  PublishInfo,
+  NewPublishInfo,
   Rating,
   Sejul,
 } from '@/types/features/bookReview';
+import { Category } from '@/types/features/category';
 import { Tag, TagList } from '@/types/features/tag';
 import { Book, BookThumbnail } from '@/types/features/book';
 
@@ -38,7 +38,7 @@ interface BookReviewState {
   setTag: (tag: TagList) => void;
   setSejul: (sejul: Sejul) => void;
   setContent: (content: Content) => void;
-  setPublishInfo: (publishInfo: PublishInfo) => void;
+  setPublishInfo: (publishInfo: NewPublishInfo) => void;
   setBookReivew: (bookReview: NewBookReview) => void;
 }
 
@@ -73,7 +73,7 @@ const bookReviewStore = create<BookReviewState>((set) => ({
     set((state) => ({ bookReview: { ...state.bookReview, content } }));
   },
 
-  setPublishInfo: (publishInfo: PublishInfo) => {
+  setPublishInfo: (publishInfo: NewPublishInfo) => {
     set((state) => ({ bookReview: { ...state.bookReview, ...publishInfo } }));
   },
 

@@ -1,11 +1,9 @@
+import Query from '@/types/query';
 import { BookReviewId } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
-import Query from '@/types/query';
-import {
-  getBookReview,
-  getBookReviewList,
-  getCategories,
-} from '../api/bookReview';
+
+import { getBookReview, getBookReviewList } from '../api/bookReview';
+import { getCategories } from '../api/category';
 import { getTags } from '../api/tag';
 
 const BASE_QUERY_KEY = 'bookReview';
