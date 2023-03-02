@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import prefetchQuery from '@/utils/prefetchQuery';
+import prefetchQuery from '@/services/prefetchQuery';
 import { getUserQuery } from '@/services/queries/user';
 import { getBookReviewListQuery } from '@/services/queries/bookReview';
 import useUser from '@/hooks/services/queries/useUser';

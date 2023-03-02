@@ -16,7 +16,7 @@ import BookInfoBox from '@/components/organisms/BookInfoBox';
 import { BookReviewResponse } from '@/types/features/bookReview';
 import { Tag } from '@/types/features/tag';
 import { Comment } from '@/types/features/comment';
-import prefetchQuery from '@/utils/prefetchQuery';
+import prefetchQuery from '@/services/prefetchQuery';
 import {
   getBookReviewQuery,
   getTagsQuery,
