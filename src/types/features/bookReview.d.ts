@@ -45,8 +45,12 @@ export interface PublishRequest {
   categoryId: CategoryId;
 }
 
-export interface BookReviewResponse extends PublishRequest {
+export interface BookReviewResponse
+  extends Omit<PublishRequest, 'tags' | 'categoryId'> {
   id: BookReviewId;
+  category: string;
+  likeCount: number;
+  createdAt: string;
 }
 
 export type BookReviewSummary = Pick<

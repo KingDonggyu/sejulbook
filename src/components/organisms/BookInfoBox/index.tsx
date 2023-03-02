@@ -9,15 +9,19 @@ import { BoxVariant } from '@/constants';
 import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
+interface BookInfoBoxProps extends Omit<Book, 'authors'> {
+  authors: string;
+}
+
 const BookInfoBox = ({
   title,
   authors,
   thumbnail,
   publisher,
   datetime,
-}: Book) => {
+}: BookInfoBoxProps) => {
   const bookInfoList = [
-    { label: '저자', content: authors.join(', ') },
+    { label: '저자', content: authors },
     { label: '출판', content: publisher },
     { label: '발매', content: formatDate(datetime) },
   ];
@@ -43,7 +47,10 @@ const BookInfoBox = ({
   );
 };
 
-const BookInfoBoxButton = ({ children, ...bookInfo }: Book & ButtonProps) => {
+const BookInfoBoxButton = ({
+  children,
+  ...bookInfo
+}: BookInfoBoxProps & ButtonProps) => {
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
 
   return (

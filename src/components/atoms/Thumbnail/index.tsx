@@ -1,21 +1,8 @@
 import { ForwardedRef, forwardRef } from 'react';
 import Image, { ImageProps } from 'next/image';
-import styled from '@emotion/styled';
 import { AiOutlineQuestionCircle } from '@react-icons/all-files/ai/AiOutlineQuestionCircle';
 import { StyleProps } from '@/types/style';
-import { searchedItemThumbnailStyle } from '@/styles/common';
-
-const AltThumbnail = styled.div<{ width: number; height: number }>`
-  ${({ theme }) => searchedItemThumbnailStyle(theme)};
-  width: ${({ width }) => `${width}px`};
-  height: ${({ height }) => `${height}px`};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.COLOR.PRIMARY};
-  color: ${({ theme }) => theme.COLOR.PRIMARY};
-`;
+import * as s from './style';
 
 type ExtendedImageProps =
   | ImageProps
@@ -34,12 +21,13 @@ const Thumbnail = forwardRef(
         src={src}
         width={width}
         height={height}
+        css={s.thumbnailStyle}
         {...imageProps}
       />
     ) : (
-      <AltThumbnail width={width as number} height={height as number}>
+      <s.AltThumbnail width={width as number} height={height as number}>
         <AiOutlineQuestionCircle size={25} />
-      </AltThumbnail>
+      </s.AltThumbnail>
     ),
 );
 

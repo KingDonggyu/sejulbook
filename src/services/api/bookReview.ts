@@ -143,3 +143,23 @@ export const getBookReviewList = async (userId: UserId) => {
     throw new BookReviewError({ name: 'GET_BOOKREIVEW_LIST_ERROR', message });
   }
 };
+
+export const getBookReview = async (bookReviewId: BookReviewId) => {
+  try {
+    const response = await get<HttpResponse<BookReivewList>>(
+      `${API_URL}/${bookReviewId}`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_BOOKREVIEW_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_BOOKREVIEW_ERROR', message });
+  }
+};

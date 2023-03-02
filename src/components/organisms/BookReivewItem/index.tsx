@@ -9,6 +9,7 @@ import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
 const BookReviewItem = ({
+  id,
   bookname,
   sejul,
   thumbnail,
@@ -34,7 +35,7 @@ const BookReviewItem = ({
 
   return (
     <s.Wrapper>
-      <Link href={`${Route.BOOKREVIEW}/1`}>
+      <Link href={`${Route.BOOKREVIEW}/${id}`}>
         <s.ThumnailWrapper
           onMouseEnter={handleMouseEnterThumbnail}
           onMouseLeave={handleMouseLeaveThumbnail}
