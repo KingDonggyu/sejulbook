@@ -2,15 +2,14 @@ import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import modalStore from '@/stores/modalStore';
-import { Category } from '@/types/features/bookReview';
-import useQuery from '@/hooks/useQuery';
-import { getCategoriesQuery } from '@/services/queries/bookReview';
+import { CategoryResponse } from '@/types/features/category';
+import useCategories from '@/hooks/services/queries/useCategories';
 import { useState } from 'react';
 import * as s from './style';
 
 type CategoryModalProps = {
   modalKey: string;
-  handleClickCategory: (category: Category) => void;
+  handleClickCategory: (category: CategoryResponse) => void;
 };
 
 const CategoryModal = ({
@@ -18,7 +17,7 @@ const CategoryModal = ({
   handleClickCategory,
   ...modalProps
 }: CategoryModalProps & Omit<ModalProps, 'children'>) => {
-  const { data: categories } = useQuery<Category[]>(getCategoriesQuery);
+  const categories = useCategories();
 
   return (
     <Modal modalKey={modalKey} {...modalProps}>
@@ -46,10 +45,10 @@ const CategoryButton = ({
   handleClickCategory,
   ...buttonProps
 }: CategoryModalProps & ButtonProps) => {
-  const [category, setCategory] = useState<Category | null>(null);
+  const [category, setCategory] = useState<CategoryResponse | null>(null);
   const { openModal, closeModal } = modalStore();
 
-  const handleClick = (selectedCategory: Category) => {
+  const handleClick = (selectedCategory: CategoryResponse) => {
     setCategory(selectedCategory);
     handleClickCategory(selectedCategory);
     closeModal(modalKey);

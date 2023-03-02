@@ -13,4 +13,6 @@ export const bookReviewError = {
   EMPTY_CATEGORY: '카테고리를 선택해주세요.',
   EMPTY_RATING: '평점을 선택해주세요.',
   LIMIT_REACHED_RATING: '평점은 1 이상 5 이하만 선택할 수 있습니다.',
+  NOT_EXIST_BOOKREVIEW: '존재하지 않는 독후감입니다.',
+  NOT_PUBLISHED_BOOKREVIEW: '발행되지 않은 독후감입니다.',
 };

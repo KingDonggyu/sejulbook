@@ -37,10 +37,10 @@ export const CommentWrapper = styled.div`
     color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
   }
-  &:first-child {
+  &:first-of-type {
     padding-top: 0;
   }
-  &:last-child {
+  &:last-of-type {
     padding-bottom: 0;
     border-bottom: none;
   }

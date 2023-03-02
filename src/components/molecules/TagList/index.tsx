@@ -3,7 +3,7 @@ import { ButtonVariant, ColorVariant } from '@/constants';
 import styled from '@emotion/styled';
 
 interface TagListProps {
-  tag: string[];
+  tags: string[];
   handleTagClick?: () => void;
 }
 
@@ -15,9 +15,9 @@ const Wrapper = styled.div`
   gap: 8px;
 `;
 
-const TagList = ({ tag, handleTagClick }: TagListProps) => (
+const TagList = ({ tags, handleTagClick }: TagListProps) => (
   <Wrapper>
-    {tag.map((name) => (
+    {tags.map((name) => (
       <Button
         key={name}
         elevation={0}

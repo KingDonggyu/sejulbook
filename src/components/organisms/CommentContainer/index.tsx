@@ -3,22 +3,33 @@ import Button from '@/components/atoms/Button';
 import TextArea, { TextAreaProps } from '@/components/atoms/TextArea';
 import { ButtonVariant, ColorVariant, TextFieldVariant } from '@/constants';
 import Route from '@/constants/routes';
-import { Comment } from '@/types/features/comment';
+import { CommentResponse } from '@/types/features/comment';
 import formatDate from '@/utils/formatDateToKorean';
+import useUser from '@/hooks/services/queries/useUser';
 import * as s from './style';
 
-const CommentItem = ({ writer, content, createdAt }: Comment) => (
-  <s.CommentWrapper>
-    <s.CommentInfo>
-      <Link href={`${Route.LIBRARY}/1`}>{writer}</Link>
-      <time>{formatDate(createdAt)}</time>
-    </s.CommentInfo>
-    <s.CommentContent>{content}</s.CommentContent>
-  </s.CommentWrapper>
-);
+const CommentItem = ({
+  commenterId,
+  content,
+  createdAt,
+}: Omit<CommentResponse, 'bookReviewId'>) => {
+  const user = useUser(commenterId);
+
+  return (
+    <s.CommentWrapper>
+      <s.CommentInfo>
+        <Link href={`${Route.LIBRARY}/${commenterId}`}>
+          {user && user.name}
+        </Link>
+        <time>{formatDate(createdAt)}</time>
+      </s.CommentInfo>
+      <s.CommentContent>{content}</s.CommentContent>
+    </s.CommentWrapper>
+  );
+};
 
 interface CommentContainerProps extends TextAreaProps {
-  comments: Comment[];
+  comments: CommentResponse[];
 }
 
 const CommentContainer = ({
@@ -36,16 +47,18 @@ const CommentContainer = ({
         등록
       </Button>
     </s.TextAreaWrapper>
-    <s.CommentList>
-      {comments.map(({ writer, content, createdAt }) => (
-        <CommentItem
-          key={writer + createdAt}
-          writer={writer}
-          content={content}
-          createdAt={createdAt}
-        />
-      ))}
-    </s.CommentList>
+    {Boolean(comments.length) && (
+      <s.CommentList>
+        {comments.map(({ commenterId, content, createdAt }) => (
+          <CommentItem
+            key={createdAt}
+            commenterId={commenterId}
+            content={content}
+            createdAt={createdAt}
+          />
+        ))}
+      </s.CommentList>
+    )}
   </>
 );
 

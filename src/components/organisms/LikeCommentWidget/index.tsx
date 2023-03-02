@@ -5,11 +5,15 @@ import LikeButton from '@/components/molecules/LikeButton';
 import * as s from './style';
 
 interface LikeCommentWidgetProps {
+  likeCount: number;
+  commentCount: number;
   handleClickLikeButton: () => void;
   handleClickCommentButton: () => void;
 }
 
 const LikeCommentWidget = ({
+  likeCount,
+  commentCount,
   handleClickLikeButton,
   handleClickCommentButton,
 }: LikeCommentWidgetProps) => (
@@ -18,14 +22,14 @@ const LikeCommentWidget = ({
       <Box radius={30} css={s.boxStyle}>
         <s.WidgetItem>
           <LikeButton handleClick={handleClickLikeButton} />
-          <s.Count>13</s.Count>
+          <s.Count>{likeCount}</s.Count>
         </s.WidgetItem>
         <s.WidgetItem>
           <Button css={s.buttonStyle} onClick={handleClickCommentButton}>
             <CommentIcon />
             댓글
           </Button>
-          <s.Count>3</s.Count>
+          <s.Count>{commentCount}</s.Count>
         </s.WidgetItem>
       </Box>
     </s.Widget>

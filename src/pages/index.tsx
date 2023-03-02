@@ -15,7 +15,7 @@ import { signUp } from '@/services/api/user';
 import UserError from '@/services/errors/UserError';
 import { getUserQuery } from '@/services/queries/user';
 import { Introduce, UserName } from '@/types/features/user';
-import prefetchQuery from '@/utils/prefetchQuery';
+import prefetchQuery from '@/services/prefetchQuery';
 
 const HomePage = () => {
   const { session, isSignupRequired } = useLoginStatus();
@@ -71,7 +71,7 @@ export const getServerSideProps = async ({
     };
   }
 
-  const queryClient = await prefetchQuery(getUserQuery(session.id));
+  const queryClient = await prefetchQuery([getUserQuery(session.id)]);
 
   return {
     props: { dehydratedState: dehydrate(queryClient) },

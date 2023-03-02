@@ -18,7 +18,7 @@ const userModel = {
   getUserById: async ({ id }: Pick<UserEntity, 'id'>) => {
     const sql = `select * from ${TABLE_NAME} where ${Column.ID} = ${id};`;
 
-    const result = await query<UserEntity>(sql);
+    const result = await query<UserEntity[]>(sql);
 
     if (result.length) {
       return result[0];
@@ -29,7 +29,7 @@ const userModel = {
 
   getUserByName: async ({ nick }: Pick<UserEntity, 'nick'>) => {
     const sql = `select * from ${TABLE_NAME} where ${Column.NICK} = "${nick}";`;
-    const result = await query<UserEntity>(sql);
+    const result = await query<UserEntity[]>(sql);
 
     if (result.length) {
       return result[0];
@@ -40,10 +40,21 @@ const userModel = {
 
   getUserId: async ({ sub }: Pick<UserEntity, 'sub'>) => {
     const sql = `select ${Column.ID} from ${TABLE_NAME} where ${Column.SUB} = "${sub}";`;
-    const result = await query<Pick<UserEntity, 'id'>>(sql);
+    const result = await query<Pick<UserEntity, 'id'>[]>(sql);
 
     if (result.length) {
       return result[0].id;
+    }
+
+    return null;
+  },
+
+  getUserName: async ({ id }: Pick<UserEntity, 'id'>) => {
+    const sql = `select ${Column.NICK} from ${TABLE_NAME} where ${Column.ID} = "${id}";`;
+    const result = await query<Pick<UserEntity, 'nick'>[]>(sql);
+
+    if (result.length) {
+      return result[0].nick;
     }
 
     return null;

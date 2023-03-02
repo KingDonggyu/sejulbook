@@ -1,8 +1,9 @@
 export type CategoryId = number;
+export type Category = string;
 
 interface CategoryDTO {
   id: CategoryId;
-  category: string;
+  category: Category;
 }
 
 export default CategoryDTO;

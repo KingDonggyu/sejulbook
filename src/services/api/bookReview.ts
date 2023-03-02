@@ -2,11 +2,12 @@ import { PresignedPost } from '@aws-sdk/s3-presigned-post';
 import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import {
-  BookReview,
+  BookReivewList,
+  NewBookReview,
   BookReviewId,
-  Category,
   PublishRequest,
 } from '@/types/features/bookReview';
+import { CategoryResponse } from '@/types/features/category';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';
@@ -66,7 +67,7 @@ export const uploadLocalImage = async (blob: Blob) => {
 
 export const getCategories = async () => {
   try {
-    const response = await get<HttpResponse<Category[]>>(
+    const response = await get<HttpResponse<CategoryResponse[]>>(
       `${API_URL}/categories`,
     );
 
@@ -88,7 +89,7 @@ export const publishBookReview = async ({
   bookReview,
   userId,
 }: {
-  bookReview: BookReview;
+  bookReview: NewBookReview;
   userId: UserId;
 }) => {
   try {
@@ -119,5 +120,46 @@ export const publishBookReview = async ({
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'PUBLISH_ERROR', message });
+  }
+};
+
+export const getBookReviewList = async (userId: UserId) => {
+  try {
+    const response = await get<HttpResponse<BookReivewList>>(
+      `${API_URL}/list`,
+      { userId },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_BOOKREIVEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_BOOKREIVEW_LIST_ERROR', message });
+  }
+};
+
+export const getBookReview = async (bookReviewId: BookReviewId) => {
+  try {
+    const response = await get<HttpResponse<BookReivewList>>(
+      `${API_URL}/${bookReviewId}`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_BOOKREVIEW_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_BOOKREVIEW_ERROR', message });
   }
 };

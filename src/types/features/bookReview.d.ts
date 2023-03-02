@@ -6,36 +6,34 @@ import {
   BookThumbnail,
   BookTitle,
 } from './book';
+import { Category, CategoryId, CategoryResponse } from './category';
+import { Tag, TagList } from './tag';
 import { UserId, UserName } from './user';
 
-type CategoryId = number;
-
 export type BookReviewId = number;
-export type Category = { id: CategoryId; category: string };
 export type Rating = number;
-export type Tag = string;
-export type TagList = Set<Tag>;
 export type Sejul = string;
 export type Content = string;
 
-export interface PublishInfo {
+/**
+ * 새 독후감 관련 타입
+ */
+export interface NewPublishInfo {
   thumbnail: BookThumbnail;
-  category: Category;
+  category: CategoryResponse;
   rating: Rating;
   tag: TagList;
   sejul: Sejul;
   content: Content;
 }
 
-export interface BookReview extends PublishInfo {
+export interface NewBookReview extends NewPublishInfo {
   book: Book;
 }
 
-export interface BookReviewPost extends BookReview {
-  writer: UserName;
-  createdAt: string;
-}
-
+/**
+ * 독후감 생성 요청 타입
+ */
 export interface PublishRequest {
   bookname: BookTitle;
   authors: BookAuthor;
@@ -49,3 +47,25 @@ export interface PublishRequest {
   userId: UserId;
   categoryId: CategoryId;
 }
+
+/**
+ * 독후감 정보 응답 타입
+ */
+export interface BookReviewResponse
+  extends Omit<PublishRequest, 'tags' | 'categoryId'> {
+  id: BookReviewId;
+  writer: UserName;
+  category: Category;
+  likeCount: number;
+  createdAt: string;
+}
+
+export type BookReviewSummary = Pick<
+  BookReviewResponse,
+  'id' | 'bookname' | 'sejul' | 'thumbnail'
+> & {
+  likeCount: number;
+  commentCount: number;
+};
+
+export type BookReivewList = BookReviewSummary[];

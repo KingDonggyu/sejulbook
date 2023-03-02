@@ -17,6 +17,7 @@ interface BookReviewDTO {
   userId: UserId;
   categoryId: CategoryId;
   isDraftSave: boolean;
+  createdAt: string;
 }
 
 export default BookReviewDTO;

@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { BookReviewPost } from '@/types/features/bookReview';
+import { BookReviewResponse } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
 import * as s from './style';
 
 export interface BookReviewBottomProps {
-  bookReivew: BookReviewPost;
+  bookReivew: BookReviewResponse;
   ratingViewer: ReactNode;
   tagList: ReactNode;
   comment: ReactNode;
@@ -20,7 +20,10 @@ const BookReviewBottom = ({
   <s.Bottom>
     <s.RatingWrapper>
       <s.Writer>
-        <Link href={`${Route.LIBRARY}/1`}>{bookReivew.writer}</Link>의 평점
+        <Link href={`${Route.LIBRARY}/${bookReivew.userId}`}>
+          {bookReivew.writer}
+        </Link>
+        의 평점
       </s.Writer>
       {ratingViewer}
     </s.RatingWrapper>
