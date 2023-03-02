@@ -3,8 +3,7 @@ import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import modalStore from '@/stores/modalStore';
 import { CategoryResponse } from '@/types/features/category';
-import useQuery from '@/hooks/useQuery';
-import { getCategoriesQuery } from '@/services/queries/bookReview';
+import useCategories from '@/hooks/services/queries/useCategories';
 import { useState } from 'react';
 import * as s from './style';
 
@@ -18,7 +17,7 @@ const CategoryModal = ({
   handleClickCategory,
   ...modalProps
 }: CategoryModalProps & Omit<ModalProps, 'children'>) => {
-  const { data: categories } = useQuery<CategoryResponse[]>(getCategoriesQuery);
+  const categories = useCategories();
 
   return (
     <Modal modalKey={modalKey} {...modalProps}>
