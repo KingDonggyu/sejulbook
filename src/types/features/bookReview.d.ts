@@ -6,9 +6,9 @@ import {
   BookThumbnail,
   BookTitle,
 } from './book';
-import { CategoryId, Category } from './category';
+import { Category, CategoryId, CategoryResponse } from './category';
 import { Tag, TagList } from './tag';
-import { UserId } from './user';
+import { UserId, UserName } from './user';
 
 export type BookReviewId = number;
 export type Rating = number;
@@ -20,7 +20,7 @@ export type Content = string;
  */
 export interface NewPublishInfo {
   thumbnail: BookThumbnail;
-  category: Category;
+  category: CategoryResponse;
   rating: Rating;
   tag: TagList;
   sejul: Sejul;
@@ -54,7 +54,8 @@ export interface PublishRequest {
 export interface BookReviewResponse
   extends Omit<PublishRequest, 'tags' | 'categoryId'> {
   id: BookReviewId;
-  category: string;
+  writer: UserName;
+  category: Category;
   likeCount: number;
   createdAt: string;
 }

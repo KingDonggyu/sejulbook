@@ -1,3 +1,8 @@
 type CategoryId = number;
 
-export type Category = { id: CategoryId; category: string };
+export type Category = string;
+
+export interface CategoryResponse {
+  id: CategoryId;
+  category: Category;
+}

@@ -21,6 +21,7 @@ import Bookshelf from '@/components/organisms/Bookshelf';
 const LibraryPage = () => {
   const router = useRouter();
   const user = useUser(Number(router.query.id));
+
   const { data: bookReviewList } = useQuery<BookReivewList>(
     getBookReviewListQuery(Number(router.query.id)),
   );

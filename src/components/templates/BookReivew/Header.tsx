@@ -24,7 +24,7 @@ const BookReviewHeader = ({
     <s.HeaderBottom>
       <s.WritingInfo>
         <s.Writer>
-          {/* <Link href={`${Route.LIBRARY}/1`}>{bookReivew.writer}</Link>의 독후감 */}
+          <Link href={`${Route.LIBRARY}/1`}>{bookReivew.writer}</Link>의 독후감
         </s.Writer>
         <span>·</span>
         <s.DateCreated>{formatDate(bookReivew.createdAt)}</s.DateCreated>

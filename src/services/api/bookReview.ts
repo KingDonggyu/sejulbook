@@ -7,7 +7,7 @@ import {
   BookReviewId,
   PublishRequest,
 } from '@/types/features/bookReview';
-import { Category } from '@/types/features/category';
+import { CategoryResponse } from '@/types/features/category';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';
@@ -67,7 +67,7 @@ export const uploadLocalImage = async (blob: Blob) => {
 
 export const getCategories = async () => {
   try {
-    const response = await get<HttpResponse<Category[]>>(
+    const response = await get<HttpResponse<CategoryResponse[]>>(
       `${API_URL}/categories`,
     );
 

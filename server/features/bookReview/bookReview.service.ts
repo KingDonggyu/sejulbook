@@ -1,8 +1,11 @@
-import { bookReviewError } from 'server/constants/message';
+import { bookReviewError, userError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
+import { Category } from '../category/category.dto';
 import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
 import likeModel from '../like/like.model';
+import { UserName } from '../user/user.dto';
+import userModel from '../user/user.model';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 import formatEntityToDTO from './utils/formatEntityToDTO';
@@ -14,7 +17,8 @@ type BookReviewSummary = Pick<
 
 interface PublishedBookReview
   extends Omit<BookReviewDTO, 'categoryId' | 'isDraftSave'> {
-  category: string;
+  writer: UserName;
+  category: Category;
   likeCount: number;
 }
 
@@ -77,6 +81,16 @@ const bookReviewService = {
       };
     }
 
+    const userName = await userModel.getUserName({ id: bookReview.userId });
+
+    if (!userName) {
+      return {
+        error: true,
+        code: 400,
+        message: userError.USER_NOT_FOUND,
+      };
+    }
+
     const { category } = await categoryModel.getCategory({
       id: bookReview.categoryId,
     });
@@ -90,6 +104,7 @@ const bookReviewService = {
 
     const data: PublishedBookReview = {
       ...bookReview,
+      writer: userName,
       category,
       likeCount,
     };

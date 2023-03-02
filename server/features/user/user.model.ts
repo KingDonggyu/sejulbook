@@ -49,6 +49,17 @@ const userModel = {
     return null;
   },
 
+  getUserName: async ({ id }: Pick<UserEntity, 'id'>) => {
+    const sql = `select ${Column.NICK} from ${TABLE_NAME} where ${Column.ID} = "${id}";`;
+    const result = await query<Pick<UserEntity, 'nick'>[]>(sql);
+
+    if (result.length) {
+      return result[0].nick;
+    }
+
+    return null;
+  },
+
   createUser: async (user: Omit<UserEntity, 'id'>) => {
     const sql = `insert into ${TABLE_NAME} (
       ${Column.EMAIL}, 

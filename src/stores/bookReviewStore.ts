@@ -6,7 +6,7 @@ import {
   Rating,
   Sejul,
 } from '@/types/features/bookReview';
-import { Category } from '@/types/features/category';
+import { CategoryResponse } from '@/types/features/category';
 import { Tag, TagList } from '@/types/features/tag';
 import { Book, BookThumbnail } from '@/types/features/book';
 
@@ -33,7 +33,7 @@ interface BookReviewState {
   bookReview: NewBookReview;
   setBook: (book: Book) => void;
   setThumbnail: (thumbnail: BookThumbnail) => void;
-  setCategory: (category: Category) => void;
+  setCategory: (category: CategoryResponse) => void;
   setRating: (rating: Rating) => void;
   setTag: (tag: TagList) => void;
   setSejul: (sejul: Sejul) => void;
@@ -53,7 +53,7 @@ const bookReviewStore = create<BookReviewState>((set) => ({
     set((state) => ({ bookReview: { ...state.bookReview, thumbnail } }));
   },
 
-  setCategory: (category: Category) => {
+  setCategory: (category: CategoryResponse) => {
     set((state) => ({ bookReview: { ...state.bookReview, category } }));
   },
 
