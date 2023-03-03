@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
-import useLoginStatus from '@/hooks/useLoginStatus';
+import useUserStatus from '@/hooks/useUserStatus';
 import { Book } from '@/types/features/book';
 import { BookReviewId } from '@/types/features/bookReview';
 import bookReviewStore from '@/stores/bookReviewStore';
@@ -33,7 +33,7 @@ const PublishSideBar = ({
   handleClose,
   handleComplete,
 }: PublishSideBarProps) => {
-  const { session, isLogin } = useLoginStatus();
+  const { session, isLogin } = useUserStatus();
   const { bookReview, setThumbnail, setCategory, setRating, setTag } =
     bookReviewStore();
 

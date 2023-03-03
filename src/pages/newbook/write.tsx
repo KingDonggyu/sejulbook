@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import NewbookWrite from '@/components/templates/NewbookWrite';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
@@ -11,6 +12,7 @@ import bookReviewStore from '@/stores/bookReviewStore';
 import { Book } from '@/types/features/book';
 import { BookReviewId } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
+import checkLogin from '@/services/middlewares/checkLogin';
 
 const NewbookWritePage = () => {
   const router = useRouter();
@@ -51,6 +53,11 @@ const NewbookWritePage = () => {
       />
     </>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const serverSideProps = await checkLogin(ctx);
+  return serverSideProps;
 };
 
 export default NewbookWritePage;

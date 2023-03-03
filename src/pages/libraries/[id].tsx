@@ -1,9 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
-import { getServerSession } from 'next-auth';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getUserQuery } from '@/services/queries/user';
 import { getBookReviewListQuery } from '@/services/queries/bookReview';
@@ -16,6 +14,7 @@ import ProfileEditButton from '@/components/molecules/ProfileEditButton';
 import BookReivewSort from '@/components/organisms/BookReivewSortButton';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
+import useUserStatus from '@/hooks/useUserStatus';
 
 const LibraryPage = () => {
   const router = useRouter();
@@ -23,6 +22,9 @@ const LibraryPage = () => {
 
   const user = useUser(userId);
   const bookReviewList = useBookReviewList(userId);
+  const { session } = useUserStatus();
+
+  const isMyLibrary = Boolean(session && userId === session.id);
 
   return (
     <>
@@ -34,10 +36,15 @@ const LibraryPage = () => {
             bookReviewCount={bookReviewList ? bookReviewList.length : 0}
           />
         }
-        profileEditButton={<ProfileEditButton />}
+        profileEditButton={isMyLibrary && <ProfileEditButton />}
         bookReivewSortButton={<BookReivewSort />}
         bookshelf={
-          bookReviewList && <Bookshelf bookReviewList={bookReviewList} />
+          bookReviewList && (
+            <Bookshelf
+              isMyBookshelf={isMyLibrary}
+              bookReviewList={bookReviewList}
+            />
+          )
         }
       />
     </>
@@ -45,20 +52,13 @@ const LibraryPage = () => {
 };
 
 export const getServerSideProps = async ({
-  req,
-  res,
+  query,
 }: GetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session || session.id === null) {
-    return {
-      props: { dehydratedState: null },
-    };
-  }
+  const userId = Number(query.id);
 
   const queryClient = await prefetchQuery([
-    getUserQuery(session.id),
-    getBookReviewListQuery(session.id),
+    getUserQuery(userId),
+    getBookReviewListQuery(userId),
   ]);
 
   return {

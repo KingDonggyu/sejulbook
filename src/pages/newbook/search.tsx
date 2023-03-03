@@ -1,6 +1,8 @@
+import { GetServerSidePropsContext } from 'next';
 import NewbookSearch from '@/components/templates/NewbookSearch';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
+import checkLogin from '@/services/middlewares/checkLogin';
 
 const NewbookSearchPage = () => (
   <>
@@ -10,5 +12,10 @@ const NewbookSearchPage = () => (
     />
   </>
 );
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const serverSideProps = await checkLogin(ctx);
+  return serverSideProps;
+};
 
 export default NewbookSearchPage;
