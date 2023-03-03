@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
 import BookReviewTemplate from '@/components/templates/BookReivew';
+import DocumentTitle from '@/components/atoms/DocumentTitle';
 import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
@@ -40,41 +41,44 @@ const BookreviewPage = () => {
   }
 
   return (
-    <BookReviewTemplate
-      bookReivew={bookReview}
-      likeCommentWidget={
-        <LikeCommentWidget
-          likeCount={bookReview.likeCount}
-          commentCount={comments.length}
-          handleClickLikeButton={() => {}}
-          handleClickCommentButton={handleClickCommentButton}
-        />
-      }
-      sejulViewer={<SejulTextArea value={bookReview.sejul} readonly />}
-      contentViewer={
-        <ContentEditor initialValue={bookReview.content} readonly />
-      }
-      bookInfoButton={
-        <BookInfoBox.Button
-          title={bookReview.bookname}
-          authors={bookReview.authors}
-          thumbnail={bookReview.thumbnail}
-          publisher={bookReview.publisher}
-          datetime={bookReview.publication}
-        >
-          책정보
-        </BookInfoBox.Button>
-      }
-      ratingViewer={
-        <Rating init={Number(bookReview.rating)} size={17} gap={3} readonly />
-      }
-      tagList={tags && <TagList tags={tags} />}
-      comment={
-        <div ref={commentRef}>
-          <CommentContainer comments={comments} />
-        </div>
-      }
-    />
+    <>
+      <DocumentTitle title={bookReview.bookname} />
+      <BookReviewTemplate
+        bookReivew={bookReview}
+        likeCommentWidget={
+          <LikeCommentWidget
+            likeCount={bookReview.likeCount}
+            commentCount={comments.length}
+            handleClickLikeButton={() => {}}
+            handleClickCommentButton={handleClickCommentButton}
+          />
+        }
+        sejulViewer={<SejulTextArea value={bookReview.sejul} readonly />}
+        contentViewer={
+          <ContentEditor initialValue={bookReview.content} readonly />
+        }
+        bookInfoButton={
+          <BookInfoBox.Button
+            title={bookReview.bookname}
+            authors={bookReview.authors}
+            thumbnail={bookReview.thumbnail}
+            publisher={bookReview.publisher}
+            datetime={bookReview.publication}
+          >
+            책정보
+          </BookInfoBox.Button>
+        }
+        ratingViewer={
+          <Rating init={Number(bookReview.rating)} size={17} gap={3} readonly />
+        }
+        tagList={tags && <TagList tags={tags} />}
+        comment={
+          <div ref={commentRef}>
+            <CommentContainer comments={comments} />
+          </div>
+        }
+      />
+    </>
   );
 };
 
