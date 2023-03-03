@@ -11,9 +11,10 @@ import globalStyle from '@/styles/global';
 import { LayoutProvider } from '@/contexts/layoutContext';
 import { ScreenModeProvider } from '@/contexts/screenModeContext';
 import { NewbookProvider } from '@/contexts/newbookContext';
+import defaultOptions from '@/services/queries/defaultOptions';
 
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient({ defaultOptions }));
 
   return (
     <ScreenModeProvider>
