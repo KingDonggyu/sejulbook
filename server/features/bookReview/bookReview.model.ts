@@ -1,6 +1,6 @@
 import { ResultSetHeader } from 'mysql2';
 import query from 'server/database/query';
-import BookReviewEntity from './bookReviewEntity';
+import BookReviewEntity from './bookReview.entity';
 
 const TABLE_NAME = 'sejulbook';
 

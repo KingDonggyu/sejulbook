@@ -1,4 +1,4 @@
-import { BookReviewId } from '../bookReview/bookReviewEntity';
+import { BookReviewId } from '../bookReview/bookReview.entity';
 import { UserId } from '../user/user.entity';
 
 interface CommentEntity {

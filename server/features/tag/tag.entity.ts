@@ -1,4 +1,4 @@
-import { BookReviewId } from '../bookReview/bookReviewEntity';
+import { BookReviewId } from '../bookReview/bookReview.entity';
 
 interface TagEntity {
   id: number;

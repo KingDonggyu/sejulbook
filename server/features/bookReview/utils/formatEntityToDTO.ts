@@ -1,5 +1,5 @@
 import BookReviewDTO from '../bookReview.dto';
-import BookReviewEntity from '../bookReviewEntity';
+import BookReviewEntity from '../bookReview.entity';
 
 const formatEntityToDTO = (
   bookReviewEntity: BookReviewEntity,
