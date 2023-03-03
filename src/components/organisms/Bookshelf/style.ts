@@ -41,3 +41,11 @@ export const Divider = styled.div`
   margin-bottom: 20px;
   background: ${({ theme }) => theme.COLOR.LINE};
 `;
+
+export const AltText = styled.div`
+  width: fit-content;
+  margin: auto;
+  margin-top: 100px;
+  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
+  font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
+`;

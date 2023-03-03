@@ -2,7 +2,7 @@ import nextAuth from 'next-auth';
 import { InitilaizedUser, UserId } from './features/user';
 
 export type SessionAfterLogin = { id: UserId };
-export type SessionBeforeLogin = InitilaizedUser;
+export type SessionBeforeLogin = InitilaizedUser | null;
 
 type CustomSession = SessionBeforeLogin | SessionAfterLogin;
 
