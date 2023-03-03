@@ -14,7 +14,7 @@ import ProfileEditButton from '@/components/molecules/ProfileEditButton';
 import BookReivewSort from '@/components/organisms/BookReivewSortButton';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
-import useLoginStatus from '@/hooks/useLoginStatus';
+import useUserStatus from '@/hooks/useLoginStatus';
 
 const LibraryPage = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const LibraryPage = () => {
 
   const user = useUser(userId);
   const bookReviewList = useBookReviewList(userId);
-  const { session } = useLoginStatus();
+  const { session } = useUserStatus();
 
   const isMyLibrary = Boolean(session && userId === session.id);
 
