@@ -14,7 +14,7 @@ import ProfileEditButton from '@/components/molecules/ProfileEditButton';
 import BookReivewSort from '@/components/organisms/BookReivewSortButton';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
-import useUserStatus from '@/hooks/useLoginStatus';
+import useUserStatus from '@/hooks/useUserStatus';
 
 const LibraryPage = () => {
   const router = useRouter();

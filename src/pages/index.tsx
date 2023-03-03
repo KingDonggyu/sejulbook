@@ -9,7 +9,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 import { ModalKey } from '@/constants/keys';
-import useUserStatus from '@/hooks/useLoginStatus';
+import useUserStatus from '@/hooks/useUserStatus';
 import modalStore from '@/stores/modalStore';
 import { signUp } from '@/services/api/user';
 import UserError from '@/services/errors/UserError';

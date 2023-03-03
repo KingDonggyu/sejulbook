@@ -2,7 +2,7 @@ import LogoButton from '@/components/molecules/LogoButton';
 import SearchButton from '@/components/molecules/SearchButton';
 import NavDropdown from '@/components/organisms/NavDropdown';
 import AccountButton from '@/components/organisms/AccountButton';
-import useUserStatus from '@/hooks/useLoginStatus';
+import useUserStatus from '@/hooks/useUserStatus';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import * as s from './style';
 
