@@ -1,9 +1,9 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
-    SEJULBOOK_DB_HOST: string;
-    SEJULBOOK_DB_USER: string;
-    SEJULBOOK_DB_DATABASE: string;
-    SEJULBOOK_DB_PASSWORD: string;
+    PLANETSCALE_DB_HOST: string;
+    PLANETSCALE_DB_USERNAME: string;
+    PLANETSCALE_DB: string;
+    PLANETSCALE_DB_PASSWORD: string;
 
     SEJULBOOK_LOCAL_DB_HOST: string;
     SEJULBOOK_LOCAL_DB_USER: string;
