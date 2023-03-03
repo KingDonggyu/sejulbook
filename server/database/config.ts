@@ -1,10 +1,10 @@
 import { ConnectionOptions } from 'mysql2/promise';
 
 const config: ConnectionOptions = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
+  host: process.env.SEJULBOOK_DB_HOST,
+  user: process.env.SEJULBOOK_DB_USER,
+  database: process.env.SEJULBOOK_DB_DATABASE,
+  password: process.env.SEJULBOOK_DB_PASSWORD,
   ssl: { rejectUnauthorized: true },
   connectionLimit: 50,
 };

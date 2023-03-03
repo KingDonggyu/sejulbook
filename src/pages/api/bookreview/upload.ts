@@ -21,14 +21,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const s3Client = new S3Client({
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: process.env.SEJULBOOK_AWS_ACCESS_KEY,
+      secretAccessKey: process.env.SEJULBOOK_AWS_SECRET_ACCESS_KEY,
     },
-    region: process.env.AWS_REGION,
+    region: process.env.SEJULBOOK_AWS_REGION,
   });
 
   const presignedPost = await createPresignedPost(s3Client, {
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: process.env.SEJULBOOK_S3_BUCKET_NAME,
     Key: `${v1().replace(/-/g, '')}.${fileType.split('/')[1]}`,
     Fields: {
       acl: 'public-read',
