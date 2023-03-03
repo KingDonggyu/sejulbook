@@ -1,9 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
-import { getServerSession } from 'next-auth';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getUserQuery } from '@/services/queries/user';
 import { getBookReviewListQuery } from '@/services/queries/bookReview';
@@ -45,20 +43,13 @@ const LibraryPage = () => {
 };
 
 export const getServerSideProps = async ({
-  req,
-  res,
+  query,
 }: GetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session || session.id === null) {
-    return {
-      props: { dehydratedState: null },
-    };
-  }
+  const userId = Number(query.id);
 
   const queryClient = await prefetchQuery([
-    getUserQuery(session.id),
-    getBookReviewListQuery(session.id),
+    getUserQuery(userId),
+    getBookReviewListQuery(userId),
   ]);
 
   return {
