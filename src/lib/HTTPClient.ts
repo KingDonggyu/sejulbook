@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  withCredentials: true,
+  baseURL: process.env.SEJULBOOK_BASE_URL,
 });
 
 export const get = async <T>(url: string, params = {}, headers = {}) => {
