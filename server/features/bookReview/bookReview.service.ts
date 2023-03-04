@@ -124,6 +124,22 @@ const bookReviewService = {
       };
     }
 
+    if (!bookReview.sejul) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.EMPTY_SEJUL,
+      };
+    }
+
+    if (!bookReview.thumbnail) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.EMPTY_THUMBNAIL,
+      };
+    }
+
     if (!bookReview.categoryId) {
       return {
         error: true,
@@ -145,22 +161,6 @@ const bookReviewService = {
         error: true,
         code: 400,
         message: bookReviewError.LIMIT_REACHED_RATING,
-      };
-    }
-
-    if (!bookReview.sejul) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_SEJUL,
-      };
-    }
-
-    if (!bookReview.thumbnail) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_THUMBNAIL,
       };
     }
 

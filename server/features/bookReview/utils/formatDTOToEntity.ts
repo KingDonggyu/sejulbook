@@ -3,7 +3,9 @@ import OriginBookReviewEntity from '../bookReview.entity';
 
 type BookReviewEntity = Omit<OriginBookReviewEntity, 'id' | 'datecreated'>;
 
-const formatDTOToEntity = (bookReviewDTO: BookReviewDTO): BookReviewEntity => {
+const formatDTOToEntity = (
+  bookReviewDTO: Omit<BookReviewDTO, 'id'>,
+): BookReviewEntity => {
   const bookReviewEntity: BookReviewEntity = {
     ...bookReviewDTO,
     writer: bookReviewDTO.authors,

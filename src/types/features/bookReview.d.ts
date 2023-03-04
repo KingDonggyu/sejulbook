@@ -3,7 +3,7 @@ import {
   BookAuthor,
   BookPublication,
   BookPublisher,
-  BookThumbnail as OriginThumbnail,
+  BookThumbnail,
   BookTitle,
 } from './book';
 import { Category, CategoryId, CategoryResponse } from './category';
@@ -11,16 +11,16 @@ import { Tag, TagList } from './tag';
 import { UserId, UserName } from './user';
 
 export type BookReviewId = number;
+export type BookReviewThumbnail = string;
 export type Rating = number;
 export type Sejul = string;
 export type Content = string;
-export type Thumbnail = string;
 
 /**
  * 새 독후감 관련 타입
  */
 export interface NewPublishInfo {
-  thumbnail: Thumbnail;
+  thumbnail: BookThumbnail;
   category: CategoryResponse;
   rating: Rating;
   tag: TagList;
@@ -40,24 +40,25 @@ export interface PublishRequest {
   authors: BookAuthor;
   publication: BookPublication;
   publisher: BookPublisher;
-  thumbnail: Thumbnail;
+  thumbnail: BookThumbnail;
   rating: Rating;
   tags: Tag[];
   sejul: Sejul;
   content: Content;
   userId: UserId;
   categoryId: CategoryId;
-  originThumbnail: OriginThumbnail;
+  originThumbnail: BookThumbnail;
 }
 
 /**
  * 독후감 정보 응답 타입
  */
 export interface BookReviewResponse
-  extends Omit<PublishRequest, 'tags' | 'categoryId'> {
+  extends Omit<PublishRequest, 'tags' | 'categoryId' | 'originThumbnail'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;
+  originThumbnail: BookReviewThumbnail;
   likeCount: number;
   createdAt: string;
 }
