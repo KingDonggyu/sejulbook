@@ -172,6 +172,7 @@ const bookReviewService = {
       user_id: bookReview.userId,
       category_id: bookReview.categoryId,
       divide: bookReview.isDraftSave ? 0 : 1,
+      origin_thumbnail: bookReview.originThumbnail,
     });
 
     return { error: false, data };

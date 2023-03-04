@@ -17,6 +17,7 @@ const formatEntityToDTO = (
     userId: bookReviewEntity.user_id,
     categoryId: bookReviewEntity.category_id,
     isDraftSave: Boolean(!bookReviewEntity.divide),
+    originThumbnail: bookReviewEntity.origin_thumbnail,
     createdAt: bookReviewEntity.datecreated,
   };
 

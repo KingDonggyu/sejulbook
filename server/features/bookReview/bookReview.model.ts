@@ -17,6 +17,7 @@ enum Column {
   USER_ID = 'user_id',
   CATEGORY_ID = 'category_id',
   DEVIDE = 'devide',
+  ORIGIN_THUMBNAIL = 'origin_thumbnail',
 }
 
 type BookReviewSummary = Pick<
@@ -60,6 +61,7 @@ const bookReviewModel = {
       ${bookReview.user_id},
       ${bookReview.category_id},
       ${1}
+      ${bookReview.origin_thumbnail}
     )`;
 
     const { insertId } = await query<ResultSetHeader>(sql);
