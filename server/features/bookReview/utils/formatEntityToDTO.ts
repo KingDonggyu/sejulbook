@@ -1,5 +1,5 @@
 import BookReviewDTO from '../bookReview.dto';
-import BookReviewEntity from '../bookReviewEntity';
+import BookReviewEntity from '../bookReview.entity';
 
 const formatEntityToDTO = (
   bookReviewEntity: BookReviewEntity,
@@ -17,6 +17,7 @@ const formatEntityToDTO = (
     userId: bookReviewEntity.user_id,
     categoryId: bookReviewEntity.category_id,
     isDraftSave: Boolean(!bookReviewEntity.divide),
+    originThumbnail: bookReviewEntity.origin_thumbnail || undefined,
     createdAt: bookReviewEntity.datecreated,
   };
 

@@ -11,6 +11,7 @@ import { Tag, TagList } from './tag';
 import { UserId, UserName } from './user';
 
 export type BookReviewId = number;
+export type BookReviewThumbnail = string;
 export type Rating = number;
 export type Sejul = string;
 export type Content = string;
@@ -46,16 +47,18 @@ export interface PublishRequest {
   content: Content;
   userId: UserId;
   categoryId: CategoryId;
+  originThumbnail: BookThumbnail;
 }
 
 /**
  * 독후감 정보 응답 타입
  */
 export interface BookReviewResponse
-  extends Omit<PublishRequest, 'tags' | 'categoryId'> {
+  extends Omit<PublishRequest, 'tags' | 'categoryId' | 'originThumbnail'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;
+  originThumbnail: BookReviewThumbnail;
   likeCount: number;
   createdAt: string;
 }

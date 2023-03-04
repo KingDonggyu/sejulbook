@@ -6,6 +6,7 @@ import {
   NewBookReview,
   BookReviewId,
   PublishRequest,
+  BookReviewResponse,
 } from '@/types/features/bookReview';
 import { CategoryResponse } from '@/types/features/category';
 import { UserId } from '@/types/features/user';
@@ -99,6 +100,7 @@ export const publishBookReview = async ({
       authors: bookReview.book.authors.join(', '),
       publication: bookReview.book.datetime.slice(0, 10),
       publisher: bookReview.book.publisher,
+      originThumbnail: bookReview.book.thumbnail,
       categoryId: bookReview.category.id,
       tags: Array.from(bookReview.tag),
       userId,
@@ -146,7 +148,7 @@ export const getBookReviewList = async (userId: UserId) => {
 
 export const getBookReview = async (bookReviewId: BookReviewId) => {
   try {
-    const response = await get<HttpResponse<BookReivewList>>(
+    const response = await get<HttpResponse<BookReviewResponse>>(
       `${API_URL}/${bookReviewId}`,
     );
 

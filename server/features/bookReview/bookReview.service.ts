@@ -9,6 +9,7 @@ import userModel from '../user/user.model';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 import formatEntityToDTO from './utils/formatEntityToDTO';
+import formatDTOToEntity from './utils/formatDTOToEntity';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
@@ -123,6 +124,22 @@ const bookReviewService = {
       };
     }
 
+    if (!bookReview.sejul) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.EMPTY_SEJUL,
+      };
+    }
+
+    if (!bookReview.thumbnail) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.EMPTY_THUMBNAIL,
+      };
+    }
+
     if (!bookReview.categoryId) {
       return {
         error: true,
@@ -147,32 +164,9 @@ const bookReviewService = {
       };
     }
 
-    if (!bookReview.sejul) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_SEJUL,
-      };
-    }
-
-    if (!bookReview.thumbnail) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_THUMBNAIL,
-      };
-    }
-
-    const data = await bookReviewModel.createBookReview({
-      ...bookReview,
-      writer: bookReview.authors,
-      grade: bookReview.rating,
-      sejul: bookReview.sejul.replace(/"/g, '""'),
-      sejulplus: bookReview.content.replace(/"/g, '""'),
-      user_id: bookReview.userId,
-      category_id: bookReview.categoryId,
-      divide: bookReview.isDraftSave ? 0 : 1,
-    });
+    const data = await bookReviewModel.createBookReview(
+      formatDTOToEntity(bookReview),
+    );
 
     return { error: false, data };
   },

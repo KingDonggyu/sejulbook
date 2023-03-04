@@ -1,6 +1,6 @@
 import { ResultSetHeader } from 'mysql2';
 import query from 'server/database/query';
-import BookReviewEntity from './bookReviewEntity';
+import BookReviewEntity from './bookReview.entity';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -17,6 +17,7 @@ enum Column {
   USER_ID = 'user_id',
   CATEGORY_ID = 'category_id',
   DEVIDE = 'devide',
+  ORIGIN_THUMBNAIL = 'origin_thumbnail',
 }
 
 type BookReviewSummary = Pick<
@@ -59,7 +60,8 @@ const bookReviewModel = {
       default,
       ${bookReview.user_id},
       ${bookReview.category_id},
-      ${1}
+      ${1},
+      "${bookReview.origin_thumbnail}"
     )`;
 
     const { insertId } = await query<ResultSetHeader>(sql);
