@@ -60,8 +60,8 @@ const bookReviewModel = {
       default,
       ${bookReview.user_id},
       ${bookReview.category_id},
-      ${1}
-      ${bookReview.origin_thumbnail}
+      ${1},
+      "${bookReview.origin_thumbnail}"
     )`;
 
     const { insertId } = await query<ResultSetHeader>(sql);

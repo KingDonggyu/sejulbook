@@ -61,7 +61,7 @@ const BookreviewPage = () => {
           <BookInfoBox.Button
             title={bookReview.bookname}
             authors={bookReview.authors}
-            thumbnail={bookReview.thumbnail}
+            thumbnail={bookReview.originThumbnail}
             publisher={bookReview.publisher}
             datetime={bookReview.publication}
           >

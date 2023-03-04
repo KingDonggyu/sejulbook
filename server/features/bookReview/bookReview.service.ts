@@ -9,6 +9,7 @@ import userModel from '../user/user.model';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 import formatEntityToDTO from './utils/formatEntityToDTO';
+import formatDTOToEntity from './utils/formatDTOToEntity';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
@@ -163,17 +164,9 @@ const bookReviewService = {
       };
     }
 
-    const data = await bookReviewModel.createBookReview({
-      ...bookReview,
-      writer: bookReview.authors,
-      grade: bookReview.rating,
-      sejul: bookReview.sejul.replace(/"/g, '""'),
-      sejulplus: bookReview.content.replace(/"/g, '""'),
-      user_id: bookReview.userId,
-      category_id: bookReview.categoryId,
-      divide: bookReview.isDraftSave ? 0 : 1,
-      origin_thumbnail: bookReview.originThumbnail,
-    });
+    const data = await bookReviewModel.createBookReview(
+      formatDTOToEntity(bookReview),
+    );
 
     return { error: false, data };
   },

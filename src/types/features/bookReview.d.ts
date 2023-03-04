@@ -3,7 +3,7 @@ import {
   BookAuthor,
   BookPublication,
   BookPublisher,
-  BookThumbnail,
+  BookThumbnail as OriginThumbnail,
   BookTitle,
 } from './book';
 import { Category, CategoryId, CategoryResponse } from './category';
@@ -14,12 +14,13 @@ export type BookReviewId = number;
 export type Rating = number;
 export type Sejul = string;
 export type Content = string;
+export type Thumbnail = string;
 
 /**
  * 새 독후감 관련 타입
  */
 export interface NewPublishInfo {
-  thumbnail: BookThumbnail;
+  thumbnail: Thumbnail;
   category: CategoryResponse;
   rating: Rating;
   tag: TagList;
@@ -39,13 +40,14 @@ export interface PublishRequest {
   authors: BookAuthor;
   publication: BookPublication;
   publisher: BookPublisher;
-  thumbnail: BookThumbnail;
+  thumbnail: Thumbnail;
   rating: Rating;
   tags: Tag[];
   sejul: Sejul;
   content: Content;
   userId: UserId;
   categoryId: CategoryId;
+  originThumbnail: OriginThumbnail;
 }
 
 /**

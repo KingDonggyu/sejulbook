@@ -19,7 +19,7 @@ interface BookReviewEntity {
   category_id: CategoryId;
   divide: Devide;
   datecreated: string;
-  origin_thumbnail: string;
+  origin_thumbnail: string | null;
 }
 
 export default BookReviewEntity;

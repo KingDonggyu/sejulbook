@@ -17,7 +17,7 @@ interface BookReviewDTO {
   userId: UserId;
   categoryId: CategoryId;
   isDraftSave: boolean;
-  originThumbnail: string;
+  originThumbnail?: string;
   createdAt: string;
 }
 
