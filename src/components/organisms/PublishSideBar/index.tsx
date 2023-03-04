@@ -34,8 +34,7 @@ const PublishSideBar = ({
   handleComplete,
 }: PublishSideBarProps) => {
   const { session, isLogin } = useUserStatus();
-  const { bookReview, setThumbnail, setCategory, setRating, setTag } =
-    bookReviewStore();
+  const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
 
   const handlePublish = async () => {
     try {
@@ -64,10 +63,7 @@ const PublishSideBar = ({
         <s.PublishInfoItem>
           <s.Label>책 표지 사진</s.Label>
           <s.ExplainText>* 대표 이미지로 사용됩니다.</s.ExplainText>
-          <ThumbnailUploader
-            thumbnail={newbook.thumbnail}
-            handleChangeThumbnail={setThumbnail}
-          />
+          <ThumbnailUploader originThumbnail={newbook.thumbnail} />
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>카테고리</s.Label>

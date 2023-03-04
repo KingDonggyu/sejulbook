@@ -2,6 +2,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { toast } from 'react-toastify';
 import bookReviewStore from '@/stores/bookReviewStore';
+import s3ImagesStore from '@/stores/S3ImagesStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { editorContentStyle } from '@/styles/editor';
 import { uploadLocalImage } from '@/services/api/bookReview';
@@ -31,6 +32,7 @@ const ContentEditor = ({
   readonly = false,
 }: ContentEditorProps) => {
   const { setContent } = bookReviewStore();
+  const { addImage } = s3ImagesStore();
   const { isDarkMode } = useScreenModeContext();
 
   const handleEditorChange = (content: string) => {
@@ -40,6 +42,7 @@ const ContentEditor = ({
   const handleUploadLoacalImage = async (blob: Blob) => {
     try {
       const url = await uploadLocalImage(blob);
+      addImage(url);
       return url;
     } catch (error) {
       if (error instanceof BookReviewError) {

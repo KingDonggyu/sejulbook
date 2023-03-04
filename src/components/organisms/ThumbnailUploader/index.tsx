@@ -1,42 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { css, Theme } from '@emotion/react';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import UploadButton from '@/components/molecules/UploadButton';
 import Button from '@/components/atoms/Button';
+import { useScreenModeContext } from '@/contexts/screenModeContext';
+import bookReviewStore from '@/stores/bookReviewStore';
+import s3ImagesStore from '@/stores/S3ImagesStore';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { BookThumbnail } from '@/types/features/book';
 import { uploadLocalImage } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
-import { lightTheme } from '@/styles/theme';
-
-const thumbnailStyle = (theme: Theme) => css`
-  object-fit: cover;
-  border: 1px solid ${theme.COLOR.LINE};
-`;
-
-const buttonStyle = (theme: Theme) => css`
-  margin-top: 5px;
-  width: ${theme.TUMBNAIL.DEFAULT.W}px;
-  border-color: ${theme.COLOR.LINE};
-`;
+import * as s from './style';
 
 interface ThumbnailUploaderProps {
-  thumbnail: BookThumbnail;
-  handleChangeThumbnail: (thumbnail: BookThumbnail) => void;
+  originThumbnail: BookThumbnail;
 }
 
-const ThumbnailUploader = ({
-  thumbnail: originThumbnail,
-  handleChangeThumbnail,
-}: ThumbnailUploaderProps) => {
-  const [imageSrc, setImageSrc] = useState(originThumbnail);
+const ThumbnailUploader = ({ originThumbnail }: ThumbnailUploaderProps) => {
+  const { theme } = useScreenModeContext();
+  const { addImage } = s3ImagesStore();
+
+  const {
+    bookReview: { thumbnail },
+    setThumbnail,
+  } = bookReviewStore();
 
   const handleUpload = async (file: File) => {
     try {
       const url = await uploadLocalImage(file);
-      setImageSrc(url);
-      handleChangeThumbnail(url);
+      addImage(url);
+      setThumbnail(url);
     } catch (error) {
       if (error instanceof BookReviewError) {
         toast.error(error.message);
@@ -45,34 +38,33 @@ const ThumbnailUploader = ({
   };
 
   const handleClickOriginThumbnailButton = () => {
-    setImageSrc(originThumbnail);
-    handleChangeThumbnail(originThumbnail);
+    setThumbnail(originThumbnail);
   };
 
   useEffect(() => {
-    setImageSrc(originThumbnail);
-  }, [originThumbnail]);
+    setThumbnail(originThumbnail);
+  }, [originThumbnail, setThumbnail]);
 
   return (
     <>
       <Thumbnail
-        src={imageSrc}
+        src={thumbnail}
         alt="책 표지 이미지"
-        width={lightTheme.TUMBNAIL.DEFAULT.W}
-        height={lightTheme.TUMBNAIL.DEFAULT.H}
-        css={thumbnailStyle}
+        width={theme.TUMBNAIL.DEFAULT.W}
+        height={theme.TUMBNAIL.DEFAULT.H}
+        css={s.thumbnailStyle}
       />
       <UploadButton
         variant={ButtonVariant.OUTLINED}
         handleUpload={handleUpload}
         onlyImage
-        css={buttonStyle}
+        css={s.buttonStyle}
       />
       <Button
         variant={ButtonVariant.OUTLINED}
         color={ColorVariant.SECONDARY}
         onClick={handleClickOriginThumbnailButton}
-        css={buttonStyle}
+        css={s.buttonStyle}
       >
         원본 사진 사용
       </Button>
