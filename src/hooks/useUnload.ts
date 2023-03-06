@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 const useUnload = (handleUnload: () => void) => {
   const router = useRouter();
 
-  const handleBeforeUnload = useCallback((e: BeforeUnloadEvent) => {
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
     e.preventDefault();
     e.returnValue = '';
-  }, []);
+  };
 
   const handleBeforeRouteChange = useCallback(() => {
     const warningText =
@@ -35,7 +35,7 @@ const useUnload = (handleUnload: () => void) => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('unload', handleUnload);
     };
-  }, [handleUnload, handleBeforeRouteChange, handleBeforeUnload, router]);
+  }, [handleUnload, handleBeforeRouteChange, router]);
 };
 
 export default useUnload;

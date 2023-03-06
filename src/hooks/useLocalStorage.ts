@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import ClientStorage from '@/lib/ClientStorage';
 
 const useLocalStorage = <T>(key: string, onException?: () => void) => {
@@ -6,7 +6,7 @@ const useLocalStorage = <T>(key: string, onException?: () => void) => {
     null,
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setClientStorage(new ClientStorage<T>(key, localStorage, onException));
   }, [key, onException]);
 
