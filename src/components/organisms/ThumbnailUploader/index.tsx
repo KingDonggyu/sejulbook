@@ -5,7 +5,7 @@ import UploadButton from '@/components/molecules/UploadButton';
 import Button from '@/components/atoms/Button';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import bookReviewStore from '@/stores/bookReviewStore';
-import s3ImagesStore from '@/stores/S3ImagesStore';
+import s3ImagesStore from '@/stores/s3ImagesStore';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { BookThumbnail } from '@/types/features/book';
 import { uploadLocalImage } from '@/services/api/bookReview';

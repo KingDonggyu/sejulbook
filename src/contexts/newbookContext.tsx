@@ -5,13 +5,15 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 const STORAGE_KEY = 'SEJULBOOK_NEWBOOK';
 
 interface NewbookContextProps {
-  getNewbook: () => Book | null;
+  getNewbook: () =>
+    | { book: Book; isLoading: boolean }
+    | { book: null; isLoading: boolean };
   setNewbook: (book: Book) => void;
   removeNewbook: () => void;
 }
 
 const NewbookContext = createContext<NewbookContextProps>({
-  getNewbook: () => null,
+  getNewbook: () => ({ book: null, isLoading: true }),
   setNewbook: () => {},
   removeNewbook: () => {},
 });
@@ -23,9 +25,9 @@ const NewbookProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       getNewbook: () => {
         if (bookStorage) {
-          return bookStorage.get();
+          return { book: bookStorage.get(), isLoading: false };
         }
-        return null;
+        return { book: null, isLoading: true };
       },
       setNewbook: (book: Book) => bookStorage?.set(book),
       removeNewbook: () => bookStorage?.remove(),

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useLayoutEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
@@ -20,15 +20,15 @@ const NewbookWrite = ({
   publishButton,
   draftSaveButton,
 }: NewbookWriteProps) => {
+  const router = useRouter();
   const {
     showHeaderBar,
     hideHeaderBar,
     showScreenModeButton,
     hideScreenModeButton,
   } = useLayoutContext();
-  const router = useRouter();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (bookName) {
       hideHeaderBar();
       hideScreenModeButton();

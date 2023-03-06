@@ -2,7 +2,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { toast } from 'react-toastify';
 import bookReviewStore from '@/stores/bookReviewStore';
-import s3ImagesStore from '@/stores/S3ImagesStore';
+import s3ImagesStore from '@/stores/s3ImagesStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { editorContentStyle } from '@/styles/editor';
 import { uploadLocalImage } from '@/services/api/bookReview';
