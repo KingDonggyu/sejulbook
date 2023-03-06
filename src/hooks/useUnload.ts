@@ -4,10 +4,14 @@ import { useRouter } from 'next/router';
 const useUnload = (handleUnload: () => void) => {
   const router = useRouter();
 
-  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    e.preventDefault();
-    e.returnValue = '';
-  };
+  const handleBeforeUnload = useCallback(
+    (e: BeforeUnloadEvent) => {
+      handleUnload();
+      e.preventDefault();
+      e.returnValue = '';
+    },
+    [handleUnload],
+  );
 
   const handleBeforeRouteChange = useCallback(() => {
     const warningText =
@@ -28,14 +32,14 @@ const useUnload = (handleUnload: () => void) => {
   useEffect(() => {
     router.events.on('routeChangeStart', handleBeforeRouteChange);
     window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('unload', handleUnload);
+    // window.addEventListener('unload', handleUnload);
 
     return () => {
       router.events.off('routeChangeStart', handleBeforeRouteChange);
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('unload', handleUnload);
+      // window.removeEventListener('unload', handleUnload);
     };
-  }, [handleUnload, handleBeforeRouteChange, router]);
+  }, [handleUnload, handleBeforeRouteChange, router, handleBeforeUnload]);
 };
 
 export default useUnload;

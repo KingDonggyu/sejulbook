@@ -1,29 +1,30 @@
-import { useCallback } from 'react';
-import { DeleteObjectsCommand } from '@aws-sdk/client-s3';
+import { useCallback, useEffect, useRef } from 'react';
 import s3ImagesStore from '@/stores/s3ImagesStore';
-import s3Client from '@/lib/S3Client';
 import useUnload from './useUnload';
 
 const useS3GarbageCollection = () => {
+  const workerRef = useRef<Worker>();
   const { imageSet } = s3ImagesStore();
 
-  const handleDeleteGarbage = useCallback(async () => {
+  useEffect(() => {
+    workerRef.current = new Worker(
+      new URL('../services/worker.ts', import.meta.url),
+    );
+    return () => {
+      workerRef.current?.terminate();
+    };
+  }, []);
+
+  const handleWork = useCallback(() => {
     if (!imageSet.size) {
       return;
     }
-    const command = new DeleteObjectsCommand({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-      Delete: {
-        Objects: Array.from(imageSet).map((url) => ({
-          Key: url.split('/').at(-1),
-        })),
-      },
-    });
 
-    await s3Client.send(command);
+    const imageKeys = Array.from(imageSet).map((url) => url.split('/').at(-1));
+    workerRef.current?.postMessage(imageKeys);
   }, [imageSet]);
 
-  useUnload(handleDeleteGarbage);
+  useUnload(handleWork);
 };
 
 export default useS3GarbageCollection;

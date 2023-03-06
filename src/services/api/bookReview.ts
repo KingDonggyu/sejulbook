@@ -8,7 +8,6 @@ import {
   PublishRequest,
   BookReviewResponse,
 } from '@/types/features/bookReview';
-import { CategoryResponse } from '@/types/features/category';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';
@@ -63,26 +62,6 @@ export const uploadLocalImage = async (blob: Blob) => {
       name: 'IMAGE_UPLOAD_ERROR',
       message: bookReviewError.WRONG_FILE_FORMAT,
     });
-  }
-};
-
-export const getCategories = async () => {
-  try {
-    const response = await get<HttpResponse<CategoryResponse[]>>(
-      `${API_URL}/categories`,
-    );
-
-    if (response.error) {
-      throw new BookReviewError({
-        name: 'GET_CATEGORIES_ERROR',
-        message: response.message,
-      });
-    }
-
-    return response.data;
-  } catch (error) {
-    const { message } = getDataFromAxiosError(error);
-    throw new BookReviewError({ name: 'GET_CATEGORIES_ERROR', message });
   }
 };
 
