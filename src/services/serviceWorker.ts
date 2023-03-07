@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import s3Client from '@/lib/S3Client';
 
@@ -12,7 +13,6 @@ const handleDeleteGarbage = async (imageKeys: string[]) => {
   await s3Client.send(command);
 };
 
-// eslint-disable-next-line no-restricted-globals
-addEventListener('message', (event: MessageEvent<string[]>) => {
+self.addEventListener('message', (event: MessageEvent<string[]>) => {
   handleDeleteGarbage(event.data);
 });
