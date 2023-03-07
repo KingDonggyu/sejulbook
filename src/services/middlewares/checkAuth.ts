@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { HttpFailed } from '@/types/http';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { bookReviewError } from '@/constants/message';
+import { userError } from '@/constants/message';
 
 const checkAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
@@ -11,7 +11,7 @@ const checkAuth = async (req: NextApiRequest, res: NextApiResponse) => {
     const result: HttpFailed = {
       error: true,
       code: 401,
-      message: bookReviewError.NOT_LOGGED,
+      message: userError.NOT_LOGGED,
     };
 
     res.status(result.code).json(result);
@@ -24,7 +24,7 @@ const checkAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   const result: HttpFailed = {
     error: true,
     code: 401,
-    message: bookReviewError.NO_AUTH,
+    message: userError.NO_AUTH,
   };
 
   res.status(result.code).json(result);

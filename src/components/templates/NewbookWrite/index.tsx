@@ -20,16 +20,18 @@ const NewbookWrite = ({
   publishButton,
   draftSaveButton,
 }: NewbookWriteProps) => {
+  const isShowTemplate = Boolean(bookName);
+  const router = useRouter();
+
   const {
     showHeaderBar,
     hideHeaderBar,
     showScreenModeButton,
     hideScreenModeButton,
   } = useLayoutContext();
-  const router = useRouter();
 
   useEffect(() => {
-    if (bookName) {
+    if (isShowTemplate) {
       hideHeaderBar();
       hideScreenModeButton();
     }
@@ -38,14 +40,14 @@ const NewbookWrite = ({
       showScreenModeButton();
     };
   }, [
-    bookName,
+    isShowTemplate,
     hideHeaderBar,
     hideScreenModeButton,
     showHeaderBar,
     showScreenModeButton,
   ]);
 
-  if (!bookName) {
+  if (!isShowTemplate) {
     return (
       <s.ExceptionWrapper>
         <div>책 선택 후 독후감을 쓸 수 있어요.</div>

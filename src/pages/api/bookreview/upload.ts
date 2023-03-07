@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v1 } from 'uuid';
-import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost, PresignedPost } from '@aws-sdk/s3-presigned-post';
+import s3Client from '@/lib/S3Client';
 import { HttpSuccess, HttpFailed } from '@/types/http';
 import { bookReviewError } from '@/constants/message';
 
@@ -14,21 +14,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       code: 400,
       message: bookReviewError.WRONG_FILE_FORMAT,
     };
-
     res.status(response.code).json(response);
     return;
   }
 
-  const s3Client = new S3Client({
-    credentials: {
-      accessKeyId: process.env.SEJULBOOK_AWS_ACCESS_KEY,
-      secretAccessKey: process.env.SEJULBOOK_AWS_SECRET_ACCESS_KEY,
-    },
-    region: process.env.SEJULBOOK_AWS_REGION,
-  });
-
   const presignedPost = await createPresignedPost(s3Client, {
-    Bucket: process.env.SEJULBOOK_S3_BUCKET_NAME,
+    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
     Key: `${v1().replace(/-/g, '')}.${fileType.split('/')[1]}`,
     Fields: {
       acl: 'public-read',
