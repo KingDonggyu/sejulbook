@@ -2,7 +2,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { toast } from 'react-toastify';
 import bookReviewStore from '@/stores/bookReviewStore';
-import s3ImagesStore from '@/stores/s3ImagesStore';
+import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { editorContentStyle } from '@/styles/editor';
 import { uploadLocalImage } from '@/services/api/bookReview';
@@ -14,8 +14,9 @@ interface ContentEditorProps {
   readonly?: boolean;
 }
 
+export const editorElementId = 'sejulbookEditor';
+
 const editorOption = {
-  id: 'sejulbookEditor',
   lightSkin: 'snow',
   darkSkin: 'oxide-dark',
   language: 'ko_KR',
@@ -32,7 +33,7 @@ const ContentEditor = ({
   readonly = false,
 }: ContentEditorProps) => {
   const { setContent } = bookReviewStore();
-  const { addImage } = s3ImagesStore();
+  const { addImageKey } = s3ImageURLStore();
   const { isDarkMode } = useScreenModeContext();
 
   const handleEditorChange = (content: string) => {
@@ -42,7 +43,7 @@ const ContentEditor = ({
   const handleUploadLoacalImage = async (blob: Blob) => {
     try {
       const url = await uploadLocalImage(blob);
-      addImage(url);
+      addImageKey(url);
       return url;
     } catch (error) {
       if (error instanceof BookReviewError) {
@@ -53,10 +54,10 @@ const ContentEditor = ({
   };
 
   return (
-    <s.EditorContainer editorId={editorOption.id} readonly={readonly}>
+    <s.EditorContainer editorId={editorElementId} readonly={readonly}>
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINY_API_KEY}
-        id={editorOption.id}
+        id={editorElementId}
         inline
         tagName="div"
         disabled={readonly}

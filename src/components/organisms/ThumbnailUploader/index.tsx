@@ -5,7 +5,7 @@ import UploadButton from '@/components/molecules/UploadButton';
 import Button from '@/components/atoms/Button';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import bookReviewStore from '@/stores/bookReviewStore';
-import s3ImagesStore from '@/stores/s3ImagesStore';
+import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { BookThumbnail } from '@/types/features/book';
 import { uploadLocalImage } from '@/services/api/bookReview';
@@ -18,7 +18,7 @@ interface ThumbnailUploaderProps {
 
 const ThumbnailUploader = ({ originThumbnail }: ThumbnailUploaderProps) => {
   const { theme } = useScreenModeContext();
-  const { addImage } = s3ImagesStore();
+  const { addImageKey } = s3ImageURLStore();
 
   const {
     bookReview: { thumbnail },
@@ -28,7 +28,7 @@ const ThumbnailUploader = ({ originThumbnail }: ThumbnailUploaderProps) => {
   const handleUpload = async (file: File) => {
     try {
       const url = await uploadLocalImage(file);
-      addImage(url);
+      addImageKey(url);
       setThumbnail(url);
     } catch (error) {
       if (error instanceof BookReviewError) {

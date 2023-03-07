@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
-import s3ImagesStore from '@/stores/s3ImagesStore';
+import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import useUnload from './useUnload';
 
 const useS3GarbageCollection = () => {
   const serviceWorkerController = useRef<ServiceWorker | null>();
-  const { imageSet } = s3ImagesStore();
+  const { imageKeySet } = s3ImageURLStore();
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -17,12 +17,11 @@ const useS3GarbageCollection = () => {
   }, []);
 
   const handleWork = useCallback(() => {
-    if (!imageSet.size) {
+    if (!imageKeySet.size) {
       return;
     }
-    const imageKeys = Array.from(imageSet).map((url) => url.split('/').at(-1));
-    serviceWorkerController.current?.postMessage(imageKeys);
-  }, [imageSet]);
+    serviceWorkerController.current?.postMessage(Array.from(imageKeySet));
+  }, [imageKeySet]);
 
   useUnload(handleWork);
 };

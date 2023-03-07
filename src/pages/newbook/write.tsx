@@ -4,7 +4,9 @@ import { useRouter } from 'next/router';
 import NewbookWrite from '@/components/templates/NewbookWrite';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import SejulTextArea from '@/components/organisms/SejulTextarea';
-import ContentEditor from '@/components/organisms/ContentEditor';
+import ContentEditor, {
+  editorElementId,
+} from '@/components/organisms/ContentEditor';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { useNewbookContext } from '@/contexts/newbookContext';
@@ -13,17 +15,26 @@ import useS3GarbageCollection from '@/hooks/useS3GarbageCollection';
 import { BookReviewId } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
 import checkLogin from '@/services/middlewares/checkLogin';
+import s3ImageURLStore from '@/stores/s3ImageKeyStore';
+import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
 
 const NewbookWritePage = () => {
   const router = useRouter();
-  const { getNewbook, removeNewbook } = useNewbookContext();
 
+  const { getNewbook } = useNewbookContext();
   const { book, isLoading } = getNewbook();
+
   const { bookReview, setBook, setThumbnail } = bookReviewStore();
+  const { deleteImageKey } = s3ImageURLStore();
 
   const handleComplete = (bookReviewId: BookReviewId) => {
-    removeNewbook();
-    router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
+    getUsedS3ImageURLs(editorElementId).forEach((url) => {
+      deleteImageKey(url);
+    });
+    if (bookReview.thumbnail) {
+      deleteImageKey(bookReview.thumbnail);
+    }
+    router.push(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
 
   useEffect(() => {
