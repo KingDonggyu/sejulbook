@@ -1,4 +1,4 @@
-import { ReactNode, useLayoutEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
@@ -20,7 +20,9 @@ const NewbookWrite = ({
   publishButton,
   draftSaveButton,
 }: NewbookWriteProps) => {
+  const isShowTemplate = Boolean(bookName);
   const router = useRouter();
+
   const {
     showHeaderBar,
     hideHeaderBar,
@@ -28,8 +30,8 @@ const NewbookWrite = ({
     hideScreenModeButton,
   } = useLayoutContext();
 
-  useLayoutEffect(() => {
-    if (bookName) {
+  useEffect(() => {
+    if (isShowTemplate) {
       hideHeaderBar();
       hideScreenModeButton();
     }
@@ -38,14 +40,14 @@ const NewbookWrite = ({
       showScreenModeButton();
     };
   }, [
-    bookName,
+    isShowTemplate,
     hideHeaderBar,
     hideScreenModeButton,
     showHeaderBar,
     showScreenModeButton,
   ]);
 
-  if (!bookName) {
+  if (!isShowTemplate) {
     return (
       <s.ExceptionWrapper>
         <div>책 선택 후 독후감을 쓸 수 있어요.</div>
