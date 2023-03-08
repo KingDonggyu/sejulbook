@@ -16,6 +16,11 @@ type BookReviewSummary = Pick<
   'id' | 'bookname' | 'sejul' | 'thumbnail'
 >;
 
+type DraftSavedBookReview = Pick<
+  BookReviewDTO,
+  'id' | 'bookname' | 'createdAt'
+>;
+
 interface PublishedBookReview
   extends Omit<BookReviewDTO, 'categoryId' | 'isDraftSave'> {
   writer: UserName;
@@ -55,6 +60,25 @@ const bookReviewService = {
     const data = await Promise.all(promises);
 
     return { error: false, data };
+  },
+
+  getDraftSavedList: async ({
+    userId,
+  }: Pick<BookReviewDTO, 'userId'>): Promise<
+    HttpSuccess<DraftSavedBookReview[]> | HttpFailed
+  > => {
+    const bookReviewList = await bookReviewModel.getDraftSavedList({
+      user_id: userId,
+    });
+
+    return {
+      error: false,
+      data: bookReviewList.map(({ id, bookname, datecreated }) => ({
+        id,
+        bookname,
+        createdAt: datecreated,
+      })),
+    };
   },
 
   getBookReivew: async ({

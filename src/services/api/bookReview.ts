@@ -139,6 +139,27 @@ export const getBookReviewList = async (userId: UserId) => {
   }
 };
 
+export const getDraftSavedList = async (userId: UserId) => {
+  try {
+    const response = await get<HttpResponse<BookReivewList>>(
+      `${API_URL}/drafts`,
+      { userId },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_DRAFT_SAVED_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_DRAFT_SAVED_LIST_ERROR', message });
+  }
+};
+
 export const getBookReview = async (bookReviewId: BookReviewId) => {
   try {
     const response = await get<HttpResponse<BookReviewResponse>>(

@@ -1,13 +1,13 @@
-import type { GetServerSideProps } from 'next';
+import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Route from '@/constants/routes';
 
-const checkLogin: GetServerSideProps = async ({ req, res }) => {
+const checkLogin = async ({ req, res }: GetServerSidePropsContext) => {
   const session = await getServerSession(req, res, authOptions);
 
   if (session && session.id !== null) {
-    return { props: {} };
+    return { props: { userId: session.id } };
   }
 
   return {
@@ -18,5 +18,9 @@ const checkLogin: GetServerSideProps = async ({ req, res }) => {
     },
   };
 };
+
+export const checkRedirect = (
+  serverSidePropsResult: GetServerSidePropsResult<unknown>,
+) => 'redirect' in serverSidePropsResult;
 
 export default checkLogin;

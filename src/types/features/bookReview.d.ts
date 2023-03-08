@@ -71,3 +71,8 @@ export type BookReviewSummary = Pick<
 };
 
 export type BookReivewList = BookReviewSummary[];
+
+export type DraftSavedBookReview = Pick<
+  BookReviewResponse,
+  'id' | 'bookname' | 'createdAt'
+>;

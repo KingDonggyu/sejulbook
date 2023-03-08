@@ -69,7 +69,11 @@ export const DraftSavedDate = styled.time`
 
 export const BookName = styled.div`
   text-align: start;
+  width: fit-content;
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  &:hover {
+    color: ${({ theme }) => theme.COLOR.PRIMARY};
+  }
 `;
 
 export const ButtonText = styled.div`

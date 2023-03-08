@@ -6,6 +6,7 @@ type BookReviewErrorName =
   | 'GET_TAGS_ERROR'
   | 'PUBLISH_ERROR'
   | 'GET_BOOKREIVEW_LIST_ERROR'
-  | 'GET_BOOKREVIEW_ERROR';
+  | 'GET_BOOKREVIEW_ERROR'
+  | 'GET_DRAFT_SAVED_LIST_ERROR';
 
 export class BookReviewError extends ErrorBase<BookReviewErrorName> {}

@@ -26,6 +26,11 @@ type BookReviewSummary = Pick<
   'id' | 'bookname' | 'sejul' | 'thumbnail'
 >;
 
+type DraftSavedBookReview = Pick<
+  BookReviewEntity,
+  'id' | 'bookname' | 'datecreated'
+>;
+
 const bookReviewModel = {
   getBookReviewList: async ({ user_id }: Pick<BookReviewEntity, 'user_id'>) => {
     const sql = `
@@ -35,6 +40,17 @@ const bookReviewModel = {
     `;
 
     const result = await query<BookReviewSummary[]>(sql);
+    return result;
+  },
+
+  getDraftSavedList: async ({ user_id }: Pick<BookReviewEntity, 'user_id'>) => {
+    const sql = `
+      select ${Column.ID}, ${Column.BOOK_NAME}, ${Column.DATE_CREATED}
+      from ${TABLE_NAME} 
+      where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 0
+    `;
+
+    const result = await query<DraftSavedBookReview[]>(sql);
     return result;
   },
 
