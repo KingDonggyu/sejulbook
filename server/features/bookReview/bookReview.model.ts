@@ -16,8 +16,9 @@ enum Column {
   SEJUL_PLUS = 'sejulplus',
   USER_ID = 'user_id',
   CATEGORY_ID = 'category_id',
-  DEVIDE = 'devide',
+  DiVIDE = 'divide',
   ORIGIN_THUMBNAIL = 'origin_thumbnail',
+  DATE_CREATED = 'datecreated',
 }
 
 type BookReviewSummary = Pick<
@@ -30,7 +31,7 @@ const bookReviewModel = {
     const sql = `
       select ${Column.ID}, ${Column.BOOK_NAME}, ${Column.SEJUL}, ${Column.THUMBNAIL}
       from ${TABLE_NAME} 
-      where ${Column.USER_ID} = ${user_id}
+      where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 1
     `;
 
     const result = await query<BookReviewSummary[]>(sql);
@@ -45,7 +46,7 @@ const bookReviewModel = {
   },
 
   createBookReview: async (
-    bookReview: Omit<BookReviewEntity, 'id' | 'devide' | 'datecreated'>,
+    bookReview: Omit<BookReviewEntity, 'id' | 'datecreated'>,
   ) => {
     const sql = `insert into ${TABLE_NAME} values (
       null,
@@ -60,8 +61,8 @@ const bookReviewModel = {
       default,
       ${bookReview.user_id},
       ${bookReview.category_id},
-      ${1},
-      "${bookReview.origin_thumbnail}"
+      ${bookReview.divide},
+      ${bookReview.origin_thumbnail ? `"${bookReview.origin_thumbnail}"` : null}
     )`;
 
     const { insertId } = await query<ResultSetHeader>(sql);

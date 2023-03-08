@@ -113,6 +113,39 @@ const bookReviewService = {
     return { error: false, data };
   },
 
+  draftSaveBookReview: async (
+    bookReview: Omit<BookReviewDTO, 'id'>,
+  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+    if (!bookReview.bookname) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.EMPTY_BOOK,
+      };
+    }
+
+    if (bookReview.rating < 1 || bookReview.rating > 5) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.LIMIT_REACHED_RATING,
+      };
+    }
+
+    const data = await bookReviewModel.createBookReview(
+      formatDTOToEntity({
+        ...bookReview,
+        isDraftSave: true,
+        sejul: bookReview.sejul || '',
+        thumbnail: bookReview.thumbnail || '',
+        categoryId: bookReview.categoryId || 1,
+        rating: bookReview.rating || 3,
+      }),
+    );
+
+    return { error: false, data };
+  },
+
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id'>,
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
@@ -165,7 +198,10 @@ const bookReviewService = {
     }
 
     const data = await bookReviewModel.createBookReview(
-      formatDTOToEntity(bookReview),
+      formatDTOToEntity({
+        ...bookReview,
+        isDraftSave: false,
+      }),
     );
 
     return { error: false, data };

@@ -6,3 +6,7 @@ export const userError = {
   NO_AUTH: '사용자 인증에 실패했습니다.',
   NOT_LOGGED: '로그인 후 이용해주세요.',
 };
+
+export const bookReviewSussess = {
+  DRAFT_SAVE: '작성 중인 독후감이 저장되었습니다.',
+};

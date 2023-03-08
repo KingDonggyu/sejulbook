@@ -9,8 +9,8 @@ const formatDTOToEntity = (
   const bookReviewEntity: BookReviewEntity = {
     ...bookReviewDTO,
     writer: bookReviewDTO.authors,
-    grade: bookReviewDTO.rating,
-    sejul: bookReviewDTO.sejul.replace(/"/g, '""'),
+    grade: bookReviewDTO.rating || 3,
+    sejul: bookReviewDTO.sejul ? bookReviewDTO.sejul.replace(/"/g, '""') : '',
     sejulplus: bookReviewDTO.content.replace(/"/g, '""'),
     user_id: bookReviewDTO.userId,
     category_id: bookReviewDTO.categoryId,

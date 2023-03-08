@@ -68,9 +68,11 @@ export const uploadLocalImage = async (blob: Blob) => {
 export const publishBookReview = async ({
   bookReview,
   userId,
+  isDraftSave = false,
 }: {
   bookReview: NewBookReview;
   userId: UserId;
+  isDraftSave?: boolean;
 }) => {
   try {
     const publishRequest: PublishRequest = {
@@ -79,9 +81,11 @@ export const publishBookReview = async ({
       authors: bookReview.book.authors.join(', '),
       publication: bookReview.book.datetime.slice(0, 10),
       publisher: bookReview.book.publisher,
+      thumbnail: bookReview.thumbnail || '',
       originThumbnail: bookReview.book.thumbnail,
       categoryId: bookReview.category.id,
       tags: Array.from(bookReview.tag),
+      isDraftSave,
       userId,
     };
 
@@ -102,6 +106,16 @@ export const publishBookReview = async ({
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'PUBLISH_ERROR', message });
   }
+};
+
+export const draftSaveBookReview = async ({
+  bookReview,
+  userId,
+}: {
+  bookReview: NewBookReview;
+  userId: UserId;
+}) => {
+  await publishBookReview({ bookReview, userId, isDraftSave: true });
 };
 
 export const getBookReviewList = async (userId: UserId) => {

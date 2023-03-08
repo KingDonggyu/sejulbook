@@ -6,7 +6,11 @@ import checkAuth from '@/services/middlewares/checkAuth';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await checkAuth(req, res);
 
-  const result = await bookReviewService.publishBookReview(req.body);
+  const service = req.body.isDraftSave
+    ? bookReviewService.draftSaveBookReview
+    : bookReviewService.publishBookReview;
+
+  const result = await service(req.body);
 
   if (result.error) {
     res.status(result.code).json(result);
