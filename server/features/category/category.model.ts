@@ -10,7 +10,7 @@ enum Column {
 
 const categoryModel = {
   getCategories: async () => {
-    const sql = `select * from ${TABLE_NAME}`;
+    const sql = `select * from ${TABLE_NAME} where ${Column.ID} > 1`;
     const result = await query<CategoryEntity[]>(sql);
     return result;
   },
