@@ -53,8 +53,7 @@ export interface PublishRequest {
 /**
  * 독후감 정보 응답 타입
  */
-export interface BookReviewResponse
-  extends Omit<PublishRequest, 'tags' | 'categoryId'> {
+export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;

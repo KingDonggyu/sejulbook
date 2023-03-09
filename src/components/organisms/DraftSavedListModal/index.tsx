@@ -23,7 +23,14 @@ const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
   return (
     <s.DraftSavedItem key={bookname + createdAt}>
       <s.BookName>
-        <Link href={Route.NEWBOOK_WRITE}>{bookname} </Link>
+        <Link
+          href={{
+            pathname: Route.NEWBOOK_WRITE,
+            query: { draft: id },
+          }}
+        >
+          {bookname}{' '}
+        </Link>
       </s.BookName>
       <s.DraftSavedItemBottom>
         <s.DraftSavedDate>{formatDateToKorean(createdAt)}</s.DraftSavedDate>
@@ -87,7 +94,7 @@ const DraftSavedListModalButton = ({
         {...buttonProps}
       >
         <s.ButtonText>
-          임시저장 독후감 <span>10</span>
+          임시저장 독후감 <span>{draftSavedList.length}</span>
         </s.ButtonText>
       </Button>
       <DraftSavedListModal draftSavedList={draftSavedList} />

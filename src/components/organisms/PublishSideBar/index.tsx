@@ -63,7 +63,9 @@ const PublishSideBar = ({
         <s.PublishInfoItem>
           <s.Label>책 표지 사진</s.Label>
           <s.ExplainText>* 대표 이미지로 사용됩니다.</s.ExplainText>
-          <ThumbnailUploader originThumbnail={newbook.thumbnail} />
+          <ThumbnailUploader
+            originThumbnail={bookReview.thumbnail || newbook.thumbnail}
+          />
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>카테고리</s.Label>
@@ -83,7 +85,7 @@ const PublishSideBar = ({
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>태그</s.Label>
-          <TagInput handleUpdate={setTag} />
+          <TagInput initTagList={bookReview.tag} handleUpdate={setTag} />
         </s.PublishInfoItem>
         <s.ButtonWrapper>
           <DraftSaveButton />

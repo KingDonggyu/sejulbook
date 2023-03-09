@@ -82,6 +82,7 @@ export const ButtonText = styled.div`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   & > span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
+    margin-left: 4px;
   }
 `;
 

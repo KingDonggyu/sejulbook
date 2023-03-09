@@ -57,7 +57,7 @@ const bookReviewModel = {
   getBookReivew: async ({ id }: Pick<BookReviewEntity, 'id'>) => {
     const sql = `select * from ${TABLE_NAME} where ${Column.ID} = ${id}`;
 
-    const result = await query<BookReviewEntity[]>(sql);
+    const [result] = await query<BookReviewEntity[]>(sql);
     return result;
   },
 

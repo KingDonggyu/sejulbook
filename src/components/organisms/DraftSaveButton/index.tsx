@@ -1,23 +1,26 @@
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
-import { userError } from '@/constants/message';
+import { bookReviewSussess, userError } from '@/constants/message';
 import useUserStatus from '@/hooks/useUserStatus';
 import { draftSaveBookReview } from '@/services/api/bookReview';
 import bookReviewStore from '@/stores/bookReviewStore';
+import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { toast } from 'react-toastify';
 
 const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
   const { session, isLogin } = useUserStatus();
   const { bookReview } = bookReviewStore();
+  const { emptyImageKeySet } = s3ImageURLStore();
 
   const handleClick = async () => {
-    if (isLogin) {
-      await draftSaveBookReview({ bookReview, userId: session.id });
-      toast.success(userError.NOT_LOGGED);
+    if (!isLogin) {
+      toast.error(userError.NOT_LOGGED);
       return;
     }
 
-    toast.error(userError.NOT_LOGGED);
+    emptyImageKeySet();
+    await draftSaveBookReview({ bookReview, userId: session.id });
+    toast.success(bookReviewSussess.DRAFT_SAVE);
   };
 
   return (

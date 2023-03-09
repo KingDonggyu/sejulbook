@@ -21,8 +21,7 @@ type DraftSavedBookReview = Pick<
   'id' | 'bookname' | 'createdAt'
 >;
 
-interface PublishedBookReview
-  extends Omit<BookReviewDTO, 'categoryId' | 'isDraftSave'> {
+interface PublishedBookReview extends BookReviewDTO {
   writer: UserName;
   category: Category;
   likeCount: number;
@@ -86,7 +85,7 @@ const bookReviewService = {
   }: Pick<BookReviewDTO, 'id'>): Promise<
     HttpSuccess<PublishedBookReview> | HttpFailed
   > => {
-    const [bookReviewData] = await bookReviewModel.getBookReivew({ id });
+    const bookReviewData = await bookReviewModel.getBookReivew({ id });
 
     if (!bookReviewData) {
       return {
@@ -97,15 +96,6 @@ const bookReviewService = {
     }
 
     const bookReview = formatEntityToDTO(bookReviewData);
-
-    if (bookReview.isDraftSave) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.NOT_PUBLISHED_BOOKREVIEW,
-      };
-    }
-
     const userName = await userModel.getUserName({ id: bookReview.userId });
 
     if (!userName) {
@@ -123,9 +113,6 @@ const bookReviewService = {
     const { count: likeCount } = await likeModel.getLikeCount({
       sejulbook_id: id,
     });
-
-    delete (bookReview as Partial<BookReviewDTO>).categoryId;
-    delete (bookReview as Partial<BookReviewDTO>).isDraftSave;
 
     const data: PublishedBookReview = {
       ...bookReview,
