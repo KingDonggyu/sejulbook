@@ -84,6 +84,22 @@ const bookReviewModel = {
     const { insertId } = await query<ResultSetHeader>(sql);
     return insertId;
   },
+
+  updateBookReview: async (bookReview: BookReviewEntity) => {
+    const sql = `
+      update ${TABLE_NAME} set 
+      ${Column.GRADE} = ${bookReview.grade},
+      ${Column.THUMBNAIL} = "${bookReview.thumbnail}",
+      ${Column.SEJUL} = "${bookReview.sejul}",
+      ${Column.SEJUL_PLUS} = "${bookReview.sejulplus}",
+      ${Column.DATE_CREATED} = "${bookReview.datecreated}",
+      ${Column.CATEGORY_ID} = ${bookReview.category_id},
+      ${Column.DiVIDE} = ${bookReview.divide}
+      where ${Column.ID} = ${bookReview.id}
+    `;
+
+    await query<ResultSetHeader>(sql);
+  },
 };
 
 export default bookReviewModel;

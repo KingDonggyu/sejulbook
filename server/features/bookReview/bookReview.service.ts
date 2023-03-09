@@ -1,5 +1,6 @@
 import { bookReviewError, userError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
+import getCurrentDateString from 'server/utils/getCurrentDateString';
 import { Category } from '../category/category.dto';
 import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
@@ -10,6 +11,7 @@ import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 import bookReviewModel from './bookReview.model';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
+import BookReviewGuard from './bookReview.guard';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
@@ -127,20 +129,13 @@ const bookReviewService = {
   draftSaveBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id'>,
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
-    if (!bookReview.bookname) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_BOOK,
-      };
-    }
+    const bookReviewGuard = new BookReviewGuard(bookReview);
+    const result =
+      bookReviewGuard.checkEmptyBook() ||
+      bookReviewGuard.checkReachedRatingLimit();
 
-    if (bookReview.rating < 1 || bookReview.rating > 5) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.LIMIT_REACHED_RATING,
-      };
+    if (result) {
+      return result;
     }
 
     const data = await bookReviewModel.createBookReview(
@@ -160,52 +155,11 @@ const bookReviewService = {
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id'>,
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
-    if (!bookReview.bookname) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_BOOK,
-      };
-    }
+    const bookReviewGuard = new BookReviewGuard(bookReview);
+    const guardResult = bookReviewGuard.checkInvalidPublish();
 
-    if (!bookReview.sejul) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_SEJUL,
-      };
-    }
-
-    if (!bookReview.thumbnail) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_THUMBNAIL,
-      };
-    }
-
-    if (!bookReview.categoryId) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_CATEGORY,
-      };
-    }
-
-    if (!bookReview.rating) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_RATING,
-      };
-    }
-
-    if (bookReview.rating < 1 || bookReview.rating > 5) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.LIMIT_REACHED_RATING,
-      };
+    if (guardResult) {
+      return guardResult;
     }
 
     const data = await bookReviewModel.createBookReview(
@@ -216,6 +170,43 @@ const bookReviewService = {
     );
 
     return { error: false, data };
+  },
+
+  updateBookReview: async (
+    bookReview: BookReviewDTO,
+  ): Promise<HttpSuccess<undefined> | HttpFailed> => {
+    const bookReviewGuard = new BookReviewGuard(bookReview);
+    const guardResult = bookReviewGuard.checkInvalidPublish();
+
+    if (guardResult) {
+      return guardResult;
+    }
+
+    const { isDraftSave: prevIsDraftSave, createdAt } = formatEntityToDTO(
+      await bookReviewModel.getBookReivew({
+        id: bookReview.id,
+      }),
+    );
+
+    const entityData = formatDTOToEntity(bookReview);
+
+    if (prevIsDraftSave) {
+      await bookReviewModel.updateBookReview({
+        ...entityData,
+        id: bookReview.id,
+        datecreated: getCurrentDateString(),
+      });
+
+      return { error: false, data: undefined };
+    }
+
+    await bookReviewModel.updateBookReview({
+      ...entityData,
+      id: bookReview.id,
+      datecreated: createdAt,
+    });
+
+    return { error: false, data: undefined };
   },
 };
 

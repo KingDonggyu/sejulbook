@@ -29,6 +29,15 @@ const tagModel = {
 
     await query(sql);
   },
+
+  deleteTags: async ({ sejulbook_id }: Pick<TagEntity, 'sejulbook_id'>) => {
+    const sql = `
+      delete from ${TABLE_NAME} 
+      where ${Column.BOOKREVIEW_ID} = ${sejulbook_id}
+    `;
+
+    await query(sql);
+  },
 };
 
 export default tagModel;

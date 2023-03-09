@@ -3,10 +3,11 @@ import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
 import useUserStatus from '@/hooks/useUserStatus';
+import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import { Book } from '@/types/features/book';
 import { BookReviewId } from '@/types/features/bookReview';
 import bookReviewStore from '@/stores/bookReviewStore';
-import { publishBookReview } from '@/services/api/bookReview';
+import { publishBookReview, updateBookReview } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 
 import Button from '@/components/atoms/Button';
@@ -34,6 +35,7 @@ const PublishSideBar = ({
   handleComplete,
 }: PublishSideBarProps) => {
   const { session, isLogin } = useUserStatus();
+  const savedBookReviewId = useSavedBookReviewId();
   const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
 
   const handlePublish = async () => {
@@ -42,10 +44,23 @@ const PublishSideBar = ({
         return;
       }
 
-      const bookReviewId = await publishBookReview({
-        bookReview,
-        userId: session.id,
-      });
+      let bookReviewId: BookReviewId;
+
+      if (savedBookReviewId) {
+        bookReviewId = savedBookReviewId;
+        await updateBookReview({
+          bookReview: {
+            ...bookReview,
+            id: savedBookReviewId,
+          },
+          userId: session.id,
+        });
+      } else {
+        bookReviewId = await publishBookReview({
+          bookReview,
+          userId: session.id,
+        });
+      }
 
       if (handleComplete) {
         handleComplete(bookReviewId);

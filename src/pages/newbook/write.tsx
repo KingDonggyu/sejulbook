@@ -71,7 +71,7 @@ const NewbookWritePage = ({
       deleteImageKey(bookReview.thumbnail);
     }
 
-    router.push(`${Route.BOOKREVIEW}/${bookReviewId}`);
+    router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
 
   return (

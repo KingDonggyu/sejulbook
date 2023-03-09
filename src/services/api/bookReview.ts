@@ -7,6 +7,8 @@ import {
   BookReviewId,
   PublishRequest,
   BookReviewResponse,
+  BookReviewUpdateRequest,
+  PublishUpdateRequest,
 } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
@@ -116,6 +118,59 @@ export const draftSaveBookReview = async ({
   userId: UserId;
 }) => {
   await publishBookReview({ bookReview, userId, isDraftSave: true });
+};
+
+export const updateBookReview = async ({
+  bookReview,
+  userId,
+  isDraftSave = false,
+}: {
+  bookReview: BookReviewUpdateRequest;
+  userId: UserId;
+  isDraftSave?: boolean;
+}) => {
+  try {
+    const publishRequest: PublishUpdateRequest = {
+      ...bookReview,
+      bookname: bookReview.book.title,
+      authors: bookReview.book.authors.join(', '),
+      publication: bookReview.book.datetime.slice(0, 10),
+      publisher: bookReview.book.publisher,
+      thumbnail: bookReview.thumbnail || '',
+      originThumbnail: bookReview.book.thumbnail,
+      categoryId: bookReview.category.id,
+      tags: Array.from(bookReview.tag),
+      isDraftSave,
+      userId,
+    };
+
+    const response = await post<HttpResponse<BookReviewId>>(
+      `${API_URL}/update`,
+      publishRequest,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'UPDATE_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'UPDATE_ERROR', message });
+  }
+};
+
+export const updateDraftSaveBookReview = async ({
+  bookReview,
+  userId,
+}: {
+  bookReview: BookReviewUpdateRequest;
+  userId: UserId;
+}) => {
+  await updateBookReview({ bookReview, userId, isDraftSave: true });
 };
 
 export const getBookReviewList = async (userId: UserId) => {

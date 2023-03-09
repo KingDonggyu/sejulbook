@@ -6,7 +6,10 @@ import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import Route from '@/constants/routes';
 import modalStore from '@/stores/modalStore';
-import { DraftSavedBookReview } from '@/types/features/bookReview';
+import {
+  DraftSavedBookReview,
+  DraftSavedBookReviewURLQuery,
+} from '@/types/features/bookReview';
 import formatDateToKorean from '@/utils/formatDateToKorean';
 import * as s from './style';
 
@@ -16,6 +19,11 @@ interface DraftSavedListModalProps
 }
 
 const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
+  const { closeModal } = modalStore();
+  const draftSavedURLQuery: DraftSavedBookReviewURLQuery = {
+    draft: id,
+  };
+
   const handleClickDeleteButton = () => {
     window.confirm('임시저장 독후감을 정말 삭제하시겠습니까?');
   };
@@ -26,10 +34,11 @@ const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
         <Link
           href={{
             pathname: Route.NEWBOOK_WRITE,
-            query: { draft: id },
+            query: draftSavedURLQuery,
           }}
+          onClick={() => closeModal(ModalKey.DRAFT_SAVED_LIST)}
         >
-          {bookname}{' '}
+          {bookname}
         </Link>
       </s.BookName>
       <s.DraftSavedItemBottom>

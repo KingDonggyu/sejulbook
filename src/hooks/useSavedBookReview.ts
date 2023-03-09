@@ -31,16 +31,14 @@ const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
       setNewbook(book);
 
       setBookReivew({
+        ...savedBookReview,
         book,
-        thumbnail: savedBookReview.thumbnail,
         category: {
           id: savedBookReview.categoryId,
           category: savedBookReview.category,
         },
         rating: Number(savedBookReview.rating),
         tag: new Set(tags),
-        sejul: savedBookReview.sejul,
-        content: savedBookReview.content,
       });
 
       setIsLoading(false);
