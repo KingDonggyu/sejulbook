@@ -32,7 +32,7 @@ const ContentEditor = ({
   initialValue,
   readonly = false,
 }: ContentEditorProps) => {
-  const { setContent } = bookReviewStore();
+  const { bookReview, setContent } = bookReviewStore();
   const { addImageKey } = s3ImageURLStore();
   const { isDarkMode } = useScreenModeContext();
 
@@ -61,6 +61,7 @@ const ContentEditor = ({
         inline
         tagName="div"
         disabled={readonly}
+        value={bookReview.content}
         initialValue={initialValue && sanitize(initialValue)}
         onEditorChange={handleEditorChange}
         css={editorContentStyle}

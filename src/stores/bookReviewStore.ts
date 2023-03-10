@@ -21,7 +21,7 @@ const initlializedBook: Book = {
 const initlializedBookReview: NewBookReview = {
   book: initlializedBook,
   thumbnail: '',
-  category: { id: 0, category: '' },
+  category: { id: 1, category: '' },
   rating: 3,
   tag: new Set<Tag>(),
   sejul: '',
@@ -39,6 +39,7 @@ interface BookReviewState {
   setContent: (content: Content) => void;
   setPublishInfo: (publishInfo: NewPublishInfo) => void;
   setBookReivew: (bookReview: NewBookReview) => void;
+  initBookReview: () => void;
 }
 
 const bookReviewStore = create<BookReviewState>((set) => ({
@@ -78,6 +79,10 @@ const bookReviewStore = create<BookReviewState>((set) => ({
 
   setBookReivew: (bookReview: NewBookReview) => {
     set({ bookReview });
+  },
+
+  initBookReview: () => {
+    set({ bookReview: initlializedBookReview });
   },
 }));
 

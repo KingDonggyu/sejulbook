@@ -13,7 +13,7 @@ interface SejulTextAreaProps {
 }
 
 const SejulTextArea = ({ value, readonly = false }: SejulTextAreaProps) => {
-  const { setSejul } = bookReviewStore();
+  const { bookReview, setSejul } = bookReviewStore();
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setSejul(e.target.value);
@@ -28,6 +28,7 @@ const SejulTextArea = ({ value, readonly = false }: SejulTextAreaProps) => {
         <TextArea
           variant={TextFieldVariant.TEXT}
           css={s.textAreaStyle}
+          value={bookReview.sejul}
           onChange={handleChange}
           placeholder="세 줄 독후감 작성"
         />

@@ -11,7 +11,6 @@ import { Tag, TagList } from './tag';
 import { UserId, UserName } from './user';
 
 export type BookReviewId = number;
-export type BookReviewThumbnail = string;
 export type Rating = number;
 export type Sejul = string;
 export type Content = string;
@@ -36,11 +35,12 @@ export interface NewBookReview extends NewPublishInfo {
  * 독후감 생성 요청 타입
  */
 export interface PublishRequest {
+  id?: BookReviewId;
   bookname: BookTitle;
   authors: BookAuthor;
   publication: BookPublication;
   publisher: BookPublisher;
-  thumbnail: BookThumbnail;
+  thumbnail: string;
   rating: Rating;
   tags: Tag[];
   sejul: Sejul;
@@ -48,17 +48,16 @@ export interface PublishRequest {
   userId: UserId;
   categoryId: CategoryId;
   originThumbnail: BookThumbnail;
+  isDraftSave: boolean;
 }
 
 /**
  * 독후감 정보 응답 타입
  */
-export interface BookReviewResponse
-  extends Omit<PublishRequest, 'tags' | 'categoryId' | 'originThumbnail'> {
+export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;
-  originThumbnail: BookReviewThumbnail;
   likeCount: number;
   createdAt: string;
 }
@@ -72,3 +71,20 @@ export type BookReviewSummary = Pick<
 };
 
 export type BookReivewList = BookReviewSummary[];
+
+export type DraftSavedBookReview = Pick<
+  BookReviewResponse,
+  'id' | 'bookname' | 'createdAt'
+>;
+
+/**
+ * URL Query
+ */
+
+export type DraftSavedBookReviewURLQuery = {
+  draft: BookReviewId;
+};
+
+export type PublishedBookReviewURLQuery = {
+  publish: BookReviewId;
+};

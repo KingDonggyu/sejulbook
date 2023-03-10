@@ -4,7 +4,7 @@ import useUnload from './useUnload';
 
 const useS3GarbageCollection = () => {
   const serviceWorkerController = useRef<ServiceWorker | null>();
-  const { imageKeySet } = s3ImageURLStore();
+  const { imageKeySet, emptyImageKeySet } = s3ImageURLStore();
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -21,7 +21,8 @@ const useS3GarbageCollection = () => {
       return;
     }
     serviceWorkerController.current?.postMessage(Array.from(imageKeySet));
-  }, [imageKeySet]);
+    emptyImageKeySet();
+  }, [emptyImageKeySet, imageKeySet]);
 
   useUnload(handleWork);
 };

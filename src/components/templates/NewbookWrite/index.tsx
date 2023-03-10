@@ -1,6 +1,5 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
 import Route from '@/constants/routes';
 import * as s from './style';
@@ -22,30 +21,6 @@ const NewbookWrite = ({
 }: NewbookWriteProps) => {
   const isShowTemplate = Boolean(bookName);
   const router = useRouter();
-
-  const {
-    showHeaderBar,
-    hideHeaderBar,
-    showScreenModeButton,
-    hideScreenModeButton,
-  } = useLayoutContext();
-
-  useEffect(() => {
-    if (isShowTemplate) {
-      hideHeaderBar();
-      hideScreenModeButton();
-    }
-    return () => {
-      showHeaderBar();
-      showScreenModeButton();
-    };
-  }, [
-    isShowTemplate,
-    hideHeaderBar,
-    hideScreenModeButton,
-    showHeaderBar,
-    showScreenModeButton,
-  ]);
 
   if (!isShowTemplate) {
     return (

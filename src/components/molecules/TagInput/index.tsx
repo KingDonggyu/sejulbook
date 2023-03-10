@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import TextField from '@/components/atoms/TextField';
 import Button from '@/components/atoms/Button';
 import { TextFieldVariant } from '@/constants';
@@ -13,6 +13,7 @@ interface TagItemProps {
 }
 
 interface TagInputProps {
+  initTagList?: TagList;
   handleUpdate: (tagList: TagList) => void;
 }
 
@@ -23,9 +24,15 @@ const TagItem = ({ tag, handleDelete }: TagItemProps) => (
   </s.HashTag>
 );
 
-const TagInput = ({ handleUpdate }: TagInputProps) => {
+const TagInput = ({ initTagList, handleUpdate }: TagInputProps) => {
   const [currentTag, setCurrentTag] = useState<Tag>('');
   const [tagList, setTagList] = useState<TagList>(new Set<Tag>());
+
+  useEffect(() => {
+    if (initTagList) {
+      setTagList(initTagList);
+    }
+  }, [initTagList]);
 
   const handleComplete = () => {
     if (currentTag && !tagList.has(currentTag)) {

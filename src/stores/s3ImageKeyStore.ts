@@ -5,7 +5,7 @@ interface S3ImageKeyState {
   imageKeySet: Set<string>;
   addImageKey: (url: string) => void;
   deleteImageKey: (url: string) => void;
-  empty: () => void;
+  emptyImageKeySet: () => void;
 }
 
 const convertURLToKey = (url: string) => {
@@ -33,7 +33,7 @@ const s3ImageURLStore = create<S3ImageKeyState>((set) => ({
     });
   },
 
-  empty: () => {
+  emptyImageKeySet: () => {
     set({
       imageKeySet: new Set<string>(),
     });

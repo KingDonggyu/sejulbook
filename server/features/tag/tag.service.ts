@@ -27,6 +27,13 @@ const tagService = {
 
     return { error: false, data: undefined };
   },
+
+  deleteTags: async ({
+    bookReviewId,
+  }: Pick<TagDTO, 'bookReviewId'>): Promise<HttpResponse<undefined>> => {
+    await tagModel.deleteTags({ sejulbook_id: bookReviewId });
+    return { error: false, data: undefined };
+  },
 };
 
 export default tagService;

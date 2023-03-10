@@ -2,7 +2,11 @@ import Query from '@/types/query';
 import { BookReviewId } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 
-import { getBookReview, getBookReviewList } from '../api/bookReview';
+import {
+  getBookReview,
+  getBookReviewList,
+  getDraftSavedList,
+} from '../api/bookReview';
 import { getCategories } from '../api/category';
 import { getTags } from '../api/tag';
 
@@ -13,14 +17,25 @@ export const getBookReviewListQuery = (userId: UserId): Query => ({
   queryFn: () => getBookReviewList(userId),
 });
 
-export const getBookReviewQuery = (bookReviewId: BookReviewId): Query => ({
+export const getBookReviewQuery = (bookReviewId?: BookReviewId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getBookReviewQuery`, bookReviewId],
-  queryFn: () => getBookReview(bookReviewId),
+  queryFn: () => bookReviewId && getBookReview(bookReviewId),
+  options: {
+    enabled: !!bookReviewId,
+  },
 });
 
-export const getTagsQuery = (bookReviewId: BookReviewId): Query => ({
+export const getDraftSavedListQuery = (myId: UserId): Query => ({
+  queryKey: [`${BASE_QUERY_KEY}_getDraftSavedListQuery`],
+  queryFn: () => getDraftSavedList(myId),
+});
+
+export const getTagsQuery = (bookReviewId?: BookReviewId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getTagsQuery`, bookReviewId],
-  queryFn: () => getTags(bookReviewId),
+  queryFn: () => bookReviewId && getTags(bookReviewId),
+  options: {
+    enabled: !!bookReviewId,
+  },
 });
 
 export const getCategoriesQuery: Query = {
