@@ -1,16 +1,20 @@
 import { bookReviewError, userError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
+
 import { Category } from '../category/category.dto';
+import { UserName } from '../user/user.dto';
+import BookReviewDTO, { BookReviewId } from './bookReview.dto';
+
+import bookReviewModel from './bookReview.model';
+import userModel from '../user/user.model';
 import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
 import likeModel from '../like/like.model';
-import { UserName } from '../user/user.dto';
-import userModel from '../user/user.model';
-import BookReviewDTO, { BookReviewId } from './bookReview.dto';
-import bookReviewModel from './bookReview.model';
+import tagModel from '../tag/tag.model';
+
+import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
-import BookReviewGuard from './bookReview.guard';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
@@ -189,6 +193,19 @@ const bookReviewService = {
     // 독후감 발행
     const data = await bookReviewModel.createBookReview(entityData);
     return { error: false, data };
+  },
+
+  deletedBookReview: async ({
+    id,
+  }: Pick<BookReviewDTO, 'id'>): Promise<
+    HttpSuccess<undefined> | HttpFailed
+  > => {
+    await commentModel.deleteComments({ sejulbook_id: id });
+    await tagModel.deleteTags({ sejulbook_id: id });
+    await likeModel.deleteLikes({ sejulbook_id: id });
+    await bookReviewModel.deleteBookReview({ id });
+
+    return { error: false, data: undefined };
   },
 };
 

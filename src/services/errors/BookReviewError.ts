@@ -8,6 +8,7 @@ export type BookReviewErrorName =
   | 'UPDATE_ERROR'
   | 'GET_BOOKREIVEW_LIST_ERROR'
   | 'GET_BOOKREVIEW_ERROR'
-  | 'GET_DRAFT_SAVED_LIST_ERROR';
+  | 'GET_DRAFT_SAVED_LIST_ERROR'
+  | 'DELETE_BOOKREVIEW_ERROR';
 
 export class BookReviewError extends ErrorBase<BookReviewErrorName> {}

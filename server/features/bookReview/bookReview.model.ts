@@ -106,7 +106,12 @@ const bookReviewModel = {
       where ${Column.ID} = ${bookReview.id}
     `;
 
-    await query<ResultSetHeader>(sql);
+    await query(sql);
+  },
+
+  deleteBookReview: async ({ id }: Pick<BookReviewEntity, 'id'>) => {
+    const sql = `delete from ${TABLE_NAME} where ${Column.ID} = ${id}`;
+    await query(sql);
   },
 };
 

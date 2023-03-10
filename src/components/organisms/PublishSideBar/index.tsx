@@ -76,8 +76,8 @@ const PublishSideBar = ({
 
       router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
     } catch (error) {
+      setIsPossiblePublish(true);
       if (error instanceof BookReviewError) {
-        setIsPossiblePublish(true);
         toast.error(error.message);
       }
     }

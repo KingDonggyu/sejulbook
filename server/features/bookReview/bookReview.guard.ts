@@ -43,7 +43,7 @@ class BookReviewGuard {
   }
 
   checkEmptyCategory(): HttpFailed | false {
-    if (this.bookReview.categoryId) {
+    if (!this.bookReview.categoryId || this.bookReview.categoryId > 1) {
       return false;
     }
     return {

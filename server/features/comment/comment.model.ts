@@ -36,6 +36,16 @@ const commentModel = {
     const result = await query<CommentEntity[]>(sql);
     return result;
   },
+
+  deleteComments: async ({
+    sejulbook_id,
+  }: Pick<CommentEntity, 'sejulbook_id'>) => {
+    const sql = `
+      delete from ${TABLE_NAME} 
+      where ${Column.BOOKREVIEW_ID} = ${sejulbook_id}
+    `;
+    await query(sql);
+  },
 };
 
 export default commentModel;

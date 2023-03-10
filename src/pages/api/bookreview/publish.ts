@@ -9,7 +9,9 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 }
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  await checkAuth(req, res);
+  if (!(await checkAuth(req, res))) {
+    return;
+  }
 
   const service = req.body.isDraftSave
     ? bookReviewService.draftSaveBookReview

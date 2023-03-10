@@ -1,5 +1,5 @@
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
-import { get, post } from '@/lib/HTTPClient';
+import { get, post, remove } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import {
   BookReivewList,
@@ -191,5 +191,37 @@ export const getBookReview = async (bookReviewId: BookReviewId) => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'GET_BOOKREVIEW_ERROR', message });
+  }
+};
+
+interface DeleteBookReviewProps {
+  userId: UserId;
+  bookReviewId: BookReviewId;
+}
+
+export const deleteBookReview = async ({
+  userId,
+  bookReviewId,
+}: DeleteBookReviewProps) => {
+  try {
+    const response = await remove<HttpResponse<undefined>>(
+      `${API_URL}/${bookReviewId}`,
+      {
+        userId,
+        bookReviewId,
+      },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'DELETE_BOOKREVIEW_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'DELETE_BOOKREVIEW_ERROR', message });
   }
 };

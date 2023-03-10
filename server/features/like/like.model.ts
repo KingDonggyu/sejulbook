@@ -20,6 +20,14 @@ const likeModel = {
     const [result] = await query<{ count: number }[]>(sql);
     return result;
   },
+
+  deleteLikes: async ({ sejulbook_id }: Pick<LikeEntity, 'sejulbook_id'>) => {
+    const sql = `
+      delete from ${TABLE_NAME} 
+      where ${Column.BOOKREVIEW_ID} = ${sejulbook_id}
+    `;
+    await query(sql);
+  },
 };
 
 export default likeModel;
