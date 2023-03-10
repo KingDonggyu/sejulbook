@@ -17,9 +17,12 @@ export const getBookReviewListQuery = (userId: UserId): Query => ({
   queryFn: () => getBookReviewList(userId),
 });
 
-export const getBookReviewQuery = (bookReviewId: BookReviewId): Query => ({
+export const getBookReviewQuery = (bookReviewId?: BookReviewId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getBookReviewQuery`, bookReviewId],
-  queryFn: () => getBookReview(bookReviewId),
+  queryFn: () => bookReviewId && getBookReview(bookReviewId),
+  options: {
+    enabled: !!bookReviewId,
+  },
 });
 
 export const getDraftSavedListQuery = (myId: UserId): Query => ({
@@ -27,9 +30,12 @@ export const getDraftSavedListQuery = (myId: UserId): Query => ({
   queryFn: () => getDraftSavedList(myId),
 });
 
-export const getTagsQuery = (bookReviewId: BookReviewId): Query => ({
+export const getTagsQuery = (bookReviewId?: BookReviewId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getTagsQuery`, bookReviewId],
-  queryFn: () => getTags(bookReviewId),
+  queryFn: () => bookReviewId && getTags(bookReviewId),
+  options: {
+    enabled: !!bookReviewId,
+  },
 });
 
 export const getCategoriesQuery: Query = {

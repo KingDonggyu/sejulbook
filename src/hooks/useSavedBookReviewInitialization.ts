@@ -1,28 +1,24 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+import { useEffect, useState } from 'react';
 import { useNewbookContext } from '@/contexts/newbookContext';
 import bookReviewStore from '@/stores/bookReviewStore';
 import { Book } from '@/types/features/book';
 import { BookReviewId } from '@/types/features/bookReview';
-import { useEffect, useState } from 'react';
 import useBookReview from './services/queries/useBookReview';
 import useTags from './services/queries/useTags';
 
-const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
-  if (!bookReviewId) {
-    return { isLoading: false };
-  }
-
+const useSavedBookReviewInitialization = (
+  bookReviewId: BookReviewId | undefined,
+) => {
   const [isLoading, setIsLoading] = useState(true);
-
   const savedBookReview = useBookReview(bookReviewId);
   const tags = useTags(bookReviewId);
 
-  const { setNewbook, removeNewbook } = useNewbookContext();
+  const { setNewbook } = useNewbookContext();
   const { setBookReivew, initBookReview } = bookReviewStore();
 
   useEffect(() => {
     if (savedBookReview) {
-      const book: Book = {
+      const savedBook: Book = {
         title: savedBookReview.bookname,
         authors: savedBookReview.authors.split(', '),
         publisher: savedBookReview.publisher,
@@ -30,11 +26,11 @@ const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
         thumbnail: savedBookReview.originThumbnail,
       };
 
-      setNewbook(book);
+      setNewbook(savedBook);
 
       setBookReivew({
         ...savedBookReview,
-        book,
+        book: savedBook,
         category: {
           id: savedBookReview.categoryId,
           category: savedBookReview.category,
@@ -43,17 +39,16 @@ const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
         tag: new Set(tags),
         thumbnail: undefined,
       });
-
-      setIsLoading(false);
     }
 
+    setIsLoading(false);
+
     return () => {
-      removeNewbook();
       initBookReview();
     };
   }, [
+    bookReviewId,
     initBookReview,
-    removeNewbook,
     savedBookReview,
     setBookReivew,
     setNewbook,
@@ -63,4 +58,4 @@ const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
   return { isLoading };
 };
 
-export default useSavedBookReview;
+export default useSavedBookReviewInitialization;

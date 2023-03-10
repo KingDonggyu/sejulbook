@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
@@ -12,11 +11,9 @@ import ContentEditor, {
 import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 
-import { useNewbookContext } from '@/contexts/newbookContext';
-import bookReviewStore from '@/stores/bookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
-import useSavedBookReview from '@/hooks/useSavedBookReview';
 import useS3GarbageCollection from '@/hooks/useS3GarbageCollection';
+import useNewbookWriteInitialization from '@/hooks/useNewbookWriteInitialization';
 import { BookReviewId } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
 import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
@@ -30,45 +27,25 @@ import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
 const NewbookWritePage = ({
   savedBookReviewId,
 }: {
-  savedBookReviewId: BookReviewId | null;
+  savedBookReviewId?: BookReviewId;
 }) => {
   const router = useRouter();
-
-  // 저장된 독후감 정보로 초기화
-  const { isLoading: isSavedBookReviewLoading } =
-    useSavedBookReview(savedBookReviewId);
-
-  // 검색한 책 정보 가져오기 (in 로컬스토리지)
-  const { getNewbook } = useNewbookContext();
-  const { book, isLoading: isNewBookLoading } = getNewbook();
-
-  // 독후감 작성 상태 관리
-  const { bookReview, setBook, setThumbnail } = bookReviewStore();
   const { deleteImageKey } = s3ImageURLStore();
 
-  const isLoading = isSavedBookReviewLoading || isNewBookLoading;
+  const {
+    bookReview: { book, thumbnail },
+    isLoading,
+  } = useNewbookWriteInitialization(savedBookReviewId);
 
-  // S3 이미지 스토리지 최적화
   useS3GarbageCollection();
-
-  useEffect(() => {
-    if (savedBookReviewId) {
-      return;
-    }
-
-    if (book && !bookReview.book.title) {
-      setBook(book);
-      setThumbnail(book.thumbnail);
-    }
-  }, [book, bookReview.book.title, savedBookReviewId, setBook, setThumbnail]);
 
   const handleComplete = (bookReviewId: BookReviewId) => {
     getUsedS3ImageURLs(editorElementId).forEach((url) => {
       deleteImageKey(url);
     });
 
-    if (bookReview.thumbnail) {
-      deleteImageKey(bookReview.thumbnail);
+    if (thumbnail) {
+      deleteImageKey(thumbnail);
     }
 
     router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
@@ -79,7 +56,7 @@ const NewbookWritePage = ({
       <DocumentTitle title="독후감 쓰기" />
       {!isLoading && (
         <NewbookWrite
-          bookName={book ? book.title : undefined}
+          bookName={book.title ? book.title : undefined}
           sejulTextarea={<SejulTextArea />}
           contentTextarea={<ContentEditor />}
           publishButton={
@@ -120,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  return { props: { savedBookReviewId: null } };
+  return { props: {} };
 };
 
 export default NewbookWritePage;
