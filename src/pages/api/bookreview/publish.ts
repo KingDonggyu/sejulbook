@@ -22,6 +22,10 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     return;
   }
 
+  if (req.body.id) {
+    await tagService.deleteTags({ bookReviewId: req.body.id });
+  }
+
   await tagService.writeTags({
     tags: req.body.tags,
     bookReviewId: result.data,

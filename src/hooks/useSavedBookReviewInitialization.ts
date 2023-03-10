@@ -9,12 +9,12 @@ import useTags from './services/queries/useTags';
 const useSavedBookReviewInitialization = (
   bookReviewId: BookReviewId | undefined,
 ) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!!bookReviewId);
   const savedBookReview = useBookReview(bookReviewId);
   const tags = useTags(bookReviewId);
 
   const { setNewbook } = useNewbookContext();
-  const { setBookReivew, initBookReview } = bookReviewStore();
+  const { bookReview, setBookReivew, initBookReview } = bookReviewStore();
 
   useEffect(() => {
     if (savedBookReview) {
@@ -41,19 +41,16 @@ const useSavedBookReviewInitialization = (
       });
     }
 
-    setIsLoading(false);
-
     return () => {
       initBookReview();
     };
-  }, [
-    bookReviewId,
-    initBookReview,
-    savedBookReview,
-    setBookReivew,
-    setNewbook,
-    tags,
-  ]);
+  }, [initBookReview, savedBookReview, setBookReivew, setNewbook, tags]);
+
+  useEffect(() => {
+    if (bookReview.book.title) {
+      setIsLoading(false);
+    }
+  }, [bookReview]);
 
   return { isLoading };
 };
