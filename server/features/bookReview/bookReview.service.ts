@@ -1,6 +1,5 @@
 import { bookReviewError, userError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
-import getCurrentDateString from 'server/utils/getCurrentDateString';
 import { Category } from '../category/category.dto';
 import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
@@ -127,7 +126,7 @@ const bookReviewService = {
   },
 
   draftSaveBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id'>,
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const result =
@@ -138,22 +137,32 @@ const bookReviewService = {
       return result;
     }
 
-    const data = await bookReviewModel.createBookReview(
-      formatDTOToEntity({
-        ...bookReview,
-        isDraftSave: true,
-        sejul: bookReview.sejul || '',
-        thumbnail: bookReview.thumbnail || '',
-        categoryId: bookReview.categoryId || 1,
-        rating: bookReview.rating || 3,
-      }),
-    );
+    const entityData = formatDTOToEntity({
+      ...bookReview,
+      isDraftSave: true,
+      sejul: bookReview.sejul || '',
+      thumbnail: bookReview.thumbnail || '',
+      categoryId: bookReview.categoryId || 1,
+      rating: bookReview.rating || 3,
+    });
 
+    // 독후감 재임시저장
+    if (bookReview.id) {
+      await bookReviewModel.updateBookReview({
+        ...entityData,
+        id: bookReview.id,
+      });
+
+      return { error: false, data: bookReview.id };
+    }
+
+    // 독후감 임시저장
+    const data = await bookReviewModel.createBookReview(entityData);
     return { error: false, data };
   },
 
   publishBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id'>,
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
@@ -162,51 +171,24 @@ const bookReviewService = {
       return guardResult;
     }
 
-    const data = await bookReviewModel.createBookReview(
-      formatDTOToEntity({
-        ...bookReview,
-        isDraftSave: false,
-      }),
-    );
+    const entityData = formatDTOToEntity({
+      ...bookReview,
+      isDraftSave: false,
+    });
 
-    return { error: false, data };
-  },
-
-  updateBookReview: async (
-    bookReview: BookReviewDTO,
-  ): Promise<HttpSuccess<undefined> | HttpFailed> => {
-    const bookReviewGuard = new BookReviewGuard(bookReview);
-    const guardResult = bookReviewGuard.checkInvalidPublish();
-
-    if (guardResult) {
-      return guardResult;
-    }
-
-    const { isDraftSave: prevIsDraftSave, createdAt } = formatEntityToDTO(
-      await bookReviewModel.getBookReivew({
-        id: bookReview.id,
-      }),
-    );
-
-    const entityData = formatDTOToEntity(bookReview);
-
-    if (prevIsDraftSave) {
+    // 임시저장 독후감 발행
+    if (bookReview.id) {
       await bookReviewModel.updateBookReview({
         ...entityData,
         id: bookReview.id,
-        datecreated: getCurrentDateString(),
       });
 
-      return { error: false, data: undefined };
+      return { error: false, data: bookReview.id };
     }
 
-    await bookReviewModel.updateBookReview({
-      ...entityData,
-      id: bookReview.id,
-      datecreated: createdAt,
-    });
-
-    return { error: false, data: undefined };
+    // 독후감 발행
+    const data = await bookReviewModel.createBookReview(entityData);
+    return { error: false, data };
   },
 };
 

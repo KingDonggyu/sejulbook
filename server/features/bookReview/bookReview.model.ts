@@ -1,6 +1,6 @@
 import { ResultSetHeader } from 'mysql2';
 import query from 'server/database/query';
-import BookReviewEntity from './bookReview.entity';
+import BookReviewEntity, { DateCreated } from './bookReview.entity';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -85,14 +85,22 @@ const bookReviewModel = {
     return insertId;
   },
 
-  updateBookReview: async (bookReview: BookReviewEntity) => {
+  updateBookReview: async (
+    bookReview: Omit<BookReviewEntity, 'datecreated'> & {
+      datecreated?: DateCreated;
+    },
+  ) => {
+    const dateCreated = bookReview.datecreated
+      ? `"${bookReview.datecreated}"`
+      : 'default';
+
     const sql = `
       update ${TABLE_NAME} set 
       ${Column.GRADE} = ${bookReview.grade},
       ${Column.THUMBNAIL} = "${bookReview.thumbnail}",
       ${Column.SEJUL} = "${bookReview.sejul}",
       ${Column.SEJUL_PLUS} = "${bookReview.sejulplus}",
-      ${Column.DATE_CREATED} = "${bookReview.datecreated}",
+      ${Column.DATE_CREATED} = ${dateCreated},
       ${Column.CATEGORY_ID} = ${bookReview.category_id},
       ${Column.DiVIDE} = ${bookReview.divide}
       where ${Column.ID} = ${bookReview.id}

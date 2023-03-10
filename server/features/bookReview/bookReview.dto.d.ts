@@ -2,7 +2,6 @@ import { UserId } from '../user/user.dto';
 import { CategoryId } from '../category/category.dto';
 
 export type BookReviewId = number;
-type Rating = 1 | 2 | 3 | 4 | 5;
 
 interface BookReviewDTO {
   id: BookReviewId;
@@ -11,7 +10,7 @@ interface BookReviewDTO {
   publication: string;
   publisher: string;
   thumbnail: string;
-  rating: Rating;
+  rating: number;
   sejul: string;
   content: string;
   userId: UserId;

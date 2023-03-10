@@ -1,6 +1,6 @@
 import ErrorBase from '@/lib/ErrorBase';
 
-type BookReviewErrorName =
+export type BookReviewErrorName =
   | 'IMAGE_UPLOAD_ERROR'
   | 'GET_CATEGORIES_ERROR'
   | 'GET_TAGS_ERROR'

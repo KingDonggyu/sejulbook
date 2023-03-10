@@ -7,7 +7,7 @@ import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import { Book } from '@/types/features/book';
 import { BookReviewId } from '@/types/features/bookReview';
 import bookReviewStore from '@/stores/bookReviewStore';
-import { publishBookReview, updateBookReview } from '@/services/api/bookReview';
+import { publishBookReview } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 
 import Button from '@/components/atoms/Button';
@@ -35,7 +35,7 @@ const PublishSideBar = ({
   handleComplete,
 }: PublishSideBarProps) => {
   const { session, isLogin } = useUserStatus();
-  const savedBookReviewId = useSavedBookReviewId();
+  const { savedBookReviewId } = useSavedBookReviewId();
   const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
 
   const handlePublish = async () => {
@@ -44,23 +44,11 @@ const PublishSideBar = ({
         return;
       }
 
-      let bookReviewId: BookReviewId;
-
-      if (savedBookReviewId) {
-        bookReviewId = savedBookReviewId;
-        await updateBookReview({
-          bookReview: {
-            ...bookReview,
-            id: savedBookReviewId,
-          },
-          userId: session.id,
-        });
-      } else {
-        bookReviewId = await publishBookReview({
-          bookReview,
-          userId: session.id,
-        });
-      }
+      const bookReviewId = await publishBookReview({
+        userId: session.id,
+        bookReviewId: savedBookReviewId,
+        bookReview,
+      });
 
       if (handleComplete) {
         handleComplete(bookReviewId);
@@ -117,7 +105,7 @@ const PublishSideBar = ({
   );
 };
 
-const PublishButton = ({
+const PublishSidebarButton = ({
   newbook,
   handleComplete,
 }: {
@@ -145,6 +133,6 @@ const PublishButton = ({
   );
 };
 
-PublishSideBar.Button = PublishButton;
+PublishSideBar.Button = PublishSidebarButton;
 
 export default PublishSideBar;

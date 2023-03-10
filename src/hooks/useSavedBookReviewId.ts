@@ -1,22 +1,23 @@
 import {
+  BookReviewId,
   DraftSavedBookReviewURLQuery,
   PublishedBookReviewURLQuery,
 } from '@/types/features/bookReview';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const useSavedBookReviewId = () => {
   const router = useRouter();
+  const [savedBookReviewId, setSavedBookReviewId] = useState<BookReviewId>();
 
-  const { draft } = router.query as unknown as DraftSavedBookReviewURLQuery;
-  const { publish } = router.query as unknown as PublishedBookReviewURLQuery;
+  useEffect(() => {
+    const { draft } = router.query as unknown as DraftSavedBookReviewURLQuery;
+    const { publish } = router.query as unknown as PublishedBookReviewURLQuery;
 
-  const bookReviewId = draft || publish;
+    setSavedBookReviewId(draft || publish);
+  }, [router.query]);
 
-  if (bookReviewId) {
-    return bookReviewId;
-  }
-
-  return null;
+  return { savedBookReviewId, setSavedBookReviewId };
 };
 
 export default useSavedBookReviewId;

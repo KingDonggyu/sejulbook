@@ -2,8 +2,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import bookReviewService from 'server/features/bookReview/bookReview.service';
 import tagService from 'server/features/tag/tag.service';
 import checkAuth from '@/services/middlewares/checkAuth';
+import { PublishRequest } from '@/types/features/bookReview';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+interface ExtendedNextApiRequest extends NextApiRequest {
+  body: PublishRequest;
+}
+
+const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   await checkAuth(req, res);
 
   const service = req.body.isDraftSave

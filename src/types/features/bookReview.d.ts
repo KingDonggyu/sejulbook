@@ -31,14 +31,11 @@ export interface NewBookReview extends NewPublishInfo {
   book: Book;
 }
 
-export interface BookReviewUpdateRequest extends NewBookReview {
-  id: BookReviewId;
-}
-
 /**
  * 독후감 생성 요청 타입
  */
 export interface PublishRequest {
+  id?: BookReviewId;
   bookname: BookTitle;
   authors: BookAuthor;
   publication: BookPublication;
@@ -54,14 +51,10 @@ export interface PublishRequest {
   isDraftSave: boolean;
 }
 
-export interface PublishUpdateRequest extends PublishRequest {
-  id: BookReviewId;
-}
-
 /**
  * 독후감 정보 응답 타입
  */
-export interface BookReviewResponse extends Omit<PublishUpdateRequest, 'tags'> {
+export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   writer: UserName;
   category: Category;
   likeCount: number;

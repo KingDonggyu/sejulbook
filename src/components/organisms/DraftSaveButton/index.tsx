@@ -4,16 +4,14 @@ import { ButtonVariant } from '@/constants';
 import { bookReviewSussess, userError } from '@/constants/message';
 import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import useUserStatus from '@/hooks/useUserStatus';
-import {
-  draftSaveBookReview,
-  updateDraftSaveBookReview,
-} from '@/services/api/bookReview';
+import { draftSaveBookReview } from '@/services/api/bookReview';
 import bookReviewStore from '@/stores/bookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 
 const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
   const { session, isLogin } = useUserStatus();
-  const savedBookReviewId = useSavedBookReviewId();
+  const { savedBookReviewId, setSavedBookReviewId } = useSavedBookReviewId();
+
   const { bookReview } = bookReviewStore();
   const { emptyImageKeySet } = s3ImageURLStore();
 
@@ -23,19 +21,14 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
       return;
     }
 
-    if (savedBookReviewId) {
-      await updateDraftSaveBookReview({
-        bookReview: {
-          ...bookReview,
-          id: savedBookReviewId,
-        },
-        userId: session.id,
-      });
-    } else {
-      await draftSaveBookReview({ bookReview, userId: session.id });
-    }
+    const bookReviewId = await draftSaveBookReview({
+      userId: session.id,
+      bookReviewId: savedBookReviewId,
+      bookReview,
+    });
 
     emptyImageKeySet();
+    setSavedBookReviewId(bookReviewId);
     toast.success(bookReviewSussess.DRAFT_SAVE);
   };
 

@@ -13,8 +13,10 @@ const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
   }
 
   const [isLoading, setIsLoading] = useState(true);
+
   const savedBookReview = useBookReview(bookReviewId);
   const tags = useTags(bookReviewId);
+
   const { setNewbook, removeNewbook } = useNewbookContext();
   const { setBookReivew, initBookReview } = bookReviewStore();
 
@@ -39,6 +41,7 @@ const useSavedBookReview = (bookReviewId: BookReviewId | null) => {
         },
         rating: Number(savedBookReview.rating),
         tag: new Set(tags),
+        thumbnail: undefined,
       });
 
       setIsLoading(false);

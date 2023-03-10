@@ -4,10 +4,13 @@ import OriginBookReviewEntity from '../bookReview.entity';
 type BookReviewEntity = Omit<OriginBookReviewEntity, 'id' | 'datecreated'>;
 
 const formatDTOToEntity = (
-  bookReviewDTO: Omit<BookReviewDTO, 'id'>,
+  bookReviewDTO: Omit<BookReviewDTO, 'id' | 'createdAt'>,
 ): BookReviewEntity => {
   const bookReviewEntity: BookReviewEntity = {
-    ...bookReviewDTO,
+    bookname: bookReviewDTO.bookname,
+    publication: bookReviewDTO.publication,
+    publisher: bookReviewDTO.publisher,
+    thumbnail: bookReviewDTO.thumbnail,
     writer: bookReviewDTO.authors,
     grade: bookReviewDTO.rating || 3,
     sejul: bookReviewDTO.sejul ? bookReviewDTO.sejul.replace(/"/g, '""') : '',
