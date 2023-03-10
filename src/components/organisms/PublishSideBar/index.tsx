@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
 import { ButtonVariant, ColorVariant } from '@/constants';
 import Route from '@/constants/routes';
 import { ModalKey } from '@/constants/keys';
+import { userError } from '@/constants/message';
 import useOpenClose from '@/hooks/useOpenClose';
 import useUserStatus from '@/hooks/useUserStatus';
 import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
@@ -22,7 +24,6 @@ import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
 import CategoryModal from '@/components/organisms/CategoryModal';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { editorElementId } from '@/components/organisms/ContentEditor';
-
 import * as s from './style';
 
 interface PublishSideBarProps {
@@ -40,15 +41,23 @@ const PublishSideBar = ({
   const { session, isLogin } = useUserStatus();
   const { savedBookReviewId } = useSavedBookReviewId();
 
-  const { initBookReview } = bookReviewStore();
   const { deleteImageKey } = s3ImageURLStore();
   const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
 
+  const [isPossiblePublish, setIsPossiblePublish] = useState(true);
+
   const handlePublish = async () => {
     try {
-      if (!isLogin) {
+      if (!isPossiblePublish) {
         return;
       }
+
+      if (!isLogin) {
+        toast.error(userError.NOT_LOGGED);
+        return;
+      }
+
+      setIsPossiblePublish(false);
 
       const bookReviewId = await publishBookReview({
         userId: session.id,
@@ -65,10 +74,10 @@ const PublishSideBar = ({
         deleteImageKey(bookReview.thumbnail);
       }
 
-      initBookReview();
       router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
     } catch (error) {
       if (error instanceof BookReviewError) {
+        setIsPossiblePublish(true);
         toast.error(error.message);
       }
     }

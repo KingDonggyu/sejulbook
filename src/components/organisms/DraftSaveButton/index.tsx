@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
@@ -18,11 +19,19 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
   const { bookReview } = bookReviewStore();
   const { emptyImageKeySet } = s3ImageURLStore();
 
+  const [isPossibleSave, isSetPossibleSave] = useState(true);
+
   const handleClick = async () => {
+    if (!isPossibleSave) {
+      return;
+    }
+
     if (!isLogin) {
       toast.error(userError.NOT_LOGGED);
       return;
     }
+
+    isSetPossibleSave(false);
 
     const bookReviewId = await draftSaveBookReview({
       userId: session.id,
@@ -41,6 +50,8 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
       const url = getInlineURL({ baseURL: Route.NEWBOOK_WRITE, query });
       window.history.replaceState(null, '', url);
     }
+
+    isSetPossibleSave(true);
   };
 
   return (
