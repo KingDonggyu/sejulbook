@@ -1,17 +1,13 @@
 import Link from 'next/link';
-import { toast } from 'react-toastify';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { DeleteIcon } from '@/components/atoms/Icon';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
-import { userError } from '@/constants/message';
 import Route from '@/constants/routes';
-import useUserStatus from '@/hooks/useUserStatus';
 import modalStore from '@/stores/modalStore';
 import formatDateToKorean from '@/utils/formatDateToKorean';
-import { deleteBookReview } from '@/services/api/bookReview';
-import { BookReviewError } from '@/services/errors/BookReviewError';
+import useDraftSavedDeletion from '@/hooks/services/mutations/useDraftSavedDeletion';
 import {
   DraftSavedBookReview,
   DraftSavedBookReviewURLQuery,
@@ -24,29 +20,19 @@ interface DraftSavedListModalProps
 }
 
 const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
-  const { session, isLogin } = useUserStatus();
   const { closeModal } = modalStore();
+
+  const deleteDraftSavedBookReview = useDraftSavedDeletion({
+    bookReviewId: id,
+  });
 
   const draftSavedURLQuery: DraftSavedBookReviewURLQuery = {
     draft: id,
   };
 
-  const handleClickDeleteButton = async () => {
-    if (!isLogin) {
-      toast.error(userError.NOT_LOGGED);
-      return;
-    }
-
-    if (!window.confirm('임시저장 독후감을 정말 삭제하시겠습니까?')) {
-      return;
-    }
-
-    try {
-      await deleteBookReview({ userId: session.id, bookReviewId: id });
-    } catch (error) {
-      if (error instanceof BookReviewError) {
-        toast.error(error.message);
-      }
+  const handleClickDeleteButton = () => {
+    if (window.confirm('임시저장 독후감을 정말 삭제하시겠습니까?')) {
+      deleteDraftSavedBookReview();
     }
   };
 
