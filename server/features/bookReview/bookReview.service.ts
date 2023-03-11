@@ -1,22 +1,32 @@
 import { bookReviewError, userError } from 'server/constants/message';
 import { HttpSuccess, HttpFailed } from 'server/types/http';
+
 import { Category } from '../category/category.dto';
+import { UserName } from '../user/user.dto';
+import BookReviewDTO, { BookReviewId } from './bookReview.dto';
+
+import bookReviewModel from './bookReview.model';
+import userModel from '../user/user.model';
 import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
 import likeModel from '../like/like.model';
-import { UserName } from '../user/user.dto';
-import userModel from '../user/user.model';
-import BookReviewDTO, { BookReviewId } from './bookReview.dto';
-import bookReviewModel from './bookReview.model';
+import tagModel from '../tag/tag.model';
+
+import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
+import formatDTOToEntity from './utils/formatDTOToEntity';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
   'id' | 'bookname' | 'sejul' | 'thumbnail'
 >;
 
-interface PublishedBookReview
-  extends Omit<BookReviewDTO, 'categoryId' | 'isDraftSave'> {
+type DraftSavedBookReview = Pick<
+  BookReviewDTO,
+  'id' | 'bookname' | 'createdAt'
+>;
+
+interface PublishedBookReview extends BookReviewDTO {
   writer: UserName;
   category: Category;
   likeCount: number;
@@ -56,12 +66,31 @@ const bookReviewService = {
     return { error: false, data };
   },
 
+  getDraftSavedList: async ({
+    userId,
+  }: Pick<BookReviewDTO, 'userId'>): Promise<
+    HttpSuccess<DraftSavedBookReview[]> | HttpFailed
+  > => {
+    const bookReviewList = await bookReviewModel.getDraftSavedList({
+      user_id: userId,
+    });
+
+    return {
+      error: false,
+      data: bookReviewList.map(({ id, bookname, datecreated }) => ({
+        id,
+        bookname,
+        createdAt: datecreated,
+      })),
+    };
+  },
+
   getBookReivew: async ({
     id,
   }: Pick<BookReviewDTO, 'id'>): Promise<
     HttpSuccess<PublishedBookReview> | HttpFailed
   > => {
-    const [bookReviewData] = await bookReviewModel.getBookReivew({ id });
+    const bookReviewData = await bookReviewModel.getBookReivew({ id });
 
     if (!bookReviewData) {
       return {
@@ -72,15 +101,6 @@ const bookReviewService = {
     }
 
     const bookReview = formatEntityToDTO(bookReviewData);
-
-    if (bookReview.isDraftSave) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.NOT_PUBLISHED_BOOKREVIEW,
-      };
-    }
-
     const userName = await userModel.getUserName({ id: bookReview.userId });
 
     if (!userName) {
@@ -99,9 +119,6 @@ const bookReviewService = {
       sejulbook_id: id,
     });
 
-    delete (bookReview as Partial<BookReviewDTO>).categoryId;
-    delete (bookReview as Partial<BookReviewDTO>).isDraftSave;
-
     const data: PublishedBookReview = {
       ...bookReview,
       writer: userName,
@@ -112,69 +129,83 @@ const bookReviewService = {
     return { error: false, data };
   },
 
-  publishBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id'>,
+  draftSaveBookReview: async (
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
   ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
-    if (!bookReview.bookname) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_BOOK,
-      };
+    const bookReviewGuard = new BookReviewGuard(bookReview);
+    const result =
+      bookReviewGuard.checkEmptyBook() ||
+      bookReviewGuard.checkReachedRatingLimit();
+
+    if (result) {
+      return result;
     }
 
-    if (!bookReview.categoryId) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_CATEGORY,
-      };
-    }
-
-    if (!bookReview.rating) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_RATING,
-      };
-    }
-
-    if (bookReview.rating < 1 || bookReview.rating > 5) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.LIMIT_REACHED_RATING,
-      };
-    }
-
-    if (!bookReview.sejul) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_SEJUL,
-      };
-    }
-
-    if (!bookReview.thumbnail) {
-      return {
-        error: true,
-        code: 400,
-        message: bookReviewError.EMPTY_THUMBNAIL,
-      };
-    }
-
-    const data = await bookReviewModel.createBookReview({
+    const entityData = formatDTOToEntity({
       ...bookReview,
-      writer: bookReview.authors,
-      grade: bookReview.rating,
-      sejul: bookReview.sejul.replace(/"/g, '""'),
-      sejulplus: bookReview.content.replace(/"/g, '""'),
-      user_id: bookReview.userId,
-      category_id: bookReview.categoryId,
-      divide: bookReview.isDraftSave ? 0 : 1,
+      isDraftSave: true,
+      sejul: bookReview.sejul || '',
+      thumbnail: bookReview.thumbnail || '',
+      categoryId: bookReview.categoryId || 1,
+      rating: bookReview.rating || 3,
     });
 
+    // 독후감 재임시저장
+    if (bookReview.id) {
+      await bookReviewModel.updateBookReview({
+        ...entityData,
+        id: bookReview.id,
+      });
+
+      return { error: false, data: bookReview.id };
+    }
+
+    // 독후감 임시저장
+    const data = await bookReviewModel.createBookReview(entityData);
     return { error: false, data };
+  },
+
+  publishBookReview: async (
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
+  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+    const bookReviewGuard = new BookReviewGuard(bookReview);
+    const guardResult = bookReviewGuard.checkInvalidPublish();
+
+    if (guardResult) {
+      return guardResult;
+    }
+
+    const entityData = formatDTOToEntity({
+      ...bookReview,
+      isDraftSave: false,
+    });
+
+    // 임시저장 독후감 발행
+    if (bookReview.id) {
+      await bookReviewModel.updateBookReview({
+        ...entityData,
+        id: bookReview.id,
+      });
+
+      return { error: false, data: bookReview.id };
+    }
+
+    // 독후감 발행
+    const data = await bookReviewModel.createBookReview(entityData);
+    return { error: false, data };
+  },
+
+  deletedBookReview: async ({
+    id,
+  }: Pick<BookReviewDTO, 'id'>): Promise<
+    HttpSuccess<undefined> | HttpFailed
+  > => {
+    await commentModel.deleteComments({ sejulbook_id: id });
+    await tagModel.deleteTags({ sejulbook_id: id });
+    await likeModel.deleteLikes({ sejulbook_id: id });
+    await bookReviewModel.deleteBookReview({ id });
+
+    return { error: false, data: undefined };
   },
 };
 

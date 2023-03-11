@@ -9,7 +9,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 import { ModalKey } from '@/constants/keys';
-import useLoginStatus from '@/hooks/useLoginStatus';
+import useUserStatus from '@/hooks/useUserStatus';
 import modalStore from '@/stores/modalStore';
 import { signUp } from '@/services/api/user';
 import UserError from '@/services/errors/UserError';
@@ -18,7 +18,7 @@ import { Introduce, UserName } from '@/types/features/user';
 import prefetchQuery from '@/services/prefetchQuery';
 
 const HomePage = () => {
-  const { session, isSignupRequired } = useLoginStatus();
+  const { session, isSignupRequired } = useUserStatus();
   const { openModal } = modalStore();
 
   const handleSignUp = async ({

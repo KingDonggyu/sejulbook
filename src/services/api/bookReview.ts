@@ -1,17 +1,20 @@
 import { PresignedPost } from '@aws-sdk/s3-presigned-post';
-import { get, post } from '@/lib/HTTPClient';
+import { get, post, remove } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import {
   BookReivewList,
   NewBookReview,
   BookReviewId,
   PublishRequest,
+  BookReviewResponse,
 } from '@/types/features/bookReview';
-import { CategoryResponse } from '@/types/features/category';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { bookReviewError } from '@/constants/message';
-import { BookReviewError } from '../errors/BookReviewError';
+import {
+  BookReviewError,
+  BookReviewErrorName,
+} from '../errors/BookReviewError';
 
 const API_URL = '/api/bookreview';
 
@@ -65,42 +68,36 @@ export const uploadLocalImage = async (blob: Blob) => {
   }
 };
 
-export const getCategories = async () => {
-  try {
-    const response = await get<HttpResponse<CategoryResponse[]>>(
-      `${API_URL}/categories`,
-    );
-
-    if (response.error) {
-      throw new BookReviewError({
-        name: 'GET_CATEGORIES_ERROR',
-        message: response.message,
-      });
-    }
-
-    return response.data;
-  } catch (error) {
-    const { message } = getDataFromAxiosError(error);
-    throw new BookReviewError({ name: 'GET_CATEGORIES_ERROR', message });
-  }
-};
+interface PublishBookReviewProps {
+  userId: UserId;
+  bookReview: NewBookReview;
+  bookReviewId?: BookReviewId;
+  isDraftSave?: boolean;
+}
 
 export const publishBookReview = async ({
-  bookReview,
   userId,
-}: {
-  bookReview: NewBookReview;
-  userId: UserId;
-}) => {
+  bookReview,
+  bookReviewId,
+  isDraftSave = false,
+}: PublishBookReviewProps) => {
+  const errorName: BookReviewErrorName = bookReviewId
+    ? 'UPDATE_ERROR'
+    : 'PUBLISH_ERROR';
+
   try {
     const publishRequest: PublishRequest = {
       ...bookReview,
+      id: bookReviewId,
       bookname: bookReview.book.title,
       authors: bookReview.book.authors.join(', '),
       publication: bookReview.book.datetime.slice(0, 10),
       publisher: bookReview.book.publisher,
+      thumbnail: bookReview.thumbnail || '',
+      originThumbnail: bookReview.book.thumbnail,
       categoryId: bookReview.category.id,
       tags: Array.from(bookReview.tag),
+      isDraftSave,
       userId,
     };
 
@@ -111,7 +108,7 @@ export const publishBookReview = async ({
 
     if (response.error) {
       throw new BookReviewError({
-        name: 'PUBLISH_ERROR',
+        name: errorName,
         message: response.message,
       });
     }
@@ -119,9 +116,21 @@ export const publishBookReview = async ({
     return response.data;
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
-    throw new BookReviewError({ name: 'PUBLISH_ERROR', message });
+    throw new BookReviewError({ name: errorName, message });
   }
 };
+
+export const draftSaveBookReview = async ({
+  userId,
+  bookReview,
+  bookReviewId,
+}: PublishBookReviewProps) =>
+  publishBookReview({
+    userId,
+    bookReview,
+    bookReviewId,
+    isDraftSave: true,
+  });
 
 export const getBookReviewList = async (userId: UserId) => {
   try {
@@ -144,9 +153,30 @@ export const getBookReviewList = async (userId: UserId) => {
   }
 };
 
-export const getBookReview = async (bookReviewId: BookReviewId) => {
+export const getDraftSavedList = async (userId: UserId) => {
   try {
     const response = await get<HttpResponse<BookReivewList>>(
+      `${API_URL}/drafts`,
+      { userId },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_DRAFT_SAVED_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'GET_DRAFT_SAVED_LIST_ERROR', message });
+  }
+};
+
+export const getBookReview = async (bookReviewId: BookReviewId) => {
+  try {
+    const response = await get<HttpResponse<BookReviewResponse>>(
       `${API_URL}/${bookReviewId}`,
     );
 
@@ -161,5 +191,37 @@ export const getBookReview = async (bookReviewId: BookReviewId) => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'GET_BOOKREVIEW_ERROR', message });
+  }
+};
+
+interface DeleteBookReviewProps {
+  userId: UserId;
+  bookReviewId: BookReviewId;
+}
+
+export const deleteBookReview = async ({
+  userId,
+  bookReviewId,
+}: DeleteBookReviewProps) => {
+  try {
+    const response = await remove<HttpResponse<undefined>>(
+      `${API_URL}/${bookReviewId}`,
+      {
+        userId,
+        bookReviewId,
+      },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'DELETE_BOOKREVIEW_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({ name: 'DELETE_BOOKREVIEW_ERROR', message });
   }
 };

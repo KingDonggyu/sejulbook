@@ -11,8 +11,11 @@ interface ButtonStyleProps {
 
 export const Button = styled.button<ButtonStyleProps>`
   width: fit-content;
-  border-radius: ${({ radius }) =>
-    radius === undefined ? '4px' : `${radius}px`};
+  border-radius: ${({ radius, variant }) =>
+    radius === undefined && variant !== ButtonVariant.TEXT
+      ? '4px'
+      : `${radius}px`};
+
   display: flex;
   justify-content: center;
   align-items: center;

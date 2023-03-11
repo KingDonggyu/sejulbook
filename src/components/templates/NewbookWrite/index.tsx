@@ -1,6 +1,5 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { useLayoutContext } from '@/contexts/layoutContext';
 import Button from '@/components/atoms/Button';
 import Route from '@/constants/routes';
 import * as s from './style';
@@ -20,32 +19,10 @@ const NewbookWrite = ({
   publishButton,
   draftSaveButton,
 }: NewbookWriteProps) => {
-  const {
-    showHeaderBar,
-    hideHeaderBar,
-    showScreenModeButton,
-    hideScreenModeButton,
-  } = useLayoutContext();
+  const isShowTemplate = Boolean(bookName);
   const router = useRouter();
 
-  useEffect(() => {
-    if (bookName) {
-      hideHeaderBar();
-      hideScreenModeButton();
-    }
-    return () => {
-      showHeaderBar();
-      showScreenModeButton();
-    };
-  }, [
-    bookName,
-    hideHeaderBar,
-    hideScreenModeButton,
-    showHeaderBar,
-    showScreenModeButton,
-  ]);
-
-  if (!bookName) {
+  if (!isShowTemplate) {
     return (
       <s.ExceptionWrapper>
         <div>책 선택 후 독후감을 쓸 수 있어요.</div>

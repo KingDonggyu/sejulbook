@@ -9,6 +9,7 @@ import BookReviewItem from '../BookReivewItem';
 import * as s from './style';
 
 interface BookshelfProps {
+  isMyBookshelf: boolean;
   bookReviewList: BookReivewList;
 }
 
@@ -31,8 +32,13 @@ const BookshelfRow = ({ row }: { row: (BookReviewSummary | null)[] }) => (
   </s.Row>
 );
 
-const Bookshelf = ({ bookReviewList }: BookshelfProps) => {
-  const bookshelf = convert1DArrayTo2DArray([null, ...bookReviewList], 3);
+const Bookshelf = ({ isMyBookshelf, bookReviewList }: BookshelfProps) => {
+  const initializedBookShelf = isMyBookshelf ? [null] : [];
+
+  const bookshelf = convert1DArrayTo2DArray(
+    [...initializedBookShelf, ...bookReviewList],
+    3,
+  );
 
   return (
     <s.Wrapper>
@@ -42,6 +48,7 @@ const Bookshelf = ({ bookReviewList }: BookshelfProps) => {
           <s.Divider />
         </Fragment>
       ))}
+      {Boolean(!bookshelf.length) && <s.AltText>독후감이 없습니다</s.AltText>}
     </s.Wrapper>
   );
 };

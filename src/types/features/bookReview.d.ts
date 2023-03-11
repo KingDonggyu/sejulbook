@@ -35,24 +35,26 @@ export interface NewBookReview extends NewPublishInfo {
  * 독후감 생성 요청 타입
  */
 export interface PublishRequest {
+  id?: BookReviewId;
   bookname: BookTitle;
   authors: BookAuthor;
   publication: BookPublication;
   publisher: BookPublisher;
-  thumbnail: BookThumbnail;
+  thumbnail: string;
   rating: Rating;
   tags: Tag[];
   sejul: Sejul;
   content: Content;
   userId: UserId;
   categoryId: CategoryId;
+  originThumbnail: BookThumbnail;
+  isDraftSave: boolean;
 }
 
 /**
  * 독후감 정보 응답 타입
  */
-export interface BookReviewResponse
-  extends Omit<PublishRequest, 'tags' | 'categoryId'> {
+export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;
@@ -69,3 +71,20 @@ export type BookReviewSummary = Pick<
 };
 
 export type BookReivewList = BookReviewSummary[];
+
+export type DraftSavedBookReview = Pick<
+  BookReviewResponse,
+  'id' | 'bookname' | 'createdAt'
+>;
+
+/**
+ * URL Query
+ */
+
+export type DraftSavedBookReviewURLQuery = {
+  draft: BookReviewId;
+};
+
+export type PublishedBookReviewURLQuery = {
+  publish: BookReviewId;
+};

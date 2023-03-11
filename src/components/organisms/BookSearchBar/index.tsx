@@ -28,8 +28,9 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   return (
     <SearchBar onChange={handleChange} {...textFieldProps}>
       {Boolean(searchedList.length) &&
-        searchedList.map((book) => (
-          <BookSearchedItem.Newbook key={book.isbn} book={book} />
+        searchedList.map((book, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <BookSearchedItem.Newbook key={i} book={book} />
         ))}
     </SearchBar>
   );

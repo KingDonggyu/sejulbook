@@ -2,9 +2,9 @@ import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import modalStore from '@/stores/modalStore';
+import bookReviewStore from '@/stores/bookReviewStore';
 import { CategoryResponse } from '@/types/features/category';
 import useCategories from '@/hooks/services/queries/useCategories';
-import { useState } from 'react';
 import * as s from './style';
 
 type CategoryModalProps = {
@@ -45,7 +45,7 @@ const CategoryButton = ({
   handleClickCategory,
   ...buttonProps
 }: CategoryModalProps & ButtonProps) => {
-  const [category, setCategory] = useState<CategoryResponse | null>(null);
+  const { bookReview, setCategory } = bookReviewStore();
   const { openModal, closeModal } = modalStore();
 
   const handleClick = (selectedCategory: CategoryResponse) => {
@@ -57,12 +57,16 @@ const CategoryButton = ({
   return (
     <>
       <Button
-        color={category ? ColorVariant.PRIMARY : ColorVariant.SECONDARY}
+        color={
+          bookReview.category.id > 1
+            ? ColorVariant.PRIMARY
+            : ColorVariant.SECONDARY
+        }
         css={s.categoryButtonStyle}
         onClick={() => openModal(modalKey)}
         {...buttonProps}
       >
-        {category?.category || '선택'}
+        {bookReview.category?.category || '선택'}
       </Button>
       <CategoryModal modalKey={modalKey} handleClickCategory={handleClick} />
     </>

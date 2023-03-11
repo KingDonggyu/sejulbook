@@ -11,7 +11,6 @@ import { Tag, TagList } from '@/types/features/tag';
 import { Book, BookThumbnail } from '@/types/features/book';
 
 const initlializedBook: Book = {
-  isbn: '',
   title: '',
   thumbnail: undefined,
   authors: [],
@@ -21,8 +20,8 @@ const initlializedBook: Book = {
 
 const initlializedBookReview: NewBookReview = {
   book: initlializedBook,
-  thumbnail: undefined,
-  category: { id: 0, category: '' },
+  thumbnail: '',
+  category: { id: 1, category: '' },
   rating: 3,
   tag: new Set<Tag>(),
   sejul: '',
@@ -40,6 +39,7 @@ interface BookReviewState {
   setContent: (content: Content) => void;
   setPublishInfo: (publishInfo: NewPublishInfo) => void;
   setBookReivew: (bookReview: NewBookReview) => void;
+  initBookReview: () => void;
 }
 
 const bookReviewStore = create<BookReviewState>((set) => ({
@@ -79,6 +79,10 @@ const bookReviewStore = create<BookReviewState>((set) => ({
 
   setBookReivew: (bookReview: NewBookReview) => {
     set({ bookReview });
+  },
+
+  initBookReview: () => {
+    set({ bookReview: initlializedBookReview });
   },
 }));
 

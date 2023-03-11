@@ -14,6 +14,16 @@ export const post = async <T>(url: string, body: unknown, headers = {}) => {
   return response.data as T;
 };
 
+export const put = async <T>(path: string, body: unknown, headers = {}) => {
+  const response = await axiosInstance.put(path, body, { headers });
+  return response.data as T;
+};
+
+export const remove = async <T>(path: string, params = {}, headers = {}) => {
+  const response = await axiosInstance.delete(path, { params, headers });
+  return response.data as T;
+};
+
 const httpClient = { get, post };
 
 export default httpClient;
