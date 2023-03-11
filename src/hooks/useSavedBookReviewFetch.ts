@@ -6,9 +6,7 @@ import { BookReviewId } from '@/types/features/bookReview';
 import useBookReview from './services/queries/useBookReview';
 import useTags from './services/queries/useTags';
 
-const useSavedBookReviewInitialization = (
-  bookReviewId: BookReviewId | undefined,
-) => {
+const useSavedBookReviewFetch = (bookReviewId: BookReviewId | undefined) => {
   const [isLoading, setIsLoading] = useState(!!bookReviewId);
   const savedBookReview = useBookReview(bookReviewId);
   const tags = useTags(bookReviewId);
@@ -55,4 +53,4 @@ const useSavedBookReviewInitialization = (
   return { isLoading };
 };
 
-export default useSavedBookReviewInitialization;
+export default useSavedBookReviewFetch;

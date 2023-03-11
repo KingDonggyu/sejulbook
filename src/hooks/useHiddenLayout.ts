@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLayoutContext } from '@/contexts/layoutContext';
 
-const useLayoutVisibility = (isHide = true) => {
+const useHiddenLayout = () => {
   const {
     showHeaderBar,
     hideHeaderBar,
@@ -10,10 +10,8 @@ const useLayoutVisibility = (isHide = true) => {
   } = useLayoutContext();
 
   useEffect(() => {
-    if (isHide) {
-      hideHeaderBar();
-      hideScreenModeButton();
-    }
+    hideHeaderBar();
+    hideScreenModeButton();
 
     return () => {
       showHeaderBar();
@@ -22,10 +20,9 @@ const useLayoutVisibility = (isHide = true) => {
   }, [
     hideHeaderBar,
     hideScreenModeButton,
-    isHide,
     showHeaderBar,
     showScreenModeButton,
   ]);
 };
 
-export default useLayoutVisibility;
+export default useHiddenLayout;

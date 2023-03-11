@@ -2,16 +2,11 @@ import { useEffect } from 'react';
 import { useNewbookContext } from '@/contexts/newbookContext';
 import bookReviewStore from '@/stores/bookReviewStore';
 import { BookReviewId } from '@/types/features/bookReview';
-import useLayoutVisibility from './useLayoutVisibility';
-import useSavedBookReviewInitialization from './useSavedBookReviewInitialization';
 
-const useNewbookWriteInitialization = (savedBookReviewId?: BookReviewId) => {
+const useNewbookFetch = (savedBookReviewId?: BookReviewId) => {
   const { getNewbook } = useNewbookContext();
-  const { newBook, isLoading: isNewBookLoading } = getNewbook();
-
+  const { newBook, isLoading } = getNewbook();
   const { bookReview, setBook, setThumbnail } = bookReviewStore();
-
-  const { isLoading } = useSavedBookReviewInitialization(savedBookReviewId);
 
   useEffect(() => {
     if (savedBookReviewId) {
@@ -30,9 +25,7 @@ const useNewbookWriteInitialization = (savedBookReviewId?: BookReviewId) => {
     setThumbnail,
   ]);
 
-  useLayoutVisibility(Boolean(bookReview.book.title));
-
-  return { bookReview, isLoading: isLoading || isNewBookLoading };
+  return { newBook, isLoading };
 };
 
-export default useNewbookWriteInitialization;
+export default useNewbookFetch;
