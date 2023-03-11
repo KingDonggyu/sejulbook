@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { ButtonVariant, ColorVariant } from '@/constants';
@@ -10,7 +10,6 @@ import useBookReviewPublication from '@/hooks/services/mutations/useBookReviewPu
 import bookReviewStore from '@/stores/bookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
-import { Book } from '@/types/features/book';
 import { BookReviewId } from '@/types/features/bookReview';
 
 import Button from '@/components/atoms/Button';
@@ -25,42 +24,44 @@ import { editorElementId } from '@/components/organisms/ContentEditor';
 import * as s from './style';
 
 interface PublishSideBarProps {
-  newbook: Book;
   anchorEl: HTMLElement | null;
   handleClose: () => void;
 }
 
-const PublishSideBar = ({
-  newbook,
-  anchorEl,
-  handleClose,
-}: PublishSideBarProps) => {
+const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => {
   const router = useRouter();
   const { savedBookReviewId } = useSavedBookReviewId();
+  const [isPossiblePublish, setIsPossiblePublish] = useState(true);
 
   const { deleteImageKey } = s3ImageURLStore();
   const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
 
-  const onSuccess = useCallback(
-    (bookReviewId: BookReviewId) => {
-      if (bookReview.thumbnail) {
-        deleteImageKey(bookReview.thumbnail);
-      }
+  const handleSuccess = (bookReviewId: BookReviewId) => {
+    if (bookReview.thumbnail) {
+      deleteImageKey(bookReview.thumbnail);
+    }
 
-      getUsedS3ImageURLs(editorElementId).forEach((url) => {
-        deleteImageKey(url);
-      });
+    getUsedS3ImageURLs(editorElementId).forEach((url) => {
+      deleteImageKey(url);
+    });
 
-      router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
-    },
-    [bookReview.thumbnail, deleteImageKey, router],
-  );
+    router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
+  };
 
   const publishBookReview = useBookReviewPublication({
     bookReview,
     savedBookReviewId,
-    onSuccess,
+    onSuccess: handleSuccess,
+    onError: () => setIsPossiblePublish(true),
   });
+
+  const handlePublish = () => {
+    if (!isPossiblePublish) {
+      return;
+    }
+    setIsPossiblePublish(false);
+    publishBookReview();
+  };
 
   return (
     <SideBar anchorEl={anchorEl} handleClose={handleClose}>
@@ -69,7 +70,7 @@ const PublishSideBar = ({
           <s.Label>책 표지 사진</s.Label>
           <s.ExplainText>* 대표 이미지로 사용됩니다.</s.ExplainText>
           <ThumbnailUploader
-            originThumbnail={bookReview.thumbnail || newbook.thumbnail}
+            originThumbnail={bookReview.thumbnail || bookReview.book.thumbnail}
           />
         </s.PublishInfoItem>
         <s.PublishInfoItem>
@@ -97,7 +98,7 @@ const PublishSideBar = ({
           <Button
             variant={ButtonVariant.OUTLINED}
             color={ColorVariant.PRIMARY}
-            onClick={() => publishBookReview()}
+            onClick={handlePublish}
           >
             발행
           </Button>
@@ -107,7 +108,7 @@ const PublishSideBar = ({
   );
 };
 
-const PublishSidebarButton = ({ newbook }: { newbook: Book }) => {
+const PublishSidebarButton = () => {
   const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   return (
@@ -119,11 +120,7 @@ const PublishSidebarButton = ({ newbook }: { newbook: Book }) => {
       >
         발행
       </Button>
-      <PublishSideBar
-        newbook={newbook}
-        anchorEl={anchorEl}
-        handleClose={handleClose}
-      />
+      <PublishSideBar anchorEl={anchorEl} handleClose={handleClose} />
     </>
   );
 };

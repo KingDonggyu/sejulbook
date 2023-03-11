@@ -38,7 +38,7 @@ const NewbookWritePage = ({
           bookName={book.title ? book.title : undefined}
           sejulTextarea={<SejulTextArea />}
           contentTextarea={<ContentEditor />}
-          publishButton={book && <PublishSideBar.Button newbook={book} />}
+          publishButton={book && <PublishSideBar.Button />}
           draftSaveButton={book && <DraftSaveButton />}
         />
       )}
