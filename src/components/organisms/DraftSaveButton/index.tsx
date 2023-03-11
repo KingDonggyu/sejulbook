@@ -1,18 +1,19 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
+import Route from '@/constants/routes';
 import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
+import useBookReviewDraftSave from '@/hooks/services/mutations/useBookReviewDraftSave';
 import bookReviewStore from '@/stores/bookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
-import Route from '@/constants/routes';
 import {
   BookReviewId,
   DraftSavedBookReviewURLQuery,
 } from '@/types/features/bookReview';
-import getInlineURL from '@/utils/getInlineURL';
-import useBookReviewDraftSave from '@/hooks/services/mutations/useBookReviewDraftSave';
 
 const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
+  const router = useRouter();
   const { savedBookReviewId, setSavedBookReviewId } = useSavedBookReviewId();
 
   const { bookReview } = bookReviewStore();
@@ -20,7 +21,7 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
 
   const [isPossibleSave, setIsPossibleSave] = useState(true);
 
-  const chageURL = (bookReviewId: BookReviewId) => {
+  const replaceURL = (bookReviewId: BookReviewId) => {
     if (savedBookReviewId) {
       return;
     }
@@ -28,14 +29,16 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
     const query: DraftSavedBookReviewURLQuery = {
       draft: bookReviewId,
     };
-    const url = getInlineURL({ baseURL: Route.NEWBOOK_WRITE, query });
 
-    window.history.replaceState(null, '', url);
+    router.replace({
+      pathname: Route.NEWBOOK_WRITE,
+      query,
+    });
   };
 
   const handleSuccess = (bookReviewId: BookReviewId) => {
     emptyImageKeySet();
-    chageURL(bookReviewId);
+    replaceURL(bookReviewId);
     setSavedBookReviewId(bookReviewId);
     setIsPossibleSave(true);
   };

@@ -38,10 +38,6 @@ const useSavedBookReviewFetch = (bookReviewId: BookReviewId | undefined) => {
         thumbnail: undefined,
       });
     }
-
-    return () => {
-      initBookReview();
-    };
   }, [initBookReview, savedBookReview, setBookReivew, setNewbook, tags]);
 
   useEffect(() => {
