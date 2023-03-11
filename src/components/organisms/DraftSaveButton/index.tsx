@@ -1,31 +1,27 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
-import { bookReviewSussess, userError } from '@/constants/message';
+import Route from '@/constants/routes';
 import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
-import useUserStatus from '@/hooks/useUserStatus';
-import { draftSaveBookReview } from '@/services/api/bookReview';
-import { BookReviewError } from '@/services/errors/BookReviewError';
+import useBookReviewDraftSave from '@/hooks/services/mutations/useBookReviewDraftSave';
 import bookReviewStore from '@/stores/bookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
-import Route from '@/constants/routes';
 import {
   BookReviewId,
   DraftSavedBookReviewURLQuery,
 } from '@/types/features/bookReview';
-import getInlineURL from '@/utils/getInlineURL';
 
 const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
-  const { session, isLogin } = useUserStatus();
+  const router = useRouter();
   const { savedBookReviewId, setSavedBookReviewId } = useSavedBookReviewId();
 
   const { bookReview } = bookReviewStore();
   const { emptyImageKeySet } = s3ImageURLStore();
 
-  const [isPossibleSave, isSetPossibleSave] = useState(true);
+  const [isPossibleSave, setIsPossibleSave] = useState(true);
 
-  const chageURL = (bookReviewId: BookReviewId) => {
+  const replaceURL = (bookReviewId: BookReviewId) => {
     if (savedBookReviewId) {
       return;
     }
@@ -33,41 +29,33 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
     const query: DraftSavedBookReviewURLQuery = {
       draft: bookReviewId,
     };
-    const url = getInlineURL({ baseURL: Route.NEWBOOK_WRITE, query });
 
-    window.history.replaceState(null, '', url);
+    router.replace({
+      pathname: Route.NEWBOOK_WRITE,
+      query,
+    });
   };
+
+  const handleSuccess = (bookReviewId: BookReviewId) => {
+    emptyImageKeySet();
+    replaceURL(bookReviewId);
+    setSavedBookReviewId(bookReviewId);
+    setIsPossibleSave(true);
+  };
+
+  const draftSaveBookReview = useBookReviewDraftSave({
+    bookReview,
+    savedBookReviewId,
+    onSuccess: handleSuccess,
+    onError: () => setIsPossibleSave(true),
+  });
 
   const handleClick = async () => {
     if (!isPossibleSave) {
       return;
     }
-
-    if (!isLogin) {
-      toast.error(userError.NOT_LOGGED);
-      return;
-    }
-
-    isSetPossibleSave(false);
-
-    try {
-      const bookReviewId = await draftSaveBookReview({
-        userId: session.id,
-        bookReviewId: savedBookReviewId,
-        bookReview,
-      });
-
-      emptyImageKeySet();
-      chageURL(bookReviewId);
-      setSavedBookReviewId(bookReviewId);
-      toast.success(bookReviewSussess.DRAFT_SAVE);
-    } catch (error) {
-      if (error instanceof BookReviewError) {
-        toast.error(error.message);
-      }
-    } finally {
-      isSetPossibleSave(true);
-    }
+    setIsPossibleSave(false);
+    draftSaveBookReview();
   };
 
   return (

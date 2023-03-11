@@ -9,7 +9,7 @@ import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 
 import useS3GarbageCollection from '@/hooks/useS3GarbageCollection';
-import useNewbookWriteInitialization from '@/hooks/useNewbookWriteInitialization';
+import useNewbookFetch from '@/hooks/useNewbookFetch';
 import { BookReviewId } from '@/types/features/bookReview';
 import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
 import prefetchQuery from '@/services/prefetchQuery';
@@ -17,17 +17,23 @@ import {
   getBookReviewQuery,
   getTagsQuery,
 } from '@/services/queries/bookReview';
+import useSavedBookReviewFetch from '@/hooks/useSavedBookReviewFetch';
+import useHiddenLayout from '@/hooks/useHiddenLayout';
 
 const NewbookWritePage = ({
   savedBookReviewId,
 }: {
   savedBookReviewId?: BookReviewId;
 }) => {
-  const {
-    bookReview: { book },
-    isLoading,
-  } = useNewbookWriteInitialization(savedBookReviewId);
+  const { newBook, isLoading: newBookLoading } =
+    useNewbookFetch(savedBookReviewId);
 
+  const { isLoading: savedBookReviewLoading } =
+    useSavedBookReviewFetch(savedBookReviewId);
+
+  const isLoading = newBookLoading || savedBookReviewLoading;
+
+  useHiddenLayout();
   useS3GarbageCollection();
 
   return (
@@ -35,11 +41,11 @@ const NewbookWritePage = ({
       <DocumentTitle title="독후감 쓰기" />
       {!isLoading && (
         <NewbookWrite
-          bookName={book.title ? book.title : undefined}
+          bookName={newBook ? newBook.title : undefined}
           sejulTextarea={<SejulTextArea />}
           contentTextarea={<ContentEditor />}
-          publishButton={book && <PublishSideBar.Button newbook={book} />}
-          draftSaveButton={book && <DraftSaveButton />}
+          publishButton={newBook && <PublishSideBar.Button />}
+          draftSaveButton={newBook && <DraftSaveButton />}
         />
       )}
     </>
