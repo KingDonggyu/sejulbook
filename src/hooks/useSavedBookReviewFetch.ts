@@ -15,6 +15,10 @@ const useSavedBookReviewFetch = (bookReviewId: BookReviewId | undefined) => {
   const { bookReview, setBookReivew, initBookReview } = bookReviewStore();
 
   useEffect(() => {
+    initBookReview();
+  }, [initBookReview]);
+
+  useEffect(() => {
     if (savedBookReview) {
       const savedBook: Book = {
         title: savedBookReview.bookname,
@@ -38,7 +42,7 @@ const useSavedBookReviewFetch = (bookReviewId: BookReviewId | undefined) => {
         thumbnail: undefined,
       });
     }
-  }, [initBookReview, savedBookReview, setBookReivew, setNewbook, tags]);
+  }, [savedBookReview, setBookReivew, setNewbook, tags]);
 
   useEffect(() => {
     if (bookReview.book.title) {
