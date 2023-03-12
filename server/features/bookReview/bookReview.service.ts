@@ -160,6 +160,23 @@ const bookReviewService = {
       return { error: false, data: bookReview.id };
     }
 
+    // 임시저장 독후감 개수 확인
+    const draftSavedListResponse = await bookReviewService.getDraftSavedList({
+      userId: bookReview.userId,
+    });
+
+    if (draftSavedListResponse.error) {
+      return draftSavedListResponse;
+    }
+
+    if (draftSavedListResponse.data.length === 10) {
+      return {
+        error: true,
+        code: 400,
+        message: bookReviewError.LIMIT_DRAFT_SAVE,
+      };
+    }
+
     // 독후감 임시저장
     const data = await bookReviewModel.createBookReview(entityData);
     return { error: false, data };
