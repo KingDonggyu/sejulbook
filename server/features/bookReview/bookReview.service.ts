@@ -219,7 +219,7 @@ const bookReviewService = {
   > => {
     await commentModel.deleteComments({ sejulbook_id: id });
     await tagModel.deleteTags({ sejulbook_id: id });
-    await likeModel.deleteLikes({ sejulbook_id: id });
+    await likeModel.deleteAllLikes({ sejulbook_id: id });
     await bookReviewModel.deleteBookReview({ id });
 
     return { error: false, data: undefined };
