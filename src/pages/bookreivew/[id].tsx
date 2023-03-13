@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { GetServerSidePropsContext } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
@@ -17,20 +18,31 @@ import {
   getBookReviewQuery,
   getTagsQuery,
 } from '@/services/queries/bookReview';
+import { getUserQuery } from '@/services/queries/user';
+import { getCommentsQuery } from '@/services/queries/comment';
+import { getLikeStatusQuery } from '@/services/queries/like';
 import prefetchQuery from '@/services/prefetchQuery';
+
 import useBookReview from '@/hooks/services/queries/useBookReview';
 import useTags from '@/hooks/services/queries/useTags';
 import useComments from '@/hooks/services/queries/useComments';
-import { getCommentsQuery } from '@/services/queries/comment';
+import useLikeStatus from '@/hooks/services/queries/useLike';
+import useUserStatus from '@/hooks/useUserStatus';
+
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const BookreviewPage = () => {
   const router = useRouter();
   const bookReviewId = Number(router.query.id);
   const commentRef = useRef<HTMLDivElement>(null);
 
+  const { session } = useUserStatus();
+  const userId = session ? session.id || undefined : undefined;
+
   const bookReview = useBookReview(bookReviewId);
   const tags = useTags(bookReviewId);
   const comments = useComments(bookReviewId);
+  const { likeCount } = useLikeStatus({ userId, bookReviewId });
 
   const handleClickCommentButton = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -47,10 +59,9 @@ const BookreviewPage = () => {
         bookReivew={bookReview}
         likeCommentWidget={
           <LikeCommentWidget
-            likeCount={bookReview.likeCount}
+            likeCount={likeCount}
             commentCount={comments.length}
-            handleClickLikeButton={() => {}}
-            handleClickCommentButton={handleClickCommentButton}
+            onClickCommentButton={handleClickCommentButton}
           />
         }
         sejulViewer={<SejulTextArea value={bookReview.sejul} readonly />}
@@ -83,15 +94,26 @@ const BookreviewPage = () => {
 };
 
 export const getServerSideProps = async ({
+  req,
+  res,
   query,
 }: GetServerSidePropsContext) => {
-  const bookReviewId = Number(query.id);
+  const session = await getServerSession(req, res, authOptions);
+  const userId = session ? session.id || undefined : undefined;
 
-  const queryClient = await prefetchQuery([
+  const bookReviewId = Number(query.id);
+  const queries = [
     getBookReviewQuery(bookReviewId),
     getTagsQuery(bookReviewId),
     getCommentsQuery(bookReviewId),
-  ]);
+    getLikeStatusQuery({ userId, bookReviewId }),
+  ];
+
+  if (userId) {
+    queries.push(getUserQuery(userId));
+  }
+
+  const queryClient = await prefetchQuery(queries);
 
   return {
     props: { dehydratedState: dehydrate(queryClient) },

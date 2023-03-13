@@ -53,6 +53,8 @@ export const DateCreated = styled.time`
 `;
 
 export const BookName = styled.h1`
+  line-height: 1.4;
+  word-break: break-all;
   font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};

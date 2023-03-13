@@ -31,7 +31,7 @@ const checkAuth = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   }
 
   if (session && session.id === userId) {
-    return true;
+    return session.id;
   }
 
   const result: HttpFailed = {

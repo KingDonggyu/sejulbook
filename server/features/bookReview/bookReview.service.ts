@@ -29,7 +29,6 @@ type DraftSavedBookReview = Pick<
 interface PublishedBookReview extends BookReviewDTO {
   writer: UserName;
   category: Category;
-  likeCount: number;
 }
 
 const bookReviewService = {
@@ -115,15 +114,10 @@ const bookReviewService = {
       id: bookReview.categoryId,
     });
 
-    const { count: likeCount } = await likeModel.getLikeCount({
-      sejulbook_id: id,
-    });
-
     const data: PublishedBookReview = {
       ...bookReview,
       writer: userName,
       category,
-      likeCount,
     };
 
     return { error: false, data };
@@ -219,7 +213,7 @@ const bookReviewService = {
   > => {
     await commentModel.deleteComments({ sejulbook_id: id });
     await tagModel.deleteTags({ sejulbook_id: id });
-    await likeModel.deleteLikes({ sejulbook_id: id });
+    await likeModel.deleteAllLikes({ sejulbook_id: id });
     await bookReviewModel.deleteBookReview({ id });
 
     return { error: false, data: undefined };

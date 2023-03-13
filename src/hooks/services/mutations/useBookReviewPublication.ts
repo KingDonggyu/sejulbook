@@ -13,6 +13,7 @@ interface BookReviewPublicationProps {
   savedBookReviewId?: BookReviewId;
   onSuccess?: (bookReviewId: BookReviewId) => void;
   onError?: () => void;
+  onFinish?: () => void;
 }
 
 const useBookReviewPublication = ({
@@ -20,6 +21,7 @@ const useBookReviewPublication = ({
   savedBookReviewId,
   onSuccess,
   onError,
+  onFinish,
 }: BookReviewPublicationProps) => {
   const { session, isLogin } = useUserStatus();
 
@@ -44,6 +46,9 @@ const useBookReviewPublication = ({
       if (onSuccess && data) {
         onSuccess(data);
       }
+      if (onFinish) {
+        onFinish();
+      }
     },
     onError: (error) => {
       if (error instanceof BookReviewError) {
@@ -51,6 +56,9 @@ const useBookReviewPublication = ({
       }
       if (onError) {
         onError();
+      }
+      if (onFinish) {
+        onFinish();
       }
     },
   });

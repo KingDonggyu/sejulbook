@@ -10,6 +10,17 @@ enum Column {
 }
 
 const likeModel = {
+  getLike: async ({ sejulbook_id, liker_id }: LikeEntity) => {
+    const sql = `
+      select * from ${TABLE_NAME} where 
+      ${Column.BOOKREVIEW_ID} = ${sejulbook_id} and  
+      ${Column.LIKER_ID} = ${liker_id}
+    `;
+
+    const result = await query<LikeEntity[]>(sql);
+    return result;
+  },
+
   getLikeCount: async ({ sejulbook_id }: Pick<LikeEntity, 'sejulbook_id'>) => {
     const sql = `
       select count(${Column.ID}) as count
@@ -21,10 +32,28 @@ const likeModel = {
     return result;
   },
 
-  deleteLikes: async ({ sejulbook_id }: Pick<LikeEntity, 'sejulbook_id'>) => {
+  deleteAllLikes: async ({
+    sejulbook_id,
+  }: Pick<LikeEntity, 'sejulbook_id'>) => {
     const sql = `
       delete from ${TABLE_NAME} 
       where ${Column.BOOKREVIEW_ID} = ${sejulbook_id}
+    `;
+    await query(sql);
+  },
+
+  createLike: async ({ sejulbook_id, liker_id }: LikeEntity) => {
+    const sql = `
+      insert into ${TABLE_NAME} 
+      values (null, ${sejulbook_id}, ${liker_id})
+    `;
+    await query(sql);
+  },
+
+  deleteLike: async ({ sejulbook_id, liker_id }: LikeEntity) => {
+    const sql = `
+      delete from ${TABLE_NAME} where 
+      ${Column.BOOKREVIEW_ID} = ${sejulbook_id} and ${Column.LIKER_ID} = ${liker_id}
     `;
     await query(sql);
   },
