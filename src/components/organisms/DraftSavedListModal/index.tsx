@@ -7,7 +7,7 @@ import { ModalKey } from '@/constants/keys';
 import Route from '@/constants/routes';
 import modalStore from '@/stores/modalStore';
 import formatDateToKorean from '@/utils/formatDateToKorean';
-import useDraftSavedDeletion from '@/hooks/services/mutations/useDraftSavedDeletion';
+import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 import {
   DraftSavedBookReview,
   DraftSavedBookReviewURLQuery,
@@ -22,8 +22,9 @@ interface DraftSavedListModalProps
 const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
   const { closeModal } = modalStore();
 
-  const deleteDraftSavedBookReview = useDraftSavedDeletion({
+  const deleteDraftSavedBookReview = useBookReviewDeletion({
     bookReviewId: id,
+    isDraftSaved: true,
   });
 
   const draftSavedURLQuery: DraftSavedBookReviewURLQuery = {

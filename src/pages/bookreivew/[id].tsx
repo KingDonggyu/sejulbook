@@ -29,7 +29,9 @@ import useTags from '@/hooks/services/queries/useTags';
 import useComments from '@/hooks/services/queries/useComments';
 import useLikeStatus from '@/hooks/services/queries/useLike';
 import useUserStatus from '@/hooks/useUserStatus';
+import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 
+import Route from '@/constants/routes';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const BookreviewPage = () => {
@@ -45,6 +47,25 @@ const BookreviewPage = () => {
   const comments = useComments(bookReviewId);
   const { likeCount } = useLikeStatus({ userId, bookReviewId });
 
+  const deleteBookReview = useBookReviewDeletion({
+    bookReviewId,
+    onSuccess: () => {
+      if (userId) {
+        router.replace(`${Route.LIBRARY}/${userId}`);
+        return;
+      }
+      router.replace(Route.HOME);
+    },
+  });
+
+  const isMyBookReview = !!(userId && userId === bookReview?.userId);
+
+  const handleClickDeleteButton = () => {
+    if (isMyBookReview && window.confirm('독후감을 정말 삭제하시겠습니까?')) {
+      deleteBookReview();
+    }
+  };
+
   const handleClickCommentButton = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -59,7 +80,11 @@ const BookreviewPage = () => {
       <BookReviewTemplate
         bookReivew={bookReview}
         editDeleteButtonSet={
-          <EditDeleteButtonSet isShowDeleteButton isShowEditButton />
+          <EditDeleteButtonSet
+            isShowDeleteButton={isMyBookReview}
+            isShowEditButton={isMyBookReview}
+            onClickDeleteButton={handleClickDeleteButton}
+          />
         }
         likeCommentWidget={
           <LikeCommentWidget
