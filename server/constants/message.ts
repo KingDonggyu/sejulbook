@@ -4,6 +4,7 @@ export const userError = {
   LIMIT_REACHED_NAME: '2자 이상 10자 이하의 이름만 사용할 수 있습니다.',
   NOT_MATCHED_PATTERN_NAME: '이름에는 문자와 숫자만 사용할 수 있습니다.',
   USER_NOT_FOUND: '사용자를 찾을 수 없습니다.',
+  NOT_LOGGED: '로그인 후 이용해주세요.',
 };
 
 export const bookReviewError = {

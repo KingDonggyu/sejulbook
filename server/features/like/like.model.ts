@@ -45,15 +45,15 @@ const likeModel = {
   createLike: async ({ sejulbook_id, liker_id }: LikeEntity) => {
     const sql = `
       insert into ${TABLE_NAME} 
-      (null, ${sejulbook_id} ${liker_id})
+      values (null, ${sejulbook_id}, ${liker_id})
     `;
     await query(sql);
   },
 
-  deleteLike: async ({ liker_id }: Pick<LikeEntity, 'liker_id'>) => {
+  deleteLike: async ({ sejulbook_id, liker_id }: LikeEntity) => {
     const sql = `
-      delete from ${TABLE_NAME} 
-      where ${Column.LIKER_ID} = ${liker_id}
+      delete from ${TABLE_NAME} where 
+      ${Column.BOOKREVIEW_ID} = ${sejulbook_id} and ${Column.LIKER_ID} = ${liker_id}
     `;
     await query(sql);
   },

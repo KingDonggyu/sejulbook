@@ -1,5 +1,5 @@
 import { get, post, remove } from '@/lib/HTTPClient';
-import { LikeRequest } from '@/types/features/like';
+import { LikeRequest, LikeResponse } from '@/types/features/like';
 import { HttpResponse } from '@/types/http';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import { BookReviewError } from '../errors/BookReviewError';
@@ -25,9 +25,12 @@ export const like = async ({ userId, bookReviewId }: LikeRequest) => {
   }
 };
 
-export const unlike = async ({ userId }: Pick<LikeRequest, 'userId'>) => {
+export const unlike = async ({ userId, bookReviewId }: LikeRequest) => {
   try {
-    const response = await remove<HttpResponse<undefined>>(API_URL, { userId });
+    const response = await remove<HttpResponse<undefined>>(API_URL, {
+      userId,
+      bookReviewId,
+    });
 
     if (response.error) {
       throw new BookReviewError({
@@ -41,9 +44,9 @@ export const unlike = async ({ userId }: Pick<LikeRequest, 'userId'>) => {
   }
 };
 
-export const checkIsLike = async ({ userId, bookReviewId }: LikeRequest) => {
+export const getLikeStatus = async ({ userId, bookReviewId }: LikeRequest) => {
   try {
-    const response = await get<HttpResponse<boolean>>(API_URL, {
+    const response = await get<HttpResponse<LikeResponse>>(API_URL, {
       userId,
       bookReviewId,
     });

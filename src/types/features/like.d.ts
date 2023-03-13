@@ -2,10 +2,11 @@ import { BookReviewId } from './bookReview';
 import { UserId } from './user';
 
 export interface LikeRequest {
-  userId: UserId;
+  userId?: UserId;
   bookReviewId: BookReviewId;
 }
 
-export interface LikeResponse {
+export type LikeResponse = {
   isLike: boolean;
-}
+  likeCount: number;
+};

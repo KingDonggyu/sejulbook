@@ -4,28 +4,40 @@ import checkAuth from '@/services/middlewares/checkAuth';
 import { BookReviewId } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 
-interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
+interface ExtendedNextGetApiRequest extends Omit<NextApiRequest, 'query'> {
   query: {
     userId: UserId;
     bookReviewId: BookReviewId;
   };
 }
 
-const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  const { userId, bookReviewId } = req.query;
+interface ExtendedNextPostApiRequest extends NextApiRequest {
+  body: {
+    userId: UserId;
+    bookReviewId: BookReviewId;
+  };
+}
 
-  if (!(await checkAuth(req, res))) {
-    return;
-  }
-
+const handler = async (
+  req: ExtendedNextGetApiRequest | ExtendedNextPostApiRequest,
+  res: NextApiResponse,
+) => {
   let result;
+  const userId = req.query.userId || req.body.userId;
+  const bookReviewId = req.query.bookReviewId || req.body.bookReviewId;
 
-  if (req.method === 'DELETE') {
-    result = await likeService.unlike({ likerId: userId });
-  } else if (req.method === 'POST') {
+  if (req.method === 'POST') {
+    if (!(await checkAuth(req, res))) {
+      return;
+    }
     result = await likeService.like({ likerId: userId, bookReviewId });
+  } else if (req.method === 'DELETE') {
+    if (!(await checkAuth(req, res))) {
+      return;
+    }
+    result = await likeService.unlike({ likerId: userId, bookReviewId });
   } else {
-    result = await likeService.checkIsLike({ likerId: userId, bookReviewId });
+    result = await likeService.getLikeStatus({ likerId: userId, bookReviewId });
   }
 
   if (!result.error) {

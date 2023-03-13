@@ -58,7 +58,6 @@ export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;
-  likeCount: number;
   createdAt: string;
 }
 
