@@ -1,19 +1,45 @@
 import styled from '@emotion/styled';
 import { SIDEBAR_Z_INDEX } from '@/constants/zIndex';
 
+export const Top = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    padding: 10px;
+  }
+`;
+
+export const Logo = styled.div`
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    a {
+      width: 80px;
+    }
+  }
+`;
+
 export const ButtonWrapper = styled.div`
   z-index: ${SIDEBAR_Z_INDEX};
-  position: fixed;
-  top: 20px;
-  right: 20px;
   display: flex;
   gap: 10px;
   & > button {
     width: 80px;
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+  }
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    & > button {
+      /* width: 50px; */
+    }
   }
 `;
 
-export const Wrapper = styled.div`
+export const ContentWrapper = styled.div`
   margin: auto;
   margin-top: 5rem;
   gap: 50px;

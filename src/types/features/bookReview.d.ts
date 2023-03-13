@@ -79,11 +79,10 @@ export type DraftSavedBookReview = Pick<
 /**
  * URL Query
  */
-
 export type DraftSavedBookReviewURLQuery = {
-  draft: BookReviewId;
+  draft?: BookReviewId;
 };
 
 export type PublishedBookReviewURLQuery = {
-  publish: BookReviewId;
+  publish?: BookReviewId;
 };

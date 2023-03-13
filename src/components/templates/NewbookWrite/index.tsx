@@ -6,6 +6,7 @@ import * as s from './style';
 
 interface NewbookWriteProps {
   bookName?: string;
+  logo: ReactNode;
   sejulTextarea: ReactNode;
   contentTextarea: ReactNode;
   publishButton: ReactNode;
@@ -13,6 +14,7 @@ interface NewbookWriteProps {
 }
 
 const NewbookWrite = ({
+  logo,
   bookName,
   sejulTextarea,
   contentTextarea,
@@ -35,15 +37,18 @@ const NewbookWrite = ({
 
   return (
     <>
-      <s.ButtonWrapper>
-        {draftSaveButton}
-        {publishButton}
-      </s.ButtonWrapper>
-      <s.Wrapper>
+      <s.Top>
+        <s.Logo>{logo}</s.Logo>
+        <s.ButtonWrapper>
+          {draftSaveButton}
+          {publishButton}
+        </s.ButtonWrapper>
+      </s.Top>
+      <s.ContentWrapper>
         <s.BookName>{bookName}</s.BookName>
         {sejulTextarea}
         {contentTextarea}
-      </s.Wrapper>
+      </s.ContentWrapper>
     </>
   );
 };

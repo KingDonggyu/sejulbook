@@ -32,6 +32,7 @@ import useUserStatus from '@/hooks/useUserStatus';
 import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 
 import Route from '@/constants/routes';
+import { PublishedBookReviewURLQuery } from '@/types/features/bookReview';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const BookreviewPage = () => {
@@ -66,6 +67,16 @@ const BookreviewPage = () => {
     }
   };
 
+  const handleClickEditButton = () => {
+    const query: PublishedBookReviewURLQuery = {
+      publish: bookReviewId,
+    };
+    router.push({
+      pathname: `${Route.NEWBOOK_WRITE}`,
+      query,
+    });
+  };
+
   const handleClickCommentButton = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -84,6 +95,7 @@ const BookreviewPage = () => {
             isShowDeleteButton={isMyBookReview}
             isShowEditButton={isMyBookReview}
             onClickDeleteButton={handleClickDeleteButton}
+            onClickEditButton={handleClickEditButton}
           />
         }
         likeCommentWidget={

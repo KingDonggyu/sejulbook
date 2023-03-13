@@ -15,12 +15,15 @@ export const editorContentStyle = (theme: Theme) => css`
     padding: revert;
   }
 
-  p,
+  p {
+    line-height: 1.5;
+  }
+
   h1,
   h2,
   h3 {
     margin: 20px 0;
-    line-height: 1.7;
+    line-height: 1.5;
   }
 
   h1,

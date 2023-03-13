@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import bookReviewStore from '@/stores/bookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
-import { editorContentStyle } from '@/styles/editor';
 import { uploadLocalImage } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 import * as s from './style';
@@ -64,7 +63,6 @@ const ContentEditor = ({
         value={bookReview.content}
         initialValue={initialValue && sanitize(initialValue)}
         onEditorChange={handleEditorChange}
-        css={editorContentStyle}
         init={{
           menubar: false,
           skin: isDarkMode ? editorOption.darkSkin : editorOption.lightSkin,
