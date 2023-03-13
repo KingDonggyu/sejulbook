@@ -52,7 +52,7 @@ const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => {
     bookReview,
     savedBookReviewId,
     onSuccess: handleSuccess,
-    onError: () => setIsPossiblePublish(true),
+    onFinish: () => setIsPossiblePublish(true),
   });
 
   const handlePublish = () => {

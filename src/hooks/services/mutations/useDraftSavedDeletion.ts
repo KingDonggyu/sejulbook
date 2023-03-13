@@ -20,16 +20,17 @@ const useDraftSavedDeletion = ({
   const mutationFn = async () => {
     if (!isLogin) {
       toast.error(userError.NOT_LOGGED);
-      return;
+      return false;
     }
 
     await deleteBookReview({ userId: session.id, bookReviewId });
+    return true;
   };
 
   const { mutate } = useMutation({
     mutationFn,
-    onSuccess: () => {
-      if (isLogin) {
+    onSuccess: (isSuccess) => {
+      if (isSuccess && isLogin) {
         queryClient.invalidateQueries(getDraftSavedListQuery(session.id));
       }
     },

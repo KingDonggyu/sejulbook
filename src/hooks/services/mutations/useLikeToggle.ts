@@ -18,7 +18,7 @@ const useLikeToggle = ({ isLike, bookReviewId }: LikeToggleProps) => {
   const mutationFn = async () => {
     if (!isLogin) {
       toast.error(userError.NOT_LOGGED);
-      return;
+      return false;
     }
 
     setQueryKey(
@@ -27,16 +27,19 @@ const useLikeToggle = ({ isLike, bookReviewId }: LikeToggleProps) => {
 
     if (isLike) {
       await unlike({ userId: session.id, bookReviewId });
-      return;
+      return true;
     }
 
     await like({ userId: session.id, bookReviewId });
+    return true;
   };
 
   const { mutate } = useMutation({
     mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries(queryKey);
+    onSuccess: (isSuccess) => {
+      if (isSuccess) {
+        queryClient.invalidateQueries(queryKey);
+      }
     },
     onError: (error) => {
       if (error instanceof BookReviewError) {

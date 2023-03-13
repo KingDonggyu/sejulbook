@@ -40,14 +40,13 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
     emptyImageKeySet();
     replaceURL(bookReviewId);
     setSavedBookReviewId(bookReviewId);
-    setIsPossibleSave(true);
   };
 
   const draftSaveBookReview = useBookReviewDraftSave({
     bookReview,
     savedBookReviewId,
     onSuccess: handleSuccess,
-    onError: () => setIsPossibleSave(true),
+    onFinish: () => setIsPossibleSave(true),
   });
 
   const handleClick = async () => {

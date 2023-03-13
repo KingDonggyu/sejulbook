@@ -14,6 +14,7 @@ interface BookReviewDraftSaveProps {
   savedBookReviewId?: UserId;
   onSuccess?: (bookReviewId: BookReviewId) => void;
   onError?: () => void;
+  onFinish?: () => void;
 }
 
 const useBookReviewDraftSave = ({
@@ -21,6 +22,7 @@ const useBookReviewDraftSave = ({
   savedBookReviewId,
   onSuccess,
   onError,
+  onFinish,
 }: BookReviewDraftSaveProps) => {
   const queryClient = useQueryClient();
   const { session, isLogin } = useUserStatus();
@@ -43,12 +45,15 @@ const useBookReviewDraftSave = ({
   const { mutate } = useMutation({
     mutationFn,
     onSuccess: (bookReviewId) => {
-      toast.success(bookReviewSussess.DRAFT_SAVE);
+      if (onFinish) {
+        onFinish();
+      }
 
       if (!bookReviewId) {
         return;
       }
 
+      toast.success(bookReviewSussess.DRAFT_SAVE);
       queryClient.invalidateQueries(getBookReviewQuery(bookReviewId).queryKey);
 
       if (onSuccess) {
@@ -62,6 +67,10 @@ const useBookReviewDraftSave = ({
 
       if (onError) {
         onError();
+      }
+
+      if (onFinish) {
+        onFinish();
       }
     },
   });
