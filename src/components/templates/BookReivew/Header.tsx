@@ -8,19 +8,25 @@ import * as s from './style';
 export interface BookReviewHeaderProps {
   bookReivew: BookReviewResponse;
   bookInfoButton: ReactNode;
+  editDeleteButtonSet: ReactNode;
   likeCommentWidget: ReactNode;
 }
 
 const BookReviewHeader = ({
   bookReivew,
   bookInfoButton,
+  editDeleteButtonSet,
   likeCommentWidget,
 }: BookReviewHeaderProps) => (
   <s.Header>
-    <s.TitleWrapper>
+    <s.HeaderTop>
       <s.Category>{bookReivew.category}</s.Category>
-      <s.BookName>{bookReivew.bookname}</s.BookName>
-    </s.TitleWrapper>
+      <s.EditDeleteButtonWrapper>
+        {' '}
+        {editDeleteButtonSet}
+      </s.EditDeleteButtonWrapper>
+    </s.HeaderTop>
+    <s.BookName>{bookReivew.bookname}</s.BookName>
     <s.HeaderBottom>
       <s.WritingInfo>
         <s.Writer>

@@ -15,12 +15,36 @@ export const Header = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE};
 `;
 
-export const TitleWrapper = styled.div`
+export const HeaderTop = styled.div`
+  margin-bottom: 10px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+`;
+
+export const BookName = styled.h1`
+  line-height: 1.4;
   margin-bottom: 50px;
+  text-align: center;
+  font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
+  }
+`;
+
+export const Category = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
+  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+  }
+`;
+
+export const EditDeleteButtonWrapper = styled.div`
+  z-index: 1;
+  margin-left: auto;
 `;
 
 export const HeaderBottom = styled.div`
@@ -50,23 +74,6 @@ export const Writer = styled.h2`
 export const DateCreated = styled.time`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
-`;
-
-export const BookName = styled.h1`
-  line-height: 1.4;
-  word-break: break-all;
-  font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
-  }
-`;
-
-export const Category = styled.div`
-  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
-  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
-  }
 `;
 
 export const Article = styled.article`

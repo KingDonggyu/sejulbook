@@ -10,7 +10,7 @@ import useUser from '@/hooks/services/queries/useUser';
 import Library from '@/components/templates/Library';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import Profile from '@/components/organisms/Profile';
-import ProfileEditButton from '@/components/molecules/ProfileEditButton';
+import ProfileEditButton from '@/components/organisms/ProfileEditButton';
 import BookReivewSort from '@/components/organisms/BookReivewSortButton';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import useBookReviewList from '@/hooks/services/queries/useBookReviewList';

@@ -10,6 +10,7 @@ import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
 import TagList from '@/components/molecules/TagList';
+import EditDeleteButtonSet from '@/components/molecules/EditDeleteButtonSet';
 import CommentContainer from '@/components/organisms/CommentContainer';
 import LikeCommentWidget from '@/components/organisms/LikeCommentWidget';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
@@ -57,6 +58,9 @@ const BookreviewPage = () => {
       <DocumentTitle title={bookReview.bookname} />
       <BookReviewTemplate
         bookReivew={bookReview}
+        editDeleteButtonSet={
+          <EditDeleteButtonSet isShowDeleteButton isShowEditButton />
+        }
         likeCommentWidget={
           <LikeCommentWidget
             likeCount={likeCount}

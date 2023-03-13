@@ -5,7 +5,8 @@ import { FaRegComment } from '@react-icons/all-files/fa/FaRegComment';
 import { AiOutlineSearch } from '@react-icons/all-files/ai/AiOutlineSearch';
 import { BsStar } from '@react-icons/all-files/bs/BsStar';
 import { BsStarFill } from '@react-icons/all-files/bs/BsStarFill';
-import { RiDeleteBinLine } from '@react-icons/all-files/ri/RiDeleteBinLine';
+import { BsTrash } from '@react-icons/all-files/bs/BsTrash';
+import { BsPencil } from '@react-icons/all-files/bs/BsPencil';
 
 import { StyleProps } from '@/types/style';
 import { lightTheme as theme } from '@/styles/theme';
@@ -49,5 +50,9 @@ export const StarIcon = ({
   );
 
 export const DeleteIcon = ({ size, color, ...styleProps }: IconProps) => (
-  <RiDeleteBinLine size={size} color={color} {...styleProps} />
+  <BsTrash size={size} color={color} {...styleProps} />
+);
+
+export const EditIcon = ({ size, color, ...styleProps }: IconProps) => (
+  <BsPencil size={size} color={color} {...styleProps} />
 );
