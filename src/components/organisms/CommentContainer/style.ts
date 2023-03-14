@@ -50,4 +50,12 @@ export const CommentInfo = styled.div`
   margin-bottom: 15px;
 `;
 
-export const CommentContent = styled.div``;
+export const CommentContent = styled.div`
+  line-height: 1.5;
+  margin-bottom: 10px;
+`;
+
+export const ButtonWrapper = styled.div`
+  width: fit-content;
+  margin-left: auto;
+`;

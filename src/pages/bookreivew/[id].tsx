@@ -126,7 +126,11 @@ const BookreviewPage = () => {
         tagList={tags && <TagList tags={tags} />}
         comment={
           <div ref={commentRef}>
-            <CommentContainer bookReviewId={bookReviewId} comments={comments} />
+            <CommentContainer
+              bookReviewId={bookReviewId}
+              comments={comments}
+              isMyBookReview={isMyBookReview}
+            />
           </div>
         }
       />
