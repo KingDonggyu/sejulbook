@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { SIDEBAR_Z_INDEX } from '@/constants/zIndex';
 
 export const Top = styled.div`
+  z-index: ${SIDEBAR_Z_INDEX};
   position: fixed;
   top: 0;
   left: 0;
@@ -25,17 +26,11 @@ export const Logo = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
-  z-index: ${SIDEBAR_Z_INDEX};
   display: flex;
   gap: 10px;
   & > button {
     width: 80px;
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
-  }
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    & > button {
-      /* width: 50px; */
-    }
   }
 `;
 

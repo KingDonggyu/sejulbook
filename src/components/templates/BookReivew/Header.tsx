@@ -22,7 +22,6 @@ const BookReviewHeader = ({
     <s.HeaderTop>
       <s.Category>{bookReivew.category}</s.Category>
       <s.EditDeleteButtonWrapper>
-        {' '}
         {editDeleteButtonSet}
       </s.EditDeleteButtonWrapper>
     </s.HeaderTop>

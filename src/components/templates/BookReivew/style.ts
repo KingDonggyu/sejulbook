@@ -45,6 +45,9 @@ export const Category = styled.div`
 export const EditDeleteButtonWrapper = styled.div`
   z-index: 1;
   margin-left: auto;
+  & svg {
+    color: ${({ theme }) => theme.COLOR.PRIMARY};
+  }
 `;
 
 export const HeaderBottom = styled.div`
@@ -52,7 +55,7 @@ export const HeaderBottom = styled.div`
   justify-content: space-between;
   button {
     font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
-    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
   }
 `;
 
