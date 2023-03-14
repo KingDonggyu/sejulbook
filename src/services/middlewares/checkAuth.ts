@@ -27,7 +27,7 @@ const checkAuth = async (
     return false;
   }
 
-  if (session && session.id === userId) {
+  if (session && session.id === Number(userId)) {
     return session.id;
   }
 

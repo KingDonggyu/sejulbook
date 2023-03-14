@@ -1,11 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import commentService from 'server/features/comment/comment.service';
-import { CommentRequest } from '@/types/features/comment';
+import { CommentDeleteRequest, CommentRequest } from '@/types/features/comment';
 import checkAuth from '@/services/middlewares/checkAuth';
 
 interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: 'GET' | 'DELETE';
+  method: 'GET';
   query: Pick<CommentRequest, 'bookReviewId'>;
+}
+
+interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: 'DELETE';
+  query: CommentDeleteRequest;
 }
 
 interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -14,7 +19,10 @@ interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
   body: Omit<CommentRequest, 'bookReviewId'>;
 }
 
-type ExtendedNextApiRequest = NextGetApiRequest | NextPostApiRequest;
+type ExtendedNextApiRequest =
+  | NextGetApiRequest
+  | NextPostApiRequest
+  | NextDeleteApiRequest;
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   let result;
@@ -31,10 +39,16 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
         content: req.body.content,
       });
       break;
+
+    case 'DELETE':
+      if (!(await checkAuth(req, res, req.query.userId))) {
+        return;
+      }
+      result = await commentService.deleteComment({ id: req.query.id });
+      break;
+
     default:
-      result = await commentService.getComments({
-        bookReviewId,
-      });
+      result = await commentService.getComments({ bookReviewId });
   }
 
   if (!result.error) {

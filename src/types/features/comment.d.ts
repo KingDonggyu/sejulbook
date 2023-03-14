@@ -1,6 +1,7 @@
 import { BookReviewId } from './bookReview';
 import { UserId, UserName } from './user';
 
+export type CommentId = number;
 export type CommentContent = string;
 
 interface Comment {
@@ -14,4 +15,13 @@ interface CommentRequest extends Pick<Comment, 'content'> {
   commenterId: UserId;
 }
 
-type CommentResponse = CommentRequest & Pick<Comment, 'createdAt'>;
+interface CommentDeleteRequest {
+  id: CommentId;
+  userId: UserId;
+  bookReviewId: BookReviewId;
+}
+
+type CommentResponse = {
+  id: CommentId;
+} & CommentRequest &
+  Pick<Comment, 'createdAt'>;

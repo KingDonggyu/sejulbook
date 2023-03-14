@@ -47,11 +47,19 @@ const commentModel = {
     await query(sql);
   },
 
+  deleteSingleComment: async ({ id }: Pick<CommentEntity, 'id'>) => {
+    const sql = `
+      delete from ${TABLE_NAME}
+      where ${Column.ID} = ${id}
+    `;
+    await query(sql);
+  },
+
   createComments: async ({
     sejulbook_id,
     replyer_id,
     reply,
-  }: Omit<CommentEntity, 'replydate'>) => {
+  }: Omit<CommentEntity, 'id' | 'replydate'>) => {
     const sql = `
       insert into ${TABLE_NAME} values (
         null, "${reply}", default, ${sejulbook_id}, ${replyer_id}

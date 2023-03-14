@@ -14,12 +14,15 @@ const commentService = {
 
       return {
         error: false,
-        data: data.map(({ sejulbook_id, replyer_id, reply, replydate }) => ({
-          bookReviewId: sejulbook_id,
-          commenterId: replyer_id,
-          content: reply,
-          createdAt: replydate,
-        })),
+        data: data.map(
+          ({ id, sejulbook_id, replyer_id, reply, replydate }) => ({
+            id,
+            bookReviewId: sejulbook_id,
+            commenterId: replyer_id,
+            content: reply,
+            createdAt: replydate,
+          }),
+        ),
       };
     } catch {
       return {
@@ -34,7 +37,9 @@ const commentService = {
     bookReviewId,
     commenterId,
     content,
-  }: Omit<CommentDTO, 'createdAt'>): Promise<HttpResponse<undefined>> => {
+  }: Omit<CommentDTO, 'id' | 'createdAt'>): Promise<
+    HttpResponse<undefined>
+  > => {
     try {
       await commentModel.createComments({
         sejulbook_id: bookReviewId,
@@ -42,6 +47,17 @@ const commentService = {
         reply: content,
       });
 
+      return { error: false, data: undefined };
+    } catch {
+      return { error: true, code: 500, message: commentError.ADD_FAIL };
+    }
+  },
+
+  deleteComment: async ({
+    id,
+  }: Pick<CommentDTO, 'id'>): Promise<HttpResponse<undefined>> => {
+    try {
+      await commentModel.deleteSingleComment({ id });
       return { error: false, data: undefined };
     } catch {
       return { error: true, code: 500, message: commentError.ADD_FAIL };

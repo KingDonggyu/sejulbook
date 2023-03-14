@@ -1,7 +1,11 @@
-import { get, post } from '@/lib/HTTPClient';
+import { get, post, remove } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import { BookReviewId } from '@/types/features/bookReview';
-import { CommentRequest, CommentResponse } from '@/types/features/comment';
+import {
+  CommentDeleteRequest,
+  CommentRequest,
+  CommentResponse,
+} from '@/types/features/comment';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import CommentError from '../errors/CommentError';
 
@@ -51,5 +55,28 @@ export const addComment = async ({
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new CommentError({ name: 'ADD_COMMENT_ERROR', message });
+  }
+};
+
+export const deleteComment = async ({
+  id,
+  userId,
+  bookReviewId,
+}: CommentDeleteRequest) => {
+  try {
+    const response = await remove<HttpResponse<undefined>>(
+      `${API_URL}/${bookReviewId}`,
+      { id, userId },
+    );
+
+    if (response.error) {
+      throw new CommentError({
+        name: 'DELETE_COMMENT_ERROR',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new CommentError({ name: 'DELETE_COMMENT_ERROR', message });
   }
 };
