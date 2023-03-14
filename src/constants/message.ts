@@ -1,5 +1,6 @@
 export const bookReviewError = {
   WRONG_FILE_FORMAT: '지원하지 않는 파일 형식입니다.',
+  NOT_FOUND: '존재하지 않는 독후감입니다.',
 };
 
 export const userError = {

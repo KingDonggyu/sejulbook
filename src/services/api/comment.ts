@@ -1,7 +1,7 @@
-import { get } from '@/lib/HTTPClient';
+import { get, post } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import { BookReviewId } from '@/types/features/bookReview';
-import { CommentResponse } from '@/types/features/comment';
+import { CommentRequest, CommentResponse } from '@/types/features/comment';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import CommentError from '../errors/CommentError';
 
@@ -24,5 +24,32 @@ export const getComments = async (bookReviewId: BookReviewId) => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new CommentError({ name: 'GET_COMMENTS_ERROR', message });
+  }
+};
+
+export const addComment = async ({
+  bookReviewId,
+  commenterId,
+  content,
+}: CommentRequest) => {
+  try {
+    const response = await post<HttpResponse<undefined>>(
+      `${API_URL}/${bookReviewId}`,
+      {
+        bookReviewId,
+        commenterId,
+        content,
+      },
+    );
+
+    if (response.error) {
+      throw new CommentError({
+        name: 'ADD_COMMENT_ERROR',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new CommentError({ name: 'ADD_COMMENT_ERROR', message });
   }
 };

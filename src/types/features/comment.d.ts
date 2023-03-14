@@ -9,7 +9,9 @@ interface Comment {
   createdAt: string;
 }
 
-interface CommentResponse extends Pick<Comment, 'content' | 'createdAt'> {
+interface CommentRequest extends Pick<Comment, 'content'> {
   bookReviewId: BookReviewId;
   commenterId: UserId;
 }
+
+type CommentResponse = CommentRequest & Pick<Comment, 'createdAt'>;

@@ -1,4 +1,4 @@
-import { bookReviewError } from 'server/constants/message';
+import { bookReviewError, commentError } from 'server/constants/message';
 import { HttpResponse } from 'server/types/http';
 import CommentDTO from './comment.dto';
 import commentModel from './comment.model';
@@ -27,6 +27,24 @@ const commentService = {
         code: 404,
         message: bookReviewError.NOT_EXIST_BOOKREVIEW,
       };
+    }
+  },
+
+  AddComment: async ({
+    bookReviewId,
+    commenterId,
+    content,
+  }: Omit<CommentDTO, 'createdAt'>): Promise<HttpResponse<undefined>> => {
+    try {
+      await commentModel.createComments({
+        sejulbook_id: bookReviewId,
+        replyer_id: commenterId,
+        reply: content,
+      });
+
+      return { error: false, data: undefined };
+    } catch {
+      return { error: true, code: 500, message: commentError.ADD_FAIL };
     }
   },
 };
