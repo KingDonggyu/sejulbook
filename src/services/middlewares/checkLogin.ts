@@ -3,7 +3,10 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Route from '@/constants/routes';
 
-const checkLogin = async ({ req, res }: GetServerSidePropsContext) => {
+const checkLogin = async ({
+  req,
+  res,
+}: Omit<GetServerSidePropsContext, 'query'>) => {
   const session = await getServerSession(req, res, authOptions);
 
   if (session && session.id !== null) {

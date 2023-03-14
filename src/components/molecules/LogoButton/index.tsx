@@ -1,15 +1,28 @@
 import Link from 'next/link';
-import { css as emotionCSS } from '@emotion/react';
+import { css } from '@emotion/react';
 import Route from '@/constants/routes';
 import { StyleProps } from '@/types/style';
 import Logo from '@/components/atoms/Logo';
+import { useScreenModeContext } from '@/contexts/screenModeContext';
 
-type LogoButtonProps = { isDarkMode: boolean } & StyleProps;
+const LogoButton = ({ style, css: cssProps }: StyleProps) => {
+  const { isDarkMode } = useScreenModeContext();
 
-const LogoButton = ({ isDarkMode, style, css }: LogoButtonProps) => (
-  <Link href={Route.HOME} css={css || emotionCSS`width: 120px;`} style={style}>
-    <Logo isDarkMode={isDarkMode} />
-  </Link>
-);
+  return (
+    <Link
+      href={Route.HOME}
+      css={
+        cssProps ||
+        css`
+          display: block;
+          width: 120px;
+        `
+      }
+      style={style}
+    >
+      <Logo isDarkMode={isDarkMode} />
+    </Link>
+  );
+};
 
 export default LogoButton;

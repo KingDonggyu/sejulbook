@@ -25,10 +25,15 @@ import * as s from './style';
 
 interface PublishSideBarProps {
   anchorEl: HTMLElement | null;
+  isHiddenDraftSaveButton?: boolean;
   handleClose: () => void;
 }
 
-const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => {
+const PublishSideBar = ({
+  anchorEl,
+  isHiddenDraftSaveButton,
+  handleClose,
+}: PublishSideBarProps) => {
   const router = useRouter();
   const { savedBookReviewId } = useSavedBookReviewId();
   const [isPossiblePublish, setIsPossiblePublish] = useState(true);
@@ -94,7 +99,7 @@ const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => {
           <TagInput initTagList={bookReview.tag} handleUpdate={setTag} />
         </s.PublishInfoItem>
         <s.ButtonWrapper>
-          <DraftSaveButton />
+          {!isHiddenDraftSaveButton && <DraftSaveButton />}
           <Button
             variant={ButtonVariant.OUTLINED}
             color={ColorVariant.PRIMARY}
@@ -108,7 +113,9 @@ const PublishSideBar = ({ anchorEl, handleClose }: PublishSideBarProps) => {
   );
 };
 
-const PublishSidebarButton = () => {
+const PublishSidebarButton = ({
+  isHiddenDraftSaveButton,
+}: Pick<PublishSideBarProps, 'isHiddenDraftSaveButton'>) => {
   const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   return (
@@ -120,7 +127,11 @@ const PublishSidebarButton = () => {
       >
         발행
       </Button>
-      <PublishSideBar anchorEl={anchorEl} handleClose={handleClose} />
+      <PublishSideBar
+        anchorEl={anchorEl}
+        isHiddenDraftSaveButton={isHiddenDraftSaveButton}
+        handleClose={handleClose}
+      />
     </>
   );
 };

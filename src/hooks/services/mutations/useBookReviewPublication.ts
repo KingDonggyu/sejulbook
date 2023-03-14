@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { publishBookReview } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
@@ -7,6 +7,7 @@ import { BookReviewError } from '@/services/errors/BookReviewError';
 import useUserStatus from '@/hooks/useUserStatus';
 import { userError } from '@/constants/message';
 import { BookReviewId, NewBookReview } from '@/types/features/bookReview';
+import { getBookReviewQuery } from '@/services/queries/bookReview';
 
 interface BookReviewPublicationProps {
   bookReview: NewBookReview;
@@ -23,6 +24,7 @@ const useBookReviewPublication = ({
   onError,
   onFinish,
 }: BookReviewPublicationProps) => {
+  const queryClient = useQueryClient();
   const { session, isLogin } = useUserStatus();
 
   const mutationFn = async () => {
@@ -43,6 +45,9 @@ const useBookReviewPublication = ({
   const { mutate } = useMutation({
     mutationFn,
     onSuccess: (data) => {
+      queryClient.invalidateQueries(
+        getBookReviewQuery(savedBookReviewId).queryKey,
+      );
       if (onSuccess && data) {
         onSuccess(data);
       }

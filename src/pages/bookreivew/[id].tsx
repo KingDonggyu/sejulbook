@@ -10,6 +10,7 @@ import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
 import TagList from '@/components/molecules/TagList';
+import EditDeleteButtonSet from '@/components/molecules/EditDeleteButtonSet';
 import CommentContainer from '@/components/organisms/CommentContainer';
 import LikeCommentWidget from '@/components/organisms/LikeCommentWidget';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
@@ -28,7 +29,10 @@ import useTags from '@/hooks/services/queries/useTags';
 import useComments from '@/hooks/services/queries/useComments';
 import useLikeStatus from '@/hooks/services/queries/useLike';
 import useUserStatus from '@/hooks/useUserStatus';
+import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 
+import Route from '@/constants/routes';
+import { PublishedBookReviewURLQuery } from '@/types/features/bookReview';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const BookreviewPage = () => {
@@ -44,6 +48,35 @@ const BookreviewPage = () => {
   const comments = useComments(bookReviewId);
   const { likeCount } = useLikeStatus({ userId, bookReviewId });
 
+  const deleteBookReview = useBookReviewDeletion({
+    bookReviewId,
+    onSuccess: () => {
+      if (userId) {
+        router.replace(`${Route.LIBRARY}/${userId}`);
+        return;
+      }
+      router.replace(Route.HOME);
+    },
+  });
+
+  const isMyBookReview = !!(userId && userId === bookReview?.userId);
+
+  const handleClickDeleteButton = () => {
+    if (isMyBookReview && window.confirm('독후감을 정말 삭제하시겠습니까?')) {
+      deleteBookReview();
+    }
+  };
+
+  const handleClickEditButton = () => {
+    const query: PublishedBookReviewURLQuery = {
+      publish: bookReviewId,
+    };
+    router.push({
+      pathname: `${Route.NEWBOOK_WRITE}`,
+      query,
+    });
+  };
+
   const handleClickCommentButton = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -57,6 +90,14 @@ const BookreviewPage = () => {
       <DocumentTitle title={bookReview.bookname} />
       <BookReviewTemplate
         bookReivew={bookReview}
+        editDeleteButtonSet={
+          <EditDeleteButtonSet
+            isShowDeleteButton={isMyBookReview}
+            isShowEditButton={isMyBookReview}
+            onClickDeleteButton={handleClickDeleteButton}
+            onClickEditButton={handleClickEditButton}
+          />
+        }
         likeCommentWidget={
           <LikeCommentWidget
             likeCount={likeCount}

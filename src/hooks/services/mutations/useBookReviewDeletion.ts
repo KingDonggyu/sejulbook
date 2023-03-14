@@ -9,10 +9,14 @@ import { getDraftSavedListQuery } from '@/services/queries/bookReview';
 
 interface DraftSavedBookReviewDeletionProps {
   bookReviewId: BookReviewId;
+  isDraftSaved?: boolean;
+  onSuccess?: () => void;
 }
 
-const useDraftSavedDeletion = ({
+const useBookReviewDeletion = ({
   bookReviewId,
+  isDraftSaved,
+  onSuccess,
 }: DraftSavedBookReviewDeletionProps) => {
   const queryClient = useQueryClient();
   const { session, isLogin } = useUserStatus();
@@ -30,8 +34,14 @@ const useDraftSavedDeletion = ({
   const { mutate } = useMutation({
     mutationFn,
     onSuccess: (isSuccess) => {
-      if (isSuccess && isLogin) {
+      if (!isSuccess || !isLogin) {
+        return;
+      }
+      if (isDraftSaved) {
         queryClient.invalidateQueries(getDraftSavedListQuery(session.id));
+      }
+      if (onSuccess) {
+        onSuccess();
       }
     },
     onError: (error) => {
@@ -44,4 +54,4 @@ const useDraftSavedDeletion = ({
   return mutate;
 };
 
-export default useDraftSavedDeletion;
+export default useBookReviewDeletion;
