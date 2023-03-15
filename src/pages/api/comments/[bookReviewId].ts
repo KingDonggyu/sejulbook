@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import commentService from 'server/features/comment/comment.service';
-import { CommentDeleteRequest, CommentRequest } from '@/types/features/comment';
+import {
+  CommentDeleteRequest,
+  CommentRequest,
+  CommentUpdateRequest,
+} from '@/types/features/comment';
 import checkAuth from '@/services/middlewares/checkAuth';
 
 interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -13,6 +17,12 @@ interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
   query: CommentDeleteRequest;
 }
 
+interface NextUpdateApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: 'PUT';
+  query: Pick<CommentRequest, 'bookReviewId'>;
+  body: Omit<CommentUpdateRequest, 'bookReviewId'>;
+}
+
 interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
   method: 'POST';
   query: Pick<CommentRequest, 'bookReviewId'>;
@@ -22,7 +32,8 @@ interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
 type ExtendedNextApiRequest =
   | NextGetApiRequest
   | NextPostApiRequest
-  | NextDeleteApiRequest;
+  | NextDeleteApiRequest
+  | NextUpdateApiRequest;
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   let result;
@@ -45,6 +56,16 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
         return;
       }
       result = await commentService.deleteComment({ id: req.query.id });
+      break;
+
+    case 'PUT':
+      if (!(await checkAuth(req, res, req.body.userId))) {
+        return;
+      }
+      result = await commentService.updateComment({
+        id: req.body.id,
+        content: req.body.content,
+      });
       break;
 
     default:

@@ -41,6 +41,10 @@ const commentService = {
     HttpResponse<undefined>
   > => {
     try {
+      if (!content) {
+        return { error: true, code: 400, message: commentError.EMPTY_CONTENT };
+      }
+
       await commentModel.createComments({
         sejulbook_id: bookReviewId,
         replyer_id: commenterId,
@@ -56,12 +60,20 @@ const commentService = {
   deleteComment: async ({
     id,
   }: Pick<CommentDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    try {
-      await commentModel.deleteSingleComment({ id });
-      return { error: false, data: undefined };
-    } catch {
-      return { error: true, code: 500, message: commentError.ADD_FAIL };
+    await commentModel.deleteSingleComment({ id });
+    return { error: false, data: undefined };
+  },
+
+  updateComment: async ({
+    id,
+    content,
+  }: Pick<CommentDTO, 'id' | 'content'>): Promise<HttpResponse<undefined>> => {
+    if (!content) {
+      return { error: true, code: 400, message: commentError.EMPTY_CONTENT };
     }
+
+    await commentModel.updateComment({ id, reply: content });
+    return { error: false, data: undefined };
   },
 };
 

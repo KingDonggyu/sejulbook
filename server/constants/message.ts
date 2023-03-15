@@ -21,4 +21,5 @@ export const bookReviewError = {
 
 export const commentError = {
   ADD_FAIL: '댓글 작성에 실패했습니다.',
+  EMPTY_CONTENT: '댓글을 입력해주세요.',
 };

@@ -67,6 +67,15 @@ const commentModel = {
     `;
     await query(sql);
   },
+
+  updateComment: async ({ id, reply }: Pick<CommentEntity, 'id' | 'reply'>) => {
+    const sql = `
+      update ${TABLE_NAME}
+      set ${Column.CONTENT} = "${reply}"
+      where ${Column.ID} = ${id}
+    `;
+    await query(sql);
+  },
 };
 
 export default commentModel;

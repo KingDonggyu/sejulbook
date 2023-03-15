@@ -32,6 +32,7 @@ import useUserStatus from '@/hooks/useUserStatus';
 import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 
 import Route from '@/constants/routes';
+import { confirm } from '@/constants/message';
 import { PublishedBookReviewURLQuery } from '@/types/features/bookReview';
 import { authOptions } from '../api/auth/[...nextauth]';
 
@@ -62,7 +63,7 @@ const BookreviewPage = () => {
   const isMyBookReview = !!(userId && userId === bookReview?.userId);
 
   const handleClickDeleteButton = () => {
-    if (isMyBookReview && window.confirm('독후감을 정말 삭제하시겠습니까?')) {
+    if (isMyBookReview && window.confirm(confirm.DELETE_BOOKREVIEW)) {
       deleteBookReview();
     }
   };

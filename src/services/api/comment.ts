@@ -1,10 +1,11 @@
-import { get, post, remove } from '@/lib/HTTPClient';
+import { get, post, put, remove } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import { BookReviewId } from '@/types/features/bookReview';
 import {
   CommentDeleteRequest,
   CommentRequest,
   CommentResponse,
+  CommentUpdateRequest,
 } from '@/types/features/comment';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
 import CommentError from '../errors/CommentError';
@@ -78,5 +79,29 @@ export const deleteComment = async ({
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new CommentError({ name: 'DELETE_COMMENT_ERROR', message });
+  }
+};
+
+export const updateComment = async ({
+  id,
+  userId,
+  content,
+  bookReviewId,
+}: CommentUpdateRequest) => {
+  try {
+    const response = await put<HttpResponse<undefined>>(
+      `${API_URL}/${bookReviewId}`,
+      { id, userId, content },
+    );
+
+    if (response.error) {
+      throw new CommentError({
+        name: 'UPDATE_COMMENT_ERROR',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new CommentError({ name: 'UPDATE_COMMENT_ERROR', message });
   }
 };

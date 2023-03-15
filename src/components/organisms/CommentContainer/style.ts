@@ -1,3 +1,4 @@
+import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const TextAreaWrapper = styled.div`
@@ -52,10 +53,20 @@ export const CommentInfo = styled.div`
 
 export const CommentContent = styled.div`
   line-height: 1.5;
-  margin-bottom: 10px;
 `;
 
 export const ButtonWrapper = styled.div`
   width: fit-content;
   margin-left: auto;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  button {
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+  }
+`;
+
+export const editTextAreaStyle = (theme: Theme) => css`
+  font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
 `;

@@ -21,7 +21,16 @@ interface CommentDeleteRequest {
   bookReviewId: BookReviewId;
 }
 
-type CommentResponse = {
+interface CommentUpdateRequest extends Pick<Comment, 'content'> {
   id: CommentId;
-} & CommentRequest &
-  Pick<Comment, 'createdAt'>;
+  userId: UserId;
+  bookReviewId: BookReviewId;
+}
+
+interface CommentResponse {
+  id: CommentId;
+  bookReviewId: BookReviewId;
+  commenterId: UserId;
+  content: CommentContent;
+  createdAt: string;
+}
