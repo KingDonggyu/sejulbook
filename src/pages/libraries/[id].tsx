@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
@@ -11,7 +12,7 @@ import Library from '@/components/templates/Library';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import Profile from '@/components/organisms/Profile';
 import ProfileEditButton from '@/components/organisms/ProfileEditButton';
-import BookReivewSort from '@/components/organisms/BookReivewSortButton';
+import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
 import useUserStatus from '@/hooks/useUserStatus';
@@ -21,10 +22,20 @@ const LibraryPage = () => {
   const userId = Number(router.query.id);
 
   const user = useUser(userId);
-  const bookReviewList = useBookReviewList(userId);
   const { session } = useUserStatus();
+  const initBookReviewList = useBookReviewList(userId);
 
-  const isMyLibrary = Boolean(session && userId === session.id);
+  const [bookReviewList, setBookReviewList] = useState(initBookReviewList);
+  const isMyLibrary = !!(session && userId === session.id);
+
+  const handleClickLatestSortButton = () => {
+    setBookReviewList(initBookReviewList);
+  };
+
+  const handleClickLikeSortButton = () => {
+    const list = [...bookReviewList];
+    setBookReviewList(list.sort((a, b) => b.likeCount - a.likeCount));
+  };
 
   return (
     <>
@@ -36,8 +47,6 @@ const LibraryPage = () => {
             bookReviewCount={bookReviewList ? bookReviewList.length : 0}
           />
         }
-        profileEditButton={isMyLibrary && <ProfileEditButton />}
-        bookReivewSortButton={<BookReivewSort />}
         bookshelf={
           bookReviewList && (
             <Bookshelf
@@ -45,6 +54,13 @@ const LibraryPage = () => {
               bookReviewList={bookReviewList}
             />
           )
+        }
+        profileEditButton={isMyLibrary && <ProfileEditButton />}
+        bookReivewSortButton={
+          <SortDropdown
+            onClickLatestButton={handleClickLatestSortButton}
+            onClickLikeSortButton={handleClickLikeSortButton}
+          />
         }
       />
     </>

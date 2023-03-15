@@ -63,7 +63,7 @@ export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
 
 export type BookReviewSummary = Pick<
   BookReviewResponse,
-  'id' | 'bookname' | 'sejul' | 'thumbnail'
+  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
 > & {
   likeCount: number;
   commentCount: number;

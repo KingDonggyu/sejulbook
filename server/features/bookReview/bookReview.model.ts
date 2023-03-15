@@ -23,7 +23,7 @@ enum Column {
 
 type BookReviewSummary = Pick<
   BookReviewEntity,
-  'id' | 'bookname' | 'sejul' | 'thumbnail'
+  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'datecreated'
 >;
 
 type DraftSavedBookReview = Pick<
@@ -34,7 +34,12 @@ type DraftSavedBookReview = Pick<
 const bookReviewModel = {
   getBookReviewList: async ({ user_id }: Pick<BookReviewEntity, 'user_id'>) => {
     const sql = `
-      select ${Column.ID}, ${Column.BOOK_NAME}, ${Column.SEJUL}, ${Column.THUMBNAIL}
+      select 
+        ${Column.ID}, 
+        ${Column.BOOK_NAME}, 
+        ${Column.SEJUL}, 
+        ${Column.THUMBNAIL}, 
+        ${Column.DATE_CREATED}
       from ${TABLE_NAME} 
       where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 1
     `;
