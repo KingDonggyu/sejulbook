@@ -8,6 +8,7 @@ const ButtonWrapper = styled.div`
 `;
 
 interface EditDeleteButtonSetProps {
+  size?: number;
   isShowEditButton: boolean;
   isShowDeleteButton: boolean;
   onClickEditButton?: () => void;
@@ -15,29 +16,35 @@ interface EditDeleteButtonSetProps {
 }
 
 export const EditButton = ({
+  size,
   isShowEditButton,
   onClickEditButton,
-}: Pick<EditDeleteButtonSetProps, 'isShowEditButton' | 'onClickEditButton'>) =>
+}: Pick<
+  EditDeleteButtonSetProps,
+  'size' | 'isShowEditButton' | 'onClickEditButton'
+>) =>
   isShowEditButton ? (
     <Button onClick={onClickEditButton}>
-      <EditIcon size={18} />
+      <EditIcon size={size || 18} />
     </Button>
   ) : null;
 
 export const DeleteButton = ({
+  size,
   isShowDeleteButton,
   onClickDeleteButton,
 }: Pick<
   EditDeleteButtonSetProps,
-  'isShowDeleteButton' | 'onClickDeleteButton'
+  'size' | 'isShowDeleteButton' | 'onClickDeleteButton'
 >) =>
   isShowDeleteButton ? (
     <Button onClick={onClickDeleteButton}>
-      <DeleteIcon size={18} />
+      <DeleteIcon size={size || 18} />
     </Button>
   ) : null;
 
 const EditDeleteButtonSet = ({
+  size,
   isShowEditButton,
   isShowDeleteButton,
   onClickEditButton,
@@ -46,10 +53,12 @@ const EditDeleteButtonSet = ({
   isShowEditButton || isShowDeleteButton ? (
     <ButtonWrapper>
       <EditButton
+        size={size}
         isShowEditButton={isShowEditButton}
         onClickEditButton={onClickEditButton}
       />
       <DeleteButton
+        size={size}
         isShowDeleteButton={isShowDeleteButton}
         onClickDeleteButton={onClickDeleteButton}
       />

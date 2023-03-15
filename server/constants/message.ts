@@ -18,3 +18,8 @@ export const bookReviewError = {
   NOT_EXIST_BOOKREVIEW: '존재하지 않는 독후감입니다.',
   NOT_PUBLISHED_BOOKREVIEW: '발행되지 않은 독후감입니다.',
 };
+
+export const commentError = {
+  ADD_FAIL: '댓글 작성에 실패했습니다.',
+  EMPTY_CONTENT: '댓글을 입력해주세요.',
+};
