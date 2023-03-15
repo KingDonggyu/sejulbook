@@ -18,7 +18,7 @@ import formatDTOToEntity from './utils/formatDTOToEntity';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
-  'id' | 'bookname' | 'sejul' | 'thumbnail'
+  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
 >;
 
 type DraftSavedBookReview = Pick<
@@ -41,8 +41,8 @@ const bookReviewService = {
       user_id: userId,
     });
 
-    const promises = bookReviewList.map(
-      async ({ id, ...bookReviewSummary }) => {
+    const promises: Promise<BookReviewSummary>[] = bookReviewList.map(
+      async ({ id, datecreated, ...bookReviewSummary }) => {
         const likeResult = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
@@ -53,6 +53,7 @@ const bookReviewService = {
 
         return {
           id,
+          createdAt: datecreated,
           likeCount: likeResult.count,
           commentCount: commentResult.count,
           ...bookReviewSummary,
