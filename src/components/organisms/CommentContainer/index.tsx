@@ -27,6 +27,12 @@ const CommentContainer = ({
   const addComment = useCommentCreation({
     bookReviewId,
     content: writingContent,
+    onSuccess: () => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth',
+      });
+    },
   });
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {

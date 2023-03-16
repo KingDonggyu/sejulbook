@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import useUserStatus from '@/hooks/useUserStatus';
-import { userError } from '@/constants/message';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
+import useMutation from '@/hooks/useMutation';
 import { deleteBookReview } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 import { BookReviewId } from '@/types/features/bookReview';
@@ -19,31 +19,25 @@ const useBookReviewDeletion = ({
   onSuccess,
 }: DraftSavedBookReviewDeletionProps) => {
   const queryClient = useQueryClient();
-  const { session, isLogin } = useUserStatus();
-
-  const mutationFn = async () => {
-    if (!isLogin) {
-      toast.error(userError.NOT_LOGGED);
-      return false;
-    }
-
-    await deleteBookReview({ userId: session.id, bookReviewId });
-    return true;
-  };
+  const [queryKey, setQueryKey] = useState<QueryKey>([]);
 
   const { mutate } = useMutation({
-    mutationFn,
-    onSuccess: (isSuccess) => {
-      if (!isSuccess || !isLogin) {
-        return;
-      }
+    mutationFn: async (userId) => {
       if (isDraftSaved) {
-        queryClient.invalidateQueries(getDraftSavedListQuery(session.id));
+        setQueryKey(getDraftSavedListQuery(userId).queryKey);
       }
+
+      await deleteBookReview({ userId, bookReviewId });
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKey);
+
       if (onSuccess) {
         onSuccess();
       }
     },
+
     onError: (error) => {
       if (error instanceof BookReviewError) {
         toast.error(error.message);

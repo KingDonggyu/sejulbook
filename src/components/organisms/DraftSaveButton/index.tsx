@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
@@ -18,8 +17,6 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
 
   const { bookReview } = bookReviewStore();
   const { emptyImageKeySet } = s3ImageURLStore();
-
-  const [isPossibleSave, setIsPossibleSave] = useState(true);
 
   const replaceURL = (bookReviewId: BookReviewId) => {
     if (savedBookReviewId) {
@@ -46,21 +43,12 @@ const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
     bookReview,
     savedBookReviewId,
     onSuccess: handleSuccess,
-    onFinish: () => setIsPossibleSave(true),
   });
-
-  const handleClick = async () => {
-    if (!isPossibleSave) {
-      return;
-    }
-    setIsPossibleSave(false);
-    draftSaveBookReview();
-  };
 
   return (
     <Button
       variant={ButtonVariant.OUTLINED}
-      onClick={handleClick}
+      onClick={() => draftSaveBookReview()}
       {...buttonProps}
     >
       임시저장
