@@ -39,7 +39,7 @@ const LibraryPage = () => {
 
   return (
     <>
-      <DocumentTitle title={`${user.name}의 서재`} />
+      <DocumentTitle title={`${user?.name}의 서재`} />
       <Library
         profile={
           <Profile
