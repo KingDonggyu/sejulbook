@@ -4,6 +4,7 @@ import { ColorVariant, ButtonVariant } from '@/constants';
 import { StyleProps } from '@/types/style';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
+import { iconButtonStyle } from '@/styles/common';
 import * as s from './style';
 
 type ButtonAttributes = {
@@ -48,7 +49,8 @@ const CancelButton = ({
 }: {
   size?: string | number;
 } & ButtonProps) => (
-  <Button {...buttonProps}>
+  <Button {...buttonProps} css={iconButtonStyle}>
+    취소
     <HiX size={size} />
   </Button>
 );

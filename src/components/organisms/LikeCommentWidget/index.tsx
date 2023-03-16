@@ -47,8 +47,8 @@ const LikeCommentWidget = ({
           </s.WidgetItem>
           <s.WidgetItem>
             <Button css={s.buttonStyle} onClick={onClickCommentButton}>
-              <CommentIcon />
               댓글
+              <CommentIcon />
             </Button>
             <s.Count>{commentCount}</s.Count>
           </s.WidgetItem>
