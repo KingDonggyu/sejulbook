@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { ButtonVariant, ColorVariant } from '@/constants';
@@ -36,7 +35,6 @@ const PublishSideBar = ({
 }: PublishSideBarProps) => {
   const router = useRouter();
   const { savedBookReviewId } = useSavedBookReviewId();
-  const [isPossiblePublish, setIsPossiblePublish] = useState(true);
 
   const { deleteImageKey } = s3ImageURLStore();
   const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
@@ -57,16 +55,7 @@ const PublishSideBar = ({
     bookReview,
     savedBookReviewId,
     onSuccess: handleSuccess,
-    onFinish: () => setIsPossiblePublish(true),
   });
-
-  const handlePublish = () => {
-    if (!isPossiblePublish) {
-      return;
-    }
-    setIsPossiblePublish(false);
-    publishBookReview();
-  };
 
   return (
     <SideBar anchorEl={anchorEl} handleClose={handleClose}>
@@ -103,7 +92,7 @@ const PublishSideBar = ({
           <Button
             variant={ButtonVariant.OUTLINED}
             color={ColorVariant.PRIMARY}
-            onClick={handlePublish}
+            onClick={() => publishBookReview()}
           >
             발행
           </Button>

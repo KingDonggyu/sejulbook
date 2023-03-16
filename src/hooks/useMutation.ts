@@ -11,23 +11,23 @@ class MutationFail {
   fail = true;
 }
 
-interface MutationProps<T> {
-  mutationFn: (userId: UserId) => Promise<T>;
+interface MutationProps<T, U> {
+  mutationFn: (userId: UserId, args: U) => Promise<T>;
   onSuccess: (data: T) => void;
   onError: (error: unknown) => void;
   queryKeysToRefetch?: QueryKey[];
 }
 
-const useMutation = <T>({
+const useMutation = <T, U = void>({
   mutationFn,
   onSuccess,
   onError,
-}: MutationProps<T>) => {
+}: MutationProps<T, U>) => {
   const mutationFail = new MutationFail();
   const { session, isLogin } = useUserStatus();
 
   const mutationResult = useOriginMutation({
-    mutationFn: async () => {
+    mutationFn: async (args: U) => {
       if (mutationResult.isLoading) {
         return mutationFail;
       }
@@ -37,7 +37,7 @@ const useMutation = <T>({
         return mutationFail;
       }
 
-      return mutationFn(session.id);
+      return mutationFn(session.id, args);
     },
 
     onSuccess: (data) => {

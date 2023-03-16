@@ -1,8 +1,7 @@
 import { toast } from 'react-toastify';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-import useUserStatus from '@/hooks/useUserStatus';
-import { bookReviewSussess, userError } from '@/constants/message';
+import { useQueryClient } from '@tanstack/react-query';
+import useMutation from '@/hooks/useMutation';
+import { bookReviewSussess } from '@/constants/message';
 import { draftSaveBookReview } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 import { UserId } from '@/types/features/user';
@@ -13,64 +12,40 @@ interface BookReviewDraftSaveProps {
   bookReview: NewBookReview;
   savedBookReviewId?: UserId;
   onSuccess?: (bookReviewId: BookReviewId) => void;
-  onError?: () => void;
-  onFinish?: () => void;
 }
 
 const useBookReviewDraftSave = ({
   bookReview,
   savedBookReviewId,
   onSuccess,
-  onError,
-  onFinish,
 }: BookReviewDraftSaveProps) => {
   const queryClient = useQueryClient();
-  const { session, isLogin } = useUserStatus();
-
-  const mutationFn = async () => {
-    if (!isLogin) {
-      toast.error(userError.NOT_LOGGED);
-      return null;
-    }
-
-    const bookReviewId = await draftSaveBookReview({
-      userId: session.id,
-      bookReviewId: savedBookReviewId,
-      bookReview,
-    });
-
-    return bookReviewId;
-  };
 
   const { mutate } = useMutation({
-    mutationFn,
+    mutationFn: async (userId) => {
+      const bookReviewId = await draftSaveBookReview({
+        userId,
+        bookReview,
+        bookReviewId: savedBookReviewId,
+      });
+
+      return bookReviewId;
+    },
+
     onSuccess: (bookReviewId) => {
-      if (onFinish) {
-        onFinish();
-      }
+      const { queryKey } = getBookReviewQuery(bookReviewId);
 
-      if (!bookReviewId) {
-        return;
-      }
-
+      queryClient.invalidateQueries(queryKey);
       toast.success(bookReviewSussess.DRAFT_SAVE);
-      queryClient.invalidateQueries(getBookReviewQuery(bookReviewId).queryKey);
 
       if (onSuccess) {
         onSuccess(bookReviewId);
       }
     },
+
     onError: (error) => {
       if (error instanceof BookReviewError) {
         toast.error(error.message);
-      }
-
-      if (onError) {
-        onError();
-      }
-
-      if (onFinish) {
-        onFinish();
       }
     },
   });
