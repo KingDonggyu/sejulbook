@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   QueryKey,
@@ -24,13 +25,16 @@ const useMutation = <T, U = void>({
   onError,
 }: MutationProps<T, U>) => {
   const mutationFail = new MutationFail();
+  const [isLoading, setIsLoading] = useState(false);
   const { session, isLogin } = useUserStatus();
 
   const mutationResult = useOriginMutation({
     mutationFn: async (args: U) => {
-      if (mutationResult.isLoading) {
+      if (mutationResult.isLoading || isLoading) {
         return mutationFail;
       }
+
+      setIsLoading(true);
 
       if (!isLogin) {
         toast.error(userError.NOT_LOGGED);
@@ -41,6 +45,10 @@ const useMutation = <T, U = void>({
     },
 
     onSuccess: (data) => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+
       if (data instanceof MutationFail) {
         return;
       }
@@ -51,6 +59,8 @@ const useMutation = <T, U = void>({
     },
 
     onError: (error) => {
+      setIsLoading(false);
+
       if (onError) {
         onError(error);
       }
