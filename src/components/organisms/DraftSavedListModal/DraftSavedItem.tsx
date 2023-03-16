@@ -11,6 +11,7 @@ import {
   DraftSavedBookReview,
   DraftSavedBookReviewURLQuery,
 } from '@/types/features/bookReview';
+import { iconButtonStyle } from '@/styles/common';
 import * as s from './style';
 
 const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
@@ -46,7 +47,8 @@ const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
       </s.BookName>
       <s.DraftSavedItemBottom>
         <s.DraftSavedDate>{formatDateToKorean(createdAt)}</s.DraftSavedDate>
-        <Button onClick={handleClickDeleteButton}>
+        <Button onClick={handleClickDeleteButton} css={iconButtonStyle}>
+          임시저장 삭제
           <DeleteIcon size={17} />
         </Button>
       </s.DraftSavedItemBottom>

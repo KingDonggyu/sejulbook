@@ -9,8 +9,8 @@ const SearchButton = () => (
       ${iconButtonStyle};
     `}
   >
-    <SearchIcon size={25} />
     검색
+    <SearchIcon size={25} />
   </Button>
 );
 

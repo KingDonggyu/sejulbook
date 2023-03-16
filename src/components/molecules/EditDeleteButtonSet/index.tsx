@@ -1,10 +1,14 @@
 import styled from '@emotion/styled';
 import Button from '@/components/atoms/Button';
 import { EditIcon, DeleteIcon } from '@/components/atoms/Icon';
+import { iconButtonStyle } from '@/styles/common';
 
 const ButtonWrapper = styled.div`
   display: flex;
   gap: 10px;
+  button {
+    ${iconButtonStyle}
+  }
 `;
 
 interface EditDeleteButtonSetProps {
@@ -25,6 +29,7 @@ export const EditButton = ({
 >) =>
   isShowEditButton ? (
     <Button onClick={onClickEditButton}>
+      독후감 수정
       <EditIcon size={size || 18} />
     </Button>
   ) : null;
@@ -39,6 +44,7 @@ export const DeleteButton = ({
 >) =>
   isShowDeleteButton ? (
     <Button onClick={onClickDeleteButton}>
+      독후감 삭제
       <DeleteIcon size={size || 18} />
     </Button>
   ) : null;

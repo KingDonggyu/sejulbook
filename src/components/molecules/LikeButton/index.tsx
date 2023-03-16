@@ -14,8 +14,8 @@ const LikeButton = ({
   handleClick: handleClickLikeButton,
 }: LikeButtonProps) => (
   <Button css={iconButtonStyle} onClick={handleClickLikeButton}>
-    <HeartIcon size={size} active={active} />
     {active ? '좋아요 취소' : '좋아요'}
+    <HeartIcon size={size} active={active} />
   </Button>
 );
 

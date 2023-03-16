@@ -18,6 +18,7 @@ export const Header = styled.header`
 export const HeaderTop = styled.div`
   margin-bottom: 10px;
   display: flex;
+  height: 13px;
 `;
 
 export const BookName = styled.h1`
