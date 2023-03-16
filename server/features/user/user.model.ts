@@ -60,6 +60,19 @@ const userModel = {
     return null;
   },
 
+  updateUser: async ({
+    id,
+    nick,
+    introduce,
+  }: Pick<UserEntity, 'id' | 'nick' | 'introduce'>) => {
+    const sql = `
+      update ${TABLE_NAME} 
+      set ${Column.NICK} = "${nick}", ${Column.INTRODUCE} = "${introduce}"
+      where ${Column.ID} = ${id}
+    `;
+    await query(sql);
+  },
+
   createUser: async (user: Omit<UserEntity, 'id'>) => {
     const sql = `insert into ${TABLE_NAME} (
       ${Column.EMAIL}, 

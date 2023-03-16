@@ -3,7 +3,7 @@ export type UserName = string;
 type Gender = 0 | 1 | 2;
 
 interface UserDTO {
-  id: UserId | null;
+  id: UserId;
   sub: string;
   email: string;
   name: UserName;

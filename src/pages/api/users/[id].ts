@@ -1,9 +1,33 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import userService from 'server/features/user/user.service';
+import checkAuth from '@/services/middlewares/checkAuth';
+import { User } from '@/types/features/user';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
-  const result = await userService.getUserById({ id: Number(id) });
+interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: 'GET';
+  query: Pick<User, 'id'>;
+}
+
+interface NextPutApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: 'PUT';
+  query: Pick<User, 'id'>;
+  body: Omit<User, 'id'>;
+}
+
+type ExtendedNextApiRequest = NextGetApiRequest | NextPutApiRequest;
+
+const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
+  let result;
+  const id = Number(req.query.id);
+
+  if (req.method === 'GET') {
+    result = await userService.getUserById({ id });
+  } else {
+    if (!(await checkAuth(req, res, id))) {
+      return;
+    }
+    result = await userService.updateUser({ id, ...req.body });
+  }
 
   if (!result.error) {
     res.status(200).json(result);

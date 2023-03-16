@@ -1,4 +1,4 @@
-import { get, post } from '@/lib/HTTPClient';
+import { get, post, put } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import { SignUpRequset, User, UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
@@ -40,5 +40,24 @@ export const getUser = async (userId: UserId) => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new UserError({ name: 'GET_USER_ERROR', message });
+  }
+};
+
+export const updateUser = async ({ id, name, introduce }: User) => {
+  try {
+    const response = await put<HttpResponse<undefined>>(`${API_URL}/${id}`, {
+      name,
+      introduce,
+    });
+
+    if (response.error) {
+      throw new UserError({
+        name: 'UPDATE_USER_ERROR',
+        message: response.message,
+      });
+    }
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new UserError({ name: 'UPDATE_USER_ERROR', message });
   }
 };

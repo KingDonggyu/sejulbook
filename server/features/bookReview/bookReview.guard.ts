@@ -3,7 +3,7 @@ import { HttpFailed } from 'server/types/http';
 import BookReviewDTO from './bookReview.dto';
 
 class BookReviewGuard {
-  bookReview: Partial<BookReviewDTO>;
+  private bookReview: Partial<BookReviewDTO>;
 
   constructor(bookReview: Partial<BookReviewDTO>) {
     this.bookReview = bookReview;
