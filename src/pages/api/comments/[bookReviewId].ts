@@ -17,7 +17,7 @@ interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
   query: CommentDeleteRequest;
 }
 
-interface NextUpdateApiRequest extends Omit<NextApiRequest, 'query'> {
+interface NextPutApiRequest extends Omit<NextApiRequest, 'query'> {
   method: 'PUT';
   query: Pick<CommentRequest, 'bookReviewId'>;
   body: Omit<CommentUpdateRequest, 'bookReviewId'>;
@@ -33,7 +33,7 @@ type ExtendedNextApiRequest =
   | NextGetApiRequest
   | NextPostApiRequest
   | NextDeleteApiRequest
-  | NextUpdateApiRequest;
+  | NextPutApiRequest;
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   let result;

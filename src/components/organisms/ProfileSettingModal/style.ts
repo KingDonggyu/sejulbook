@@ -6,6 +6,9 @@ export const modalStyle = css`
   & > div {
     margin-bottom: 20px;
   }
+  textarea {
+    border-radius: 5px;
+  }
 `;
 
 export const buttonStyle = (theme: Theme) => css`

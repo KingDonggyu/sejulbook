@@ -1,7 +1,8 @@
-import { HttpSuccess, HttpFailed } from 'server/types/http';
+import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
 import { userError } from 'server/constants/message';
 import UserDTO from './user.dto';
 import userModel from './user.model';
+import UserGuard from './user.guard';
 
 type UserId = Pick<UserDTO, 'id'>;
 type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
@@ -9,7 +10,9 @@ type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
 const userService = {
   getUserId: async ({
     sub,
-  }: Pick<UserDTO, 'sub'>): Promise<HttpSuccess<UserId> | HttpFailed> => {
+  }: Pick<UserDTO, 'sub'>): Promise<
+    HttpSuccess<UserId | { id: null }> | HttpFailed
+  > => {
     const result = await userModel.getUserId({ sub });
 
     return {
@@ -21,12 +24,11 @@ const userService = {
   getUserById: async ({
     id,
   }: UserId): Promise<HttpSuccess<User> | HttpFailed> => {
-    if (id === null) {
-      return {
-        error: true,
-        code: 404,
-        message: userError.USER_NOT_FOUND,
-      };
+    const userGuard = new UserGuard({ id });
+    const guardResult = userGuard.checkUserNotFound();
+
+    if (guardResult) {
+      return guardResult;
     }
 
     const result = await userModel.getUserById({ id });
@@ -71,38 +73,51 @@ const userService = {
     };
   },
 
+  updateUser: async ({
+    id,
+    name,
+    introduce,
+  }: Pick<UserDTO, 'id' | 'name' | 'introduce'>): Promise<
+    HttpResponse<undefined>
+  > => {
+    const userGuard = new UserGuard({ id, name, introduce });
+    const guardResult = userGuard.checkInvalidProfile();
+
+    if (guardResult) {
+      return guardResult;
+    }
+
+    const lowerCaseName = name.toLowerCase();
+    const otherUser = await userModel.getUserByName({
+      nick: lowerCaseName,
+    });
+
+    if (otherUser && otherUser.id !== id) {
+      return {
+        error: true,
+        code: 400,
+        message: userError.DUPLICATE_NAME,
+      };
+    }
+
+    await userModel.updateUser({ id, nick: lowerCaseName, introduce });
+    return { error: false, data: undefined };
+  },
+
   signUp: async (
     user: UserDTO,
   ): Promise<HttpSuccess<undefined> | HttpFailed> => {
-    if (!user.name) {
-      return {
-        error: true,
-        code: 400,
-        message: userError.EMPTY_NAME,
-      };
+    const userGuard = new UserGuard(user);
+    const guardResult = userGuard.checkInvalidProfile();
+
+    if (guardResult) {
+      return guardResult;
     }
 
-    const name = user.name.toLowerCase();
-
-    if (name.length < 2 || name.length > 10) {
-      return {
-        error: true,
-        code: 400,
-        message: userError.LIMIT_REACHED_NAME,
-      };
-    }
-
-    if (!/^[가-힣|a-z|0-9|]+$/.test(name)) {
-      return {
-        error: true,
-        code: 400,
-        message: userError.NOT_MATCHED_PATTERN_NAME,
-      };
-    }
-
-    const isDuplicateName = Boolean(
-      await userModel.getUserByName({ nick: name }),
-    );
+    const lowerCaseName = user.name.toLowerCase();
+    const isDuplicateName = !!(await userModel.getUserByName({
+      nick: lowerCaseName,
+    }));
 
     if (isDuplicateName) {
       return {
@@ -112,8 +127,7 @@ const userService = {
       };
     }
 
-    await userModel.createUser({ ...user, nick: name });
-
+    await userModel.createUser({ ...user, nick: lowerCaseName });
     return { error: false, data: undefined };
   },
 };

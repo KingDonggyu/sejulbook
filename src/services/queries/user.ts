@@ -5,17 +5,15 @@ import Query from '@/types/query';
 
 const BASE_QUERY_KEY = 'user';
 
-export const getUserQuery = (
-  userId: UserId,
-  handleError?: () => void,
-): Query => ({
+export const getUserQuery = (userId?: UserId, onError?: () => void): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getUser`, userId],
-  queryFn: () => getUser(userId),
+  queryFn: () => userId && getUser(userId),
   options: {
+    enabled: !!userId,
     onError: () => {
       signOut();
-      if (handleError) {
-        handleError();
+      if (onError) {
+        onError();
       }
     },
   },

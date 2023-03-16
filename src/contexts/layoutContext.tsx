@@ -1,8 +1,23 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { signIn, signOut } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
 import { css } from '@emotion/react';
 import HeaderBar from '@/components/organisms/HeaderBar';
 import ScreenModeButton from '@/components/organisms/SceenModeButton';
+import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
+import { ModalKey } from '@/constants/keys';
+import useUserStatus from '@/hooks/useUserStatus';
+import modalStore from '@/stores/modalStore';
+import { signUp } from '@/services/api/user';
+import UserError from '@/services/errors/UserError';
+import { Introduce, UserName } from '@/types/features/user';
 import 'react-toastify/dist/ReactToastify.css';
 
 const mainStyle = (isVisibleHeaderBar: boolean) => css`
@@ -28,6 +43,8 @@ const LayoutContext = createContext<LayoutContextProps>({
 });
 
 const LayoutProvider = ({ children }: { children: ReactNode }) => {
+  const { session, isSignupRequired } = useUserStatus();
+  const { openModal } = modalStore();
   const [isVisibleHeaderBar, setIsVisible] = useState(true);
   const [isVisibleScreenModeButton, setIsVisibleScreenModeButton] =
     useState(true);
@@ -43,11 +60,42 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
     [isVisibleHeaderBar],
   );
 
+  const handleSignUp = async ({
+    name,
+    introduce,
+  }: {
+    name: UserName;
+    introduce: Introduce;
+  }) => {
+    try {
+      if (isSignupRequired) {
+        await signUp({ name, introduce, ...session });
+        await signIn(session.oAuth);
+      }
+    } catch (error) {
+      if (error instanceof UserError) {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isSignupRequired) {
+      openModal(ModalKey.SIGNUP);
+    }
+  }, [isSignupRequired, openModal]);
+
   return (
     <LayoutContext.Provider value={contextProps}>
       {isVisibleHeaderBar && <HeaderBar />}
       <main css={mainStyle(isVisibleHeaderBar)}>{children}</main>
       {isVisibleScreenModeButton && <ScreenModeButton />}
+      <ProfileSettingModal
+        modalKey={ModalKey.SIGNUP}
+        title="회원가입"
+        onComplete={handleSignUp}
+        onCancel={() => signOut()}
+      />
       <ToastContainer
         theme="colored"
         position="bottom-left"

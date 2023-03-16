@@ -1,41 +1,40 @@
 import { useState } from 'react';
 import Button from '@/components/atoms/Button';
 import TextField from '@/components/atoms/TextField';
+import TextArea from '@/components/atoms/TextArea';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { UserName, Introduce } from '@/types/features/user';
+import { User, UserName, Introduce } from '@/types/features/user';
 import * as s from './style';
 
 interface ProfileSettingModalProps {
   title: string;
+  initName?: string;
+  initIntroduce?: string;
   modalKey: string;
-  handleComplete: ({
-    name,
-    introduce,
-  }: {
-    name: UserName;
-    introduce: Introduce;
-  }) => void;
+  onComplete: ({ name, introduce }: Pick<User, 'name' | 'introduce'>) => void;
 }
 
 const ProfileSettingModal = ({
   title,
   modalKey,
-  handleComplete,
+  onComplete,
+  initName = '',
+  initIntroduce = '',
   ...modalProps
 }: ProfileSettingModalProps & Omit<ModalProps, 'children'>) => {
-  const [name, setName] = useState<UserName>('');
-  const [introduce, setIntroduce] = useState<Introduce>('');
+  const [name, setName] = useState<UserName>(initName);
+  const [introduce, setIntroduce] = useState<Introduce>(initIntroduce);
 
-  const handleClick = () => {
-    handleComplete({ name, introduce });
+  const handleClose = () => {
+    setName(initName);
+    setIntroduce(initIntroduce);
   };
 
   return (
     <Modal
       modalKey={modalKey}
-      elevation={4}
-      isShowModalOverlay={false}
+      onCancel={handleClose}
       css={s.modalStyle}
       {...modalProps}
     >
@@ -45,7 +44,7 @@ const ProfileSettingModal = ({
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <TextField
+      <TextArea
         label="소개"
         value={introduce}
         onChange={(e) => setIntroduce(e.target.value)}
@@ -54,7 +53,7 @@ const ProfileSettingModal = ({
         color={ColorVariant.PRIMARY}
         variant={ButtonVariant.CONTAINED}
         css={s.buttonStyle}
-        onClick={handleClick}
+        onClick={() => onComplete({ name, introduce })}
       >
         완료
       </Button>
