@@ -11,6 +11,10 @@ interface ProfileProps {
 const Profile = ({ userId, bookReviewCount }: ProfileProps) => {
   const user = useUser(userId);
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <s.Wrapper>
       <s.Title>

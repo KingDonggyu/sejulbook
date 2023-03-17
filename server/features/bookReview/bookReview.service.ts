@@ -18,7 +18,7 @@ import formatDTOToEntity from './utils/formatDTOToEntity';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
-  'id' | 'bookname' | 'sejul' | 'thumbnail'
+  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
 >;
 
 type DraftSavedBookReview = Pick<
@@ -29,7 +29,6 @@ type DraftSavedBookReview = Pick<
 interface PublishedBookReview extends BookReviewDTO {
   writer: UserName;
   category: Category;
-  likeCount: number;
 }
 
 const bookReviewService = {
@@ -42,8 +41,8 @@ const bookReviewService = {
       user_id: userId,
     });
 
-    const promises = bookReviewList.map(
-      async ({ id, ...bookReviewSummary }) => {
+    const promises: Promise<BookReviewSummary>[] = bookReviewList.map(
+      async ({ id, datecreated, ...bookReviewSummary }) => {
         const likeResult = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
@@ -54,6 +53,7 @@ const bookReviewService = {
 
         return {
           id,
+          createdAt: datecreated,
           likeCount: likeResult.count,
           commentCount: commentResult.count,
           ...bookReviewSummary,
@@ -115,15 +115,10 @@ const bookReviewService = {
       id: bookReview.categoryId,
     });
 
-    const { count: likeCount } = await likeModel.getLikeCount({
-      sejulbook_id: id,
-    });
-
     const data: PublishedBookReview = {
       ...bookReview,
       writer: userName,
       category,
-      likeCount,
     };
 
     return { error: false, data };
@@ -219,7 +214,7 @@ const bookReviewService = {
   > => {
     await commentModel.deleteComments({ sejulbook_id: id });
     await tagModel.deleteTags({ sejulbook_id: id });
-    await likeModel.deleteLikes({ sejulbook_id: id });
+    await likeModel.deleteAllLikes({ sejulbook_id: id });
     await bookReviewModel.deleteBookReview({ id });
 
     return { error: false, data: undefined };

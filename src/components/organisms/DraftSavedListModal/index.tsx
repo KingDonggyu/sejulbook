@@ -1,63 +1,16 @@
-import Link from 'next/link';
 import Button, { ButtonProps } from '@/components/atoms/Button';
-import { DeleteIcon } from '@/components/atoms/Icon';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
-import Route from '@/constants/routes';
 import modalStore from '@/stores/modalStore';
-import formatDateToKorean from '@/utils/formatDateToKorean';
-import useDraftSavedDeletion from '@/hooks/services/mutations/useDraftSavedDeletion';
-import {
-  DraftSavedBookReview,
-  DraftSavedBookReviewURLQuery,
-} from '@/types/features/bookReview';
+import { DraftSavedBookReview } from '@/types/features/bookReview';
+import DraftSavedItem from './DraftSavedItem';
 import * as s from './style';
 
 interface DraftSavedListModalProps
   extends Omit<ModalProps, 'modalKey' | 'children'> {
   draftSavedList: DraftSavedBookReview[];
 }
-
-const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
-  const { closeModal } = modalStore();
-
-  const deleteDraftSavedBookReview = useDraftSavedDeletion({
-    bookReviewId: id,
-  });
-
-  const draftSavedURLQuery: DraftSavedBookReviewURLQuery = {
-    draft: id,
-  };
-
-  const handleClickDeleteButton = () => {
-    if (window.confirm('임시저장 독후감을 정말 삭제하시겠습니까?')) {
-      deleteDraftSavedBookReview();
-    }
-  };
-
-  return (
-    <s.DraftSavedItem key={bookname + createdAt}>
-      <s.BookName>
-        <Link
-          href={{
-            pathname: Route.NEWBOOK_WRITE,
-            query: draftSavedURLQuery,
-          }}
-          onClick={() => closeModal(ModalKey.DRAFT_SAVED_LIST)}
-        >
-          {bookname}
-        </Link>
-      </s.BookName>
-      <s.DraftSavedItemBottom>
-        <s.DraftSavedDate>{formatDateToKorean(createdAt)}</s.DraftSavedDate>
-        <Button onClick={handleClickDeleteButton}>
-          <DeleteIcon size={17} />
-        </Button>
-      </s.DraftSavedItemBottom>
-    </s.DraftSavedItem>
-  );
-};
 
 const DraftSavedListModal = ({
   draftSavedList,

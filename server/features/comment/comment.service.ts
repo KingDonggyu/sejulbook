@@ -1,4 +1,4 @@
-import { bookReviewError } from 'server/constants/message';
+import { bookReviewError, commentError } from 'server/constants/message';
 import { HttpResponse } from 'server/types/http';
 import CommentDTO from './comment.dto';
 import commentModel from './comment.model';
@@ -14,12 +14,15 @@ const commentService = {
 
       return {
         error: false,
-        data: data.map(({ sejulbook_id, replyer_id, reply, replydate }) => ({
-          bookReviewId: sejulbook_id,
-          commenterId: replyer_id,
-          content: reply,
-          createdAt: replydate,
-        })),
+        data: data.map(
+          ({ id, sejulbook_id, replyer_id, reply, replydate }) => ({
+            id,
+            bookReviewId: sejulbook_id,
+            commenterId: replyer_id,
+            content: reply,
+            createdAt: replydate,
+          }),
+        ),
       };
     } catch {
       return {
@@ -28,6 +31,49 @@ const commentService = {
         message: bookReviewError.NOT_EXIST_BOOKREVIEW,
       };
     }
+  },
+
+  AddComment: async ({
+    bookReviewId,
+    commenterId,
+    content,
+  }: Omit<CommentDTO, 'id' | 'createdAt'>): Promise<
+    HttpResponse<undefined>
+  > => {
+    try {
+      if (!content) {
+        return { error: true, code: 400, message: commentError.EMPTY_CONTENT };
+      }
+
+      await commentModel.createComments({
+        sejulbook_id: bookReviewId,
+        replyer_id: commenterId,
+        reply: content,
+      });
+
+      return { error: false, data: undefined };
+    } catch {
+      return { error: true, code: 500, message: commentError.ADD_FAIL };
+    }
+  },
+
+  deleteComment: async ({
+    id,
+  }: Pick<CommentDTO, 'id'>): Promise<HttpResponse<undefined>> => {
+    await commentModel.deleteSingleComment({ id });
+    return { error: false, data: undefined };
+  },
+
+  updateComment: async ({
+    id,
+    content,
+  }: Pick<CommentDTO, 'id' | 'content'>): Promise<HttpResponse<undefined>> => {
+    if (!content) {
+      return { error: true, code: 400, message: commentError.EMPTY_CONTENT };
+    }
+
+    await commentModel.updateComment({ id, reply: content });
+    return { error: false, data: undefined };
   },
 };
 

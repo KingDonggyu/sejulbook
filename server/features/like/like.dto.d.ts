@@ -3,7 +3,7 @@ import { UserId } from '../user/user.dto';
 
 interface LikeDTO {
   bookReviewId: BookReviewId;
-  likerId: UserId;
+  likerId?: UserId;
 }
 
 export default LikeDTO;

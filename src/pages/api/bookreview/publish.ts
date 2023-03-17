@@ -9,7 +9,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 }
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  if (!(await checkAuth(req, res))) {
+  if (!(await checkAuth(req, res, req.body.userId))) {
     return;
   }
 

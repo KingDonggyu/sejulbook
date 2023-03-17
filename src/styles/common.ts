@@ -1,7 +1,7 @@
 import { css, Theme } from '@emotion/react';
 
 export const iconButtonStyle = css`
-  lineheight: 0;
+  line-height: 0;
   overflow: hidden;
   text-indent: -9999px;
 `;

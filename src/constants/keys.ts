@@ -1,6 +1,7 @@
 export enum ModalKey {
   LOGIN = 'login',
   CATEGORY = 'category',
-  PROFILE_SETTING = 'profile',
+  SIGNUP = 'signup',
   DRAFT_SAVED_LIST = 'draftSavedList',
+  PROFILE_SETTING = 'profile',
 }

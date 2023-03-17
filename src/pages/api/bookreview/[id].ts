@@ -9,11 +9,11 @@ interface ExtenedNextApiRequest extends Omit<NextApiRequest, 'query'> {
 }
 
 const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
+  const { id, userId } = req.query;
   let result;
 
   if (req.method === 'DELETE') {
-    if (!(await checkAuth(req, res))) {
+    if (!(await checkAuth(req, res, userId))) {
       return;
     }
     result = await bookReviewService.deletedBookReview({ id });

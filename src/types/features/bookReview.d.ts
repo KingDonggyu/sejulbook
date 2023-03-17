@@ -58,13 +58,12 @@ export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   id: BookReviewId;
   writer: UserName;
   category: Category;
-  likeCount: number;
   createdAt: string;
 }
 
 export type BookReviewSummary = Pick<
   BookReviewResponse,
-  'id' | 'bookname' | 'sejul' | 'thumbnail'
+  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
 > & {
   likeCount: number;
   commentCount: number;
@@ -80,11 +79,10 @@ export type DraftSavedBookReview = Pick<
 /**
  * URL Query
  */
-
 export type DraftSavedBookReviewURLQuery = {
-  draft: BookReviewId;
+  draft?: BookReviewId;
 };
 
 export type PublishedBookReviewURLQuery = {
-  publish: BookReviewId;
+  publish?: BookReviewId;
 };

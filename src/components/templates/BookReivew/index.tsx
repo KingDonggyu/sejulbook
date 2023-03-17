@@ -10,6 +10,7 @@ type BookReivewProps = BookReviewHeaderProps &
 const BookReivew = ({
   bookReivew,
   bookInfoButton,
+  editDeleteButtonSet,
   likeCommentWidget,
   sejulViewer,
   contentViewer,
@@ -21,6 +22,7 @@ const BookReivew = ({
     <BookReviewHeader
       bookReivew={bookReivew}
       bookInfoButton={bookInfoButton}
+      editDeleteButtonSet={editDeleteButtonSet}
       likeCommentWidget={likeCommentWidget}
     />
     <BookReviewArticle

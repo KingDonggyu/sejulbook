@@ -5,19 +5,16 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { userError } from '@/constants/message';
 import { UserId } from '@/types/features/user';
 
-interface NextPostApiRequest extends NextApiRequest {
-  body: { userId: UserId };
+interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
+  query: unknown;
 }
 
-interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
-  query: { userId: UserId };
-}
-
-type ExtendedNextApiRequest = NextPostApiRequest | NextGetApiRequest;
-
-const checkAuth = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
+const checkAuth = async (
+  req: ExtendedNextApiRequest,
+  res: NextApiResponse,
+  userId: UserId,
+) => {
   const session = await getServerSession(req, res, authOptions);
-  const userId = Number(req.body.userId) || Number(req.query.userId);
 
   if (!userId) {
     const result: HttpFailed = {
@@ -30,8 +27,8 @@ const checkAuth = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     return false;
   }
 
-  if (session && session.id === userId) {
-    return true;
+  if (session && session.id === Number(userId)) {
+    return session.id;
   }
 
   const result: HttpFailed = {

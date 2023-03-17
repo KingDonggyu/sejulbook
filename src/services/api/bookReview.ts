@@ -208,7 +208,6 @@ export const deleteBookReview = async ({
       `${API_URL}/${bookReviewId}`,
       {
         userId,
-        bookReviewId,
       },
     );
 
