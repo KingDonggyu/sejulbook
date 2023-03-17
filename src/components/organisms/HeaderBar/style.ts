@@ -15,6 +15,7 @@ export const Wrapper = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: ${({ theme }) => theme.HEADERBAR_HEIGHT}px;
   max-width: ${({ theme }) => theme.MAX_WIDTH.DEFAULT};
 `;
 

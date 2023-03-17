@@ -65,6 +65,8 @@ const thumbnail = {
   },
 };
 
+const headerBarHeight = 50;
+
 const color = {
   LIGHT_GREEN: '#5AB890',
   WHITE: '#ffffff',
@@ -106,6 +108,7 @@ const commonTheme = {
   FONT_WEIGHT: fontWeight,
   FONT_FAMILY: fontFamily,
   TUMBNAIL: thumbnail,
+  HEADERBAR_HEIGHT: headerBarHeight,
 };
 
 const lightTheme = {
