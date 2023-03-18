@@ -31,7 +31,14 @@ const mainStyle = ({
 }) => css`
   margin: auto;
   padding: ${isVisibleHeaderBar ? `5rem 20px` : `20px`};
-  ${isHome ? `padding: 0` : `max-width: 80rem`};
+  ${isHome
+    ? `
+      padding: 0;
+      padding-bottom: 5rem;
+    `
+    : `
+      max-width: 80rem;
+    `};
 `;
 
 interface LayoutContextProps {
