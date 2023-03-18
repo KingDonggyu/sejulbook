@@ -4,7 +4,8 @@ export const Wrapper = styled.div`
   position: relative;
 
   button {
-    opacity: 0.5;
+    z-index: 1;
+    opacity: 0.7;
     padding: 15px;
     height: fit-content;
     background: ${({ theme }) => theme.COLOR.LINE};

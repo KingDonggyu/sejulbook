@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import testImageSrc from '@public/images/test-thumbnail.jpeg';
 import quotesLeftSrc from '@public/images/icon-white-quotes-left.svg';
 import quotesRightSrc from '@public/images/icon-white-quotes-right.svg';
-import CardScoller from '@/components/molecules/CardScroller';
+import BookReviewScroller from '@/components/organisms/BookReviewScroller';
 import * as s from './style';
 
 const Home = () => (
@@ -20,35 +19,14 @@ const Home = () => (
       <s.BookReviewListLabel>
         사람들의 마음을 얻은 <span>세 줄</span>
       </s.BookReviewListLabel>
-      <CardScoller css={s.bookReviewListStyle}>
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-      </CardScoller>
+      <BookReviewScroller />
     </div>
     <div>
       <s.BookReviewListLabel>
         당신의 마음을 얻은 <span>서재</span>
       </s.BookReviewListLabel>
-      <CardScoller css={s.bookReviewListStyle}>
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-        <Image src={testImageSrc} width={300} height={400} alt="테스트" />
-      </CardScoller>
+      {/* <BookReviewScroller /> */}
+      <s.BookReviewListAltText>관심 서재가 없습니다</s.BookReviewListAltText>
     </div>
   </s.Wrapper>
 );

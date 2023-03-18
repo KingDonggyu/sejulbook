@@ -2,11 +2,13 @@ import { css, Theme } from '@emotion/react';
 import { BsMoon } from '@react-icons/all-files/bs/BsMoon';
 import { BiSun } from '@react-icons/all-files/bi/BiSun';
 import { ButtonVariant } from '@/constants';
+import { SCREEN_MODE_BUTTON_Z_INDEX } from '@/constants/zIndex';
 import Button from '@/components/atoms/Button';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { lightTheme, darkTheme } from '@/styles/theme';
 
 const screenModeButtonStyle = (theme: Theme) => css`
+  z-index: ${SCREEN_MODE_BUTTON_Z_INDEX};
   position: fixed;
   right: 30px;
   bottom: 25px;

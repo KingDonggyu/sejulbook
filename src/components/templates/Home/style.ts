@@ -67,6 +67,14 @@ export const SubTitle = styled.h2`
   }
 `;
 
+export const BookReviewListAltText = styled.div`
+  margin: 100px auto;
+  width: fit-content;
+  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
+  font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.notoSansKR};
+`;
+
 export const BookReviewListLabel = styled(SubTitle)`
   padding-left: 10%;
   margin-bottom: 25px;

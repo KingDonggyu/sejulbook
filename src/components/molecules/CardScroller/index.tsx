@@ -18,6 +18,7 @@ const CardScoller = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [cardWidth, setCardWidth] = useState(0);
   const [isVisiblePrevButton, setIsVisiblePrevButton] = useState(false);
+  const [isVisibleNextButton, setIsVisibleNextButton] = useState(false);
 
   const handleScroll = (e: UIEvent<HTMLDivElement>) => {
     if (!e.currentTarget.scrollLeft && !!isVisiblePrevButton) {
@@ -49,9 +50,18 @@ const CardScoller = ({
   };
 
   useEffect(() => {
-    if (scrollRef.current?.firstElementChild) {
-      const { clientWidth } = scrollRef.current.firstElementChild;
-      setCardWidth(clientWidth);
+    const scrollEl = scrollRef.current;
+
+    if (!scrollEl) {
+      return;
+    }
+
+    if (scrollEl.clientWidth < scrollEl.scrollWidth) {
+      setIsVisibleNextButton(true);
+    }
+
+    if (scrollEl.firstElementChild) {
+      setCardWidth(scrollEl.firstElementChild.clientWidth);
     }
   }, []);
 
@@ -73,12 +83,14 @@ const CardScoller = ({
       >
         {children}
       </s.Scoller>
-      <Button radius={50} style={{ right: '30px' }}>
-        <HiOutlineArrowRight
-          size={70}
-          onClick={() => handleClickArrowButton('next')}
-        />
-      </Button>
+      {isVisibleNextButton && (
+        <Button radius={50} style={{ right: '30px' }}>
+          <HiOutlineArrowRight
+            size={70}
+            onClick={() => handleClickArrowButton('next')}
+          />
+        </Button>
+      )}
     </s.Wrapper>
   );
 };
