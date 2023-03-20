@@ -73,6 +73,10 @@ export const BookReviewListAltText = styled.div`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   font-family: ${({ theme }) => theme.FONT_FAMILY.notoSansKR};
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    margin: 50px auto;
+    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  }
 `;
 
 export const BookReviewListLabel = styled(SubTitle)`
