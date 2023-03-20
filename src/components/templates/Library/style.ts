@@ -23,6 +23,7 @@ export const TopSectionWrapper = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   padding: 20px;
+  padding-bottom: 0;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     flex-direction: column;
     align-items: flex-start;

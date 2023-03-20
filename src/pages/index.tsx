@@ -1,13 +1,18 @@
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { dehydrate } from '@tanstack/react-query';
-
+import Home from '@/components/templates/Home';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import { getUserQuery } from '@/services/queries/user';
 import prefetchQuery from '@/services/prefetchQuery';
 
-const HomePage = () => <DocumentTitle />;
+const HomePage = () => (
+  <>
+    <DocumentTitle />
+    <Home />
+  </>
+);
 
 export const getServerSideProps = async ({
   req,

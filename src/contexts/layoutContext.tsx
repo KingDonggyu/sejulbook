@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { useRouter } from 'next/router';
 import { signIn, signOut } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import { css } from '@emotion/react';
@@ -13,6 +14,7 @@ import HeaderBar from '@/components/organisms/HeaderBar';
 import ScreenModeButton from '@/components/organisms/SceenModeButton';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 import { ModalKey } from '@/constants/keys';
+import Route from '@/constants/routes';
 import useUserStatus from '@/hooks/useUserStatus';
 import modalStore from '@/stores/modalStore';
 import { signUp } from '@/services/api/user';
@@ -20,10 +22,23 @@ import UserError from '@/services/errors/UserError';
 import { Introduce, UserName } from '@/types/features/user';
 import 'react-toastify/dist/ReactToastify.css';
 
-const mainStyle = (isVisibleHeaderBar: boolean) => css`
+const mainStyle = ({
+  isHome = false,
+  isVisibleHeaderBar,
+}: {
+  isHome?: boolean;
+  isVisibleHeaderBar: boolean;
+}) => css`
   margin: auto;
   padding: ${isVisibleHeaderBar ? `5rem 20px` : `20px`};
-  max-width: 80rem;
+  ${isHome
+    ? `
+      padding: 0;
+      padding-bottom: 5rem;
+    `
+    : `
+      max-width: 80rem;
+    `};
 `;
 
 interface LayoutContextProps {
@@ -43,6 +58,9 @@ const LayoutContext = createContext<LayoutContextProps>({
 });
 
 const LayoutProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
+  const isHome = router.pathname === Route.HOME;
+
   const { session, isSignupRequired } = useUserStatus();
   const { openModal } = modalStore();
   const [isVisibleHeaderBar, setIsVisible] = useState(true);
@@ -88,7 +106,7 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
   return (
     <LayoutContext.Provider value={contextProps}>
       {isVisibleHeaderBar && <HeaderBar />}
-      <main css={mainStyle(isVisibleHeaderBar)}>{children}</main>
+      <main css={mainStyle({ isHome, isVisibleHeaderBar })}>{children}</main>
       {isVisibleScreenModeButton && <ScreenModeButton />}
       <ProfileSettingModal
         modalKey={ModalKey.SIGNUP}

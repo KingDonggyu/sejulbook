@@ -20,7 +20,7 @@ const Profile = ({ userId, bookReviewCount }: ProfileProps) => {
       <s.Title>
         <span>{user.name}</span>의 서재
       </s.Title>
-      <s.Introduce>{user.introduce}</s.Introduce>
+      {user.introduce && <s.Introduce>{user.introduce}</s.Introduce>}
       <s.DetailWrapper>
         <s.DatailItem>
           <span>읽은 책</span>

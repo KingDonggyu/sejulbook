@@ -7,6 +7,7 @@ import LoginModal from '@/components/organisms/LoginModal';
 
 const loginButtonStyle = (theme: Theme) => css`
   font-size: ${theme.FONT_SIZE.SMALL};
+  border-color: ${theme.COLOR.SECOND_TEXT};
 `;
 
 const logoutButtonStyle = (theme: Theme) => css`
