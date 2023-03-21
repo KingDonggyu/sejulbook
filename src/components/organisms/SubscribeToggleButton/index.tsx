@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
-import Button from '@/components/atoms/Button';
+import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { UserId } from '@/types/features/user';
 import useSubscribeToggle from '@/hooks/services/mutations/useSubscribeToggle';
@@ -12,15 +12,16 @@ const buttonStyle = css`
   }
 `;
 
-interface SubscribeButtonProps {
+interface SubscribeToggleButtonProps extends ButtonProps {
   userId: UserId;
   isSubscribed?: boolean;
 }
 
-const SubscribeButton = ({
+const SubscribeToggleButton = ({
   userId,
   isSubscribed = false,
-}: SubscribeButtonProps) => {
+  ...buttonProps
+}: SubscribeToggleButtonProps) => {
   const subscribeToggle = useSubscribeToggle({
     targetUserId: userId,
     isSubscribed,
@@ -30,8 +31,9 @@ const SubscribeButton = ({
     <Button
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.SECONDARY}
-      css={buttonStyle}
       onClick={() => subscribeToggle()}
+      css={buttonStyle}
+      {...buttonProps}
     >
       구독 취소
     </Button>
@@ -39,8 +41,9 @@ const SubscribeButton = ({
     <Button
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.PRIMARY}
-      css={buttonStyle}
       onClick={() => subscribeToggle()}
+      css={buttonStyle}
+      {...buttonProps}
     >
       <AiOutlinePlus size={15} />
       구독
@@ -48,4 +51,4 @@ const SubscribeButton = ({
   );
 };
 
-export default SubscribeButton;
+export default SubscribeToggleButton;

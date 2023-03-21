@@ -18,7 +18,7 @@ import Profile from '@/components/organisms/Profile';
 import ProfileEditButton from '@/components/organisms/ProfileEditButton';
 import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
-import SubscribeButton from '@/components/organisms/SubscribeButton';
+import SubscribeToggleButton from '@/components/organisms/SubscribeToggleButton';
 import { getFollowInfoQuery } from '@/services/queries/follow';
 import { BookReivewList } from '@/types/features/bookReview';
 import { authOptions } from '../api/auth/[...nextauth]';
@@ -72,7 +72,7 @@ const LibraryPage = () => {
           isMyLibrary ? (
             <ProfileEditButton />
           ) : (
-            <SubscribeButton userId={userId} isSubscribed={isFollow} />
+            <SubscribeToggleButton userId={userId} isSubscribed={isFollow} />
           )
         }
         bookReivewSortButton={
