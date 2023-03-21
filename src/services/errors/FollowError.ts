@@ -1,6 +1,9 @@
 import ErrorBase from '@/lib/ErrorBase';
 
-type UserErrorName = 'GET_FOLLOW_INFO_ERROR' | 'SUBSCRIBE_ERROR';
+type UserErrorName =
+  | 'GET_FOLLOW_INFO_ERROR'
+  | 'SUBSCRIBE_ERROR'
+  | 'UNSUBSCRIBE_ERROR';
 
 class FollowError extends ErrorBase<UserErrorName> {}
 

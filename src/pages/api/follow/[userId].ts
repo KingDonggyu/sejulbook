@@ -2,18 +2,33 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { UserId } from '@/types/features/user';
 import followService from 'server/features/follow/follow.service';
 
-interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: 'GET' | 'DELETE';
+interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: 'GET';
   query: { userId: UserId; myId?: UserId };
 }
 
-const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  const { userId, myId } = req.query;
+interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: 'DELETE';
+  query: { userId: UserId; myId: UserId };
+}
 
-  const result = await followService.getFollowInfo({
-    targetUserId: userId,
-    myUserId: myId,
-  });
+type ExtendedNextApiRequest = NextGetApiRequest | NextDeleteApiRequest;
+
+const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
+  let result;
+  const { userId } = req.query;
+
+  if (req.method === 'GET') {
+    result = await followService.getFollowInfo({
+      targetUserId: userId,
+      myUserId: req.query.myId,
+    });
+  } else {
+    result = await followService.unsubscribe({
+      followerId: userId,
+      followingId: req.query.myId,
+    });
+  }
 
   if (!result.error) {
     res.status(200).json(result);

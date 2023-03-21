@@ -22,6 +22,18 @@ const followService = {
     return { error: false, data: undefined };
   },
 
+  unsubscribe: async ({
+    followerId,
+    followingId,
+  }: Omit<FollowDTO, 'id'>): Promise<HttpResponse<undefined>> => {
+    await followModel.deleteFollow({
+      follower_id: followerId,
+      following_id: followingId,
+    });
+
+    return { error: false, data: undefined };
+  },
+
   getFollowInfo: async ({
     targetUserId,
     myUserId,

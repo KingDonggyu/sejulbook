@@ -2,20 +2,31 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
 import useMutation from '@/hooks/useMutation';
-import { subscribe } from '@/services/api/follow';
+import { subscribe, unsubscribe } from '@/services/api/follow';
 import FollowError from '@/services/errors/FollowError';
 import { getFollowInfoQuery } from '@/services/queries/follow';
 import { SubscribeRequest } from '@/types/features/follow';
 
-const useSubscribe = ({
+interface SubscribeToggleProps extends Pick<SubscribeRequest, 'targetUserId'> {
+  isSubscribed: boolean;
+}
+
+const useSubscribeToggle = ({
   targetUserId,
-}: Pick<SubscribeRequest, 'targetUserId'>) => {
+  isSubscribed,
+}: SubscribeToggleProps) => {
   const queryClient = useQueryClient();
   const [queryKey, setQueryKey] = useState<QueryKey>();
 
   const { mutate } = useMutation({
     mutationFn: async (myUserId) => {
       setQueryKey(getFollowInfoQuery({ targetUserId, myUserId }).queryKey);
+
+      if (isSubscribed) {
+        await unsubscribe({ targetUserId, myUserId });
+        return;
+      }
+
       await subscribe({ targetUserId, myUserId });
     },
 
@@ -33,4 +44,4 @@ const useSubscribe = ({
   return mutate;
 };
 
-export default useSubscribe;
+export default useSubscribeToggle;

@@ -3,7 +3,7 @@ import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { UserId } from '@/types/features/user';
-import useSubscribe from '@/hooks/services/mutations/useSubscribe';
+import useSubscribeToggle from '@/hooks/services/mutations/useSubscribeToggle';
 
 const buttonStyle = css`
   align-items: flex-start;
@@ -21,13 +21,17 @@ const SubscribeButton = ({
   userId,
   isSubscribed = false,
 }: SubscribeButtonProps) => {
-  const subscribe = useSubscribe({ targetUserId: userId });
+  const subscribeToggle = useSubscribeToggle({
+    targetUserId: userId,
+    isSubscribed,
+  });
 
   return isSubscribed ? (
     <Button
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.SECONDARY}
       css={buttonStyle}
+      onClick={() => subscribeToggle()}
     >
       구독 취소
     </Button>
@@ -36,7 +40,7 @@ const SubscribeButton = ({
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.PRIMARY}
       css={buttonStyle}
-      onClick={() => subscribe()}
+      onClick={() => subscribeToggle()}
     >
       <AiOutlinePlus size={15} />
       구독

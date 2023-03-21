@@ -60,6 +60,19 @@ const followModel = {
 
     await query(sql);
   },
+
+  deleteFollow: async ({
+    follower_id,
+    following_id,
+  }: Omit<FollowEntity, 'id'>) => {
+    const sql = `
+    delete from ${TABLE_NAME} where
+    ${Column.FOLLOWER_ID} = ${follower_id} and
+    ${Column.FOLLOWING_ID} = ${following_id}
+  `;
+
+    await query(sql);
+  },
 };
 
 export default followModel;
