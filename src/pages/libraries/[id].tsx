@@ -7,6 +7,8 @@ import prefetchQuery from '@/services/prefetchQuery';
 import { getUserQuery } from '@/services/queries/user';
 import { getBookReviewListQuery } from '@/services/queries/bookReview';
 import useUser from '@/hooks/services/queries/useUser';
+import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
+import useUserStatus from '@/hooks/useUserStatus';
 
 import Library from '@/components/templates/Library';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
@@ -14,8 +16,7 @@ import Profile from '@/components/organisms/Profile';
 import ProfileEditButton from '@/components/organisms/ProfileEditButton';
 import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
-import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
-import useUserStatus from '@/hooks/useUserStatus';
+import SubscribeButton from '@/components/organisms/SubscribeButton';
 
 const LibraryPage = () => {
   const router = useRouter();
@@ -55,7 +56,9 @@ const LibraryPage = () => {
             />
           )
         }
-        profileEditButton={isMyLibrary && <ProfileEditButton />}
+        profileEditButton={
+          isMyLibrary ? <ProfileEditButton /> : <SubscribeButton />
+        }
         bookReivewSortButton={
           <SortDropdown
             onClickLatestButton={handleClickLatestSortButton}

@@ -37,9 +37,14 @@ export const ButtonWrapper = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+  & > button,
+  & > * > button {
+    padding: 5px 10px;
+  }
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     width: 100%;
     flex-direction: row;
+    align-items: center;
     & > button:first-of-type {
       flex-grow: 1;
     }
