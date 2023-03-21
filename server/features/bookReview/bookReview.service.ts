@@ -1,5 +1,5 @@
 import { bookReviewError, userError } from 'server/constants/message';
-import { HttpSuccess, HttpFailed } from 'server/types/http';
+import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
 
 import { Category } from '../category/category.dto';
 import { UserName } from '../user/user.dto';
@@ -15,11 +15,17 @@ import tagModel from '../tag/tag.model';
 import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
+import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
   'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
 >;
+
+type ExtendedBookReviewSummary = {
+  writer: UserName;
+  likeCount: number;
+} & BookReviewSummary;
 
 type DraftSavedBookReview = Pick<
   BookReviewDTO,
@@ -32,6 +38,38 @@ interface PublishedBookReview extends BookReviewDTO {
 }
 
 const bookReviewService = {
+  getMostLikeBookReviewList: async (): Promise<
+    HttpResponse<ExtendedBookReviewSummary[]>
+  > => {
+    const twoMonthDateInfo = getCurrTwoMonthDate();
+    const bookReviewList = await bookReviewModel.getMostLikeBookReviewList(
+      twoMonthDateInfo,
+    );
+
+    const promises = bookReviewList.map(
+      async ({
+        user_id,
+        ...bookReview
+      }): Promise<ExtendedBookReviewSummary> => {
+        const userName = await userModel.getUserName({ id: user_id });
+
+        return {
+          id: bookReview.id,
+          bookname: bookReview.bookname,
+          sejul: bookReview.sejul,
+          thumbnail: bookReview.thumbnail,
+          createdAt: bookReview.datecreated,
+          likeCount: bookReview.likes_sum,
+          writer: userName || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+
+    return { error: false, data };
+  },
+
   getBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<

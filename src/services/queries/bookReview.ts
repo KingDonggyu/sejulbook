@@ -6,11 +6,17 @@ import {
   getBookReview,
   getBookReviewList,
   getDraftSavedList,
+  getMostLikedBookReviewList,
 } from '../api/bookReview';
 import { getCategories } from '../api/category';
 import { getTags } from '../api/tag';
 
 const BASE_QUERY_KEY = 'bookReview';
+
+export const getMostLikedBookReviewListQuery: Query = {
+  queryKey: [`${BASE_QUERY_KEY}_getMostLikedBookReviewListQuery`],
+  queryFn: () => getMostLikedBookReviewList(),
+};
 
 export const getBookReviewListQuery = (userId: UserId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getBookReviewListQuery`, userId],

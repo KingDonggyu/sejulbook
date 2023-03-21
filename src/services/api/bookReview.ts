@@ -7,6 +7,7 @@ import {
   BookReviewId,
   PublishRequest,
   BookReviewResponse,
+  ExtendedBookReviewSummary,
 } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
@@ -132,11 +133,33 @@ export const draftSaveBookReview = async ({
     isDraftSave: true,
   });
 
+export const getMostLikedBookReviewList = async () => {
+  try {
+    const response = await get<HttpResponse<ExtendedBookReviewSummary[]>>(
+      `${API_URL}/list/liked`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_MOST_LIKED_BOOKREVIEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_MOST_LIKED_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
 export const getBookReviewList = async (userId: UserId) => {
   try {
     const response = await get<HttpResponse<BookReivewList>>(
-      `${API_URL}/list`,
-      { userId },
+      `${API_URL}/list/${userId}`,
     );
 
     if (response.error) {

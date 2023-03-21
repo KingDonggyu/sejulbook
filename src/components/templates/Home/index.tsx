@@ -1,10 +1,14 @@
+import { ReactNode } from 'react';
 import Image from 'next/image';
 import quotesLeftSrc from '@public/images/icon-white-quotes-left.svg';
 import quotesRightSrc from '@public/images/icon-white-quotes-right.svg';
-import BookReviewScroller from '@/components/organisms/BookReviewScroller';
 import * as s from './style';
 
-const Home = () => (
+interface HomeProps {
+  mostLikedBookReviewScroller: ReactNode;
+}
+
+const Home = ({ mostLikedBookReviewScroller }: HomeProps) => (
   <s.Wrapper>
     <s.Banner>
       <s.BannerContent>
@@ -19,7 +23,7 @@ const Home = () => (
       <s.BookReviewListLabel>
         사람들의 마음을 얻은 <span>세 줄</span>
       </s.BookReviewListLabel>
-      <BookReviewScroller />
+      {mostLikedBookReviewScroller}
     </div>
     <div>
       <s.BookReviewListLabel>
