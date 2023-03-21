@@ -20,6 +20,7 @@ const HomePage = () => {
         mostLikedBookReviewScroller={
           <BookReviewScroller bookReviewList={mostLikedBookReviewList} />
         }
+        subscribeBookReviewScroller={<BookReviewScroller.Subscribe />}
       />
     </>
   );
@@ -30,15 +31,10 @@ export const getServerSideProps = async ({
   res,
 }: GetServerSidePropsContext) => {
   const session = await getServerSession(req, res, authOptions);
-
-  if (!session || session.id === null) {
-    return {
-      props: { dehydratedState: null },
-    };
-  }
+  const myUserId = session ? session.id || undefined : undefined;
 
   const queryClient = await prefetchQuery([
-    getUserQuery(session.id),
+    getUserQuery(myUserId),
     getMostLikedBookReviewListQuery,
   ]);
 

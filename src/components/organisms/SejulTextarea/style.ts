@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Viewer = styled.div`
-  line-height: 1.6;
+  line-height: 1.9;
   text-align: center;
   white-space: pre-line;
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};

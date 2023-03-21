@@ -9,7 +9,7 @@ export const ThumnailWrapper = styled.div`
 `;
 
 export const SejulBookReview = styled.div`
-  line-height: 1.5;
+  line-height: 1.7;
   overflow-y: auto;
   overflow-x: hidden;
   white-space: pre-line;

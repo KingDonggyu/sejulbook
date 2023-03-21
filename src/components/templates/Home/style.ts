@@ -5,7 +5,6 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 80px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     gap: 50px;
   }
@@ -17,6 +16,7 @@ export const Banner = styled.div`
   margin-right: auto;
   padding-top: ${({ theme }) => theme.HEADERBAR_HEIGHT + 60}px;
   background: ${({ theme }) => theme.COLOR.PRIMARY};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     padding: 50px 0 50px 15%;
     padding-top: ${({ theme }) => theme.HEADERBAR_HEIGHT + 50}px;
@@ -82,6 +82,7 @@ export const BookReviewListAltText = styled.div`
 export const BookReviewListLabel = styled(SubTitle)`
   padding-left: 10%;
   margin-bottom: 25px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
   }
