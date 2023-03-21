@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { getServerSession } from 'next-auth/next';
@@ -20,6 +20,7 @@ import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscribeButton from '@/components/organisms/SubscribeButton';
 import { getFollowInfoQuery } from '@/services/queries/follow';
+import { BookReivewList } from '@/types/features/bookReview';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const LibraryPage = () => {
@@ -31,8 +32,12 @@ const LibraryPage = () => {
   const initBookReviewList = useBookReviewList(userId);
   const { followerCount, followingCount, isFollow } = useFollowInfo(userId);
 
-  const [bookReviewList, setBookReviewList] = useState(initBookReviewList);
+  const [bookReviewList, setBookReviewList] = useState<BookReivewList>([]);
   const isMyLibrary = !!(session && userId === session.id);
+
+  useEffect(() => {
+    setBookReviewList(initBookReviewList);
+  }, [initBookReviewList]);
 
   const handleClickLatestSortButton = () => {
     setBookReviewList(initBookReviewList);
@@ -67,7 +72,7 @@ const LibraryPage = () => {
           isMyLibrary ? (
             <ProfileEditButton />
           ) : (
-            <SubscribeButton isSubscribed={isFollow} />
+            <SubscribeButton userId={userId} isSubscribed={isFollow} />
           )
         }
         bookReivewSortButton={

@@ -48,6 +48,18 @@ const followModel = {
     const [result] = await query<{ count: number }[]>(sql);
     return result.count;
   },
+
+  createFollow: async ({
+    follower_id,
+    following_id,
+  }: Omit<FollowEntity, 'id'>) => {
+    const sql = `
+      insert into ${TABLE_NAME} values
+      (null, ${follower_id}, ${following_id})
+    `;
+
+    await query(sql);
+  },
 };
 
 export default followModel;

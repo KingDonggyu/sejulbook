@@ -10,3 +10,8 @@ export interface FollowInfoResponse {
   followingCount: number;
   isFollow: boolean;
 }
+
+export interface SubscribeRequest {
+  targetUserId: UserId;
+  myUserId: UserId;
+}

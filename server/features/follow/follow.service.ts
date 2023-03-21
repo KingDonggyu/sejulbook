@@ -1,5 +1,6 @@
 import { HttpResponse } from 'server/types/http';
 import { UserId } from '../user/user.dto';
+import { FollowDTO } from './follow.dto';
 import followModel from './follow.model';
 
 interface FollowInfo {
@@ -9,6 +10,18 @@ interface FollowInfo {
 }
 
 const followService = {
+  subscribe: async ({
+    followerId,
+    followingId,
+  }: Omit<FollowDTO, 'id'>): Promise<HttpResponse<undefined>> => {
+    await followModel.createFollow({
+      follower_id: followerId,
+      following_id: followingId,
+    });
+
+    return { error: false, data: undefined };
+  },
+
   getFollowInfo: async ({
     targetUserId,
     myUserId,
