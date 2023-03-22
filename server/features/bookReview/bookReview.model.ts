@@ -5,6 +5,10 @@ import {
   TABLE_NAME as LIKE_TABLE_NAME,
   Column as LikeColumn,
 } from '../like/like.model';
+import {
+  TABLE_NAME as FOLLOW_TABLE_NAME,
+  Column as FollowColumn,
+} from '../follow/follow.model';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -30,9 +34,7 @@ type BookReviewSummary = Pick<
   'id' | 'bookname' | 'sejul' | 'thumbnail' | 'datecreated'
 >;
 
-type ExtendedBookReviewSummary = {
-  likes_sum: number;
-} & BookReviewSummary &
+type ExtendedBookReviewSummary = BookReviewSummary &
   Pick<BookReviewEntity, 'user_id'>;
 
 type DraftSavedBookReview = Pick<
@@ -64,7 +66,7 @@ const bookReviewModel = {
         count(L.${LikeColumn.BOOKREVIEW_ID}) as ${LikeCountAlias}
       from ${TABLE_NAME} as S
         inner join ${LIKE_TABLE_NAME} as L
-        on S.${Column.ID} = L.${LikeColumn.BOOKREVIEW_ID}
+          on S.${Column.ID} = L.${LikeColumn.BOOKREVIEW_ID}
       where S.${Column.DATE_CREATED} 
         regexp "${currYear}-${currMonth}|${nextYear}-${nextMonth}"
       group by L.${LikeColumn.BOOKREVIEW_ID}
@@ -73,6 +75,30 @@ const bookReviewModel = {
     `;
 
     const result = await query<ExtendedBookReviewSummary[]>(sql);
+    return result;
+  },
+
+  getFollowingBookReviewList: async ({
+    user_id,
+  }: Pick<BookReviewEntity, 'user_id'>) => {
+    const sql = `
+      select 
+        S.${Column.ID}, 
+        S.${Column.BOOK_NAME}, 
+        S.${Column.SEJUL}, 
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID},
+        S.${Column.DATE_CREATED}
+      from ${TABLE_NAME} as S
+        inner join ${FOLLOW_TABLE_NAME} as F
+          on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWER_ID}
+      where F.${FollowColumn.FOLLOWING_ID} = ${user_id}
+      order by ${Column.DATE_CREATED} DESC
+      limit 10;
+    `;
+
+    const result = await query<ExtendedBookReviewSummary[]>(sql);
+
     return result;
   },
 

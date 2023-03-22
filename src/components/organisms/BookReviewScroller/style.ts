@@ -45,8 +45,9 @@ export const Writer = styled.h4`
 export const AltWrapper = styled.div`
   width: fit-content;
   margin: 80px auto;
+  padding-left: 15px;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    margin: 50px auto;
+    margin: 20px auto;
   }
 `;
 
@@ -59,12 +60,15 @@ export const BookReviewListAltText = styled.div`
 `;
 
 export const loginButtonStyle = (theme: Theme) => css`
-  padding-right: 15px;
-  padding-left: 15px;
+  margin: auto;
+  margin-top: 30px;
+  padding-right: 10px;
+  padding-left: 10px;
   color: ${theme.COLOR.PRIMARY};
   border-color: ${theme.COLOR.PRIMARY};
-  font-size: ${theme.FONT_SIZE.LARGE};
+  font-size: ${theme.FONT_SIZE.SMALL};
   @media screen and (max-width: ${theme.MAX_WIDTH.MOBILE}) {
-    font-size: ${theme.FONT_SIZE.SMALL};
+    margin-top: 20px;
+    font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
   }
 `;

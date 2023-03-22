@@ -156,6 +156,30 @@ export const getMostLikedBookReviewList = async () => {
   }
 };
 
+export const getFollowingBookReviewList = async (userId: UserId) => {
+  try {
+    const response = await get<HttpResponse<ExtendedBookReviewSummary[]>>(
+      `${API_URL}/list/following`,
+      { userId },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_FOLLOWING_BOOKREVIEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_FOLLOWING_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
 export const getBookReviewList = async (userId: UserId) => {
   try {
     const response = await get<HttpResponse<BookReivewList>>(

@@ -24,7 +24,6 @@ type BookReviewSummary = Pick<
 
 type ExtendedBookReviewSummary = {
   writer: UserName;
-  likeCount: number;
 } & BookReviewSummary;
 
 type DraftSavedBookReview = Pick<
@@ -59,7 +58,38 @@ const bookReviewService = {
           sejul: bookReview.sejul,
           thumbnail: bookReview.thumbnail,
           createdAt: bookReview.datecreated,
-          likeCount: bookReview.likes_sum,
+          writer: userName || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+
+    return { error: false, data };
+  },
+
+  getFollowingBookReviewList: async ({
+    userId,
+  }: Pick<BookReviewDTO, 'userId'>): Promise<
+    HttpResponse<ExtendedBookReviewSummary[]>
+  > => {
+    const bookReviewList = await bookReviewModel.getFollowingBookReviewList({
+      user_id: userId,
+    });
+
+    const promises = bookReviewList.map(
+      async ({
+        user_id,
+        ...bookReview
+      }): Promise<ExtendedBookReviewSummary> => {
+        const userName = await userModel.getUserName({ id: user_id });
+
+        return {
+          id: bookReview.id,
+          bookname: bookReview.bookname,
+          sejul: bookReview.sejul,
+          thumbnail: bookReview.thumbnail,
+          createdAt: bookReview.datecreated,
           writer: userName || '',
         };
       },

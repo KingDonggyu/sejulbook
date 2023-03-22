@@ -1,9 +1,9 @@
 import query from 'server/database/query';
 import { FollowEntity } from './follow.entity';
 
-const TABLE_NAME = 'follow';
+export const TABLE_NAME = 'follow';
 
-enum Column {
+export enum Column {
   FOLLOWER_ID = 'follower_id',
   FOLLOWING_ID = 'following_id',
 }

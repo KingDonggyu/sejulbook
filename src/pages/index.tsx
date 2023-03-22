@@ -7,11 +7,16 @@ import DocumentTitle from '@/components/atoms/DocumentTitle';
 import BookReviewScroller from '@/components/organisms/BookReviewScroller';
 import { getUserQuery } from '@/services/queries/user';
 import prefetchQuery from '@/services/prefetchQuery';
-import { getMostLikedBookReviewListQuery } from '@/services/queries/bookReview';
+import {
+  getFollowingBookReviewListQuery,
+  getMostLikedBookReviewListQuery,
+} from '@/services/queries/bookReview';
 import useMostLikedBookReviewList from '@/hooks/services/queries/useMostLikedBookReviewList';
+import useFollowingBookReviewList from '@/hooks/services/queries/useFollowingBookReviewList';
 
 const HomePage = () => {
   const mostLikedBookReviewList = useMostLikedBookReviewList();
+  const followingBookReviewList = useFollowingBookReviewList();
 
   return (
     <>
@@ -20,7 +25,11 @@ const HomePage = () => {
         mostLikedBookReviewScroller={
           <BookReviewScroller bookReviewList={mostLikedBookReviewList} />
         }
-        subscribeBookReviewScroller={<BookReviewScroller.Subscribe />}
+        subscribeBookReviewScroller={
+          <BookReviewScroller.Subscribe
+            bookReviewList={followingBookReviewList}
+          />
+        }
       />
     </>
   );
@@ -35,6 +44,7 @@ export const getServerSideProps = async ({
 
   const queryClient = await prefetchQuery([
     getUserQuery(myUserId),
+    getFollowingBookReviewListQuery(myUserId),
     getMostLikedBookReviewListQuery,
   ]);
 

@@ -47,20 +47,19 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
   );
 };
 
-interface SubscribeBookReviewScollerProps {
-  bookReviewList?: ExtendedBookReviewSummary[];
-}
-
 const SubscribeBookReviewScoller = ({
   bookReviewList,
-}: SubscribeBookReviewScollerProps) => {
+}: BookReviewScrollerProps) => {
   const { isLogin } = useUserStatus();
-  const hasFollowing = !!bookReviewList;
 
   if (!isLogin) {
     return (
       <s.AltWrapper>
+        <s.BookReviewListAltText>
+          관심있는 서재의 독후감을 확인하려면 로그인하세요
+        </s.BookReviewListAltText>
         <LoginButton
+          radius={20}
           modalKey={ModalKey.ALT_LOGIN}
           css={s.loginButtonStyle}
           title="세 줄 독후감 시작하기"
@@ -69,19 +68,11 @@ const SubscribeBookReviewScoller = ({
     );
   }
 
-  if (!hasFollowing) {
-    return (
-      <s.AltWrapper>
-        <s.BookReviewListAltText>관심 서재가 없습니다</s.BookReviewListAltText>
-      </s.AltWrapper>
-    );
-  }
-
   if (!bookReviewList.length) {
     return (
       <s.AltWrapper>
         <s.BookReviewListAltText>
-          관심 서재의 독후감이 없습니다
+          관심 서재 독후감이 없습니다
         </s.BookReviewListAltText>
       </s.AltWrapper>
     );

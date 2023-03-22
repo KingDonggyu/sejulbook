@@ -6,6 +6,7 @@ import {
   getBookReview,
   getBookReviewList,
   getDraftSavedList,
+  getFollowingBookReviewList,
   getMostLikedBookReviewList,
 } from '../api/bookReview';
 import { getCategories } from '../api/category';
@@ -17,6 +18,14 @@ export const getMostLikedBookReviewListQuery: Query = {
   queryKey: [`${BASE_QUERY_KEY}_getMostLikedBookReviewListQuery`],
   queryFn: () => getMostLikedBookReviewList(),
 };
+
+export const getFollowingBookReviewListQuery = (userId?: UserId): Query => ({
+  queryKey: [`${BASE_QUERY_KEY}_getFollowingBookReviewListQuery`, userId],
+  queryFn: () => userId && getFollowingBookReviewList(userId),
+  options: {
+    enabled: !!userId,
+  },
+});
 
 export const getBookReviewListQuery = (userId: UserId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getBookReviewListQuery`, userId],
