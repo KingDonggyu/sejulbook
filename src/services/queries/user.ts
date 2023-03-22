@@ -1,6 +1,6 @@
 import { signOut } from 'next-auth/react';
-import { getUser } from '@/services/api/user';
-import { UserId } from '@/types/features/user';
+import { getFollowUserList, getUser } from '@/services/api/user';
+import { FollowUserListRequst, UserId } from '@/types/features/user';
 import Query from '@/types/query';
 
 const BASE_QUERY_KEY = 'user';
@@ -17,4 +17,18 @@ export const getUserQuery = (userId?: UserId, onError?: () => void): Query => ({
       }
     },
   },
+});
+
+export const getFollowingUserListInfinityQuery = ({
+  userId,
+}: Pick<FollowUserListRequst, 'userId'>): Query => ({
+  queryKey: [`${BASE_QUERY_KEY}_getFollowingUserListInfinityQuery`, userId],
+  queryFn: () => getFollowUserList({ userId, isFollowing: true }),
+});
+
+export const getFollowerUserListInfinityQuery = ({
+  userId,
+}: Pick<FollowUserListRequst, 'userId'>): Query => ({
+  queryKey: [`${BASE_QUERY_KEY}_getFollowerUserListInfinityQuery`, userId],
+  queryFn: () => getFollowUserList({ userId, isFollowing: false }),
 });

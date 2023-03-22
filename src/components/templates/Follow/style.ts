@@ -13,7 +13,7 @@ export const Title = styled.h1`
   line-height: 1.5;
   text-align: center;
   margin-top: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-bottom: 45px;
   border-bottom: 1px solid ${({ theme }) => theme.COLOR.PRIMARY};
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};

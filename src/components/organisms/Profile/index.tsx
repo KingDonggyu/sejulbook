@@ -34,13 +34,13 @@ const Profile = ({
           <em>{bookReviewCount}</em>
         </s.DatailItem>
         <s.DatailItem>
-          <Link href={Route.FOLLOWER}>
+          <Link href={`/${userId}${Route.FOLLOWER}`}>
             <span>구독자</span>
             <em>{followerCount}</em>
           </Link>
         </s.DatailItem>
         <s.DatailItem>
-          <Link href={Route.FOLLOWING}>
+          <Link href={`/${userId}${Route.FOLLOWING}`}>
             <span>관심서재</span>
             <em>{followingCount}</em>
           </Link>

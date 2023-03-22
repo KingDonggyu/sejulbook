@@ -18,8 +18,8 @@ export const Banner = styled.div`
   padding-top: ${({ theme }) => theme.HEADERBAR_HEIGHT + 60}px;
   background: ${({ theme }) => theme.COLOR.PRIMARY};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    padding: 50px 0 50px 15%;
-    padding-top: ${({ theme }) => theme.HEADERBAR_HEIGHT + 50}px;
+    padding: 30px 0 30px 15%;
+    padding-top: ${({ theme }) => theme.HEADERBAR_HEIGHT + 30}px;
   }
 `;
 

@@ -42,17 +42,17 @@ const followService = {
     myUserId?: UserId;
   }): Promise<HttpResponse<FollowInfo>> => {
     const followerCount = await followModel.getFollowerCount({
-      follower_id: targetUserId,
+      following_id: targetUserId,
     });
 
     const followingCount = await followModel.getFollowingCount({
-      following_id: targetUserId,
+      follower_id: targetUserId,
     });
 
     const isFollow = myUserId
       ? await followModel.getIsFollow({
-          follower_id: targetUserId,
-          following_id: myUserId,
+          follower_id: myUserId,
+          following_id: targetUserId,
         })
       : false;
 
