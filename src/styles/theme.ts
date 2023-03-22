@@ -31,14 +31,13 @@ const fontSize = {
   SMALL: '1.2rem',
   MEDIUM: '1.4rem',
   LARGE: '1.6rem',
-  EXTRA_LARGE: '1.8rem',
+  EXTRA_LARGE: '2rem',
   DISPLAY: '2.4rem',
 };
 
 const fontWeight = {
   LIGHT: 300,
-  NORMAL: 400,
-  BOLD: 500,
+  BOLD: 400,
   MYEONGJO_BOLD: 700,
 };
 

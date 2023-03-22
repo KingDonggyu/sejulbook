@@ -36,7 +36,7 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 10px;
+  gap: 13px;
   & > button,
   & > * > button {
     padding: 5px 10px;

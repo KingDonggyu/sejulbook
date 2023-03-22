@@ -1,10 +1,12 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
+import { css, Theme } from '@emotion/react';
 import { GiPencil } from '@react-icons/all-files/gi/GiPencil';
 import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
 import Route from '@/constants/routes';
 import { BookReivewList, BookReviewSummary } from '@/types/features/bookReview';
 import convert1DArrayTo2DArray from '@/utils/convert1DArrayTo2DArray';
+import { iconButtonStyle } from '@/styles/common';
 import BookReviewItem from '../BookReivewItem';
 import * as s from './style';
 
@@ -14,7 +16,14 @@ interface BookshelfProps {
 }
 
 const WriteBookReviewItem = () => (
-  <Link href={Route.NEWBOOK_SEARCH} css={s.wrtieBookReviewButtonStyle}>
+  <Link
+    href={Route.NEWBOOK_SEARCH}
+    css={(theme: Theme) => css`
+      ${s.wrtieBookReviewButtonStyle(theme)}
+      ${iconButtonStyle}
+    `}
+  >
+    독후감 쓰기
     <GiPencil size={40} />
     <AiOutlinePlus size={20} />
   </Link>
