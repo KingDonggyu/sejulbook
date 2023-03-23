@@ -56,7 +56,7 @@ const CommentItem = ({
   return (
     <s.CommentWrapper>
       <s.CommentInfo>
-        <Link href={`${Route.LIBRARY}/${commenterId}`}>
+        <Link href={`/${commenterId}${Route.LIBRARY}`}>
           {commenter && commenter.name}
         </Link>
         <time>{formatDateToKorean(createdAt)}</time>

@@ -53,7 +53,7 @@ const BookreviewPage = () => {
     bookReviewId,
     onSuccess: () => {
       if (userId) {
-        router.replace(`${Route.LIBRARY}/${userId}`);
+        router.replace(`/${userId}${Route.LIBRARY}`);
         return;
       }
       router.replace(Route.HOME);

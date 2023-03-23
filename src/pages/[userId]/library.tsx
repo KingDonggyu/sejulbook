@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
 import { getServerSession } from 'next-auth/next';
 import { dehydrate } from '@tanstack/react-query';
 
@@ -20,13 +19,11 @@ import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscribeToggleButton from '@/components/organisms/SubscribeToggleButton';
 import { getFollowInfoQuery } from '@/services/queries/follow';
+import { UserId } from '@/types/features/user';
 import { BookReivewList } from '@/types/features/bookReview';
 import { authOptions } from '../api/auth/[...nextauth]';
 
-const LibraryPage = () => {
-  const router = useRouter();
-  const userId = Number(router.query.id);
-
+const LibraryPage = ({ userId }: { userId: UserId }) => {
   const user = useUser(userId);
   const { session } = useUserStatus();
   const initBookReviewList = useBookReviewList(userId);
@@ -86,12 +83,19 @@ const LibraryPage = () => {
   );
 };
 
+interface ExtendedGetServerSidePropsContext
+  extends Omit<GetServerSidePropsContext, 'query'> {
+  query: {
+    userId: string;
+  };
+}
+
 export const getServerSideProps = async ({
   req,
   res,
   query,
-}: GetServerSidePropsContext) => {
-  const userId = Number(query.id);
+}: ExtendedGetServerSidePropsContext) => {
+  const userId = Number(query.userId);
   const session = await getServerSession(req, res, authOptions);
   const myId = session ? session.id || undefined : undefined;
 
@@ -102,7 +106,7 @@ export const getServerSideProps = async ({
   ]);
 
   return {
-    props: { dehydratedState: dehydrate(queryClient) },
+    props: { dehydratedState: dehydrate(queryClient), userId },
   };
 };
 

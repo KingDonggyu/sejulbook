@@ -24,7 +24,7 @@ const UserList = ({ userList, fetchMoreUserList }: UserListProps) => {
       {userList.map(({ id, name, introduce, isFollow }) => (
         <s.UserItem key={id}>
           <s.ProfileWrapper>
-            <Link href={`${Route.LIBRARY}/${id}`}>
+            <Link href={`/${id}${Route.LIBRARY}`}>
               <s.Name>{name}</s.Name>
             </Link>
             {!!introduce && <s.Introduce>{introduce}</s.Introduce>}
