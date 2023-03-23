@@ -1,9 +1,9 @@
 import query from 'server/database/query';
 import LikeEntity from './like.entity';
 
-const TABLE_NAME = 'likes';
+export const TABLE_NAME = 'likes';
 
-enum Column {
+export enum Column {
   ID = 'id',
   BOOKREVIEW_ID = 'sejulbook_id',
   LIKER_ID = 'liker_id',

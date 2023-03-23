@@ -1,9 +1,12 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import Thumbnail, { ThumbnailProps } from '@/components/atoms/Thumbnail';
-import { Sejul } from '@/types/features/bookReview';
+import { BookReviewId, Sejul } from '@/types/features/bookReview';
+import Route from '@/constants/routes';
 import * as s from './style';
 
 type SejulThumbnailProps = {
+  bookReviewId: BookReviewId;
   sejul: Sejul;
   defaultFilter?: string;
   isHiddenChildren?: boolean;
@@ -11,6 +14,7 @@ type SejulThumbnailProps = {
 } & ThumbnailProps;
 
 const SejulThumbnail = ({
+  bookReviewId,
   sejul,
   children,
   defaultFilter = 'none',
@@ -41,14 +45,16 @@ const SejulThumbnail = ({
   }, [defaultFilter]);
 
   return (
-    <s.ThumnailWrapper
-      onMouseEnter={handleMouseEnterThumbnail}
-      onMouseLeave={handleMouseLeaveThumbnail}
-    >
-      <Thumbnail ref={thumbnailRef} {...thumbnailProps} />
-      {isShowSejul && <s.SejulBookReview>{sejul}</s.SejulBookReview>}
-      {isHiddenChildren ? !isShowSejul && children : children}
-    </s.ThumnailWrapper>
+    <Link href={`${Route.BOOKREVIEW}/${bookReviewId}`}>
+      <s.ThumnailWrapper
+        onMouseEnter={handleMouseEnterThumbnail}
+        onMouseLeave={handleMouseLeaveThumbnail}
+      >
+        <Thumbnail ref={thumbnailRef} {...thumbnailProps} />
+        {isShowSejul && <s.SejulBookReview>{sejul}</s.SejulBookReview>}
+        {isHiddenChildren ? !isShowSejul && children : children}
+      </s.ThumnailWrapper>
+    </Link>
   );
 };
 
