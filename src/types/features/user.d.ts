@@ -32,6 +32,7 @@ export interface FollowUser extends User {
 }
 
 export interface FollowUserListRequst {
-  userId: UserId;
-  pageParams?: number | null;
+  myUserId?: UserId;
+  targetUserId: UserId;
+  pageParam?: number | null;
 }

@@ -7,11 +7,12 @@ interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
 }
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  const { userId, pageParams = null } = req.query;
+  const { myUserId, targetUserId, pageParam = null } = req.query;
 
   const result = await userService.getFollowUserList({
-    id: userId,
-    maxFollowId: pageParams,
+    myUserId,
+    targetUserId,
+    maxFollowId: pageParam,
     isFollowing: true,
   });
 

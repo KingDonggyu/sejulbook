@@ -4,35 +4,43 @@ import {
   getFollowerUserListInfinityQuery,
   getFollowingUserListInfinityQuery,
 } from '@/services/queries/user';
+import useUserStatus from '@/hooks/useUserStatus';
 
 const useFollowUserList = ({
-  userId,
+  targetUserId,
   isFollowing,
-}: Pick<FollowUserListRequst, 'userId'> & {
+}: Pick<FollowUserListRequst, 'targetUserId'> & {
   isFollowing: boolean;
 }) => {
-  const getQuery = isFollowing
-    ? getFollowingUserListInfinityQuery
-    : getFollowerUserListInfinityQuery;
+  const { session } = useUserStatus();
+  const myUserId = session ? session.id || undefined : undefined;
 
-  const { data, fetchNextPage } = useInfiniteQuery<FollowUser[]>({
-    ...getQuery({ userId }),
+  const query = isFollowing
+    ? getFollowingUserListInfinityQuery({ myUserId, targetUserId })
+    : getFollowerUserListInfinityQuery({ myUserId, targetUserId });
+
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
+    FollowUser[]
+  >({
+    ...query,
     options: {
       getNextPageParam: (lastPage) => {
         const page = lastPage as FollowUser[];
 
-        if (!page.length) {
-          return null;
+        if (!page || !page.length) {
+          return undefined;
         }
 
-        return page[0].followId;
+        return page[page.length - 1].followId;
       },
     },
   });
 
   return {
-    followUserList: data,
+    followUserList: myUserId ? data?.filter((d) => d) : undefined,
     refetchNextFollowUserList: fetchNextPage,
+    hasNextPage,
+    isFetching,
   };
 };
 

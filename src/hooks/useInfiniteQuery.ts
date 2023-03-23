@@ -1,28 +1,25 @@
-import {
-  useInfiniteQuery as useInfiniteQueryOrigin,
-  UseInfiniteQueryOptions,
-} from '@tanstack/react-query';
-import Query from '@/types/query';
-
-interface InfiniteQuery extends Omit<Query, 'options'> {
-  options: UseInfiniteQueryOptions;
-}
+import { useInfiniteQuery as useInfiniteQueryOrigin } from '@tanstack/react-query';
+import { InfiniteQuery } from '@/types/query';
+import { useMemo } from 'react';
 
 const useInfiniteQuery = <T>({ queryKey, queryFn, options }: InfiniteQuery) => {
   const result = useInfiniteQueryOrigin({
     queryKey,
-    queryFn: () => queryFn(),
-    refetchOnMount: true,
+    queryFn: ({ pageParam }) => queryFn({ pageParam }),
     ...options,
   });
 
-  const data = result.data?.pages
-    ? result.data.pages.flatMap((page) => page)
-    : undefined;
+  const data = useMemo(
+    () =>
+      result.data?.pages
+        ? (result.data.pages.flatMap((page) => page) as T)
+        : undefined,
+    [result.data],
+  );
 
   return {
     ...result,
-    data: result.data ? (data as T) : undefined,
+    data,
   };
 };
 

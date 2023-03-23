@@ -120,7 +120,8 @@ const userModel = {
         inner join ${FOLLOW_TABLE_NAME} as F
          on U.${Column.ID} = F.${FollowColumn.FOLLOWER_ID}
       where F.${FollowColumn.FOLLOWING_ID} = ${id} and F.${FollowColumn.ID} < ${maxFollowId}
-      limit 20;
+      order by F.${FollowColumn.ID} desc
+      limit 10;
     `;
 
     const result = await query<FollowUser[]>(sql);
@@ -143,7 +144,8 @@ const userModel = {
         inner join ${FOLLOW_TABLE_NAME} as F
          on U.${Column.ID} = F.${FollowColumn.FOLLOWING_ID}
       where F.${FollowColumn.FOLLOWER_ID} = ${id} and F.${FollowColumn.ID} < ${maxFollowId}
-      limit 20;
+      order by F.${FollowColumn.ID} desc
+      limit 10;
     `;
 
     const result = await query<FollowUser[]>(sql);

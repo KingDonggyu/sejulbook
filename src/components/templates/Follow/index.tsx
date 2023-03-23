@@ -12,11 +12,11 @@ const Follow = ({ isFollowing, myName, userCount, userList }: FollowProps) => (
   <s.Wrapper>
     {isFollowing ? (
       <s.Title>
-        <span>{myName}</span>님이 구독하는 <span>{userCount}</span>서재
+        <span>{myName}</span>님이 구독하는 서재 <span>{userCount}</span>
       </s.Title>
     ) : (
       <s.Title>
-        <span>{myName}</span>의 서재를 구독하는 <span>{userCount}</span>명
+        <span>{myName}</span>의 서재를 구독하는 사람 <span>{userCount}</span>
       </s.Title>
     )}
     {userList}

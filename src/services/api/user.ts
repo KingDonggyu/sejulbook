@@ -69,15 +69,16 @@ export const updateUser = async ({ id, name, introduce }: User) => {
 };
 
 export const getFollowUserList = async ({
-  userId,
-  pageParams,
+  myUserId,
+  targetUserId,
   isFollowing,
+  pageParam = null,
 }: FollowUserListRequst & { isFollowing: boolean }) => {
   try {
     const extraPath = isFollowing ? 'following' : 'follower';
     const response = await get<HttpResponse<FollowUser[]>>(
       `${API_URL}/list/${extraPath}`,
-      { userId, pageParams },
+      { myUserId, targetUserId, pageParam },
     );
 
     if (response.error) {

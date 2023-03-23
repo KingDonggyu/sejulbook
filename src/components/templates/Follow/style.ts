@@ -12,12 +12,9 @@ export const Wrapper = styled.div`
 export const Title = styled.h1`
   line-height: 1.5;
   text-align: center;
-  margin-top: 40px;
-  margin-bottom: 10px;
-  padding-bottom: 45px;
-  border-bottom: 1px solid ${({ theme }) => theme.COLOR.PRIMARY};
+  padding: 40px 0;
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
-  & > span {
+  & > span:first-of-type {
     font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
   }
   & > span:last-of-type {

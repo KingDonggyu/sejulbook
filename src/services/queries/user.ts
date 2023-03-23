@@ -1,7 +1,7 @@
 import { signOut } from 'next-auth/react';
 import { getFollowUserList, getUser } from '@/services/api/user';
 import { FollowUserListRequst, UserId } from '@/types/features/user';
-import Query from '@/types/query';
+import Query, { InfiniteQuery } from '@/types/query';
 
 const BASE_QUERY_KEY = 'user';
 
@@ -20,15 +20,35 @@ export const getUserQuery = (userId?: UserId, onError?: () => void): Query => ({
 });
 
 export const getFollowingUserListInfinityQuery = ({
-  userId,
-}: Pick<FollowUserListRequst, 'userId'>): Query => ({
-  queryKey: [`${BASE_QUERY_KEY}_getFollowingUserListInfinityQuery`, userId],
-  queryFn: () => getFollowUserList({ userId, isFollowing: true }),
+  myUserId,
+  targetUserId,
+}: Omit<FollowUserListRequst, 'pageParam'>): InfiniteQuery => ({
+  queryKey: [
+    `${BASE_QUERY_KEY}_getFollowingUserListInfinityQuery`,
+    targetUserId,
+  ],
+  queryFn: ({ pageParam }: Pick<FollowUserListRequst, 'pageParam'>) =>
+    getFollowUserList({
+      pageParam,
+      myUserId,
+      targetUserId,
+      isFollowing: true,
+    }),
 });
 
 export const getFollowerUserListInfinityQuery = ({
-  userId,
-}: Pick<FollowUserListRequst, 'userId'>): Query => ({
-  queryKey: [`${BASE_QUERY_KEY}_getFollowerUserListInfinityQuery`, userId],
-  queryFn: () => getFollowUserList({ userId, isFollowing: false }),
+  myUserId,
+  targetUserId,
+}: Omit<FollowUserListRequst, 'pageParam'>): InfiniteQuery => ({
+  queryKey: [
+    `${BASE_QUERY_KEY}_getFollowerUserListInfinityQuery`,
+    targetUserId,
+  ],
+  queryFn: ({ pageParam }: Pick<FollowUserListRequst, 'pageParam'>) =>
+    getFollowUserList({
+      pageParam,
+      myUserId,
+      targetUserId,
+      isFollowing: false,
+    }),
 });

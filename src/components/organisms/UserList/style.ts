@@ -32,6 +32,10 @@ export const Introduce = styled.h3`
   white-space: nowrap;
 `;
 
+export const IntersectTarget = styled.div`
+  height: 1px;
+`;
+
 export const buttonStyle = css`
   width: 70px;
   min-width: 70px;
