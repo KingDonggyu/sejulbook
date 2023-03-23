@@ -1,17 +1,25 @@
 import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
 import { userError } from 'server/constants/message';
-import UserDTO from './user.dto';
+import UserDTO, { UserId } from './user.dto';
 import userModel from './user.model';
 import UserGuard from './user.guard';
+import { FollowId } from '../follow/follow.dto';
+import followModel from '../follow/follow.model';
 
-type UserId = Pick<UserDTO, 'id'>;
 type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
+
+interface FollowUser {
+  myUserId?: UserId;
+  targetUserId: UserId;
+  isFollowing: boolean;
+  maxFollowId: FollowId | null;
+}
 
 const userService = {
   getUserId: async ({
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<
-    HttpSuccess<UserId | { id: null }> | HttpFailed
+    HttpSuccess<Pick<UserDTO, 'id'> | { id: null }> | HttpFailed
   > => {
     const result = await userModel.getUserId({ sub });
 
@@ -23,7 +31,7 @@ const userService = {
 
   getUserById: async ({
     id,
-  }: UserId): Promise<HttpSuccess<User> | HttpFailed> => {
+  }: Pick<UserDTO, 'id'>): Promise<HttpSuccess<User> | HttpFailed> => {
     const userGuard = new UserGuard({ id });
     const guardResult = userGuard.checkUserNotFound();
 
@@ -129,6 +137,69 @@ const userService = {
 
     await userModel.createUser({ ...user, nick: lowerCaseName });
     return { error: false, data: undefined };
+  },
+
+  getFollowUserList: async ({
+    myUserId,
+    targetUserId,
+    maxFollowId,
+    isFollowing,
+  }: FollowUser): Promise<
+    HttpResponse<(User & { followId: FollowId; isFollow: boolean })[]>
+  > => {
+    let followId = maxFollowId;
+
+    if (!maxFollowId) {
+      followId = isFollowing
+        ? await followModel.getMaxIdByFollowing({ follower_id: targetUserId })
+        : await followModel.getMaxIdByFollower({ following_id: targetUserId });
+
+      if (!followId) {
+        return { error: false, data: [] };
+      }
+
+      followId += 1;
+    }
+
+    if (!followId) {
+      return { error: false, data: [] };
+    }
+
+    const followUserList = isFollowing
+      ? await userModel.getFollowingUserList({
+          id: targetUserId,
+          maxFollowId: followId,
+        })
+      : await userModel.getFollowerUserList({
+          id: targetUserId,
+          maxFollowId: followId,
+        });
+
+    const promises = followUserList.map(
+      async ({ id: otherUserId, nick, introduce, follow_id }) => {
+        const isFollow = myUserId
+          ? await followModel.getIsFollow({
+              following_id: otherUserId,
+              follower_id: myUserId,
+            })
+          : false;
+
+        return {
+          introduce,
+          id: otherUserId,
+          name: nick,
+          followId: follow_id,
+          isFollow,
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+
+    return {
+      error: false,
+      data: data.sort((a, b) => b.followId - a.followId),
+    };
   },
 };
 

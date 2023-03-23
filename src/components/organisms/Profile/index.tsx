@@ -2,6 +2,7 @@ import Link from 'next/link';
 import useUser from '@/hooks/services/queries/useUser';
 import { UserId } from '@/types/features/user';
 import { FollowInfoResponse } from '@/types/features/follow';
+import Route from '@/constants/routes';
 import * as s from './style';
 
 interface ProfileProps extends Omit<FollowInfoResponse, 'isFollow'> {
@@ -33,13 +34,13 @@ const Profile = ({
           <em>{bookReviewCount}</em>
         </s.DatailItem>
         <s.DatailItem>
-          <Link href="/">
+          <Link href={`/${userId}${Route.FOLLOWER}`}>
             <span>구독자</span>
             <em>{followerCount}</em>
           </Link>
         </s.DatailItem>
         <s.DatailItem>
-          <Link href="/">
+          <Link href={`/${userId}${Route.FOLLOWING}`}>
             <span>관심서재</span>
             <em>{followingCount}</em>
           </Link>

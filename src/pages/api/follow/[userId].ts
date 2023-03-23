@@ -25,8 +25,8 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     });
   } else {
     result = await followService.unsubscribe({
-      followerId: userId,
-      followingId: req.query.myId,
+      followerId: req.query.myId,
+      followingId: userId,
     });
   }
 

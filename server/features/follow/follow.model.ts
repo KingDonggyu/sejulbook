@@ -4,6 +4,7 @@ import { FollowEntity } from './follow.entity';
 export const TABLE_NAME = 'follow';
 
 export enum Column {
+  ID = 'id',
   FOLLOWER_ID = 'follower_id',
   FOLLOWING_ID = 'following_id',
 }
@@ -24,6 +25,19 @@ const followModel = {
   },
 
   getFollowingCount: async ({
+    follower_id,
+  }: Pick<FollowEntity, 'follower_id'>) => {
+    const sql = `
+      select count(${Column.FOLLOWING_ID}) as count 
+      from ${TABLE_NAME}
+      where ${Column.FOLLOWER_ID} = ${follower_id}
+    `;
+
+    const [result] = await query<{ count: number }[]>(sql);
+    return result.count;
+  },
+
+  getFollowerCount: async ({
     following_id,
   }: Pick<FollowEntity, 'following_id'>) => {
     const sql = `
@@ -36,17 +50,30 @@ const followModel = {
     return result.count;
   },
 
-  getFollowerCount: async ({
+  getMaxIdByFollowing: async ({
     follower_id,
   }: Pick<FollowEntity, 'follower_id'>) => {
     const sql = `
-      select count(${Column.FOLLOWING_ID}) as count 
+      select max(${Column.ID}) as id
       from ${TABLE_NAME}
       where ${Column.FOLLOWER_ID} = ${follower_id}
     `;
 
-    const [result] = await query<{ count: number }[]>(sql);
-    return result.count;
+    const result = await query<Pick<FollowEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
+  },
+
+  getMaxIdByFollower: async ({
+    following_id,
+  }: Pick<FollowEntity, 'following_id'>) => {
+    const sql = `
+      select max(${Column.ID}) as id 
+      from ${TABLE_NAME}
+      where ${Column.FOLLOWING_ID} = ${following_id}
+    `;
+
+    const result = await query<Pick<FollowEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
   },
 
   createFollow: async ({

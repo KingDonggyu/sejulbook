@@ -1,5 +1,14 @@
 import query from 'server/database/query';
+import { FollowId } from '../follow/follow.entity';
+import {
+  TABLE_NAME as FOLLOW_TABLE_NAME,
+  Column as FollowColumn,
+} from '../follow/follow.model';
 import UserEntity from './user.entity';
+
+interface FollowUser extends Pick<UserEntity, 'id' | 'nick' | 'introduce'> {
+  follow_id: FollowId;
+}
 
 const TABLE_NAME = 'user';
 
@@ -93,6 +102,54 @@ const userModel = {
     );`;
 
     await query(sql);
+  },
+
+  getFollowerUserList: async ({
+    id,
+    maxFollowId,
+  }: Pick<UserEntity, 'id'> & {
+    maxFollowId: FollowId;
+  }) => {
+    const sql = `
+      select 
+        F.${FollowColumn.ID} as follow_id, 
+        U.${Column.ID}, 
+        ${Column.NICK},
+        ${Column.INTRODUCE}
+      from ${TABLE_NAME} as U
+        inner join ${FOLLOW_TABLE_NAME} as F
+         on U.${Column.ID} = F.${FollowColumn.FOLLOWER_ID}
+      where F.${FollowColumn.FOLLOWING_ID} = ${id} and F.${FollowColumn.ID} < ${maxFollowId}
+      order by F.${FollowColumn.ID} desc
+      limit 10;
+    `;
+
+    const result = await query<FollowUser[]>(sql);
+    return result;
+  },
+
+  getFollowingUserList: async ({
+    id,
+    maxFollowId,
+  }: Pick<UserEntity, 'id'> & {
+    maxFollowId: FollowId;
+  }) => {
+    const sql = `
+      select 
+        F.${FollowColumn.ID} as follow_id, 
+        U.${Column.ID}, 
+        ${Column.NICK},
+        ${Column.INTRODUCE}
+      from ${TABLE_NAME} as U
+        inner join ${FOLLOW_TABLE_NAME} as F
+         on U.${Column.ID} = F.${FollowColumn.FOLLOWING_ID}
+      where F.${FollowColumn.FOLLOWER_ID} = ${id} and F.${FollowColumn.ID} < ${maxFollowId}
+      order by F.${FollowColumn.ID} desc
+      limit 10;
+    `;
+
+    const result = await query<FollowUser[]>(sql);
+    return result;
   },
 };
 

@@ -35,7 +35,7 @@ const NavDropdown = ({ userId }: { userId: UserId }) => {
         handleClose={handleClose}
       >
         <s.MenuItem>
-          <Link href={`${Route.LIBRARY}/${userId}`} onClick={handleClose}>
+          <Link href={`/${userId}${Route.LIBRARY}`} onClick={handleClose}>
             내 서재
           </Link>
         </s.MenuItem>

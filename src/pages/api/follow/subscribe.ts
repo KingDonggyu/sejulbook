@@ -11,8 +11,8 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const { targetUserId, myUserId } = req.body;
 
   const result = await followService.subscribe({
-    followerId: targetUserId,
-    followingId: myUserId,
+    followerId: myUserId,
+    followingId: targetUserId,
   });
 
   if (!result.error) {
