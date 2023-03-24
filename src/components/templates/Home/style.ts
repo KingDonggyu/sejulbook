@@ -67,24 +67,22 @@ export const SubTitle = styled.h2`
   }
 `;
 
-export const BookReviewListAltText = styled.div`
-  margin: 100px auto;
-  width: fit-content;
-  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
-  font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
-  font-family: ${({ theme }) => theme.FONT_FAMILY.notoSansKR};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    margin: 50px auto;
-    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  }
-`;
-
 export const BookReviewListLabel = styled(SubTitle)`
   padding-left: 10%;
   margin-bottom: 25px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
+  }
+`;
+
+export const SubscribeLabelWrapper = styled.div`
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  h2 {
+    margin: 0;
   }
 `;
 

@@ -7,11 +7,13 @@ import * as s from './style';
 interface HomeProps {
   mostLikedBookReviewScroller: ReactNode;
   subscribeBookReviewScroller: ReactNode;
+  subscriptionsPageLink: ReactNode;
 }
 
 const Home = ({
   mostLikedBookReviewScroller,
   subscribeBookReviewScroller,
+  subscriptionsPageLink,
 }: HomeProps) => (
   <s.Wrapper>
     <s.Banner>
@@ -30,9 +32,12 @@ const Home = ({
       {mostLikedBookReviewScroller}
     </div>
     <div>
-      <s.BookReviewListLabel>
-        당신의 마음을 얻은 <span>서재</span>
-      </s.BookReviewListLabel>
+      <s.SubscribeLabelWrapper>
+        <s.BookReviewListLabel>
+          당신의 마음을 얻은 <span>서재</span>
+        </s.BookReviewListLabel>
+        {subscriptionsPageLink}
+      </s.SubscribeLabelWrapper>
       {subscribeBookReviewScroller}
     </div>
   </s.Wrapper>

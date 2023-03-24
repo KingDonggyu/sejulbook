@@ -7,6 +7,9 @@ export const nickNameButtonStyle = (theme: Theme) => css`
 
 export const MenuItem = styled.li`
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  a:hover {
+    color: ${({ theme }) => theme.COLOR.PRIMARY};
+  }
 `;
 
 export const Nickname = styled.span`

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { IoIosArrowDown } from '@react-icons/all-files/io/IoIosArrowDown';
 import { IoIosArrowUp } from '@react-icons/all-files/io/IoIosArrowUp';
@@ -12,9 +14,17 @@ import { UserId } from '@/types/features/user';
 import * as s from './style';
 
 const NavDropdown = ({ userId }: { userId: UserId }) => {
+  const router = useRouter();
   const user = useUser(userId);
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
   const isShowMenu = Boolean(anchorEl);
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', handleClose);
+    return () => {
+      router.events.off('routeChangeStart', handleClose);
+    };
+  }, [handleClose, router.events]);
 
   if (!user) {
     return null;
@@ -35,14 +45,13 @@ const NavDropdown = ({ userId }: { userId: UserId }) => {
         handleClose={handleClose}
       >
         <s.MenuItem>
-          <Link href={`/${userId}${Route.LIBRARY}`} onClick={handleClose}>
-            내 서재
-          </Link>
+          <Link href={`/${userId}${Route.LIBRARY}`}>내 서재</Link>
         </s.MenuItem>
         <s.MenuItem>
-          <Link href={Route.NEWBOOK_SEARCH} onClick={handleClose}>
-            독후감 쓰기
-          </Link>
+          <Link href={Route.NEWBOOK_SEARCH}>독후감 쓰기</Link>
+        </s.MenuItem>
+        <s.MenuItem>
+          <Link href={`/${userId}/${Route.SUBSCRIPTIONS}`}>구독</Link>
         </s.MenuItem>
         <s.MenuItem>
           <AccountButton isLogin />

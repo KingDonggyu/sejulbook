@@ -37,7 +37,7 @@ const useFollowUserList = ({
   });
 
   return {
-    followUserList: myUserId ? data?.filter((d) => d) : undefined,
+    followUserList: data?.filter((d) => d),
     refetchNextFollowUserList: fetchNextPage,
     hasNextPage,
     isFetching,

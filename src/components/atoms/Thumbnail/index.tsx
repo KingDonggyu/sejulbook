@@ -17,6 +17,7 @@ const Thumbnail = forwardRef(
   ) =>
     src ? (
       <Image
+        priority
         ref={ref}
         src={src}
         width={width}

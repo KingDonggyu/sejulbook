@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   gap: 25px;
   & > img {
     width: 30px;
+    height: auto;
   }
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     width: 100%;

@@ -7,6 +7,7 @@ import { BsStar } from '@react-icons/all-files/bs/BsStar';
 import { BsStarFill } from '@react-icons/all-files/bs/BsStarFill';
 import { BsTrash } from '@react-icons/all-files/bs/BsTrash';
 import { BsPencil } from '@react-icons/all-files/bs/BsPencil';
+import { HiOutlineArrowRight } from '@react-icons/all-files/hi/HiOutlineArrowRight';
 
 import { StyleProps } from '@/types/style';
 import { lightTheme as theme } from '@/styles/theme';
@@ -55,4 +56,8 @@ export const DeleteIcon = ({ size, color, ...styleProps }: IconProps) => (
 
 export const EditIcon = ({ size, color, ...styleProps }: IconProps) => (
   <BsPencil size={size} color={color} {...styleProps} />
+);
+
+export const ArrowRightIcon = ({ size, color, ...styleProps }: IconProps) => (
+  <HiOutlineArrowRight size={size} color={color} {...styleProps} />
 );
