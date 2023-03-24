@@ -35,7 +35,7 @@ const TabPanel = ({
 );
 
 interface TabsProps extends StyleProps {
-  tabItems: { title: string; onClick: () => void }[];
+  tabItems: { title: string; onClick: (index: number) => void }[];
   small?: boolean;
   isShowBottomLine?: boolean;
   isShowDivider?: boolean;
@@ -57,7 +57,7 @@ const Tabs = ({
     nextSelectionStateList[index] = true;
 
     setSelectionStateList(nextSelectionStateList);
-    tabItems[index].onClick();
+    tabItems[index].onClick(index);
   };
 
   return (

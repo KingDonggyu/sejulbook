@@ -9,33 +9,12 @@ export const Title = styled.h2`
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
 `;
 
-export const Wrapper = styled.div`
-  max-height: 500px;
-  padding: 5px;
-  gap: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+export const categoryContainerStyle = css`
   overflow-y: auto;
   overflow-x: hidden;
-
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
-
-export const categoryItemStyle = (theme: Theme) => css`
-  width: 130px;
-  height: 50px;
-  color: ${theme.COLOR.TEXT};
-  font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
-  &:hover {
-    color: ${theme.COLOR.PRIMARY};
-    border-color: ${theme.COLOR.PRIMARY};
-  }
 `;
 
 export const categoryButtonStyle = (theme: Theme) => css`
-  /* padding: 6px 8px; */
   padding: 0;
   font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
 `;

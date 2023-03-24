@@ -15,6 +15,7 @@ export const TabPanel = styled.div<{
   padding: ${({ small }) => (small ? '10px 0' : '20px 0')};
 
   & > button {
+    width: 100%;
     margin: auto;
   }
 
@@ -36,6 +37,6 @@ export const TabPanelTitle = styled.div<{
   small: boolean;
 }>`
   font-size: ${({ theme, small }) =>
-    small ? theme.FONT_SIZE.MEDIUM : theme.FONT_SIZE.LARGE};
+    small ? theme.FONT_SIZE.SMALL : theme.FONT_SIZE.MEDIUM};
   ${({ theme, isSelected }) => isSelected && `color: ${theme.COLOR.PRIMARY}`};
 `;
