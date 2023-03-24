@@ -8,20 +8,20 @@ export const TabPanelWrapper = styled.div<{ count: number }>`
 
 export const TabPanel = styled.div<{
   isSelected: boolean;
-  isShowBottomLine: boolean;
+  isShowOutline: boolean;
   isShowDivider: boolean;
   small: boolean;
 }>`
-  padding: ${({ small }) => (small ? '10px 0' : '20px 0')};
+  padding: ${({ small }) => (small ? '5px 0' : '15px 0')};
 
   & > button {
     width: 100%;
     margin: auto;
   }
 
-  ${({ theme, isSelected, isShowBottomLine }) =>
-    isShowBottomLine &&
-    `  border-bottom: 2px solid ${
+  ${({ theme, isSelected, isShowOutline }) =>
+    isShowOutline &&
+    `  border: 1px solid ${
       isSelected ? theme.COLOR.PRIMARY : theme.COLOR.LINE
     }`};
 
@@ -36,7 +36,8 @@ export const TabPanelTitle = styled.div<{
   isSelected: boolean;
   small: boolean;
 }>`
+  ${({ theme, isSelected }) => isSelected && `color: ${theme.COLOR.PRIMARY}`};
+
   font-size: ${({ theme, small }) =>
     small ? theme.FONT_SIZE.SMALL : theme.FONT_SIZE.MEDIUM};
-  ${({ theme, isSelected }) => isSelected && `color: ${theme.COLOR.PRIMARY}`};
 `;

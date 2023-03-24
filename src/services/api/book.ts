@@ -1,13 +1,13 @@
 import { get } from '@/lib/HTTPClient';
-import { BookResponse, BookTitle } from '@/types/features/book';
+import { BookAuthor, BookResponse, BookTitle } from '@/types/features/book';
 
 const API_URL = '/api/books/title';
 const AUTH_TOKEN = `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}`;
 
-export const getBooksByTitle = async (title: BookTitle) => {
+export const getBooks = async (keyword: BookTitle | BookAuthor) => {
   const response = await get<BookResponse>(
     API_URL,
-    { query: title },
+    { query: keyword },
     { Authorization: AUTH_TOKEN },
   );
 

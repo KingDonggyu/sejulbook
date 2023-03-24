@@ -22,7 +22,7 @@ const TabPanel = ({
 }: TabPanelProps) => (
   <s.TabPanel
     isSelected={isSelected}
-    isShowBottomLine={isShowBottomLine}
+    isShowOutline={isShowBottomLine}
     isShowDivider={isShowDivider}
     small={small}
   >
@@ -37,7 +37,7 @@ const TabPanel = ({
 interface TabsProps extends StyleProps {
   tabItems: { title: string; onClick: (index: number) => void }[];
   small?: boolean;
-  isShowBottomLine?: boolean;
+  isShowOutline?: boolean;
   isShowDivider?: boolean;
   children: ReactNode;
 }
@@ -46,7 +46,7 @@ const Tabs = ({
   tabItems,
   children,
   small = false,
-  isShowBottomLine = true,
+  isShowOutline = true,
   isShowDivider = false,
   ...styleProps
 }: TabsProps) => {
@@ -61,13 +61,14 @@ const Tabs = ({
   };
 
   return (
-    <div {...styleProps}>
-      <s.TabPanelWrapper count={tabItems.length}>
+    <div>
+      <s.TabPanelWrapper count={tabItems.length} {...styleProps}>
         {tabItems.map(({ title }, index) => (
           <TabPanel
+            key={title}
             title={title}
             small={small}
-            isShowBottomLine={isShowBottomLine}
+            isShowBottomLine={isShowOutline}
             isShowDivider={isShowDivider}
             isSelected={selectionStateList[index]}
             onClick={() => handleClickTabPanel(index)}
