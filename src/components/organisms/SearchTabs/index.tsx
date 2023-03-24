@@ -23,9 +23,10 @@ const BookReviewSearchTabs = () => {
   return (
     <Tabs
       tabItems={bookReviewSearchItems}
-      isShowBottomLine={false}
+      isShowOutline={false}
       isShowDivider
       small
+      css={s.bookReviewSearchTabsStyle}
     >
       <s.TabContentWrapper>
         {selectedTab === 0 && (

@@ -1,11 +1,18 @@
-import { ChangeEvent, MouseEvent, ReactNode } from 'react';
+import {
+  ChangeEvent,
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useState,
+} from 'react';
 import { css, Theme } from '@emotion/react';
 import { SearchIcon } from '@/components/atoms/Icon';
 import TextField, { TextFieldProps } from '@/components/atoms/TextField';
 import Menu from '@/components/molecules/Menu';
 import useOpenClose from '@/hooks/useOpenClose';
+import useDebounce from '@/hooks/useDebounce';
 
-const MenuStyle = (theme: Theme) => css`
+const menuStyle = (theme: Theme) => css`
   max-height: 60vh;
   overflow-y: auto;
   & li {
@@ -18,15 +25,18 @@ const MenuStyle = (theme: Theme) => css`
   }
 `;
 
-type SearchBarProps = {
+interface SearchBarProps extends TextFieldProps {
   children: ReactNode;
-} & TextFieldProps;
+  onDebounce?: (value: string) => void;
+}
 
 const SearchBar = ({
   children,
   onChange,
+  onDebounce = () => {},
   ...textFieldProps
 }: SearchBarProps) => {
+  const [keyword, setKeyword] = useState('');
   const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   const handleClick = (e: MouseEvent<HTMLInputElement>) => {
@@ -35,25 +45,30 @@ const SearchBar = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     handleOpen(e);
+    setKeyword(e.target.value);
     if (onChange) {
       onChange(e);
     }
   };
 
+  const handleDebounce = useCallback(onDebounce, [onDebounce]);
+
+  useDebounce({ value: keyword, onDebounce: handleDebounce });
+
   return (
     <div>
       <TextField
-        {...textFieldProps}
         onClick={handleClick}
         onChange={handleChange}
         icon={<SearchIcon size={20} />}
+        {...textFieldProps}
       />
       {Boolean(children) && (
         <Menu
           full
           top={5}
           anchorEl={anchorEl}
-          css={MenuStyle}
+          css={menuStyle}
           handleClose={handleClose}
         >
           {children}
