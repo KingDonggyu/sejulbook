@@ -8,7 +8,7 @@ type ExtendedImageProps =
   | ImageProps
   | (Omit<ImageProps, 'src'> & { src: undefined });
 
-type ThumbnailProps = ExtendedImageProps & StyleProps;
+export type ThumbnailProps = ExtendedImageProps & StyleProps;
 
 const Thumbnail = forwardRef(
   (

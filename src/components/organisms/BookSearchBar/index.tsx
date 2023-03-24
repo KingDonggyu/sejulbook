@@ -1,32 +1,24 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
 import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import { TextFieldProps } from '@/components/atoms/TextField';
-import useDebounce from '@/hooks/useDebounce';
-import { getBooksByTitle } from '@/services/api/book';
+import { getBooks } from '@/services/api/book';
 import { Book } from '@/types/features/book';
 
 const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
-  const [keyword, setKeyword] = useState('');
   const [searchedList, setSearchedList] = useState<Book[]>([]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
-
-  const onDebounce = useCallback(async (value: string) => {
+  const handleDebounce = useCallback(async (value: string) => {
     if (!value) {
       setSearchedList([]);
       return;
     }
-    const { documents } = await getBooksByTitle(value);
+    const { documents } = await getBooks(value);
     setSearchedList(documents);
   }, []);
 
-  useDebounce({ value: keyword, onDebounce });
-
   return (
-    <SearchBar onChange={handleChange} {...textFieldProps}>
+    <SearchBar onDebounce={handleDebounce} {...textFieldProps}>
       {Boolean(searchedList.length) &&
         searchedList.map((book, i) => (
           // eslint-disable-next-line react/no-array-index-key

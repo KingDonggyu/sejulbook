@@ -31,14 +31,13 @@ const fontSize = {
   SMALL: '1.2rem',
   MEDIUM: '1.4rem',
   LARGE: '1.6rem',
-  EXTRA_LARGE: '1.8rem',
+  EXTRA_LARGE: '2rem',
   DISPLAY: '2.4rem',
 };
 
 const fontWeight = {
   LIGHT: 300,
-  NORMAL: 400,
-  BOLD: 500,
+  BOLD: 400,
   MYEONGJO_BOLD: 700,
 };
 
@@ -64,6 +63,8 @@ const thumbnail = {
     H: 90,
   },
 };
+
+const headerBarHeight = 50;
 
 const color = {
   LIGHT_GREEN: '#5AB890',
@@ -106,6 +107,7 @@ const commonTheme = {
   FONT_WEIGHT: fontWeight,
   FONT_FAMILY: fontFamily,
   TUMBNAIL: thumbnail,
+  HEADERBAR_HEIGHT: headerBarHeight,
 };
 
 const lightTheme = {

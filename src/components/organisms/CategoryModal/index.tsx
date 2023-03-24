@@ -1,16 +1,17 @@
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
-import { ButtonVariant, ColorVariant } from '@/constants';
+import { ColorVariant } from '@/constants';
 import modalStore from '@/stores/modalStore';
 import bookReviewStore from '@/stores/bookReviewStore';
 import { CategoryResponse } from '@/types/features/category';
 import useCategories from '@/hooks/services/queries/useCategories';
 import * as s from './style';
+import CategoryContainer from '../CategoryContainer';
 
-type CategoryModalProps = {
+interface CategoryModalProps {
   modalKey: string;
   handleClickCategory: (category: CategoryResponse) => void;
-};
+}
 
 const CategoryModal = ({
   modalKey,
@@ -22,20 +23,11 @@ const CategoryModal = ({
   return (
     <Modal modalKey={modalKey} {...modalProps}>
       <s.Title>카테고리</s.Title>
-      <s.Wrapper>
-        {categories &&
-          categories.map(({ id, category }) => (
-            <Button
-              key={category}
-              variant={ButtonVariant.OUTLINED}
-              color={ColorVariant.LINE}
-              css={s.categoryItemStyle}
-              onClick={() => handleClickCategory({ id, category })}
-            >
-              {category}
-            </Button>
-          ))}
-      </s.Wrapper>
+      <CategoryContainer
+        categories={categories}
+        handleClickCategory={handleClickCategory}
+        css={s.categoryContainerStyle}
+      />
     </Modal>
   );
 };

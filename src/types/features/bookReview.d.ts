@@ -69,6 +69,10 @@ export type BookReviewSummary = Pick<
   commentCount: number;
 };
 
+export type ExtendedBookReviewSummary = {
+  writer: UserName;
+} & Omit<BookReviewSummary, 'commentCount'>;
+
 export type BookReivewList = BookReviewSummary[];
 
 export type DraftSavedBookReview = Pick<

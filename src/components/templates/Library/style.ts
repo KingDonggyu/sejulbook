@@ -23,6 +23,7 @@ export const TopSectionWrapper = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   padding: 20px;
+  padding-bottom: 0;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     flex-direction: column;
     align-items: flex-start;
@@ -35,10 +36,15 @@ export const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 10px;
+  gap: 13px;
+  & > button,
+  & > * > button {
+    padding: 5px 10px;
+  }
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     width: 100%;
     flex-direction: row;
+    align-items: center;
     & > button:first-of-type {
       flex-grow: 1;
     }

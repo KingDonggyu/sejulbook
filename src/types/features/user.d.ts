@@ -25,3 +25,14 @@ export interface User {
   name: UserName;
   introduce: Introduce;
 }
+
+export interface FollowUser extends User {
+  followId: number;
+  isFollow: boolean;
+}
+
+export interface FollowUserListRequst {
+  myUserId?: UserId;
+  targetUserId: UserId;
+  pageParam?: number | null;
+}

@@ -1,17 +1,20 @@
+import Link from 'next/link';
 import { css } from '@emotion/react';
-import Button from '@/components/atoms/Button';
 import { SearchIcon } from '@/components/atoms/Icon';
+import Route from '@/constants/routes';
 import { iconButtonStyle } from '@/styles/common';
 
 const SearchButton = () => (
-  <Button
+  <Link
+    href={Route.SEARCH}
     css={css`
+      display: flex;
       ${iconButtonStyle};
     `}
   >
     검색
     <SearchIcon size={25} />
-  </Button>
+  </Link>
 );
 
 export default SearchButton;

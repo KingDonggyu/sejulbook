@@ -7,6 +7,7 @@ import LoginModal from '@/components/organisms/LoginModal';
 
 const loginButtonStyle = (theme: Theme) => css`
   font-size: ${theme.FONT_SIZE.SMALL};
+  border-color: ${theme.COLOR.SECOND_TEXT};
 `;
 
 const logoutButtonStyle = (theme: Theme) => css`
@@ -14,18 +15,27 @@ const logoutButtonStyle = (theme: Theme) => css`
   color: ${theme.COLOR.SECOND_TEXT};
 `;
 
-const LoginButton = ({ ...buttonProps }: ButtonProps) => (
+interface LoginButtonProps extends ButtonProps {
+  title?: string;
+  modalKey?: ModalKey;
+}
+
+export const LoginButton = ({
+  title = '시작하기',
+  modalKey = ModalKey.LOGIN,
+  ...buttonProps
+}: LoginButtonProps) => (
   <>
     <LoginModal.Button
-      modalKey={ModalKey.LOGIN}
+      modalKey={modalKey}
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.INHERIT}
       css={loginButtonStyle}
       {...buttonProps}
     >
-      시작하기
+      {title}
     </LoginModal.Button>
-    <LoginModal modalKey={ModalKey.LOGIN} />
+    <LoginModal modalKey={modalKey} />
   </>
 );
 

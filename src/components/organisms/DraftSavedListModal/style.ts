@@ -19,7 +19,7 @@ export const DraftSavedListLabel = styled.h2`
 
 export const DraftSavedCount = styled.span`
   margin-left: 10px;
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.NORMAL};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   & > span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
