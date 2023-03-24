@@ -15,7 +15,7 @@ export const Title = styled.h1`
   padding: 40px 0;
   margin-bottom: 10px;
   border-bottom: 1px solid ${({ theme }) => theme.COLOR.PRIMARY};
-  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
+  font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   & > span:first-of-type {
     font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
   }
