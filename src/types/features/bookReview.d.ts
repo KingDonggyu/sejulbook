@@ -80,6 +80,11 @@ export type DraftSavedBookReview = Pick<
   'id' | 'bookname' | 'createdAt'
 >;
 
+export type SearchedBookReview = Pick<
+  BookReviewResponse,
+  'id' | 'bookname' | 'authors' | 'thumbnail' | 'writer'
+>;
+
 /**
  * URL Query
  */

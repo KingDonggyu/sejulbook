@@ -1,22 +1,9 @@
 import styled from '@emotion/styled';
-import { searchedItemThumbnailStyle } from '@/styles/common';
 
 export const SearchedItemWrapper = styled.li`
   display: flex;
   gap: 10px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
-`;
-
-export const AltTumbnail = styled.div`
-  ${searchedItemThumbnailStyle}
-  width: 60px;
-  height: 90px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.COLOR.PRIMARY};
-  color: ${({ theme }) => theme.COLOR.PRIMARY};
 `;
 
 export const TextWrapper = styled.div`

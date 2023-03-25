@@ -10,6 +10,11 @@ import {
   Column as FollowColumn,
 } from '../follow/follow.model';
 
+type SearchedBook = Pick<
+  BookReviewEntity,
+  'id' | 'bookname' | 'writer' | 'thumbnail' | 'user_id'
+>;
+
 const TABLE_NAME = 'sejulbook';
 
 enum Column {
@@ -187,6 +192,28 @@ const bookReviewModel = {
   deleteBookReview: async ({ id }: Pick<BookReviewEntity, 'id'>) => {
     const sql = `delete from ${TABLE_NAME} where ${Column.ID} = ${id}`;
     await query(sql);
+  },
+
+  getBookReviewListByTitle: async ({
+    bookname,
+  }: Pick<BookReviewEntity, 'bookname'>) => {
+    const sql = `
+      select 
+        ${Column.ID}, 
+        ${Column.BOOK_NAME}, 
+        ${Column.WRITER}, 
+        ${Column.THUMBNAIL},
+        ${Column.USER_ID}
+      from ${TABLE_NAME}
+      where 
+        match(${Column.BOOK_NAME})
+        against("${bookname}*" in boolean mode) 
+      order by 1 
+      limit 10;
+    `;
+
+    const result = await query<SearchedBook[]>(sql);
+    return result;
   },
 };
 

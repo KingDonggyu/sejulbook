@@ -8,6 +8,7 @@ import {
   PublishRequest,
   BookReviewResponse,
   ExtendedBookReviewSummary,
+  SearchedBookReview,
 } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
@@ -269,5 +270,29 @@ export const deleteBookReview = async ({
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'DELETE_BOOKREVIEW_ERROR', message });
+  }
+};
+
+export const searchBookReviewsByTitle = async (query: string) => {
+  try {
+    const response = await get<HttpResponse<SearchedBookReview[]>>(
+      `${API_URL}/search/title`,
+      { query },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'SEARCH_BOOKREVIEWS_BY_TITLE_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'SEARCH_BOOKREVIEWS_BY_TITLE_ERROR',
+      message,
+    });
   }
 };

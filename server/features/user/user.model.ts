@@ -150,13 +150,13 @@ const userModel = {
     return result;
   },
 
-  getUserListByName: async (keyword: string) => {
+  getUserListByName: async ({ nick }: Pick<User, 'nick'>) => {
     const sql = `
       select ${Column.ID}, ${Column.NICK}, ${Column.INTRODUCE}
       from ${TABLE_NAME}
       where 
         match(${Column.NICK})
-        against("${keyword}*" in boolean mode)
+        against("${nick}*" in boolean mode)
       order by 1 
       limit 10
     `;

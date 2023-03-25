@@ -1,5 +1,5 @@
 import { bookReviewError, userError } from 'server/constants/message';
-import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
+import { HttpResponse } from 'server/types/http';
 
 import { Category } from '../category/category.dto';
 import { UserName } from '../user/user.dto';
@@ -16,6 +16,10 @@ import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
+
+type SearchedBook = {
+  writer: UserName;
+} & Pick<BookReviewDTO, 'id' | 'bookname' | 'authors' | 'thumbnail'>;
 
 type BookReviewSummary = Pick<
   BookReviewDTO,
@@ -103,7 +107,7 @@ const bookReviewService = {
   getBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<BookReviewSummary[]> | HttpFailed
+    HttpResponse<BookReviewSummary[]>
   > => {
     const bookReviewList = await bookReviewModel.getBookReviewList({
       user_id: userId,
@@ -137,7 +141,7 @@ const bookReviewService = {
   getDraftSavedList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<DraftSavedBookReview[]> | HttpFailed
+    HttpResponse<DraftSavedBookReview[]>
   > => {
     const bookReviewList = await bookReviewModel.getDraftSavedList({
       user_id: userId,
@@ -155,9 +159,7 @@ const bookReviewService = {
 
   getBookReivew: async ({
     id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<
-    HttpSuccess<PublishedBookReview> | HttpFailed
-  > => {
+  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<PublishedBookReview>> => {
     const bookReviewData = await bookReviewModel.getBookReivew({ id });
 
     if (!bookReviewData) {
@@ -194,7 +196,7 @@ const bookReviewService = {
 
   draftSaveBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+  ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const result =
       bookReviewGuard.checkEmptyBook() ||
@@ -247,7 +249,7 @@ const bookReviewService = {
 
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+  ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
 
@@ -277,15 +279,41 @@ const bookReviewService = {
 
   deletedBookReview: async ({
     id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<
-    HttpSuccess<undefined> | HttpFailed
-  > => {
+  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
     await commentModel.deleteComments({ sejulbook_id: id });
     await tagModel.deleteTags({ sejulbook_id: id });
     await likeModel.deleteAllLikes({ sejulbook_id: id });
     await bookReviewModel.deleteBookReview({ id });
 
     return { error: false, data: undefined };
+  },
+
+  searchBookReviewsByTitle: async ({
+    bookname,
+  }: Pick<BookReviewDTO, 'bookname'>): Promise<
+    HttpResponse<SearchedBook[]>
+  > => {
+    const bookReviewList = await bookReviewModel.getBookReviewListByTitle({
+      bookname,
+    });
+
+    const promises = bookReviewList.map(
+      async (bookRview): Promise<SearchedBook> => {
+        const writer = await userModel.getUserName({ id: bookRview.user_id });
+
+        return {
+          id: bookRview.id,
+          bookname: bookRview.bookname,
+          authors: bookRview.writer,
+          thumbnail: bookRview.thumbnail,
+          writer: writer || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+
+    return { error: false, data };
   },
 };
 

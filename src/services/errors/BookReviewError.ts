@@ -14,6 +14,7 @@ export type BookReviewErrorName =
   | 'DELETE_BOOKREVIEW_ERROR'
   | 'LIKE_ERROR'
   | 'UNLIKE_ERROR'
-  | 'CHECK_IS_LIKE_ERROR';
+  | 'CHECK_IS_LIKE_ERROR'
+  | 'SEARCH_BOOKREVIEWS_BY_TITLE_ERROR';
 
 export class BookReviewError extends ErrorBase<BookReviewErrorName> {}

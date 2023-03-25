@@ -1,4 +1,4 @@
-import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
+import { HttpResponse } from 'server/types/http';
 import { userError } from 'server/constants/message';
 import UserDTO, { UserId } from './user.dto';
 import userModel from './user.model';
@@ -19,7 +19,7 @@ const userService = {
   getUserId: async ({
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<
-    HttpSuccess<Pick<UserDTO, 'id'> | { id: null }> | HttpFailed
+    HttpResponse<Pick<UserDTO, 'id'> | { id: null }>
   > => {
     const result = await userModel.getUserId({ sub });
 
@@ -200,8 +200,10 @@ const userService = {
     };
   },
 
-  searchUsers: async (keyword: string): Promise<HttpResponse<User[]>> => {
-    const userList = await userModel.getUserListByName(keyword);
+  searchUsers: async ({
+    name,
+  }: Pick<User, 'name'>): Promise<HttpResponse<User[]>> => {
+    const userList = await userModel.getUserListByName({ nick: name });
 
     return {
       error: false,

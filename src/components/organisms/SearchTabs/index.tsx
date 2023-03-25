@@ -5,6 +5,7 @@ import useCategories from '@/hooks/services/queries/useCategories';
 import CategoryContainer from '../CategoryContainer';
 import * as s from './style';
 import UserSearchBar from '../UserSearchBar';
+import BookReviewSearchBar from '../BookReviewSearchBar';
 
 const BookReviewSearchTabs = () => {
   const categories = useCategories();
@@ -31,7 +32,7 @@ const BookReviewSearchTabs = () => {
     >
       <s.TabContentWrapper>
         {selectedTab === 0 && (
-          <SearchBar placeholder="책 제목을 입력해주세요.">{null}</SearchBar>
+          <BookReviewSearchBar placeholder="책 제목을 입력해주세요." />
         )}
         {selectedTab === 1 && (
           <SearchBar placeholder="책 저자를 입력해주세요.">{null}</SearchBar>
@@ -76,9 +77,7 @@ const SearchTabs = () => {
         {selectedTab === 0 ? (
           <BookReviewSearchTabs />
         ) : (
-          <UserSearchBar placeholder="서재 이름을 입력해주세요.">
-            {null}
-          </UserSearchBar>
+          <UserSearchBar placeholder="서재 이름을 입력해주세요." />
         )}
       </s.TabContentWrapper>
     </Tabs>
