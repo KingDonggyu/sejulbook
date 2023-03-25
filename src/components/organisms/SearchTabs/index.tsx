@@ -35,7 +35,10 @@ const BookReviewSearchTabs = () => {
           <BookReviewSearchBar placeholder="책 제목을 입력해주세요." />
         )}
         {selectedTab === 1 && (
-          <SearchBar placeholder="책 저자를 입력해주세요.">{null}</SearchBar>
+          <BookReviewSearchBar
+            placeholder="책 저자를 입력해주세요."
+            isTitle={false}
+          />
         )}
         {selectedTab === 2 && (
           <SearchBar placeholder="태그를 입력해주세요.">{null}</SearchBar>

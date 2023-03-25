@@ -21,9 +21,8 @@ const BookReviewSearchedItem = ({
         height={theme.TUMBNAIL.SMALL.H}
       />
       <s.TextWrapper>
-        <s.BookTitle>
-          <span>{bookname}</span> ({authors})
-        </s.BookTitle>
+        <s.BookTitle>{bookname}</s.BookTitle>
+        <s.Author>{authors}</s.Author>
         <s.Writer>
           <span>{writer}</span>의 세 줄
         </s.Writer>

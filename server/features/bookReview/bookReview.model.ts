@@ -215,6 +215,28 @@ const bookReviewModel = {
     const result = await query<SearchedBook[]>(sql);
     return result;
   },
+
+  getBookReviewListByAuthor: async ({
+    writer,
+  }: Pick<BookReviewEntity, 'writer'>) => {
+    const sql = `
+      select 
+        ${Column.ID}, 
+        ${Column.BOOK_NAME}, 
+        ${Column.WRITER}, 
+        ${Column.THUMBNAIL},
+        ${Column.USER_ID}
+      from ${TABLE_NAME}
+      where 
+        match(${Column.WRITER})
+        against("${writer}*" in boolean mode) 
+      order by 1 
+      limit 10;
+  `;
+
+    const result = await query<SearchedBook[]>(sql);
+    return result;
+  },
 };
 
 export default bookReviewModel;

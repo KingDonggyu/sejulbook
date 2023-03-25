@@ -2,8 +2,7 @@ import styled from '@emotion/styled';
 
 export const SearchedItemWrapper = styled.li`
   display: flex;
-  gap: 10px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+  gap: 15px;
 `;
 
 export const TextWrapper = styled.div`

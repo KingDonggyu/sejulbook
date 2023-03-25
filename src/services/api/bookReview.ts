@@ -273,10 +273,16 @@ export const deleteBookReview = async ({
   }
 };
 
-export const searchBookReviewsByTitle = async (query: string) => {
+export const searchBookReviews = async ({
+  query,
+  isTitle = true,
+}: {
+  query: string;
+  isTitle?: boolean;
+}) => {
   try {
     const response = await get<HttpResponse<SearchedBookReview[]>>(
-      `${API_URL}/search/title`,
+      `${API_URL}/search/${isTitle ? 'title' : 'author'}`,
       { query },
     );
 

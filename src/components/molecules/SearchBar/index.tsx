@@ -18,13 +18,14 @@ const menuStyle = (theme: Theme) => css`
 
   ul {
     padding: 0;
+    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
   }
 
   li {
     cursor: pointer;
     display: flex;
     gap: 10px;
-    padding: 20px;
+    padding: 15px;
   }
 
   li:hover {

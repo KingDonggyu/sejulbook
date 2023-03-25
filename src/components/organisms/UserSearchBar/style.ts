@@ -5,7 +5,7 @@ export const UserName = styled.div`
   padding-bottom: 5px;
   span {
     font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
-    font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   }
 `;
 

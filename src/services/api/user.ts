@@ -104,9 +104,9 @@ export const getFollowUserList = async ({
 
 export const searchUsers = async (query: string) => {
   try {
-    const response = await get<HttpResponse<User[]>>(
-      `${API_URL}/list/${query}`,
-    );
+    const response = await get<HttpResponse<User[]>>(`${API_URL}/search`, {
+      query,
+    });
 
     if (response.error) {
       throw new UserError({

@@ -315,6 +315,32 @@ const bookReviewService = {
 
     return { error: false, data };
   },
+
+  searchBookReviewsByAuthor: async ({
+    authors,
+  }: Pick<BookReviewDTO, 'authors'>): Promise<HttpResponse<SearchedBook[]>> => {
+    const bookReviewList = await bookReviewModel.getBookReviewListByAuthor({
+      writer: authors,
+    });
+
+    const promises = bookReviewList.map(
+      async (bookRview): Promise<SearchedBook> => {
+        const writer = await userModel.getUserName({ id: bookRview.user_id });
+
+        return {
+          id: bookRview.id,
+          bookname: bookRview.bookname,
+          authors: bookRview.writer,
+          thumbnail: bookRview.thumbnail,
+          writer: writer || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+
+    return { error: false, data };
+  },
 };
 
 export default bookReviewService;
