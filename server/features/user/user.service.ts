@@ -201,7 +201,7 @@ const userService = {
   },
 
   searchUsers: async (keyword: string): Promise<HttpResponse<User[]>> => {
-    const userList = await userModel.getSearchedUserList(keyword);
+    const userList = await userModel.getUserListByName(keyword);
 
     return {
       error: false,

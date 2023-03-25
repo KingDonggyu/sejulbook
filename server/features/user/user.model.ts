@@ -150,7 +150,7 @@ const userModel = {
     return result;
   },
 
-  getSearchedUserList: async (keyword: string) => {
+  getUserListByName: async (keyword: string) => {
     const sql = `
       select ${Column.ID}, ${Column.NICK}, ${Column.INTRODUCE}
       from ${TABLE_NAME}
