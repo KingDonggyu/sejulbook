@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const Wrapper = styled.div`
   margin: auto;
   padding: 0 50px;
-  max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET};
+  max-width: ${({ theme }) => theme.MAX_WIDTH.POST};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     padding: 0;
   }

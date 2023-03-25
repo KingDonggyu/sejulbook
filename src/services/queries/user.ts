@@ -19,6 +19,11 @@ export const getUserQuery = (userId?: UserId, onError?: () => void): Query => ({
   },
 });
 
+export const getSearchUsersQuery = (query: string): Query => ({
+  queryKey: [`${BASE_QUERY_KEY}_getSearchUsersQuery`, query],
+  queryFn: () => getSearchUsersQuery(query),
+});
+
 export const getFollowingUserListInfinityQuery = ({
   myUserId,
   targetUserId,

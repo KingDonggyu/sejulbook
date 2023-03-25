@@ -21,4 +21,8 @@ export const SejulBookReview = styled.div`
   height: 100%;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
+    display: none;
+  }
 `;

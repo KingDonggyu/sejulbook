@@ -4,6 +4,7 @@ import SearchBar from '@/components/molecules/SearchBar';
 import useCategories from '@/hooks/services/queries/useCategories';
 import CategoryContainer from '../CategoryContainer';
 import * as s from './style';
+import UserSearchBar from '../UserSearchBar';
 
 const BookReviewSearchTabs = () => {
   const categories = useCategories();
@@ -75,7 +76,9 @@ const SearchTabs = () => {
         {selectedTab === 0 ? (
           <BookReviewSearchTabs />
         ) : (
-          <SearchBar placeholder="서재 이름을 입력해주세요.">{null}</SearchBar>
+          <UserSearchBar placeholder="서재 이름을 입력해주세요.">
+            {null}
+          </UserSearchBar>
         )}
       </s.TabContentWrapper>
     </Tabs>

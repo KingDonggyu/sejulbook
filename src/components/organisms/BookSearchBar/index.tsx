@@ -22,7 +22,7 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
       {Boolean(searchedList.length) &&
         searchedList.map((book, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <BookSearchedItem.Newbook key={i} book={book} />
+          <BookSearchedItem key={i} book={book} />
         ))}
     </SearchBar>
   );

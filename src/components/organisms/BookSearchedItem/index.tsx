@@ -6,31 +6,7 @@ import Route from '@/constants/routes';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';
 
-interface BookSearchedItemProps {
-  book: Book;
-  handleClickSearchedItem: () => void;
-}
-
-const BookSearchedItem = ({
-  book,
-  handleClickSearchedItem,
-}: BookSearchedItemProps) => (
-  <s.SearchedItemWrapper onClick={handleClickSearchedItem}>
-    <Thumbnail
-      src={book.thumbnail}
-      alt={`${book.title} 표지 이미지`}
-      width={theme.TUMBNAIL.SMALL.W}
-      height={theme.TUMBNAIL.SMALL.H}
-    />
-    <s.TextWrapper>
-      <s.BookTitle>{book.title}</s.BookTitle>
-      <s.BookAuthors>{book.authors.join(', ')}</s.BookAuthors>
-      <s.BookPublisher>{book.publisher}</s.BookPublisher>
-    </s.TextWrapper>
-  </s.SearchedItemWrapper>
-);
-
-const NewbookSearchedItem = ({ book }: { book: Book }) => {
+const BookSearchedItem = ({ book }: { book: Book }) => {
   const router = useRouter();
   const { setNewbook } = useNewbookContext();
 
@@ -40,13 +16,20 @@ const NewbookSearchedItem = ({ book }: { book: Book }) => {
   };
 
   return (
-    <BookSearchedItem
-      book={book}
-      handleClickSearchedItem={handleClickSearchedItem}
-    />
+    <s.SearchedItemWrapper onClick={handleClickSearchedItem}>
+      <Thumbnail
+        src={book.thumbnail}
+        alt={`${book.title} 표지 이미지`}
+        width={theme.TUMBNAIL.SMALL.W}
+        height={theme.TUMBNAIL.SMALL.H}
+      />
+      <s.TextWrapper>
+        <s.BookTitle>{book.title}</s.BookTitle>
+        <s.BookAuthors>{book.authors.join(', ')}</s.BookAuthors>
+        <s.BookPublisher>{book.publisher}</s.BookPublisher>
+      </s.TextWrapper>
+    </s.SearchedItemWrapper>
   );
 };
-
-BookSearchedItem.Newbook = NewbookSearchedItem;
 
 export default BookSearchedItem;
