@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 
 export const TabPanelWrapper = styled.div<{ count: number }>`
   display: grid;
+  margin-bottom: 20px;
   grid-template-columns: ${({ count }) => `repeat(${count}, 1fr)`};
-  padding-bottom: 20px;
 `;
 
 export const TabPanel = styled.div<{

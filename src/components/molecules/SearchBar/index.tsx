@@ -15,12 +15,20 @@ import useDebounce from '@/hooks/useDebounce';
 const menuStyle = (theme: Theme) => css`
   max-height: 60vh;
   overflow-y: auto;
-  & li {
+
+  ul {
+    padding: 0;
+    font-family: ${theme.FONT_FAMILY.nanumMyeongjo};
+  }
+
+  li {
     cursor: pointer;
     display: flex;
     gap: 10px;
+    padding: 15px;
   }
-  & li:hover {
+
+  li:hover {
     background: ${theme.COLOR.HOVER};
   }
 `;
@@ -63,17 +71,15 @@ const SearchBar = ({
         icon={<SearchIcon size={20} />}
         {...textFieldProps}
       />
-      {Boolean(children) && (
-        <Menu
-          full
-          top={5}
-          anchorEl={anchorEl}
-          css={menuStyle}
-          handleClose={handleClose}
-        >
-          {children}
-        </Menu>
-      )}
+      <Menu
+        full
+        top={5}
+        anchorEl={anchorEl}
+        css={menuStyle}
+        handleClose={handleClose}
+      >
+        {children}
+      </Menu>
     </div>
   );
 };

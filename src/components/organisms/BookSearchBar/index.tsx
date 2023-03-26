@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import SearchBar from '@/components/molecules/SearchBar';
-import BookSearchedItem from '@/components/organisms/BookSearchedItem';
 import { TextFieldProps } from '@/components/atoms/TextField';
 import { getBooks } from '@/services/api/book';
 import { Book } from '@/types/features/book';
+import BookSearchedItem from './BookSearchedItem';
 
 const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   const [searchedList, setSearchedList] = useState<Book[]>([]);
@@ -22,7 +22,7 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
       {Boolean(searchedList.length) &&
         searchedList.map((book, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <BookSearchedItem.Newbook key={i} book={book} />
+          <BookSearchedItem key={i} book={book} />
         ))}
     </SearchBar>
   );

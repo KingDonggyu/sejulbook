@@ -1,5 +1,5 @@
 import { bookReviewError, userError } from 'server/constants/message';
-import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
+import { HttpResponse } from 'server/types/http';
 
 import { Category } from '../category/category.dto';
 import { UserName } from '../user/user.dto';
@@ -103,7 +103,7 @@ const bookReviewService = {
   getBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<BookReviewSummary[]> | HttpFailed
+    HttpResponse<BookReviewSummary[]>
   > => {
     const bookReviewList = await bookReviewModel.getBookReviewList({
       user_id: userId,
@@ -137,7 +137,7 @@ const bookReviewService = {
   getDraftSavedList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<DraftSavedBookReview[]> | HttpFailed
+    HttpResponse<DraftSavedBookReview[]>
   > => {
     const bookReviewList = await bookReviewModel.getDraftSavedList({
       user_id: userId,
@@ -155,9 +155,7 @@ const bookReviewService = {
 
   getBookReivew: async ({
     id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<
-    HttpSuccess<PublishedBookReview> | HttpFailed
-  > => {
+  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<PublishedBookReview>> => {
     const bookReviewData = await bookReviewModel.getBookReivew({ id });
 
     if (!bookReviewData) {
@@ -194,7 +192,7 @@ const bookReviewService = {
 
   draftSaveBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+  ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const result =
       bookReviewGuard.checkEmptyBook() ||
@@ -247,7 +245,7 @@ const bookReviewService = {
 
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+  ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
 
@@ -277,9 +275,7 @@ const bookReviewService = {
 
   deletedBookReview: async ({
     id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<
-    HttpSuccess<undefined> | HttpFailed
-  > => {
+  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
     await commentModel.deleteComments({ sejulbook_id: id });
     await tagModel.deleteTags({ sejulbook_id: id });
     await likeModel.deleteAllLikes({ sejulbook_id: id });
