@@ -1,6 +1,10 @@
 import query from 'server/database/query';
 import TagEntity from './tag.entity';
 
+interface SearchedTag extends Pick<TagEntity, 'tag'> {
+  count: number;
+}
+
 const TABLE_NAME = 'tag';
 
 enum Column {
@@ -37,6 +41,20 @@ const tagModel = {
     `;
 
     await query(sql);
+  },
+
+  getSearchedTags: async ({ tag }: Pick<TagEntity, 'tag'>) => {
+    const sql = `
+      select ${Column.TAG}, count(${Column.TAG}) as count
+      from ${TABLE_NAME} 
+      where 
+        match(${Column.TAG}) against("${tag}*" in boolean mode) 
+      group by ${TABLE_NAME} 
+      order by 1 limit 10;
+    `;
+
+    const result = await query<SearchedTag[]>(sql);
+    return result;
   },
 };
 

@@ -17,10 +17,6 @@ import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 
-type SearchedBook = {
-  writer: UserName;
-} & Pick<BookReviewDTO, 'id' | 'bookname' | 'authors' | 'thumbnail'>;
-
 type BookReviewSummary = Pick<
   BookReviewDTO,
   'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
@@ -286,60 +282,6 @@ const bookReviewService = {
     await bookReviewModel.deleteBookReview({ id });
 
     return { error: false, data: undefined };
-  },
-
-  searchBookReviewsByTitle: async ({
-    bookname,
-  }: Pick<BookReviewDTO, 'bookname'>): Promise<
-    HttpResponse<SearchedBook[]>
-  > => {
-    const bookReviewList = await bookReviewModel.getBookReviewListByTitle({
-      bookname,
-    });
-
-    const promises = bookReviewList.map(
-      async (bookRview): Promise<SearchedBook> => {
-        const writer = await userModel.getUserName({ id: bookRview.user_id });
-
-        return {
-          id: bookRview.id,
-          bookname: bookRview.bookname,
-          authors: bookRview.writer,
-          thumbnail: bookRview.thumbnail,
-          writer: writer || '',
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  searchBookReviewsByAuthor: async ({
-    authors,
-  }: Pick<BookReviewDTO, 'authors'>): Promise<HttpResponse<SearchedBook[]>> => {
-    const bookReviewList = await bookReviewModel.getBookReviewListByAuthor({
-      writer: authors,
-    });
-
-    const promises = bookReviewList.map(
-      async (bookRview): Promise<SearchedBook> => {
-        const writer = await userModel.getUserName({ id: bookRview.user_id });
-
-        return {
-          id: bookRview.id,
-          bookname: bookRview.bookname,
-          authors: bookRview.writer,
-          thumbnail: bookRview.thumbnail,
-          writer: writer || '',
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
   },
 };
 

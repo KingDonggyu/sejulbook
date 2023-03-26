@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Tabs from '@/components/molecules/Tabs';
-import SearchBar from '@/components/molecules/SearchBar';
 import useCategories from '@/hooks/services/queries/useCategories';
 import CategoryContainer from '../CategoryContainer';
-import * as s from './style';
 import UserSearchBar from '../UserSearchBar';
-import BookReviewSearchBar from '../BookReviewSearchBar';
+import BookSearchBar from '../BookSearchBar';
+import * as s from './style';
+import TagSearchBar from '../TagSearchBar';
 
 const BookReviewSearchTabs = () => {
   const categories = useCategories();
@@ -16,8 +16,7 @@ const BookReviewSearchTabs = () => {
   };
 
   const bookReviewSearchItems = [
-    { title: '제목', onClick: handleSelectTab },
-    { title: '저자', onClick: handleSelectTab },
+    { title: '책', onClick: handleSelectTab },
     { title: '태그', onClick: handleSelectTab },
     { title: '카테고리', onClick: handleSelectTab },
   ];
@@ -32,18 +31,12 @@ const BookReviewSearchTabs = () => {
     >
       <s.TabContentWrapper>
         {selectedTab === 0 && (
-          <BookReviewSearchBar placeholder="책 제목을 입력해주세요." />
+          <BookSearchBar placeholder="제목 또는 저자를 입력해주세요." />
         )}
         {selectedTab === 1 && (
-          <BookReviewSearchBar
-            placeholder="책 저자를 입력해주세요."
-            isTitle={false}
-          />
+          <TagSearchBar placeholder="태그를 입력해주세요." />
         )}
         {selectedTab === 2 && (
-          <SearchBar placeholder="태그를 입력해주세요.">{null}</SearchBar>
-        )}
-        {selectedTab === 3 && (
           <s.CategoryWrapper>
             <CategoryContainer
               categories={categories}
@@ -75,7 +68,7 @@ const SearchTabs = () => {
   ];
 
   return (
-    <Tabs tabItems={searchItems}>
+    <Tabs tabItems={searchItems} css={s.searchTabsStyle}>
       <s.TabContentWrapper>
         {selectedTab === 0 ? (
           <BookReviewSearchTabs />

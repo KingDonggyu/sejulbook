@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bookReviewService from 'server/features/bookReview/bookReview.service';
+import tagService from 'server/features/tag/tag.service';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
   query: {
@@ -10,9 +10,7 @@ interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const { query } = req.query;
 
-  const result = await bookReviewService.searchBookReviewsByTitle({
-    bookname: query,
-  });
+  const result = await tagService.searchTags({ tag: query });
 
   if (!result.error) {
     res.status(200).json(result);

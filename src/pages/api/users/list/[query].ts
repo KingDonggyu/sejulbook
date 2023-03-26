@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bookReviewService from 'server/features/bookReview/bookReview.service';
+import userService from 'server/features/user/user.service';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
   query: {
@@ -10,9 +10,7 @@ interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const { query } = req.query;
 
-  const result = await bookReviewService.searchBookReviewsByAuthor({
-    authors: query,
-  });
+  const result = await userService.searchUsers({ name: query });
 
   if (!result.error) {
     res.status(200).json(result);

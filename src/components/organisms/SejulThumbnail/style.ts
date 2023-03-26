@@ -14,6 +14,7 @@ export const SejulBookReview = styled.div`
   overflow-x: hidden;
   white-space: pre-line;
   position: absolute;
+  width: 100%;
   top: 0;
   left: 0;
   padding: 10px;
@@ -21,7 +22,9 @@ export const SejulBookReview = styled.div`
   height: 100%;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
     display: none;
   }
