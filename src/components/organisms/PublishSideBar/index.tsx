@@ -63,9 +63,7 @@ const PublishSideBar = ({
         <s.PublishInfoItem>
           <s.Label>책 표지 사진</s.Label>
           <s.ExplainText>* 대표 이미지로 사용됩니다.</s.ExplainText>
-          <ThumbnailUploader
-            originThumbnail={bookReview.thumbnail || bookReview.book.thumbnail}
-          />
+          <ThumbnailUploader originThumbnail={bookReview.book.thumbnail} />
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>카테고리</s.Label>

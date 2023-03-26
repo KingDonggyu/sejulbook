@@ -101,3 +101,23 @@ export const getFollowUserList = async ({
     });
   }
 };
+
+export const searchUsers = async (query: string) => {
+  try {
+    const response = await get<HttpResponse<User[]>>(`${API_URL}/search`, {
+      query,
+    });
+
+    if (response.error) {
+      throw new UserError({
+        name: 'SEARCH_USERS_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new UserError({ name: 'SEARCH_USERS_ERROR', message });
+  }
+};

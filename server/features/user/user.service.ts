@@ -1,4 +1,4 @@
-import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
+import { HttpResponse } from 'server/types/http';
 import { userError } from 'server/constants/message';
 import UserDTO, { UserId } from './user.dto';
 import userModel from './user.model';
@@ -19,7 +19,7 @@ const userService = {
   getUserId: async ({
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<
-    HttpSuccess<Pick<UserDTO, 'id'> | { id: null }> | HttpFailed
+    HttpResponse<Pick<UserDTO, 'id'> | { id: null }>
   > => {
     const result = await userModel.getUserId({ sub });
 
@@ -31,7 +31,7 @@ const userService = {
 
   getUserById: async ({
     id,
-  }: Pick<UserDTO, 'id'>): Promise<HttpSuccess<User> | HttpFailed> => {
+  }: Pick<UserDTO, 'id'>): Promise<HttpResponse<User>> => {
     const userGuard = new UserGuard({ id });
     const guardResult = userGuard.checkUserNotFound();
 
@@ -61,7 +61,7 @@ const userService = {
 
   getUserByName: async ({
     name,
-  }: Pick<UserDTO, 'name'>): Promise<HttpSuccess<User | null> | HttpFailed> => {
+  }: Pick<UserDTO, 'name'>): Promise<HttpResponse<User | null>> => {
     const result = await userModel.getUserByName({ nick: name });
 
     if (!result) {
@@ -112,9 +112,7 @@ const userService = {
     return { error: false, data: undefined };
   },
 
-  signUp: async (
-    user: UserDTO,
-  ): Promise<HttpSuccess<undefined> | HttpFailed> => {
+  signUp: async (user: UserDTO): Promise<HttpResponse<undefined>> => {
     const userGuard = new UserGuard(user);
     const guardResult = userGuard.checkInvalidProfile();
 
@@ -185,10 +183,10 @@ const userService = {
           : false;
 
         return {
-          introduce,
           id: otherUserId,
-          name: nick,
           followId: follow_id,
+          name: nick,
+          introduce,
           isFollow,
         };
       },
@@ -199,6 +197,21 @@ const userService = {
     return {
       error: false,
       data: data.sort((a, b) => b.followId - a.followId),
+    };
+  },
+
+  searchUsers: async ({
+    name,
+  }: Pick<User, 'name'>): Promise<HttpResponse<User[]>> => {
+    const userList = await userModel.getUserListByName({ nick: name });
+
+    return {
+      error: false,
+      data: userList.map(({ id, nick, introduce }) => ({
+        id,
+        introduce,
+        name: nick,
+      })),
     };
   },
 };

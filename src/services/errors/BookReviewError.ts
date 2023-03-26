@@ -3,7 +3,6 @@ import ErrorBase from '@/lib/ErrorBase';
 export type BookReviewErrorName =
   | 'IMAGE_UPLOAD_ERROR'
   | 'GET_CATEGORIES_ERROR'
-  | 'GET_TAGS_ERROR'
   | 'PUBLISH_ERROR'
   | 'UPDATE_ERROR'
   | 'GET_BOOKREIVEW_LIST_ERROR'

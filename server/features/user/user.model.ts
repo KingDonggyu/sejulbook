@@ -6,7 +6,9 @@ import {
 } from '../follow/follow.model';
 import UserEntity from './user.entity';
 
-interface FollowUser extends Pick<UserEntity, 'id' | 'nick' | 'introduce'> {
+type User = Pick<UserEntity, 'id' | 'nick' | 'introduce'>;
+
+interface FollowUser extends User {
   follow_id: FollowId;
 }
 
@@ -69,11 +71,7 @@ const userModel = {
     return null;
   },
 
-  updateUser: async ({
-    id,
-    nick,
-    introduce,
-  }: Pick<UserEntity, 'id' | 'nick' | 'introduce'>) => {
+  updateUser: async ({ id, nick, introduce }: User) => {
     const sql = `
       update ${TABLE_NAME} 
       set ${Column.NICK} = "${nick}", ${Column.INTRODUCE} = "${introduce}"
@@ -149,6 +147,21 @@ const userModel = {
     `;
 
     const result = await query<FollowUser[]>(sql);
+    return result;
+  },
+
+  getUserListByName: async ({ nick }: Pick<User, 'nick'>) => {
+    const sql = `
+      select ${Column.ID}, ${Column.NICK}, ${Column.INTRODUCE}
+      from ${TABLE_NAME}
+      where 
+        match(${Column.NICK})
+        against("${nick}*" in boolean mode)
+      order by 1 
+      limit 10
+    `;
+
+    const result = await query<User[]>(sql);
     return result;
   },
 };

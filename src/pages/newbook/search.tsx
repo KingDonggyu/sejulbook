@@ -17,7 +17,9 @@ const NewbookSearchPage = ({ myId }: { myId: UserId }) => {
     <>
       <DocumentTitle title="책 선택" />
       <NewbookSearch
-        bookSearchBar={<BookSearchBar placeholder="책을 선택해주세요." />}
+        bookSearchBar={
+          <BookSearchBar placeholder="제목 또는 저자를 입력해주세요." />
+        }
         draftSavedListButton={
           <DraftSavedListModal.Button draftSavedList={draftSavedList} />
         }

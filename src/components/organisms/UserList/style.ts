@@ -16,7 +16,7 @@ export const ProfileWrapper = styled.div`
 
 export const Name = styled.h2`
   display: inline-block;
-  font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
+  font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
