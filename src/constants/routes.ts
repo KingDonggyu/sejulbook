@@ -7,8 +7,6 @@ enum Route {
 
   // [userId]/...
   LIBRARY = '/library',
-  FOLLOWER = '/follower',
-  FOLLOWING = '/following',
   SUBSCRIPTIONS = '/subscriptions',
 }
 

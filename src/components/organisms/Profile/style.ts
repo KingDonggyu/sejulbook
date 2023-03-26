@@ -44,6 +44,9 @@ export const BottomWrapper = styled.div`
 export const DetailWrapper = styled.dl`
   display: flex;
   gap: 25px;
+  button {
+    font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+  }
 `;
 
 export const DatailItem = styled.dd`
