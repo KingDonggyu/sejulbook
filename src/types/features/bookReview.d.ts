@@ -54,8 +54,11 @@ export interface PublishRequest {
 /**
  * 독후감 리스트 요청 타입
  */
-
-export interface FollowingBookReviewRequest {
+export interface BookReviewListRequest {
+  title: BookTitle;
+  pageParam?: number | null;
+}
+export interface FollowingBookReviewListRequest {
   userId: UserId;
   pageParam?: number | null;
 }

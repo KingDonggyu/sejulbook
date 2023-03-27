@@ -1,7 +1,8 @@
 import Query, { InfiniteQuery } from '@/types/query';
 import {
   BookReviewId,
-  FollowingBookReviewRequest,
+  BookReviewListRequest,
+  FollowingBookReviewListRequest,
 } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 
@@ -11,6 +12,7 @@ import {
   getDraftSavedList,
   getFollowingBookReviewList,
   getMostLikedBookReviewList,
+  getPagingBookReviewList,
   getPagingFollowingBookReviewList,
 } from '../api/bookReview';
 import { getCategories } from '../api/category';
@@ -57,13 +59,21 @@ export const getTagsQuery = (bookReviewId?: BookReviewId): Query => ({
   },
 });
 
+export const getBookReviewListInfinityQuery = ({
+  title,
+}: Pick<BookReviewListRequest, 'title'>): InfiniteQuery => ({
+  queryKey: [`${BASE_QUERY_KEY}_getBookReviewListInfinityQuery`, title],
+  queryFn: ({ pageParam }: Pick<BookReviewListRequest, 'pageParam'>) =>
+    getPagingBookReviewList({ title, pageParam }),
+});
+
 export const getFollowingBookReviewListInfinityQuery = ({
   userId,
 }: {
   userId?: UserId;
 }): InfiniteQuery => ({
   queryKey: [`${BASE_QUERY_KEY}_getFollowingBookReviewListInfinityQuery`],
-  queryFn: ({ pageParam }: Pick<FollowingBookReviewRequest, 'pageParam'>) =>
+  queryFn: ({ pageParam }: Pick<FollowingBookReviewListRequest, 'pageParam'>) =>
     userId && getPagingFollowingBookReviewList({ userId, pageParam }),
   options: {
     enabled: !!userId,

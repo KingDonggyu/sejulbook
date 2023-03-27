@@ -8,8 +8,9 @@ import {
   PublishRequest,
   BookReviewResponse,
   HomeBookReviewSummary,
-  FollowingBookReviewRequest,
+  FollowingBookReviewListRequest,
   FeedBookReviewSummary,
+  BookReviewListRequest,
 } from '@/types/features/bookReview';
 import { UserId } from '@/types/features/user';
 import getDataFromAxiosError from '@/utils/getDataFromAxiosError';
@@ -274,10 +275,40 @@ export const deleteBookReview = async ({
   }
 };
 
+export const getPagingBookReviewList = async ({
+  title,
+  pageParam = null,
+}: BookReviewListRequest) => {
+  try {
+    const response = await get<HttpResponse<FeedBookReviewSummary[]>>(
+      `${API_URL}/search/book`,
+      {
+        title,
+        pageParam,
+      },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_PAGING_BOOKREVIEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_PAGING_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
 export const getPagingFollowingBookReviewList = async ({
   userId,
   pageParam = null,
-}: FollowingBookReviewRequest) => {
+}: FollowingBookReviewListRequest) => {
   try {
     const response = await get<HttpResponse<FeedBookReviewSummary[]>>(
       `${API_URL}/list/following/${userId}`,
