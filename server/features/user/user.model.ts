@@ -12,9 +12,9 @@ interface FollowUser extends User {
   follow_id: FollowId;
 }
 
-const TABLE_NAME = 'user';
+export const TABLE_NAME = 'user';
 
-enum Column {
+export enum Column {
   ID = 'id',
   SUB = 'sub',
   EMAIL = 'email',

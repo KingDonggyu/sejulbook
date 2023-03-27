@@ -40,7 +40,7 @@ interface PublishedBookReview extends BookReviewDTO {
   category: Category;
 }
 
-interface PagingFollowingBookReview
+interface FeedFollowingBookReview
   extends Pick<BookReviewDTO, 'id' | 'sejul' | 'thumbnail' | 'userId'> {
   writer: UserName;
   likeCount: number;
@@ -119,11 +119,66 @@ const bookReviewService = {
     return { error: false, data };
   },
 
+  getPagingBookReviewList: async ({
+    bookname,
+    maxId,
+  }: Pick<BookReviewDTO, 'bookname'> & {
+    maxId: BookReviewId | null;
+  }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
+    let bookReviewId = maxId;
+
+    if (!maxId) {
+      bookReviewId = await bookReviewModel.getMaxBookReviewId({
+        bookname,
+      });
+
+      if (!bookReviewId) {
+        return { error: false, data: [] };
+      }
+
+      bookReviewId += 1;
+    }
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList = await bookReviewModel.getPagingBookReviewList({
+      bookname,
+      maxId: bookReviewId,
+    });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail, nick }) => {
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          likeCount,
+          commentCount,
+          userId: user_id,
+          writer: nick || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
   getPagingFollowingBookReviewList: async ({
     userId,
     maxId,
   }: Pick<BookReviewDTO, 'userId'> & { maxId: BookReviewId | null }): Promise<
-    HttpResponse<PagingFollowingBookReview[]>
+    HttpResponse<FeedFollowingBookReview[]>
   > => {
     let bookReviewId = maxId;
 
@@ -149,7 +204,7 @@ const bookReviewService = {
         maxId: bookReviewId,
       });
 
-    const promises: Promise<PagingFollowingBookReview>[] = bookReviewList.map(
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
       async ({ id, user_id, sejul, thumbnail }) => {
         const writer = (await userModel.getUserName({ id: user_id })) || '';
 
