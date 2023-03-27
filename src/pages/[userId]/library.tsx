@@ -60,7 +60,7 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
         bookshelf={
           bookReviewList && (
             <Bookshelf
-              isMyBookshelf={isMyLibrary}
+              hasWriteBookReviewItem={isMyLibrary}
               bookReviewList={bookReviewList}
             />
           )

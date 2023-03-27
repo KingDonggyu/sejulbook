@@ -49,3 +49,7 @@ export const AltText = styled.div`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
 `;
+
+export const IntersectTarget = styled.div`
+  height: 1px;
+`;

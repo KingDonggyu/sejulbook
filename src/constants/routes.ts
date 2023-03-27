@@ -1,12 +1,13 @@
 enum Route {
   HOME = '/',
-  LIBRARY = '/library',
   SEARCH = '/search',
   NEWBOOK_SEARCH = '/newbook/search',
   NEWBOOK_WRITE = '/newbook/write',
   BOOKREVIEW = '/bookreivew',
-  FOLLOWER = '/follower',
-  FOLLOWING = '/following',
+
+  // [userId]/...
+  LIBRARY = '/library',
+  SUBSCRIPTIONS = '/subscriptions',
 }
 
 export default Route;

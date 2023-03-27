@@ -44,7 +44,7 @@ export const MenuList = styled.ul<{ divider: boolean }>`
       divider && `border-bottom: 1px solid ${theme.COLOR.LINE}`}
   }
 
-  & > *:last-child {
+  & > *:last-of-type {
     border: none;
   }
 

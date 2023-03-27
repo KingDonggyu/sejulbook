@@ -17,10 +17,14 @@ import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 
-type BookReviewSummary = Pick<
-  BookReviewDTO,
-  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
->;
+interface BookReviewSummary
+  extends Pick<
+    BookReviewDTO,
+    'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
+  > {
+  likeCount: number;
+  commentCount: number;
+}
 
 type ExtendedBookReviewSummary = {
   writer: UserName;
@@ -36,9 +40,18 @@ interface PublishedBookReview extends BookReviewDTO {
   category: Category;
 }
 
+interface PagingFollowingBookReview
+  extends Pick<BookReviewDTO, 'id' | 'sejul' | 'thumbnail' | 'userId'> {
+  writer: UserName;
+  likeCount: number;
+  commentCount: number;
+}
+
 const bookReviewService = {
   getMostLikeBookReviewList: async (): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
+    HttpResponse<
+      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
+    >
   > => {
     const twoMonthDateInfo = getCurrTwoMonthDate();
     const bookReviewList = await bookReviewModel.getMostLikeBookReviewList(
@@ -49,7 +62,9 @@ const bookReviewService = {
       async ({
         user_id,
         ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
+      }): Promise<
+        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
+      > => {
         const userName = await userModel.getUserName({ id: user_id });
 
         return {
@@ -71,7 +86,9 @@ const bookReviewService = {
   getFollowingBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
+    HttpResponse<
+      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
+    >
   > => {
     const bookReviewList = await bookReviewModel.getFollowingBookReviewList({
       user_id: userId,
@@ -81,7 +98,9 @@ const bookReviewService = {
       async ({
         user_id,
         ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
+      }): Promise<
+        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
+      > => {
         const userName = await userModel.getUserName({ id: user_id });
 
         return {
@@ -97,6 +116,64 @@ const bookReviewService = {
 
     const data = await Promise.all(promises);
 
+    return { error: false, data };
+  },
+
+  getPagingFollowingBookReviewList: async ({
+    userId,
+    maxId,
+  }: Pick<BookReviewDTO, 'userId'> & { maxId: BookReviewId | null }): Promise<
+    HttpResponse<PagingFollowingBookReview[]>
+  > => {
+    let bookReviewId = maxId;
+
+    if (!maxId) {
+      bookReviewId = await bookReviewModel.getMaxFollowingBookReviewId({
+        user_id: userId,
+      });
+
+      if (!bookReviewId) {
+        return { error: false, data: [] };
+      }
+
+      bookReviewId += 1;
+    }
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList =
+      await bookReviewModel.getPagingFollowingBookReviewList({
+        user_id: userId,
+        maxId: bookReviewId,
+      });
+
+    const promises: Promise<PagingFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail }) => {
+        const writer = (await userModel.getUserName({ id: user_id })) || '';
+
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          writer,
+          likeCount,
+          commentCount,
+          userId: user_id,
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
     return { error: false, data };
   },
 

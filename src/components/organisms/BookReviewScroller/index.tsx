@@ -1,13 +1,13 @@
 import CardScoller from '@/components/molecules/CardScroller';
 import { ModalKey } from '@/constants/keys';
 import useUserStatus from '@/hooks/useUserStatus';
-import { ExtendedBookReviewSummary } from '@/types/features/bookReview';
+import { HomeBookReviewSummary } from '@/types/features/bookReview';
 import { LoginButton } from '../AccountButton';
 import SejulThumbnail from '../SejulThumbnail';
 import * as s from './style';
 
 interface BookReviewScrollerProps {
-  bookReviewList: ExtendedBookReviewSummary[];
+  bookReviewList: HomeBookReviewSummary[];
 }
 
 const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
