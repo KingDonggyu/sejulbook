@@ -16,8 +16,6 @@ import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
-import { FollowId } from '../follow/follow.dto';
-import followModel from '../follow/follow.model';
 
 interface BookReviewSummary
   extends Pick<
@@ -45,7 +43,6 @@ interface PublishedBookReview extends BookReviewDTO {
 interface PagingFollowingBookReview
   extends Pick<BookReviewDTO, 'id' | 'sejul' | 'thumbnail' | 'userId'> {
   writer: UserName;
-  followId: FollowId | null;
   likeCount: number;
   commentCount: number;
 }
@@ -124,34 +121,36 @@ const bookReviewService = {
 
   getPagingFollowingBookReviewList: async ({
     userId,
-    maxFollowId,
-  }: Pick<BookReviewDTO, 'userId'> & { maxFollowId: FollowId | null }): Promise<
+    maxId,
+  }: Pick<BookReviewDTO, 'userId'> & { maxId: BookReviewId | null }): Promise<
     HttpResponse<PagingFollowingBookReview[]>
   > => {
-    let followId = maxFollowId;
+    let bookReviewId = maxId;
 
-    if (!maxFollowId) {
-      followId = await followModel.getMaxIdByFollowing({ follower_id: userId });
+    if (!maxId) {
+      bookReviewId = await bookReviewModel.getMaxFollowingBookReviewId({
+        user_id: userId,
+      });
 
-      if (!followId) {
+      if (!bookReviewId) {
         return { error: false, data: [] };
       }
 
-      followId += 1;
+      bookReviewId += 1;
     }
 
-    if (!followId) {
+    if (!bookReviewId) {
       return { error: false, data: [] };
     }
 
     const bookReviewList =
       await bookReviewModel.getPagingFollowingBookReviewList({
         user_id: userId,
-        maxFollowId: followId,
+        maxId: bookReviewId,
       });
 
     const promises: Promise<PagingFollowingBookReview>[] = bookReviewList.map(
-      async ({ id, user_id, sejul, thumbnail, follow_id }) => {
+      async ({ id, user_id, sejul, thumbnail }) => {
         const writer = (await userModel.getUserName({ id: user_id })) || '';
 
         const { count: likeCount } = await likeModel.getLikeCount({
@@ -170,7 +169,6 @@ const bookReviewService = {
           likeCount,
           commentCount,
           userId: user_id,
-          followId: follow_id,
         };
       },
     );

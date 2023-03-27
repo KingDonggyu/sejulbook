@@ -48,7 +48,6 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
         userId={myUserId}
         modalKey={ModalKey.FOLLOWING_USER_LIST}
         isFollowing
-        isHideSubscribeToggleButton
       />
     </>
   );

@@ -15,15 +15,9 @@ interface UserListProps {
   userId: UserId;
   isFollowing: boolean;
   modalKey: ModalKey.FOLLOWER_USER_LIST | ModalKey.FOLLOWING_USER_LIST;
-  isHideSubscribeToggleButton?: boolean;
 }
 
-const UserListModal = ({
-  userId,
-  isFollowing,
-  modalKey,
-  isHideSubscribeToggleButton = false,
-}: UserListProps) => {
+const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
   const user = useUser(userId);
   const { session, isLogin } = useUserStatus();
   const { followingCount, followerCount } = useFollowInfo(userId);
@@ -62,15 +56,13 @@ const UserListModal = ({
                   </Link>
                   {!!introduce && <s.Introduce>{introduce}</s.Introduce>}
                 </s.ProfileWrapper>
-                {!isHideSubscribeToggleButton &&
-                  isLogin &&
-                  session.id !== id && (
-                    <SubscribeToggleButton
-                      userId={id}
-                      isSubscribed={isFollow}
-                      css={s.buttonStyle}
-                    />
-                  )}
+                {isLogin && session.id !== id && (
+                  <SubscribeToggleButton
+                    userId={id}
+                    isSubscribed={isFollow}
+                    css={s.buttonStyle}
+                  />
+                )}
               </s.UserItem>
             ))}
           <s.IntersectTarget ref={intersectRef} />

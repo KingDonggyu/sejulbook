@@ -1,6 +1,9 @@
 import { ResultSetHeader } from 'mysql2';
 import query from 'server/database/query';
-import BookReviewEntity, { DateCreated } from './bookReview.entity';
+import BookReviewEntity, {
+  BookReviewId,
+  DateCreated,
+} from './bookReview.entity';
 import {
   TABLE_NAME as LIKE_TABLE_NAME,
   Column as LikeColumn,
@@ -9,7 +12,6 @@ import {
   TABLE_NAME as FOLLOW_TABLE_NAME,
   Column as FollowColumn,
 } from '../follow/follow.model';
-import { FollowId } from '../follow/follow.entity';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -43,10 +45,10 @@ type DraftSavedBookReview = Pick<
   'id' | 'bookname' | 'datecreated'
 >;
 
-interface PagingFollowingBookReview
-  extends Pick<BookReviewEntity, 'id' | 'user_id' | 'sejul' | 'thumbnail'> {
-  follow_id: FollowId;
-}
+type PagingFollowingBookReview = Pick<
+  BookReviewEntity,
+  'id' | 'user_id' | 'sejul' | 'thumbnail'
+>;
 
 const bookReviewModel = {
   getMostLikeBookReviewList: async ({
@@ -84,6 +86,21 @@ const bookReviewModel = {
     return result;
   },
 
+  getMaxFollowingBookReviewId: async ({
+    user_id,
+  }: Pick<BookReviewEntity, 'user_id'>) => {
+    const sql = `
+      select max(S.${Column.ID}) as id
+      from ${TABLE_NAME} as S, ${FOLLOW_TABLE_NAME} as F 
+      where 
+        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
+        S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
+  },
+
   getFollowingBookReviewList: async ({
     user_id,
   }: Pick<BookReviewEntity, 'user_id'>) => {
@@ -109,11 +126,10 @@ const bookReviewModel = {
 
   getPagingFollowingBookReviewList: async ({
     user_id,
-    maxFollowId,
-  }: Pick<BookReviewEntity, 'user_id'> & { maxFollowId: FollowId }) => {
+    maxId,
+  }: Pick<BookReviewEntity, 'user_id'> & { maxId: BookReviewId }) => {
     const sql = `
       select 
-        F.${FollowColumn.ID}, 
         S.${Column.ID}, 
         S.${Column.THUMBNAIL}, 
         S.${Column.USER_ID}, 
@@ -123,9 +139,9 @@ const bookReviewModel = {
         on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
       where 
         F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
-        F.${FollowColumn.ID} < ${maxFollowId}
-      order by F.${FollowColumn.ID} desc
-      limit 10
+        S.${Column.ID} < ${maxId}
+      order by ${Column.ID} DESC
+      limit 12
     `;
 
     const result = await query<PagingFollowingBookReview[]>(sql);

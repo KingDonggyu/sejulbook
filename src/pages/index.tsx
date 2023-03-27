@@ -37,7 +37,7 @@ const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
           />
         }
         subscriptionsPageLink={
-          <Link href={`${myUserId}${Route.SUBSCRIPTIONS}`}>
+          <Link href={`/${myUserId}${Route.SUBSCRIPTIONS}`}>
             <ArrowRightIcon size={25} />
           </Link>
         }

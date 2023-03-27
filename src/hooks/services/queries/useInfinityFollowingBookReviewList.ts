@@ -14,7 +14,7 @@ const useInfinityFollowingBookReviewList = (myUserId?: UserId) => {
           return undefined;
         }
 
-        return page[page.length - 1].followId;
+        return page[page.length - 1].id;
       },
     },
   });

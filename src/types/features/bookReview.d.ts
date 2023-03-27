@@ -83,7 +83,6 @@ export interface FeedBookReviewSummary
   extends Omit<LibraryBookReviewSummary, 'bookname' | 'createdAt'> {
   userId: UserId;
   writer: UserName;
-  followId: number;
 }
 
 export interface HomeBookReviewSummary

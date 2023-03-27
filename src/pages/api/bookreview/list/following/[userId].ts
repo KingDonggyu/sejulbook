@@ -11,7 +11,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
 
   const result = await bookReviewService.getPagingFollowingBookReviewList({
     userId,
-    maxFollowId: pageParam,
+    maxId: pageParam,
   });
 
   if (!result.error) {
