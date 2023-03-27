@@ -9,6 +9,7 @@ import {
   TABLE_NAME as FOLLOW_TABLE_NAME,
   Column as FollowColumn,
 } from '../follow/follow.model';
+import { FollowId } from '../follow/follow.entity';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -41,6 +42,11 @@ type DraftSavedBookReview = Pick<
   BookReviewEntity,
   'id' | 'bookname' | 'datecreated'
 >;
+
+interface PagingFollowingBookReview
+  extends Pick<BookReviewEntity, 'id' | 'user_id' | 'sejul' | 'thumbnail'> {
+  follow_id: FollowId;
+}
 
 const bookReviewModel = {
   getMostLikeBookReviewList: async ({
@@ -91,14 +97,38 @@ const bookReviewModel = {
         S.${Column.DATE_CREATED}
       from ${TABLE_NAME} as S
         inner join ${FOLLOW_TABLE_NAME} as F
-          on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWER_ID}
-      where F.${FollowColumn.FOLLOWING_ID} = ${user_id}
+          on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+      where F.${FollowColumn.FOLLOWER_ID} = ${user_id}
       order by ${Column.DATE_CREATED} DESC
       limit 10;
     `;
 
     const result = await query<ExtendedBookReviewSummary[]>(sql);
+    return result;
+  },
 
+  getPagingFollowingBookReviewList: async ({
+    user_id,
+    maxFollowId,
+  }: Pick<BookReviewEntity, 'user_id'> & { maxFollowId: FollowId }) => {
+    const sql = `
+      select 
+        F.${FollowColumn.ID}, 
+        S.${Column.ID}, 
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL}
+      from ${TABLE_NAME} as S
+        inner join ${FOLLOW_TABLE_NAME} as F
+        on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+      where 
+        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
+        F.${FollowColumn.ID} < ${maxFollowId}
+      order by F.${FollowColumn.ID} desc
+      limit 10
+    `;
+
+    const result = await query<PagingFollowingBookReview[]>(sql);
     return result;
   },
 

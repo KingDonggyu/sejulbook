@@ -16,11 +16,17 @@ import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
+import { FollowId } from '../follow/follow.dto';
+import followModel from '../follow/follow.model';
 
-type BookReviewSummary = Pick<
-  BookReviewDTO,
-  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
->;
+interface BookReviewSummary
+  extends Pick<
+    BookReviewDTO,
+    'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
+  > {
+  likeCount: number;
+  commentCount: number;
+}
 
 type ExtendedBookReviewSummary = {
   writer: UserName;
@@ -36,9 +42,19 @@ interface PublishedBookReview extends BookReviewDTO {
   category: Category;
 }
 
+interface PagingFollowingBookReview
+  extends Pick<BookReviewDTO, 'id' | 'sejul' | 'thumbnail' | 'userId'> {
+  writer: UserName;
+  followId: FollowId | null;
+  likeCount: number;
+  commentCount: number;
+}
+
 const bookReviewService = {
   getMostLikeBookReviewList: async (): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
+    HttpResponse<
+      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
+    >
   > => {
     const twoMonthDateInfo = getCurrTwoMonthDate();
     const bookReviewList = await bookReviewModel.getMostLikeBookReviewList(
@@ -49,7 +65,9 @@ const bookReviewService = {
       async ({
         user_id,
         ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
+      }): Promise<
+        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
+      > => {
         const userName = await userModel.getUserName({ id: user_id });
 
         return {
@@ -71,7 +89,9 @@ const bookReviewService = {
   getFollowingBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
+    HttpResponse<
+      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
+    >
   > => {
     const bookReviewList = await bookReviewModel.getFollowingBookReviewList({
       user_id: userId,
@@ -81,7 +101,9 @@ const bookReviewService = {
       async ({
         user_id,
         ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
+      }): Promise<
+        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
+      > => {
         const userName = await userModel.getUserName({ id: user_id });
 
         return {
@@ -97,6 +119,63 @@ const bookReviewService = {
 
     const data = await Promise.all(promises);
 
+    return { error: false, data };
+  },
+
+  getPagingFollowingBookReviewList: async ({
+    userId,
+    maxFollowId,
+  }: Pick<BookReviewDTO, 'userId'> & { maxFollowId: FollowId | null }): Promise<
+    HttpResponse<PagingFollowingBookReview[]>
+  > => {
+    let followId = maxFollowId;
+
+    if (!maxFollowId) {
+      followId = await followModel.getMaxIdByFollowing({ follower_id: userId });
+
+      if (!followId) {
+        return { error: false, data: [] };
+      }
+
+      followId += 1;
+    }
+
+    if (!followId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList =
+      await bookReviewModel.getPagingFollowingBookReviewList({
+        user_id: userId,
+        maxFollowId: followId,
+      });
+
+    const promises: Promise<PagingFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail, follow_id }) => {
+        const writer = (await userModel.getUserName({ id: user_id })) || '';
+
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          writer,
+          likeCount,
+          commentCount,
+          userId: user_id,
+          followId: follow_id,
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
     return { error: false, data };
   },
 

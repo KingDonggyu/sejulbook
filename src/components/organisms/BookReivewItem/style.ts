@@ -26,6 +26,9 @@ export const Title = styled.h2`
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
   }
+  a > span {
+    font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
+  }
 `;
 
 export const Author = styled.h3`

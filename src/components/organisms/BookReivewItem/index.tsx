@@ -1,42 +1,56 @@
+import Link from 'next/link';
 import { FaComment } from '@react-icons/all-files/fa/FaComment';
 import { FaHeart } from '@react-icons/all-files/fa/FaHeart';
-import { BookReviewSummary } from '@/types/features/bookReview';
 import SejulThumbnail from '@/components/organisms/SejulThumbnail';
-import { lightTheme } from '@/styles/theme';
+import Route from '@/constants/routes';
+import { lightTheme as theme } from '@/styles/theme';
+import {
+  LibraryBookReviewSummary,
+  FeedBookReviewSummary,
+} from '@/types/features/bookReview';
 import * as s from './style';
 
-const BookReviewItem = ({
-  id,
-  bookname,
-  sejul,
-  thumbnail,
-  likeCount,
-  commentCount,
-}: BookReviewSummary) => (
-  <s.Wrapper>
-    <SejulThumbnail
-      bookReviewId={id}
-      sejul={sejul}
-      src={thumbnail}
-      alt="책 섬네일 이미지"
-      width={lightTheme.TUMBNAIL.DEFAULT.W}
-      height={lightTheme.TUMBNAIL.DEFAULT.H}
-      css={s.thumbnailStyle}
-    >
-      <s.TuhumbnailBottomWrapper>
-        <div>
-          <FaHeart color={lightTheme.COLOR.RUBY} size={10} />
-          <s.LikeCount>{likeCount}</s.LikeCount>
-        </div>
-        <div>
-          <FaComment size={10} />
-          <s.CommentCount>{commentCount}</s.CommentCount>
-        </div>
-      </s.TuhumbnailBottomWrapper>
-    </SejulThumbnail>
+interface BookReviewItemProps {
+  bookReview: LibraryBookReviewSummary | FeedBookReviewSummary;
+}
 
-    <s.Title>&apos;{bookname}&apos;</s.Title>
-  </s.Wrapper>
-);
+const BookReviewItem = ({ bookReview }: BookReviewItemProps) => {
+  const isLibraryBookReviewItem = 'bookname' in bookReview;
+
+  return (
+    <s.Wrapper>
+      <SejulThumbnail
+        bookReviewId={bookReview.id}
+        sejul={bookReview.sejul}
+        src={bookReview.thumbnail}
+        alt="책 섬네일 이미지"
+        width={theme.TUMBNAIL.DEFAULT.W}
+        height={theme.TUMBNAIL.DEFAULT.H}
+        css={s.thumbnailStyle}
+      >
+        <s.TuhumbnailBottomWrapper>
+          <div>
+            <FaHeart color={theme.COLOR.RUBY} size={10} />
+            <s.LikeCount>{bookReview.likeCount}</s.LikeCount>
+          </div>
+          <div>
+            <FaComment size={10} />
+            <s.CommentCount>{bookReview.commentCount}</s.CommentCount>
+          </div>
+        </s.TuhumbnailBottomWrapper>
+      </SejulThumbnail>
+
+      <s.Title>
+        {isLibraryBookReviewItem ? (
+          <>&apos;{bookReview.bookname}&apos;</>
+        ) : (
+          <Link href={`/${bookReview.userId}${Route.LIBRARY}`}>
+            <span>{bookReview.writer}</span>의 서재
+          </Link>
+        )}
+      </s.Title>
+    </s.Wrapper>
+  );
+};
 
 export default BookReviewItem;
