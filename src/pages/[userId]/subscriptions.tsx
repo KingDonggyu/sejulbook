@@ -23,10 +23,6 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
   const { followingBookReviewList, refetchNextFollowingBookReviewList } =
     useInfinityFollowingBookReviewList(myUserId);
 
-  const handleRefetch = () => {
-    refetchNextFollowingBookReviewList();
-  };
-
   return (
     <>
       <DocumentTitle title="구독" />
@@ -40,7 +36,7 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
           <Bookshelf
             hasWriteBookReviewItem={false}
             bookReviewList={followingBookReviewList}
-            onRefetch={handleRefetch}
+            onRefetch={refetchNextFollowingBookReviewList}
           />
         }
       />

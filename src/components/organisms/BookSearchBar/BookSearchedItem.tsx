@@ -1,18 +1,31 @@
 import { useRouter } from 'next/router';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import { Book } from '@/types/features/book';
-import { useNewbookContext } from '@/contexts/newbookContext';
 import Route from '@/constants/routes';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';
 
-const BookSearchedItem = ({ book }: { book: Book }) => {
+interface BookSearchedItemProps {
+  book: Book;
+  onClickSearchedItem?: (book: Book) => void;
+}
+
+const BookSearchedItem = ({
+  book,
+  onClickSearchedItem,
+}: BookSearchedItemProps) => {
   const router = useRouter();
-  const { setNewbook } = useNewbookContext();
 
   const handleClickSearchedItem = () => {
-    setNewbook(book);
-    router.push(Route.NEWBOOK_WRITE);
+    if (onClickSearchedItem) {
+      onClickSearchedItem(book);
+      return;
+    }
+
+    router.push({
+      pathname: Route.SEARCH_RESULT_BY_BOOK,
+      query: { title: book.title },
+    });
   };
 
   return (

@@ -5,7 +5,16 @@ import { getBooks } from '@/services/api/book';
 import { Book } from '@/types/features/book';
 import BookSearchedItem from './BookSearchedItem';
 
-const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
+interface BookSearchBarProps extends TextFieldProps {
+  initialValue?: string;
+  onClickSearchedItem?: (book: Book) => void;
+}
+
+const BookSearchBar = ({
+  initialValue,
+  onClickSearchedItem,
+  ...textFieldProps
+}: BookSearchBarProps) => {
   const [searchedList, setSearchedList] = useState<Book[]>([]);
 
   const handleDebounce = useCallback(async (value: string) => {
@@ -18,11 +27,20 @@ const BookSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   }, []);
 
   return (
-    <SearchBar onDebounce={handleDebounce} {...textFieldProps}>
+    <SearchBar
+      placeholder="제목 또는 저자를 입력해주세요."
+      initialValue={initialValue}
+      onDebounce={handleDebounce}
+      {...textFieldProps}
+    >
       {Boolean(searchedList.length) &&
         searchedList.map((book, i) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <BookSearchedItem key={i} book={book} />
+          <BookSearchedItem
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            book={book}
+            onClickSearchedItem={onClickSearchedItem}
+          />
         ))}
     </SearchBar>
   );

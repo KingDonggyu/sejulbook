@@ -157,9 +157,9 @@ const bookReviewModel = {
         inner join ${USER_TABLE_NAME} as U
         on S.${Column.USER_ID} = U.${UserColumn.ID}
       where 
-        S.${Column.BOOK_NAME} = ${bookname} and 
+        S.${Column.BOOK_NAME} = "${bookname}" and 
         S.${Column.ID} < ${maxId}
-      order by S.${Column.DATE_CREATED}
+        order by ${Column.ID} DESC
       limit 12
     `;
 

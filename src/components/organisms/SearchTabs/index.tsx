@@ -4,8 +4,8 @@ import useCategories from '@/hooks/services/queries/useCategories';
 import CategoryContainer from '../CategoryContainer';
 import UserSearchBar from '../UserSearchBar';
 import BookSearchBar from '../BookSearchBar';
-import * as s from './style';
 import TagSearchBar from '../TagSearchBar';
+import * as s from './style';
 
 const BookReviewSearchTabs = () => {
   const categories = useCategories();
@@ -30,9 +30,7 @@ const BookReviewSearchTabs = () => {
       css={s.bookReviewSearchTabsStyle}
     >
       <s.TabContentWrapper>
-        {selectedTab === 0 && (
-          <BookSearchBar placeholder="제목 또는 저자를 입력해주세요." />
-        )}
+        {selectedTab === 0 && <BookSearchBar />}
         {selectedTab === 1 && (
           <TagSearchBar placeholder="태그를 입력해주세요." />
         )}
