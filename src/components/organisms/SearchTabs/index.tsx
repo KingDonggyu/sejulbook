@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Tabs from '@/components/molecules/Tabs';
+import CategoryContainer from '@/components/organisms/CategoryContainer';
+import UserSearchBar from '@/components/organisms/UserSearchBar';
+import BookSearchBar from '@/components/organisms/BookSearchBar';
+import TagSearchBar from '@/components/organisms/TagSearchBar';
 import useCategories from '@/hooks/services/queries/useCategories';
-import CategoryContainer from '../CategoryContainer';
-import UserSearchBar from '../UserSearchBar';
-import BookSearchBar from '../BookSearchBar';
-import TagSearchBar from '../TagSearchBar';
+import Route from '@/constants/routes';
 import * as s from './style';
 
 const BookReviewSearchTabs = () => {
+  const router = useRouter();
   const categories = useCategories();
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -38,7 +41,12 @@ const BookReviewSearchTabs = () => {
           <s.CategoryWrapper>
             <CategoryContainer
               categories={categories}
-              handleClickCategory={() => {}}
+              handleClickCategory={({ category }) =>
+                router.push({
+                  pathname: Route.SEARCH_RESULT_BY_CATEGORY,
+                  query: { q: category },
+                })
+              }
             />
           </s.CategoryWrapper>
         )}

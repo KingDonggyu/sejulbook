@@ -4,16 +4,17 @@ import { dehydrate } from '@tanstack/react-query';
 import DocumentTitle from '@/components/atoms/DocumentTitle';
 import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
-import SortDropdown from '@/components/molecules/SortDropdown';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
+import SortDropdown from '@/components/molecules/SortDropdown';
 import prefetchQuery from '@/services/prefetchQuery';
-import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
-import useInfinityBookReviewListByTag from '@/hooks/services/infinityQueries/useInfinityBookReviewListByTag';
-import { Tag } from '@/types/features/tag';
+import { getBookReviewListByCategoryInfinityQuery } from '@/services/queries/bookReview';
+import useInfinityBookReviewListByCategory from '@/hooks/services/infinityQueries/useInfinityBookReviewListByCategory';
+import { BookTitle } from '@/types/features/book';
+import { Category } from '@/types/features/category';
 
-const SearchResultPage = ({ tag }: { tag: Tag }) => {
+const SearchResultPage = ({ category }: { category: Category }) => {
   const { bookReviewList: initBookReviewList, refetchBookReviewList } =
-    useInfinityBookReviewListByTag(tag);
+    useInfinityBookReviewListByCategory(category);
 
   const [bookReviewList, setBookReviewList] = useState(initBookReviewList);
 
@@ -34,7 +35,7 @@ const SearchResultPage = ({ tag }: { tag: Tag }) => {
     <>
       <DocumentTitle title="" />
       <SearchResultTemplate
-        pageTitle={`#${tag}`}
+        pageTitle={category}
         searchBar={<BookSearchBar />}
         sortButton={
           <SortDropdown
@@ -59,7 +60,7 @@ const SearchResultPage = ({ tag }: { tag: Tag }) => {
 interface ExtededGetServerSidePropsContext
   extends Omit<GetServerSidePropsContext, 'query'> {
   query: {
-    q: Tag;
+    q: BookTitle;
   };
 }
 
@@ -70,13 +71,13 @@ export const getServerSideProps = async ({
 
   const queryClient = await prefetchQuery(
     [],
-    [getBookReviewListByTagInfinityQuery({ query: q })],
+    [getBookReviewListByCategoryInfinityQuery({ query: q })],
   );
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      tag: q,
+      category: q,
     },
   };
 };

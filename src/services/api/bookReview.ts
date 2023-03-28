@@ -305,6 +305,36 @@ export const getPagingBookReviewList = async ({
   }
 };
 
+export const getPagingBookReviewListByCategory = async ({
+  query,
+  pageParam = null,
+}: BookReviewListRequest) => {
+  try {
+    const response = await get<HttpResponse<FeedBookReviewSummary[]>>(
+      `${API_URL}/search/category`,
+      {
+        query,
+        pageParam,
+      },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_PAGING_BOOKREVIEW_LIST_BY_CATEGORY_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_PAGING_BOOKREVIEW_LIST_BY_CATEGORY_ERROR',
+      message,
+    });
+  }
+};
+
 export const getPagingBookReviewListByTag = async ({
   query,
   pageParam = null,
