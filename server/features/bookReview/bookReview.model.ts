@@ -109,6 +109,19 @@ const bookReviewModel = {
     return result.length ? result[0].id : null;
   },
 
+  getMaxBookReviewIdByCategory: async ({
+    category_id,
+  }: Pick<BookReviewEntity, 'category_id'>) => {
+    const sql = `
+      select max(${Column.ID}) as id
+      from ${TABLE_NAME}
+      where ${Column.CATEGORY_ID} = ${category_id}
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
+  },
+
   getMaxFollowingBookReviewId: async ({
     user_id,
   }: Pick<BookReviewEntity, 'user_id'>) => {
@@ -187,6 +200,31 @@ const bookReviewModel = {
         on S.${Column.ID} = T.${TagColumn.BOOKREVIEW_ID}
       where 
         T.${TagColumn.TAG} = "${tag}" and 
+        S.${Column.ID} < ${maxId}
+      order by S.${Column.ID} DESC
+      limit 12
+    `;
+
+    const result = await query<FeedBookReview[]>(sql);
+    return result;
+  },
+
+  getPagingBookReviewListByCategory: async ({
+    category_id,
+    maxId,
+  }: Pick<BookReviewEntity, 'category_id'> & { maxId: BookReviewId }) => {
+    const sql = `
+      select 
+        S.${Column.ID},
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL},
+        U.${UserColumn.NICK}
+      from ${TABLE_NAME} as S
+        inner join ${USER_TABLE_NAME} as U
+        on S.${Column.USER_ID} = U.${UserColumn.ID}
+      where
+        S.${Column.CATEGORY_ID} = ${category_id} and 
         S.${Column.ID} < ${maxId}
       order by S.${Column.ID} DESC
       limit 12

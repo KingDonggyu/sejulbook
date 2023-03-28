@@ -1,7 +1,7 @@
 import { bookReviewError, userError } from 'server/constants/message';
 import { HttpResponse } from 'server/types/http';
 
-import { Category } from '../category/category.dto';
+import CategoryDTO, { Category } from '../category/category.dto';
 import { UserName } from '../user/user.dto';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 
@@ -139,6 +139,54 @@ const bookReviewService = {
       bookname,
       maxId: bookReviewId,
     });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail, nick }) => {
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          likeCount,
+          commentCount,
+          userId: user_id,
+          writer: nick || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
+  getPagingBookReviewListByCategory: async ({
+    category,
+    maxId,
+  }: Pick<CategoryDTO, 'category'> & {
+    maxId: BookReviewId | null;
+  }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
+    const categoryId = await categoryModel.getCategoryId({ category });
+
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      bookReviewModel.getMaxBookReviewIdByCategory({ category_id: categoryId }),
+    );
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList =
+      await bookReviewModel.getPagingBookReviewListByCategory({
+        category_id: categoryId,
+        maxId: bookReviewId,
+      });
 
     const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
       async ({ id, user_id, sejul, thumbnail, nick }) => {
