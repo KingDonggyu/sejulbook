@@ -16,6 +16,7 @@ import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
+import getMaxBookReviewId from './utils/getMaxBookReviewId';
 
 interface BookReviewSummary
   extends Pick<
@@ -125,19 +126,9 @@ const bookReviewService = {
   }: Pick<BookReviewDTO, 'bookname'> & {
     maxId: BookReviewId | null;
   }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
-    let bookReviewId = maxId;
-
-    if (!maxId) {
-      bookReviewId = await bookReviewModel.getMaxBookReviewId({
-        bookname,
-      });
-
-      if (!bookReviewId) {
-        return { error: false, data: [] };
-      }
-
-      bookReviewId += 1;
-    }
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      bookReviewModel.getMaxBookReviewId({ bookname }),
+    );
 
     if (!bookReviewId) {
       return { error: false, data: [] };
@@ -180,19 +171,9 @@ const bookReviewService = {
   }: Pick<BookReviewDTO, 'userId'> & { maxId: BookReviewId | null }): Promise<
     HttpResponse<FeedFollowingBookReview[]>
   > => {
-    let bookReviewId = maxId;
-
-    if (!maxId) {
-      bookReviewId = await bookReviewModel.getMaxFollowingBookReviewId({
-        user_id: userId,
-      });
-
-      if (!bookReviewId) {
-        return { error: false, data: [] };
-      }
-
-      bookReviewId += 1;
-    }
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      bookReviewModel.getMaxFollowingBookReviewId({ user_id: userId }),
+    );
 
     if (!bookReviewId) {
       return { error: false, data: [] };
@@ -243,26 +224,25 @@ const bookReviewService = {
 
     const promises: Promise<BookReviewSummary>[] = bookReviewList.map(
       async ({ id, datecreated, ...bookReviewSummary }) => {
-        const likeResult = await likeModel.getLikeCount({
+        const { count: likeCount } = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
 
-        const commentResult = await commentModel.getCommentCount({
+        const { count: commentCount } = await commentModel.getCommentCount({
           sejulbook_id: id,
         });
 
         return {
           id,
+          likeCount,
+          commentCount,
           createdAt: datecreated,
-          likeCount: likeResult.count,
-          commentCount: commentResult.count,
           ...bookReviewSummary,
         };
       },
     );
 
     const data = await Promise.all(promises);
-
     return { error: false, data };
   },
 
