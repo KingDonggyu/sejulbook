@@ -4,7 +4,7 @@ import prefetchQuery from '@/services/prefetchQuery';
 import { getBookReviewListInfinityQuery } from '@/services/queries/bookReview';
 import { dehydrate } from '@tanstack/react-query';
 import { BookTitle } from '@/types/features/book';
-import useInfinityBookReviewList from '@/hooks/services/queries/useInfinityBookReviewList';
+import useInfinityBookReviewList from '@/hooks/services/infinityQueries/useInfinityBookReviewList';
 import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import BookSearchBar from '@/components/organisms/BookSearchBar';

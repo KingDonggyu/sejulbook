@@ -8,7 +8,7 @@ import SortDropdown from '@/components/molecules/SortDropdown';
 import TagSearchBar from '@/components/organisms/TagSearchBar';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
-import useInfinityBookReviewListByTag from '@/hooks/services/queries/useInfinityBookReviewListByTag';
+import useInfinityBookReviewListByTag from '@/hooks/services/infinityQueries/useInfinityBookReviewListByTag';
 import { Tag } from '@/types/features/tag';
 
 const SearchResultPage = ({ tag }: { tag: Tag }) => {
