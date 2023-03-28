@@ -1,11 +1,11 @@
 import useInfiniteQuery from '@/hooks/useInfiniteQuery';
-import { getBookReviewListInfinityQuery } from '@/services/queries/bookReview';
-import { BookTitle } from '@/types/features/book';
+import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
 import { FeedBookReviewSummary } from '@/types/features/bookReview';
+import { Tag } from '@/types/features/tag';
 
-const useInfinityBookReviewList = (title: BookTitle) => {
+const useInfinityBookReviewListByTag = (tag: Tag) => {
   const { data, fetchNextPage } = useInfiniteQuery<FeedBookReviewSummary[]>({
-    ...getBookReviewListInfinityQuery({ query: title }),
+    ...getBookReviewListByTagInfinityQuery({ query: tag }),
     options: {
       getNextPageParam: (lastPage) => {
         const page = lastPage as FeedBookReviewSummary[];
@@ -25,4 +25,4 @@ const useInfinityBookReviewList = (title: BookTitle) => {
   };
 };
 
-export default useInfinityBookReviewList;
+export default useInfinityBookReviewListByTag;

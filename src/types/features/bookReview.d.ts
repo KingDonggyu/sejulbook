@@ -55,7 +55,7 @@ export interface PublishRequest {
  * 독후감 리스트 요청 타입
  */
 export interface BookReviewListRequest {
-  title: BookTitle;
+  query: string;
   pageParam?: number | null;
 }
 export interface FollowingBookReviewListRequest {

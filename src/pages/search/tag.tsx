@@ -1,19 +1,19 @@
+import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
-import prefetchQuery from '@/services/prefetchQuery';
-import { getBookReviewListInfinityQuery } from '@/services/queries/bookReview';
 import { dehydrate } from '@tanstack/react-query';
-import { BookTitle } from '@/types/features/book';
-import useInfinityBookReviewList from '@/hooks/services/queries/useInfinityBookReviewList';
+import DocumentTitle from '@/components/atoms/DocumentTitle';
 import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
-import BookSearchBar from '@/components/organisms/BookSearchBar';
 import SortDropdown from '@/components/molecules/SortDropdown';
-import { useEffect, useState } from 'react';
+import TagSearchBar from '@/components/organisms/TagSearchBar';
+import prefetchQuery from '@/services/prefetchQuery';
+import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
+import useInfinityBookReviewListByTag from '@/hooks/services/queries/useInfinityBookReviewListByTag';
+import { Tag } from '@/types/features/tag';
 
-const SearchResultPage = ({ title }: { title: BookTitle }) => {
+const SearchResultPage = ({ tag }: { tag: Tag }) => {
   const { bookReviewList: initBookReviewList, refetchBookReviewList } =
-    useInfinityBookReviewList(title);
+    useInfinityBookReviewListByTag(tag);
 
   const [bookReviewList, setBookReviewList] = useState(initBookReviewList);
 
@@ -34,8 +34,8 @@ const SearchResultPage = ({ title }: { title: BookTitle }) => {
     <>
       <DocumentTitle title="" />
       <SearchResultTemplate
-        pageTitle={`'${title}'`}
-        searchBar={<BookSearchBar initialValue={title} />}
+        pageTitle={`#${tag}`}
+        searchBar={<TagSearchBar initialValue={tag} />}
         sortButton={
           <SortDropdown
             onClickLatestButton={handleClickLatestSortButton}
@@ -59,7 +59,7 @@ const SearchResultPage = ({ title }: { title: BookTitle }) => {
 interface ExtededGetServerSidePropsContext
   extends Omit<GetServerSidePropsContext, 'query'> {
   query: {
-    q: BookTitle;
+    q: Tag;
   };
 }
 
@@ -70,13 +70,13 @@ export const getServerSideProps = async ({
 
   const queryClient = await prefetchQuery(
     [],
-    [getBookReviewListInfinityQuery({ query: q })],
+    [getBookReviewListByTagInfinityQuery({ query: q })],
   );
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      title: q,
+      tag: q,
     },
   };
 };

@@ -13,6 +13,7 @@ import {
   getFollowingBookReviewList,
   getMostLikedBookReviewList,
   getPagingBookReviewList,
+  getPagingBookReviewListByTag,
   getPagingFollowingBookReviewList,
 } from '../api/bookReview';
 import { getCategories } from '../api/category';
@@ -60,11 +61,19 @@ export const getTagsQuery = (bookReviewId?: BookReviewId): Query => ({
 });
 
 export const getBookReviewListInfinityQuery = ({
-  title,
-}: Pick<BookReviewListRequest, 'title'>): InfiniteQuery => ({
-  queryKey: [`${BASE_QUERY_KEY}_getBookReviewListInfinityQuery`, title],
+  query,
+}: Pick<BookReviewListRequest, 'query'>): InfiniteQuery => ({
+  queryKey: [`${BASE_QUERY_KEY}_getBookReviewListInfinityQuery`, query],
   queryFn: ({ pageParam }: Pick<BookReviewListRequest, 'pageParam'>) =>
-    getPagingBookReviewList({ title, pageParam }),
+    getPagingBookReviewList({ query, pageParam }),
+});
+
+export const getBookReviewListByTagInfinityQuery = ({
+  query,
+}: Pick<BookReviewListRequest, 'query'>): InfiniteQuery => ({
+  queryKey: [`${BASE_QUERY_KEY}_getBookReviewListByTagInfinityQuery`, query],
+  queryFn: ({ pageParam }: Pick<BookReviewListRequest, 'pageParam'>) =>
+    getPagingBookReviewListByTag({ query, pageParam }),
 });
 
 export const getFollowingBookReviewListInfinityQuery = ({

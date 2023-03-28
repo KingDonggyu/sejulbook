@@ -276,14 +276,14 @@ export const deleteBookReview = async ({
 };
 
 export const getPagingBookReviewList = async ({
-  title,
+  query,
   pageParam = null,
 }: BookReviewListRequest) => {
   try {
     const response = await get<HttpResponse<FeedBookReviewSummary[]>>(
       `${API_URL}/search/book`,
       {
-        title,
+        query,
         pageParam,
       },
     );
@@ -300,6 +300,36 @@ export const getPagingBookReviewList = async ({
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({
       name: 'GET_PAGING_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
+export const getPagingBookReviewListByTag = async ({
+  query,
+  pageParam = null,
+}: BookReviewListRequest) => {
+  try {
+    const response = await get<HttpResponse<FeedBookReviewSummary[]>>(
+      `${API_URL}/search/tag`,
+      {
+        query,
+        pageParam,
+      },
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_PAGING_BOOKREVIEW_LIST_BY_TAG_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_PAGING_BOOKREVIEW_LIST_BY_TAG_ERROR',
       message,
     });
   }

@@ -9,8 +9,8 @@ interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const { query, pageParam = null } = req.query;
 
-  const result = await bookReviewService.getPagingBookReviewList({
-    bookname: query,
+  const result = await bookReviewService.getPagingBookReviewListByTag({
+    tag: query,
     maxId: pageParam,
   });
 

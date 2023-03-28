@@ -24,7 +24,7 @@ const BookSearchedItem = ({
 
     router.push({
       pathname: Route.SEARCH_RESULT_BY_BOOK,
-      query: { title: book.title },
+      query: { q: book.title },
     });
   };
 
