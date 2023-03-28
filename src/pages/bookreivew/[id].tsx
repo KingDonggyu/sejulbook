@@ -34,6 +34,7 @@ import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDelet
 import Route from '@/constants/routes';
 import { confirm } from '@/constants/message';
 import { PublishedBookReviewURLQuery } from '@/types/features/bookReview';
+import { Tag } from '@/types/features/tag';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const BookreviewPage = () => {
@@ -82,6 +83,15 @@ const BookreviewPage = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleClickTagButton = (tag: Tag) => {
+    router.push({
+      pathname: Route.SEARCH_RESULT_BY_TAG,
+      query: {
+        q: tag,
+      },
+    });
+  };
+
   if (!bookReview) {
     return null;
   }
@@ -124,7 +134,9 @@ const BookreviewPage = () => {
         ratingViewer={
           <Rating init={Number(bookReview.rating)} size={17} gap={3} readonly />
         }
-        tagList={tags && <TagList tags={tags} />}
+        tagList={
+          tags && <TagList tags={tags} onClickTag={handleClickTagButton} />
+        }
         comment={
           <div ref={commentRef}>
             <CommentContainer

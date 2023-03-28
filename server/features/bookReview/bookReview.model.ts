@@ -191,7 +191,7 @@ const bookReviewModel = {
       order by S.${Column.ID} DESC
       limit 12
     `;
-    console.log(maxId);
+
     const result = await query<FeedBookReview[]>(sql);
     return result;
   },
