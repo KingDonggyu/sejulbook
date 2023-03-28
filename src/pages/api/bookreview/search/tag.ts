@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { FollowingBookReviewListRequest } from '@/types/features/bookReview';
+import { BookReviewListRequest } from '@/types/features/bookReview';
 import bookReviewService from 'server/features/bookReview/bookReview.service';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
-  query: FollowingBookReviewListRequest;
+  query: BookReviewListRequest;
 }
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  const { userId, pageParam = null } = req.query;
+  const { query, pageParam = null } = req.query;
 
-  const result = await bookReviewService.getPagingFollowingBookReviewList({
-    userId,
+  const result = await bookReviewService.getPagingBookReviewListByTag({
+    tag: query,
     maxId: pageParam,
   });
 

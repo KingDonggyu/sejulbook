@@ -9,7 +9,7 @@ import modalStore from '@/stores/modalStore';
 import { ModalKey } from '@/constants/keys';
 
 import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
-import useInfinityFollowingBookReviewList from '@/hooks/services/queries/useInfinityFollowingBookReviewList';
+import useInfinityFollowingBookReviewList from '@/hooks/services/infinityQueries/useInfinityFollowingBookReviewList';
 import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getFollowInfoQuery } from '@/services/queries/follow';
@@ -22,10 +22,6 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
 
   const { followingBookReviewList, refetchNextFollowingBookReviewList } =
     useInfinityFollowingBookReviewList(myUserId);
-
-  const handleRefetch = () => {
-    refetchNextFollowingBookReviewList();
-  };
 
   return (
     <>
@@ -40,7 +36,7 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
           <Bookshelf
             hasWriteBookReviewItem={false}
             bookReviewList={followingBookReviewList}
-            onRefetch={handleRefetch}
+            onRefetch={refetchNextFollowingBookReviewList}
           />
         }
       />

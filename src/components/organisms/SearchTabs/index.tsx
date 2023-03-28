@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Tabs from '@/components/molecules/Tabs';
+import CategoryContainer from '@/components/organisms/CategoryContainer';
+import UserSearchBar from '@/components/organisms/UserSearchBar';
+import BookSearchBar from '@/components/organisms/BookSearchBar';
+import TagSearchBar from '@/components/organisms/TagSearchBar';
 import useCategories from '@/hooks/services/queries/useCategories';
-import CategoryContainer from '../CategoryContainer';
-import UserSearchBar from '../UserSearchBar';
-import BookSearchBar from '../BookSearchBar';
+import Route from '@/constants/routes';
 import * as s from './style';
-import TagSearchBar from '../TagSearchBar';
 
 const BookReviewSearchTabs = () => {
+  const router = useRouter();
   const categories = useCategories();
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -30,9 +33,7 @@ const BookReviewSearchTabs = () => {
       css={s.bookReviewSearchTabsStyle}
     >
       <s.TabContentWrapper>
-        {selectedTab === 0 && (
-          <BookSearchBar placeholder="제목 또는 저자를 입력해주세요." />
-        )}
+        {selectedTab === 0 && <BookSearchBar />}
         {selectedTab === 1 && (
           <TagSearchBar placeholder="태그를 입력해주세요." />
         )}
@@ -40,7 +41,12 @@ const BookReviewSearchTabs = () => {
           <s.CategoryWrapper>
             <CategoryContainer
               categories={categories}
-              handleClickCategory={() => {}}
+              handleClickCategory={({ category }) =>
+                router.push({
+                  pathname: Route.SEARCH_RESULT_BY_CATEGORY,
+                  query: { q: category },
+                })
+              }
             />
           </s.CategoryWrapper>
         )}

@@ -3,6 +3,7 @@ import {
   MouseEvent,
   ReactNode,
   useCallback,
+  useEffect,
   useState,
 } from 'react';
 import { css, Theme } from '@emotion/react';
@@ -11,6 +12,7 @@ import TextField, { TextFieldProps } from '@/components/atoms/TextField';
 import Menu from '@/components/molecules/Menu';
 import useOpenClose from '@/hooks/useOpenClose';
 import useDebounce from '@/hooks/useDebounce';
+import { useRouter } from 'next/router';
 
 const menuStyle = (theme: Theme) => css`
   max-height: 60vh;
@@ -34,6 +36,7 @@ const menuStyle = (theme: Theme) => css`
 `;
 
 interface SearchBarProps extends TextFieldProps {
+  initialValue?: string;
   children: ReactNode;
   onDebounce?: (value: string) => void;
 }
@@ -41,10 +44,12 @@ interface SearchBarProps extends TextFieldProps {
 const SearchBar = ({
   children,
   onChange,
+  initialValue = '',
   onDebounce = () => {},
   ...textFieldProps
 }: SearchBarProps) => {
-  const [keyword, setKeyword] = useState('');
+  const router = useRouter();
+  const [keyword, setKeyword] = useState(initialValue);
   const { anchorEl, handleOpen, handleClose } = useOpenClose();
 
   const handleClick = (e: MouseEvent<HTMLInputElement>) => {
@@ -63,9 +68,22 @@ const SearchBar = ({
 
   useDebounce({ value: keyword, onDebounce: handleDebounce });
 
+  useEffect(() => {
+    setKeyword(initialValue);
+  }, [initialValue]);
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', handleClose);
+
+    return () => {
+      router.events.off('routeChangeStart', handleClose);
+    };
+  }, [handleClose, router.events]);
+
   return (
     <div>
       <TextField
+        value={keyword}
         onClick={handleClick}
         onChange={handleChange}
         icon={<SearchIcon size={20} />}

@@ -39,6 +39,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const BookName = styled.h1`
+  line-height: 1.5;
   width: 100%;
   padding: 40px 0;
   margin: auto;

@@ -5,9 +5,9 @@ interface SearchedTag extends Pick<TagEntity, 'tag'> {
   count: number;
 }
 
-const TABLE_NAME = 'tag';
+export const TABLE_NAME = 'tag';
 
-enum Column {
+export enum Column {
   TAG = 'tag',
   BOOKREVIEW_ID = 'sejulbook_id',
 }
@@ -55,6 +55,17 @@ const tagModel = {
 
     const result = await query<SearchedTag[]>(sql);
     return result;
+  },
+
+  getMaxBookReviewIdByTag: async ({ tag }: Pick<TagEntity, 'tag'>) => {
+    const sql = `
+      select max(${Column.BOOKREVIEW_ID}) as id
+      from ${TABLE_NAME}
+      where ${Column.TAG} = "${tag}"
+    `;
+
+    const result = await query<Pick<TagEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
   },
 };
 
