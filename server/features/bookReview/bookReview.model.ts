@@ -16,7 +16,12 @@ import {
   TABLE_NAME as FOLLOW_TABLE_NAME,
   Column as FollowColumn,
 } from '../follow/follow.model';
+import {
+  TABLE_NAME as TAG_TABLE_NAME,
+  Column as TagColumn,
+} from '../tag/tag.model';
 import { UserName } from '../user/user.entity';
+import TagEntity from '../tag/tag.entity';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -163,6 +168,30 @@ const bookReviewModel = {
       limit 12
     `;
 
+    const result = await query<FeedBookReview[]>(sql);
+    return result;
+  },
+
+  getPagingBookReviewListByTag: async ({
+    tag,
+    maxId,
+  }: Pick<TagEntity, 'tag'> & { maxId: BookReviewId }) => {
+    const sql = `
+      select 
+        S.${Column.ID}, 
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL}
+      from ${TABLE_NAME} as S
+        inner join ${TAG_TABLE_NAME} as T
+        on S.${Column.ID} = T.${TagColumn.BOOKREVIEW_ID}
+      where 
+        T.${TagColumn.TAG} = "${tag}" and 
+        S.${Column.ID} < ${maxId}
+      order by S.${Column.ID} DESC
+      limit 12
+    `;
+    console.log(maxId);
     const result = await query<FeedBookReview[]>(sql);
     return result;
   },

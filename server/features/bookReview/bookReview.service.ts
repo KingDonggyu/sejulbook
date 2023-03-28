@@ -17,6 +17,7 @@ import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 import getMaxBookReviewId from './utils/getMaxBookReviewId';
+import TagDTO from '../tag/tag.dto';
 
 interface BookReviewSummary
   extends Pick<
@@ -157,6 +158,53 @@ const bookReviewService = {
           commentCount,
           userId: user_id,
           writer: nick || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
+  getPagingBookReviewListByTag: async ({
+    tag,
+    maxId,
+  }: Pick<TagDTO, 'tag'> & { maxId: BookReviewId | null }): Promise<
+    HttpResponse<FeedFollowingBookReview[]>
+  > => {
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      tagModel.getMaxBookReviewIdByTag({ tag }),
+    );
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList = await bookReviewModel.getPagingBookReviewListByTag({
+      tag,
+      maxId: bookReviewId,
+    });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail }) => {
+        const writer = (await userModel.getUserName({ id: user_id })) || '';
+
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          writer,
+          likeCount,
+          commentCount,
+          userId: user_id,
         };
       },
     );
