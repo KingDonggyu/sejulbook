@@ -29,18 +29,19 @@ const Detail = styled.p`
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
 `;
 
-const NotFoundPage = () => (
+const ErrorPage = () => (
   <>
     <SEO />
     <Wrapper>
       <Image src={quotesLeftSrc} alt="왼쪽 큰따옴표 아이콘" />
       <Title>
-        해당 페이지를 <span>찾을 수 없습니다.</span>
+        예상하지 못한 오류가 발생했습니다.
+        <span>잠시 후 다시 시도해 주세요.</span>
       </Title>
       <Image src={quotesRightSrc} alt="오른쪽 큰따옴표 아이콘" />
-      <Detail>404 - Page is not Found</Detail>
+      <Detail>500 - Server Error</Detail>
     </Wrapper>
   </>
 );
 
-export default NotFoundPage;
+export default ErrorPage;
