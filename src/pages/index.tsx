@@ -22,7 +22,9 @@ import { UserId } from '@/types/features/user';
 
 const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
   const mostLikedBookReviewList = useMostLikedBookReviewList();
-  const followingBookReviewList = useFollowingBookReviewList();
+  const followingBookReviewList = useFollowingBookReviewList(
+    myUserId || undefined,
+  );
 
   return (
     <>
@@ -37,9 +39,11 @@ const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
           />
         }
         subscriptionsPageLink={
-          <Link href={`/${myUserId}${Route.SUBSCRIPTIONS}`}>
-            <ArrowRightIcon size={25} />
-          </Link>
+          !!myUserId && (
+            <Link href={`/${myUserId}${Route.SUBSCRIPTIONS}`}>
+              <ArrowRightIcon size={25} />
+            </Link>
+          )
         }
       />
     </>

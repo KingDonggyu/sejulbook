@@ -50,7 +50,7 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
 
       <link
         rel="canonical"
-        href={url ? `${defaultSEO.url}${url.split('?')[0]}` : url}
+        href={url ? `${defaultSEO.url}${url.split('?')[0]}` : defaultSEO.url}
       />
     </Head>
   );
