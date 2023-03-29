@@ -1,12 +1,9 @@
 import useQuery from '@/hooks/useQuery';
-import useUserStatus from '@/hooks/useUserStatus';
 import { getFollowingBookReviewListQuery } from '@/services/queries/bookReview';
 import { HomeBookReviewSummary } from '@/types/features/bookReview';
+import { UserId } from '@/types/features/user';
 
-const useFollowingBookReviewList = () => {
-  const { session } = useUserStatus();
-  const myUserId = session ? session.id || undefined : undefined;
-
+const useFollowingBookReviewList = (myUserId?: UserId) => {
   const { data: followingBookReviewList } = useQuery<HomeBookReviewSummary[]>(
     getFollowingBookReviewListQuery(myUserId),
   );
