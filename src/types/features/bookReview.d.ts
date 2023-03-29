@@ -52,6 +52,18 @@ export interface PublishRequest {
 }
 
 /**
+ * 독후감 리스트 요청 타입
+ */
+export interface BookReviewListRequest {
+  query: string;
+  pageParam?: number | null;
+}
+export interface FollowingBookReviewListRequest {
+  userId: UserId;
+  pageParam?: number | null;
+}
+
+/**
  * 독후감 정보 응답 타입
  */
 export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
@@ -61,24 +73,32 @@ export interface BookReviewResponse extends Omit<PublishRequest, 'tags'> {
   createdAt: string;
 }
 
-export type BookReviewSummary = Pick<
-  BookReviewResponse,
-  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
-> & {
+export interface LibraryBookReviewSummary
+  extends Pick<
+    BookReviewResponse,
+    'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
+  > {
   likeCount: number;
   commentCount: number;
-};
+}
 
-export type ExtendedBookReviewSummary = {
+export interface FeedBookReviewSummary
+  extends Omit<LibraryBookReviewSummary, 'bookname' | 'createdAt'> {
+  userId: UserId;
   writer: UserName;
-} & Omit<BookReviewSummary, 'commentCount'>;
+}
 
-export type BookReivewList = BookReviewSummary[];
+export interface HomeBookReviewSummary
+  extends Omit<LibraryBookReviewSummary, 'commentCount'> {
+  writer: UserName;
+}
 
 export type DraftSavedBookReview = Pick<
   BookReviewResponse,
   'id' | 'bookname' | 'createdAt'
 >;
+
+export type BookReivewList = LibraryBookReviewSummary[];
 
 /**
  * URL Query

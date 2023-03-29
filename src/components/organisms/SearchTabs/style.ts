@@ -15,6 +15,11 @@ export const CategoryWrapper = styled.div`
   }
 `;
 
+export const searchTabsStyle = (theme: Theme) =>
+  css`
+    background: ${theme.COLOR.BOX};
+  `;
+
 export const bookReviewSearchTabsStyle = (theme: Theme) => css`
   grid-template-columns: repeat(8, 1fr);
   @media screen and (max-width: ${theme.MAX_WIDTH.TABLET}) {

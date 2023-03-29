@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
 import BookReviewTemplate from '@/components/templates/BookReivew';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
@@ -34,6 +34,7 @@ import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDelet
 import Route from '@/constants/routes';
 import { confirm } from '@/constants/message';
 import { PublishedBookReviewURLQuery } from '@/types/features/bookReview';
+import { Tag } from '@/types/features/tag';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const BookreviewPage = () => {
@@ -82,13 +83,27 @@ const BookreviewPage = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleClickTagButton = (tag: Tag) => {
+    router.push({
+      pathname: Route.SEARCH_RESULT_BY_TAG,
+      query: {
+        q: tag,
+      },
+    });
+  };
+
   if (!bookReview) {
     return null;
   }
 
   return (
     <>
-      <DocumentTitle title={bookReview.bookname} />
+      <SEO
+        title={bookReview.bookname}
+        description={bookReview.sejul}
+        image={bookReview.thumbnail}
+        url={`${Route.BOOKREVIEW}/${bookReview.id}`}
+      />
       <BookReviewTemplate
         bookReivew={bookReview}
         editDeleteButtonSet={
@@ -124,7 +139,9 @@ const BookreviewPage = () => {
         ratingViewer={
           <Rating init={Number(bookReview.rating)} size={17} gap={3} readonly />
         }
-        tagList={tags && <TagList tags={tags} />}
+        tagList={
+          tags && <TagList tags={tags} onClickTag={handleClickTagButton} />
+        }
         comment={
           <div ref={commentRef}>
             <CommentContainer

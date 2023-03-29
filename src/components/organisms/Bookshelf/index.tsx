@@ -4,15 +4,22 @@ import { css, Theme } from '@emotion/react';
 import { GiPencil } from '@react-icons/all-files/gi/GiPencil';
 import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
 import Route from '@/constants/routes';
-import { BookReivewList, BookReviewSummary } from '@/types/features/bookReview';
 import convert1DArrayTo2DArray from '@/utils/convert1DArrayTo2DArray';
+import useIntersect from '@/hooks/useIntersect';
 import { iconButtonStyle } from '@/styles/common';
+import {
+  LibraryBookReviewSummary,
+  FeedBookReviewSummary,
+} from '@/types/features/bookReview';
 import BookReviewItem from '../BookReivewItem';
 import * as s from './style';
 
+type BookReview = LibraryBookReviewSummary | FeedBookReviewSummary;
+
 interface BookshelfProps {
-  isMyBookshelf: boolean;
-  bookReviewList: BookReivewList;
+  bookReviewList: BookReview[];
+  hasWriteBookReviewItem: boolean;
+  onRefetch?: () => void;
 }
 
 const WriteBookReviewItem = () => (
@@ -29,20 +36,30 @@ const WriteBookReviewItem = () => (
   </Link>
 );
 
-const BookshelfRow = ({ row }: { row: (BookReviewSummary | null)[] }) => (
+const BookshelfRow = ({ row }: { row: (BookReview | null)[] }) => (
   <s.Row>
     {row.map((bookReview) => {
       if (!bookReview) {
         return <WriteBookReviewItem key={0} />;
       }
 
-      return <BookReviewItem key={bookReview.id} {...bookReview} />;
+      return <BookReviewItem key={bookReview.id} bookReview={bookReview} />;
     })}
   </s.Row>
 );
 
-const Bookshelf = ({ isMyBookshelf, bookReviewList }: BookshelfProps) => {
-  const initializedBookShelf = isMyBookshelf ? [null] : [];
+const Bookshelf = ({
+  bookReviewList,
+  hasWriteBookReviewItem,
+  onRefetch,
+}: BookshelfProps) => {
+  const initializedBookShelf = hasWriteBookReviewItem ? [null] : [];
+
+  const intersectRef = useIntersect(() => {
+    if (onRefetch) {
+      onRefetch();
+    }
+  });
 
   const bookshelf = convert1DArrayTo2DArray(
     [...initializedBookShelf, ...bookReviewList],
@@ -57,7 +74,11 @@ const Bookshelf = ({ isMyBookshelf, bookReviewList }: BookshelfProps) => {
           <s.Divider />
         </Fragment>
       ))}
-      {Boolean(!bookshelf.length) && <s.AltText>독후감이 없습니다</s.AltText>}
+      {bookshelf.length ? (
+        <s.IntersectTarget ref={intersectRef} />
+      ) : (
+        <s.AltText>독후감이 없습니다</s.AltText>
+      )}
     </s.Wrapper>
   );
 };

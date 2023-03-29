@@ -1,6 +1,13 @@
 import { ResultSetHeader } from 'mysql2';
 import query from 'server/database/query';
-import BookReviewEntity, { DateCreated } from './bookReview.entity';
+import BookReviewEntity, {
+  BookReviewId,
+  DateCreated,
+} from './bookReview.entity';
+import {
+  TABLE_NAME as USER_TABLE_NAME,
+  Column as UserColumn,
+} from '../user/user.model';
 import {
   TABLE_NAME as LIKE_TABLE_NAME,
   Column as LikeColumn,
@@ -9,6 +16,12 @@ import {
   TABLE_NAME as FOLLOW_TABLE_NAME,
   Column as FollowColumn,
 } from '../follow/follow.model';
+import {
+  TABLE_NAME as TAG_TABLE_NAME,
+  Column as TagColumn,
+} from '../tag/tag.model';
+import { UserName } from '../user/user.entity';
+import TagEntity from '../tag/tag.entity';
 
 const TABLE_NAME = 'sejulbook';
 
@@ -41,6 +54,11 @@ type DraftSavedBookReview = Pick<
   BookReviewEntity,
   'id' | 'bookname' | 'datecreated'
 >;
+
+interface FeedBookReview
+  extends Pick<BookReviewEntity, 'id' | 'user_id' | 'sejul' | 'thumbnail'> {
+  nick?: UserName;
+}
 
 const bookReviewModel = {
   getMostLikeBookReviewList: async ({
@@ -78,6 +96,47 @@ const bookReviewModel = {
     return result;
   },
 
+  getMaxBookReviewId: async ({
+    bookname,
+  }: Pick<BookReviewEntity, 'bookname'>) => {
+    const sql = `
+      select max(${Column.ID}) as id
+      from ${TABLE_NAME}
+      where ${Column.BOOK_NAME} = "${bookname}"
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
+  },
+
+  getMaxBookReviewIdByCategory: async ({
+    category_id,
+  }: Pick<BookReviewEntity, 'category_id'>) => {
+    const sql = `
+      select max(${Column.ID}) as id
+      from ${TABLE_NAME}
+      where ${Column.CATEGORY_ID} = ${category_id}
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
+  },
+
+  getMaxFollowingBookReviewId: async ({
+    user_id,
+  }: Pick<BookReviewEntity, 'user_id'>) => {
+    const sql = `
+      select max(S.${Column.ID}) as id
+      from ${TABLE_NAME} as S, ${FOLLOW_TABLE_NAME} as F 
+      where 
+        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
+        S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result.length ? result[0].id : null;
+  },
+
   getFollowingBookReviewList: async ({
     user_id,
   }: Pick<BookReviewEntity, 'user_id'>) => {
@@ -91,14 +150,111 @@ const bookReviewModel = {
         S.${Column.DATE_CREATED}
       from ${TABLE_NAME} as S
         inner join ${FOLLOW_TABLE_NAME} as F
-          on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWER_ID}
-      where F.${FollowColumn.FOLLOWING_ID} = ${user_id}
+          on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+      where F.${FollowColumn.FOLLOWER_ID} = ${user_id}
       order by ${Column.DATE_CREATED} DESC
       limit 10;
     `;
 
     const result = await query<ExtendedBookReviewSummary[]>(sql);
+    return result;
+  },
 
+  getPagingBookReviewList: async ({
+    bookname,
+    maxId,
+  }: Pick<BookReviewEntity, 'bookname'> & { maxId: BookReviewId }) => {
+    const sql = `
+      select 
+        S.${Column.ID},
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL},
+        U.${UserColumn.NICK}
+      from ${TABLE_NAME} as S
+        inner join ${USER_TABLE_NAME} as U
+        on S.${Column.USER_ID} = U.${UserColumn.ID}
+      where 
+        S.${Column.BOOK_NAME} = "${bookname}" and 
+        S.${Column.ID} < ${maxId}
+        order by ${Column.ID} DESC
+      limit 12
+    `;
+
+    const result = await query<FeedBookReview[]>(sql);
+    return result;
+  },
+
+  getPagingBookReviewListByTag: async ({
+    tag,
+    maxId,
+  }: Pick<TagEntity, 'tag'> & { maxId: BookReviewId }) => {
+    const sql = `
+      select 
+        S.${Column.ID}, 
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL}
+      from ${TABLE_NAME} as S
+        inner join ${TAG_TABLE_NAME} as T
+        on S.${Column.ID} = T.${TagColumn.BOOKREVIEW_ID}
+      where 
+        T.${TagColumn.TAG} = "${tag}" and 
+        S.${Column.ID} < ${maxId}
+      order by S.${Column.ID} DESC
+      limit 12
+    `;
+
+    const result = await query<FeedBookReview[]>(sql);
+    return result;
+  },
+
+  getPagingBookReviewListByCategory: async ({
+    category_id,
+    maxId,
+  }: Pick<BookReviewEntity, 'category_id'> & { maxId: BookReviewId }) => {
+    const sql = `
+      select 
+        S.${Column.ID},
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL},
+        U.${UserColumn.NICK}
+      from ${TABLE_NAME} as S
+        inner join ${USER_TABLE_NAME} as U
+        on S.${Column.USER_ID} = U.${UserColumn.ID}
+      where
+        S.${Column.CATEGORY_ID} = ${category_id} and 
+        S.${Column.ID} < ${maxId}
+      order by S.${Column.ID} DESC
+      limit 12
+    `;
+
+    const result = await query<FeedBookReview[]>(sql);
+    return result;
+  },
+
+  getPagingFollowingBookReviewList: async ({
+    user_id,
+    maxId,
+  }: Pick<BookReviewEntity, 'user_id'> & { maxId: BookReviewId }) => {
+    const sql = `
+      select 
+        S.${Column.ID}, 
+        S.${Column.THUMBNAIL}, 
+        S.${Column.USER_ID}, 
+        S.${Column.SEJUL}
+      from ${TABLE_NAME} as S
+        inner join ${FOLLOW_TABLE_NAME} as F
+        on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+      where 
+        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
+        S.${Column.ID} < ${maxId}
+      order by ${Column.ID} DESC
+      limit 12
+    `;
+
+    const result = await query<FeedBookReview[]>(sql);
     return result;
   },
 

@@ -4,13 +4,14 @@ const nanumMyeongjo = Nanum_Myeongjo({
   display: 'swap',
   weight: ['400', '700'],
   subsets: ['korean'],
-  fallback: ['serif'],
+  fallback: ['sans-serif'],
 });
 
 const notoSansKR = Noto_Sans_KR({
   display: 'swap',
-  weight: ['300', '400', '500'],
+  weight: ['400', '500'],
   subsets: ['korean'],
+  fallback: ['system-ui'],
 });
 
 const fontFamily = {
@@ -36,8 +37,8 @@ const fontSize = {
 };
 
 const fontWeight = {
-  LIGHT: 300,
-  BOLD: 400,
+  NORMAL: 400,
+  BOLD: 500,
   MYEONGJO_BOLD: 700,
 };
 

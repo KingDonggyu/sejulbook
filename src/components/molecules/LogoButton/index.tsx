@@ -15,7 +15,6 @@ const LogoButton = ({ style, css: cssProps }: StyleProps) => {
         cssProps ||
         css`
           display: block;
-          width: 120px;
         `
       }
       style={style}

@@ -11,19 +11,14 @@ export const Top = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 40px;
+  background: ${({ theme }) => theme.COLOR.BACKGROUND};
   border-bottom: 1px solid ${({ theme }) => theme.COLOR.LINE};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     padding: 10px;
   }
 `;
 
-export const Logo = styled.div`
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    a {
-      width: 80px;
-    }
-  }
-`;
+export const Logo = styled.div``;
 
 export const ButtonWrapper = styled.div`
   display: flex;
@@ -44,6 +39,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const BookName = styled.h1`
+  line-height: 1.5;
   width: 100%;
   padding: 40px 0;
   margin: auto;

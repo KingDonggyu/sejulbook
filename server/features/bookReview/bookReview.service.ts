@@ -1,7 +1,7 @@
 import { bookReviewError, userError } from 'server/constants/message';
-import { HttpSuccess, HttpFailed, HttpResponse } from 'server/types/http';
+import { HttpResponse } from 'server/types/http';
 
-import { Category } from '../category/category.dto';
+import CategoryDTO, { Category } from '../category/category.dto';
 import { UserName } from '../user/user.dto';
 import BookReviewDTO, { BookReviewId } from './bookReview.dto';
 
@@ -16,11 +16,17 @@ import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
+import getMaxBookReviewId from './utils/getMaxBookReviewId';
+import TagDTO from '../tag/tag.dto';
 
-type BookReviewSummary = Pick<
-  BookReviewDTO,
-  'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
->;
+interface BookReviewSummary
+  extends Pick<
+    BookReviewDTO,
+    'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
+  > {
+  likeCount: number;
+  commentCount: number;
+}
 
 type ExtendedBookReviewSummary = {
   writer: UserName;
@@ -36,9 +42,18 @@ interface PublishedBookReview extends BookReviewDTO {
   category: Category;
 }
 
+interface FeedFollowingBookReview
+  extends Pick<BookReviewDTO, 'id' | 'sejul' | 'thumbnail' | 'userId'> {
+  writer: UserName;
+  likeCount: number;
+  commentCount: number;
+}
+
 const bookReviewService = {
   getMostLikeBookReviewList: async (): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
+    HttpResponse<
+      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
+    >
   > => {
     const twoMonthDateInfo = getCurrTwoMonthDate();
     const bookReviewList = await bookReviewModel.getMostLikeBookReviewList(
@@ -49,7 +64,9 @@ const bookReviewService = {
       async ({
         user_id,
         ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
+      }): Promise<
+        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
+      > => {
         const userName = await userModel.getUserName({ id: user_id });
 
         return {
@@ -71,7 +88,9 @@ const bookReviewService = {
   getFollowingBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
+    HttpResponse<
+      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
+    >
   > => {
     const bookReviewList = await bookReviewModel.getFollowingBookReviewList({
       user_id: userId,
@@ -81,7 +100,9 @@ const bookReviewService = {
       async ({
         user_id,
         ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
+      }): Promise<
+        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
+      > => {
         const userName = await userModel.getUserName({ id: user_id });
 
         return {
@@ -100,10 +121,198 @@ const bookReviewService = {
     return { error: false, data };
   },
 
+  getPagingBookReviewList: async ({
+    bookname,
+    maxId,
+  }: Pick<BookReviewDTO, 'bookname'> & {
+    maxId: BookReviewId | null;
+  }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      bookReviewModel.getMaxBookReviewId({ bookname }),
+    );
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList = await bookReviewModel.getPagingBookReviewList({
+      bookname,
+      maxId: bookReviewId,
+    });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail, nick }) => {
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          likeCount,
+          commentCount,
+          userId: user_id,
+          writer: nick || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
+  getPagingBookReviewListByCategory: async ({
+    category,
+    maxId,
+  }: Pick<CategoryDTO, 'category'> & {
+    maxId: BookReviewId | null;
+  }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
+    const categoryId = await categoryModel.getCategoryId({ category });
+
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      bookReviewModel.getMaxBookReviewIdByCategory({ category_id: categoryId }),
+    );
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList =
+      await bookReviewModel.getPagingBookReviewListByCategory({
+        category_id: categoryId,
+        maxId: bookReviewId,
+      });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail, nick }) => {
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          likeCount,
+          commentCount,
+          userId: user_id,
+          writer: nick || '',
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
+  getPagingBookReviewListByTag: async ({
+    tag,
+    maxId,
+  }: Pick<TagDTO, 'tag'> & { maxId: BookReviewId | null }): Promise<
+    HttpResponse<FeedFollowingBookReview[]>
+  > => {
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      tagModel.getMaxBookReviewIdByTag({ tag }),
+    );
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList = await bookReviewModel.getPagingBookReviewListByTag({
+      tag,
+      maxId: bookReviewId,
+    });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail }) => {
+        const writer = (await userModel.getUserName({ id: user_id })) || '';
+
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          writer,
+          likeCount,
+          commentCount,
+          userId: user_id,
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
+  getPagingFollowingBookReviewList: async ({
+    userId,
+    maxId,
+  }: Pick<BookReviewDTO, 'userId'> & { maxId: BookReviewId | null }): Promise<
+    HttpResponse<FeedFollowingBookReview[]>
+  > => {
+    const bookReviewId = await getMaxBookReviewId(maxId, () =>
+      bookReviewModel.getMaxFollowingBookReviewId({ user_id: userId }),
+    );
+
+    if (!bookReviewId) {
+      return { error: false, data: [] };
+    }
+
+    const bookReviewList =
+      await bookReviewModel.getPagingFollowingBookReviewList({
+        user_id: userId,
+        maxId: bookReviewId,
+      });
+
+    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
+      async ({ id, user_id, sejul, thumbnail }) => {
+        const writer = (await userModel.getUserName({ id: user_id })) || '';
+
+        const { count: likeCount } = await likeModel.getLikeCount({
+          sejulbook_id: id,
+        });
+
+        const { count: commentCount } = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+
+        return {
+          id,
+          sejul,
+          thumbnail,
+          writer,
+          likeCount,
+          commentCount,
+          userId: user_id,
+        };
+      },
+    );
+
+    const data = await Promise.all(promises);
+    return { error: false, data };
+  },
+
   getBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<BookReviewSummary[]> | HttpFailed
+    HttpResponse<BookReviewSummary[]>
   > => {
     const bookReviewList = await bookReviewModel.getBookReviewList({
       user_id: userId,
@@ -111,33 +320,32 @@ const bookReviewService = {
 
     const promises: Promise<BookReviewSummary>[] = bookReviewList.map(
       async ({ id, datecreated, ...bookReviewSummary }) => {
-        const likeResult = await likeModel.getLikeCount({
+        const { count: likeCount } = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
 
-        const commentResult = await commentModel.getCommentCount({
+        const { count: commentCount } = await commentModel.getCommentCount({
           sejulbook_id: id,
         });
 
         return {
           id,
+          likeCount,
+          commentCount,
           createdAt: datecreated,
-          likeCount: likeResult.count,
-          commentCount: commentResult.count,
           ...bookReviewSummary,
         };
       },
     );
 
     const data = await Promise.all(promises);
-
     return { error: false, data };
   },
 
   getDraftSavedList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpSuccess<DraftSavedBookReview[]> | HttpFailed
+    HttpResponse<DraftSavedBookReview[]>
   > => {
     const bookReviewList = await bookReviewModel.getDraftSavedList({
       user_id: userId,
@@ -155,9 +363,7 @@ const bookReviewService = {
 
   getBookReivew: async ({
     id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<
-    HttpSuccess<PublishedBookReview> | HttpFailed
-  > => {
+  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<PublishedBookReview>> => {
     const bookReviewData = await bookReviewModel.getBookReivew({ id });
 
     if (!bookReviewData) {
@@ -194,7 +400,7 @@ const bookReviewService = {
 
   draftSaveBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+  ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const result =
       bookReviewGuard.checkEmptyBook() ||
@@ -247,7 +453,7 @@ const bookReviewService = {
 
   publishBookReview: async (
     bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpSuccess<BookReviewId> | HttpFailed> => {
+  ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
 
@@ -277,9 +483,7 @@ const bookReviewService = {
 
   deletedBookReview: async ({
     id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<
-    HttpSuccess<undefined> | HttpFailed
-  > => {
+  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
     await commentModel.deleteComments({ sejulbook_id: id });
     await tagModel.deleteTags({ sejulbook_id: id });
     await likeModel.deleteAllLikes({ sejulbook_id: id });

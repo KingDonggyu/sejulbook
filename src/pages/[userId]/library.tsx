@@ -12,7 +12,7 @@ import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
 import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
 
 import Library from '@/components/templates/Library';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import Profile from '@/components/organisms/Profile';
 import ProfileEditButton from '@/components/organisms/ProfileEditButton';
 import SortDropdown from '@/components/molecules/SortDropdown';
@@ -21,6 +21,7 @@ import SubscribeToggleButton from '@/components/organisms/SubscribeToggleButton'
 import { getFollowInfoQuery } from '@/services/queries/follow';
 import { UserId } from '@/types/features/user';
 import { BookReivewList } from '@/types/features/bookReview';
+import Route from '@/constants/routes';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 const LibraryPage = ({ userId }: { userId: UserId }) => {
@@ -47,7 +48,13 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
 
   return (
     <>
-      <DocumentTitle title={`${user?.name}의 서재`} />
+      <SEO
+        title={`${user?.name}의 서재`}
+        description={`${user?.name}의 서재 ${
+          !!user?.introduce && `- ${user.introduce}`
+        }`}
+        url={`/${userId}${Route.LIBRARY}`}
+      />
       <Library
         profile={
           <Profile
@@ -60,7 +67,7 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
         bookshelf={
           bookReviewList && (
             <Bookshelf
-              isMyBookshelf={isMyLibrary}
+              hasWriteBookReviewItem={isMyLibrary}
               bookReviewList={bookReviewList}
             />
           )

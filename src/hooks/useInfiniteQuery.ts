@@ -20,6 +20,11 @@ const useInfiniteQuery = <T>({ queryKey, queryFn, options }: InfiniteQuery) => {
   return {
     ...result,
     data,
+    fetchNextPage: () => {
+      if (result.hasNextPage && !result.isFetching) {
+        result.fetchNextPage();
+      }
+    },
   };
 };
 

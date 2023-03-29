@@ -14,7 +14,7 @@ const nextConfig = {
     return [
       {
         source: '/api/books/title',
-        destination: `https://dapi.kakao.com/v3/search/book?target=title`,
+        destination: `https://dapi.kakao.com/v3/search/book?target=people`,
       },
     ];
   },

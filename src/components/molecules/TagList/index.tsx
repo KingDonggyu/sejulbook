@@ -1,10 +1,10 @@
+import styled from '@emotion/styled';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import styled from '@emotion/styled';
 
 interface TagListProps {
   tags: string[];
-  handleTagClick?: () => void;
+  onClickTag?: (tag: string) => void;
 }
 
 const Wrapper = styled.div`
@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   gap: 8px;
 `;
 
-const TagList = ({ tags, handleTagClick }: TagListProps) => (
+const TagList = ({ tags, onClickTag }: TagListProps) => (
   <Wrapper>
     {tags.map((name) => (
       <Button
@@ -23,7 +23,7 @@ const TagList = ({ tags, handleTagClick }: TagListProps) => (
         elevation={0}
         variant={ButtonVariant.CONTAINED}
         color={ColorVariant.LINE}
-        onClick={handleTagClick}
+        onClick={() => onClickTag && onClickTag(name)}
       >
         #{name}
       </Button>

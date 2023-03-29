@@ -25,6 +25,17 @@ const categoryModel = {
     const [result] = await query<Pick<CategoryEntity, 'category'>[]>(sql);
     return result;
   },
+
+  getCategoryId: async ({ category }: Pick<CategoryEntity, 'category'>) => {
+    const sql = `
+      select ${Column.ID} 
+      from ${TABLE_NAME} 
+      where ${Column.CATEGORY} = "${category}"
+  `;
+
+    const [result] = await query<Pick<CategoryEntity, 'id'>[]>(sql);
+    return result.id;
+  },
 };
 
 export default categoryModel;

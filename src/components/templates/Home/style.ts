@@ -29,53 +29,35 @@ export const BannerContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   & > img:first-of-type {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   & > img:last-of-type {
-    margin-top: 20px;
+    margin-top: 10px;
   }
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     gap: 20px;
     & > img {
       width: 20px;
     }
-    & > img:first-of-type {
-      margin-bottom: 10px;
-    }
-    & > img:last-of-type {
-      margin-top: 10px;
-    }
   }
 `;
 
 export const Title = styled.h1`
-  font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
+  font-size: 3rem;
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
   }
 `;
 
 export const SubTitle = styled.h2`
-  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
+  font-size: 2.2rem;
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
-  }
-`;
-
-export const BookReviewListAltText = styled.div`
-  margin: 100px auto;
-  width: fit-content;
-  color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
-  font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
-  font-family: ${({ theme }) => theme.FONT_FAMILY.notoSansKR};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    margin: 50px auto;
-    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   }
 `;
 
@@ -85,6 +67,16 @@ export const BookReviewListLabel = styled(SubTitle)`
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
+  }
+`;
+
+export const SubscribeLabelWrapper = styled.div`
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  h2 {
+    margin: 0;
   }
 `;
 

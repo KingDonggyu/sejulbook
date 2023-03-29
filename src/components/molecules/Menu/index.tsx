@@ -3,7 +3,7 @@ import Box, { BoxProps } from '@/components/atoms/Box';
 import useClickOutside from '@/hooks/useClickOutside';
 import * as s from './style';
 
-type MenuProps = {
+export type MenuProps = {
   anchorEl: HTMLElement | null;
   divider?: boolean;
   top?: number;

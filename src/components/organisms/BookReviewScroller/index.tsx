@@ -1,13 +1,13 @@
 import CardScoller from '@/components/molecules/CardScroller';
 import { ModalKey } from '@/constants/keys';
 import useUserStatus from '@/hooks/useUserStatus';
-import { ExtendedBookReviewSummary } from '@/types/features/bookReview';
+import { HomeBookReviewSummary } from '@/types/features/bookReview';
 import { LoginButton } from '../AccountButton';
 import SejulThumbnail from '../SejulThumbnail';
 import * as s from './style';
 
 interface BookReviewScrollerProps {
-  bookReviewList: ExtendedBookReviewSummary[];
+  bookReviewList: HomeBookReviewSummary[];
 }
 
 const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
@@ -15,7 +15,7 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
     return (
       <s.AltWrapper>
         <s.BookReviewListAltText>
-          최근 발행된 독후감이 없습니다
+          최근 좋아요를 받은 독후감이 없습니다.
         </s.BookReviewListAltText>
       </s.AltWrapper>
     );
@@ -35,12 +35,12 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
           width={300}
           height={400}
         >
-          <s.Content>
-            <s.Test>
+          <s.ContentWrapper>
+            <s.Content>
               <s.Writer>{writer}의 세 줄</s.Writer>
               <s.BookName>&apos;{bookname}&apos;</s.BookName>
-            </s.Test>
-          </s.Content>
+            </s.Content>
+          </s.ContentWrapper>
         </SejulThumbnail>
       ))}
     </CardScoller>

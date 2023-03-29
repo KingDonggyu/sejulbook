@@ -6,7 +6,7 @@ import {
 } from '@/services/queries/user';
 import useUserStatus from '@/hooks/useUserStatus';
 
-const useFollowUserList = ({
+const useInfinityFollowUserList = ({
   targetUserId,
   isFollowing,
 }: Pick<FollowUserListRequst, 'targetUserId'> & {
@@ -19,9 +19,7 @@ const useFollowUserList = ({
     ? getFollowingUserListInfinityQuery({ myUserId, targetUserId })
     : getFollowerUserListInfinityQuery({ myUserId, targetUserId });
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
-    FollowUser[]
-  >({
+  const { data, fetchNextPage } = useInfiniteQuery<FollowUser[]>({
     ...query,
     options: {
       getNextPageParam: (lastPage) => {
@@ -37,11 +35,9 @@ const useFollowUserList = ({
   });
 
   return {
-    followUserList: myUserId ? data?.filter((d) => d) : undefined,
+    followUserList: data,
     refetchNextFollowUserList: fetchNextPage,
-    hasNextPage,
-    isFetching,
   };
 };
 
-export default useFollowUserList;
+export default useInfinityFollowUserList;

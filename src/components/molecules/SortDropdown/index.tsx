@@ -1,35 +1,32 @@
 import { useState } from 'react';
 import { TiArrowSortedDown } from '@react-icons/all-files/ti/TiArrowSortedDown';
 import { ButtonVariant, BoxVariant } from '@/constants';
-import Button from '@/components/atoms/Button';
+import Button, { ButtonProps } from '@/components/atoms/Button';
 import Menu from '@/components/molecules/Menu';
 import useOpenClose from '@/hooks/useOpenClose';
 import * as s from './style';
 
-interface SortDropdownProps {
-  onClickLatestButton?: () => void;
-  onClickLikeSortButton?: () => void;
+interface SortDropdownProps extends ButtonProps {
+  onClickLatestButton: () => void;
+  onClickLikeSortButton: () => void;
 }
 
 const SortDropdown = ({
   onClickLatestButton,
   onClickLikeSortButton,
+  ...buttonProps
 }: SortDropdownProps) => {
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
   const [isLatestSorted, setIsLatestSorted] = useState(true);
 
   const handleClickLatestButton = () => {
-    if (onClickLatestButton) {
-      onClickLatestButton();
-    }
+    onClickLatestButton();
     setIsLatestSorted(true);
     handleClose();
   };
 
   const handleClickLikeSortButton = () => {
-    if (onClickLikeSortButton) {
-      onClickLikeSortButton();
-    }
+    onClickLikeSortButton();
     setIsLatestSorted(false);
     handleClose();
   };
@@ -40,6 +37,7 @@ const SortDropdown = ({
         variant={ButtonVariant.OUTLINED}
         css={s.sortButtonStyle}
         onClick={handleToggle}
+        {...buttonProps}
       >
         <span>{isLatestSorted ? '최신순' : '좋아요 순'}</span>
         <TiArrowSortedDown />
