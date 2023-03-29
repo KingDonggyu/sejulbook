@@ -3,7 +3,7 @@ import { dehydrate } from '@tanstack/react-query';
 
 import LogoButton from '@/components/molecules/LogoButton';
 import NewbookWrite from '@/components/templates/NewbookWrite';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
@@ -46,7 +46,7 @@ const NewbookWritePage = ({
 
   return (
     <>
-      <DocumentTitle title="독후감 쓰기" />
+      <SEO title="독후감 쓰기" />
       {!isLoading && (
         <NewbookWrite
           logo={<LogoButton />}

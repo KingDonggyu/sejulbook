@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate } from '@tanstack/react-query';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
@@ -11,6 +11,7 @@ import { getBookReviewListByCategoryInfinityQuery } from '@/services/queries/boo
 import useInfinityBookReviewListByCategory from '@/hooks/services/infinityQueries/useInfinityBookReviewListByCategory';
 import { BookTitle } from '@/types/features/book';
 import { Category } from '@/types/features/category';
+import Route from '@/constants/routes';
 
 const SearchResultPage = ({ category }: { category: Category }) => {
   const { bookReviewList: initBookReviewList, refetchBookReviewList } =
@@ -33,7 +34,12 @@ const SearchResultPage = ({ category }: { category: Category }) => {
 
   return (
     <>
-      <DocumentTitle title="" />
+      <SEO
+        title={category}
+        description={`'${category}' 카테고리로 검색한 독후감`}
+        image={bookReviewList.length ? bookReviewList[0].thumbnail : undefined}
+        url={`${Route.SEARCH_RESULT_BY_CATEGORY}?q=${category}`}
+      />
       <SearchResultTemplate
         pageTitle={category}
         searchBar={<BookSearchBar />}

@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 import NewbookSearch from '@/components/templates/NewbookSearch';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
 import DraftSavedListModal from '@/components/organisms/DraftSavedListModal';
 import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
@@ -26,7 +26,7 @@ const NewbookSearchPage = ({ myId }: { myId: UserId }) => {
 
   return (
     <>
-      <DocumentTitle title="책 선택" />
+      <SEO title="책 선택" />
       <NewbookSearch
         bookSearchBar={
           <BookSearchBar onClickSearchedItem={handleClickSearchedItem} />

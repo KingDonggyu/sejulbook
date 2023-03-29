@@ -1,8 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate } from '@tanstack/react-query';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import Button from '@/components/atoms/Button';
 import UserListModal from '@/components/organisms/UserListModal';
+import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscriptionsTemplate from '@/components/templates/Subscriptions';
 import { UserId } from '@/types/features/user';
 import modalStore from '@/stores/modalStore';
@@ -14,7 +15,6 @@ import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getFollowInfoQuery } from '@/services/queries/follow';
 import { getFollowingBookReviewListInfinityQuery } from '@/services/queries/bookReview';
-import Bookshelf from '@/components/organisms/Bookshelf';
 
 const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
   const { openModal } = modalStore();
@@ -25,7 +25,7 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
 
   return (
     <>
-      <DocumentTitle title="구독" />
+      <SEO title="관심서재" />
       <SubscriptionsTemplate
         followingUserListModalButton={
           <Button onClick={() => openModal(ModalKey.FOLLOWING_USER_LIST)}>
