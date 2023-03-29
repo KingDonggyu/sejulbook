@@ -9,7 +9,7 @@ const nanumMyeongjo = Nanum_Myeongjo({
 
 const notoSansKR = Noto_Sans_KR({
   display: 'swap',
-  weight: ['300', '400'],
+  weight: ['400', '500'],
   subsets: ['korean'],
   fallback: ['system-ui'],
 });
@@ -37,8 +37,8 @@ const fontSize = {
 };
 
 const fontWeight = {
-  NORMAL: 300,
-  BOLD: 400,
+  NORMAL: 400,
+  BOLD: 500,
   MYEONGJO_BOLD: 700,
 };
 
