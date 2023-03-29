@@ -19,9 +19,9 @@ const Home = ({
     <s.Banner>
       <s.BannerContent>
         <Image src={quotesLeftSrc} alt="왼쪽 큰따옴표 아이콘" />
-        <s.Title>세 줄로 마음을 정리해요</s.Title>
-        <s.SubTitle>세 줄로 마음을 정리해요</s.SubTitle>
-        <s.SubTitle>세 줄로 마음을 정리해요</s.SubTitle>
+        <s.Title>의미있는 책을 담는 공간,</s.Title>
+        <s.SubTitle>부담없이 책을 기록하는 공간,</s.SubTitle>
+        <s.SubTitle>당신에게 그런 공간이 되기를.</s.SubTitle>
         <Image src={quotesRightSrc} alt="오른쪽 큰따옴표 아이콘" />
       </s.BannerContent>
     </s.Banner>
