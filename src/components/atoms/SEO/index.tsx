@@ -43,8 +43,8 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       <meta property="og:site_name" content="세 줄 독후감" />
       <meta property="og:locale" content="ko_kr" />
 
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="original" data-rh="true" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={pageTitle} data-rh="true" />
       <meta
         name="twitter:description"
         content={description || defaultSEO.description}

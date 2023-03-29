@@ -29,7 +29,7 @@ export const BannerContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   & > img:first-of-type {
     margin-bottom: 10px;
@@ -41,6 +41,7 @@ export const BannerContent = styled.div`
     gap: 20px;
     & > img {
       width: 20px;
+      margin: 0 !important;
     }
   }
 `;
