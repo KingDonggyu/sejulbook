@@ -24,7 +24,7 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       <meta
         name="viewport"
-        content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
       />
 
       <title>{pageTitle}</title>
