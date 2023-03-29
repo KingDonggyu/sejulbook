@@ -15,7 +15,7 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
     return (
       <s.AltWrapper>
         <s.BookReviewListAltText>
-          최근 발행된 독후감이 없습니다
+          최근 좋아요를 받은 독후감이 없습니다.
         </s.BookReviewListAltText>
       </s.AltWrapper>
     );
