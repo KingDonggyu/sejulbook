@@ -10,7 +10,6 @@ const Wrapper = styled.div`
   align-items: center;
   padding-top: 7rem;
   gap: 30px;
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
 `;
 
 const Title = styled.div`
@@ -19,13 +18,17 @@ const Title = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
   }
 `;
 
 const Detail = styled.p`
-  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  margin-top: 30px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
+  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
   color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
 `;
 
