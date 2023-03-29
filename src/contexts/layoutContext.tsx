@@ -10,9 +10,12 @@ import { useRouter } from 'next/router';
 import { signIn, signOut } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import { css } from '@emotion/react';
+
+import Footer from '@/components/atoms/Footer';
 import HeaderBar from '@/components/organisms/HeaderBar';
 import ScreenModeButton from '@/components/organisms/SceenModeButton';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
+
 import { ModalKey } from '@/constants/keys';
 import Route from '@/constants/routes';
 import useUserStatus from '@/hooks/useUserStatus';
@@ -114,6 +117,7 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
         onComplete={handleSignUp}
         onCancel={() => signOut()}
       />
+      {isHome && <Footer />}
       <ToastContainer
         theme="colored"
         position="bottom-left"
