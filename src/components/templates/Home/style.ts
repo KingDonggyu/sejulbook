@@ -29,38 +29,32 @@ export const BannerContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   & > img:first-of-type {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   & > img:last-of-type {
-    margin-top: 20px;
+    margin-top: 10px;
   }
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     gap: 20px;
     & > img {
       width: 20px;
     }
-    & > img:first-of-type {
-      margin-bottom: 10px;
-    }
-    & > img:last-of-type {
-      margin-top: 10px;
-    }
   }
 `;
 
 export const Title = styled.h1`
-  font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
+  font-size: 3rem;
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
+    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
   }
 `;
 
 export const SubTitle = styled.h2`
-  font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
+  font-size: 2.2rem;
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
