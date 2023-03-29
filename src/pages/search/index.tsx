@@ -1,10 +1,11 @@
 import SearchTemplate from '@/components/templates/Search';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import SearchTabs from '@/components/organisms/SearchTabs';
+import Route from '@/constants/routes';
 
 const SearchPage = () => (
   <>
-    <DocumentTitle title="검색" />
+    <SEO title="검색" url={Route.SEARCH} />
     <SearchTemplate searchTabs={<SearchTabs />} />
   </>
 );

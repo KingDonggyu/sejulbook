@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getBookReviewListInfinityQuery } from '@/services/queries/bookReview';
 import { dehydrate } from '@tanstack/react-query';
@@ -10,6 +10,7 @@ import Bookshelf from '@/components/organisms/Bookshelf';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
 import SortDropdown from '@/components/molecules/SortDropdown';
 import { useEffect, useState } from 'react';
+import Route from '@/constants/routes';
 
 const SearchResultPage = ({ title }: { title: BookTitle }) => {
   const { bookReviewList: initBookReviewList, refetchBookReviewList } =
@@ -32,7 +33,12 @@ const SearchResultPage = ({ title }: { title: BookTitle }) => {
 
   return (
     <>
-      <DocumentTitle title="" />
+      <SEO
+        title={title}
+        description={`'${title}' 책으로 검색한 독후감`}
+        image={bookReviewList.length ? bookReviewList[0].thumbnail : undefined}
+        url={`${Route.SEARCH_RESULT_BY_BOOK}?q=${title}`}
+      />
       <SearchResultTemplate
         pageTitle={`'${title}'`}
         searchBar={<BookSearchBar initialValue={title} />}

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
 
 import BookReviewTemplate from '@/components/templates/BookReivew';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import Rating from '@/components/molecules/Rating';
@@ -98,7 +98,12 @@ const BookreviewPage = () => {
 
   return (
     <>
-      <DocumentTitle title={bookReview.bookname} />
+      <SEO
+        title={bookReview.bookname}
+        description={bookReview.sejul}
+        image={bookReview.thumbnail}
+        url={`${Route.BOOKREVIEW}/${bookReview.id}`}
+      />
       <BookReviewTemplate
         bookReivew={bookReview}
         editDeleteButtonSet={

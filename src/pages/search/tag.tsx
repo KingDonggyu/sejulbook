@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate } from '@tanstack/react-query';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SortDropdown from '@/components/molecules/SortDropdown';
@@ -10,6 +10,7 @@ import prefetchQuery from '@/services/prefetchQuery';
 import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
 import useInfinityBookReviewListByTag from '@/hooks/services/infinityQueries/useInfinityBookReviewListByTag';
 import { Tag } from '@/types/features/tag';
+import Route from '@/constants/routes';
 
 const SearchResultPage = ({ tag }: { tag: Tag }) => {
   const { bookReviewList: initBookReviewList, refetchBookReviewList } =
@@ -32,7 +33,12 @@ const SearchResultPage = ({ tag }: { tag: Tag }) => {
 
   return (
     <>
-      <DocumentTitle title="" />
+      <SEO
+        title={`#${tag}`}
+        description={`'${tag}' 태그로 검색한 독후감`}
+        image={bookReviewList.length ? bookReviewList[0].thumbnail : undefined}
+        url={`${Route.SEARCH_RESULT_BY_TAG}?q=${tag}`}
+      />
       <SearchResultTemplate
         pageTitle={`#${tag}`}
         searchBar={<BookSearchBar />}

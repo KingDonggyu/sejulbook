@@ -5,7 +5,7 @@ import { dehydrate } from '@tanstack/react-query';
 
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Home from '@/components/templates/Home';
-import DocumentTitle from '@/components/atoms/DocumentTitle';
+import SEO from '@/components/atoms/SEO';
 import { ArrowRightIcon } from '@/components/atoms/Icon';
 import BookReviewScroller from '@/components/organisms/BookReviewScroller';
 
@@ -26,7 +26,7 @@ const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
 
   return (
     <>
-      <DocumentTitle />
+      <SEO />
       <Home
         mostLikedBookReviewScroller={
           <BookReviewScroller bookReviewList={mostLikedBookReviewList} />

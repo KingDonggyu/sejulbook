@@ -10,7 +10,6 @@ interface LogoProps {
 
 const Logo = ({ width, isDarkMode }: LogoProps) => (
   <Image
-    priority
     src={isDarkMode ? logoDarkSrc : logoLightSrc}
     alt="로고 이미지"
     width={120}
