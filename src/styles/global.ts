@@ -8,7 +8,6 @@ const globalStyle = (theme: Theme) => css`
   *, *:before, *:after {
     box-sizing: border-box;
     line-height: 1;
-    font-weight: ${theme.FONT_WEIGHT.NORMAL};
     font-family: ${theme.FONT_FAMILY.notoSansKR};
     -webkit-font-smoothing: antialiased;
   }
@@ -25,13 +24,11 @@ const globalStyle = (theme: Theme) => css`
     cursor: pointer;
     background: none;
     border: none;
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
   }
 
   a {
     text-decoration: none;
     color: inherit;
-    font-weight: ${theme.FONT_WEIGHT.BOLD};
   }
 
   input::placeholder {

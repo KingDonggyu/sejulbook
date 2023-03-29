@@ -35,12 +35,12 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
           width={300}
           height={400}
         >
-          <s.Content>
-            <s.Test>
+          <s.ContentWrapper>
+            <s.Content>
               <s.Writer>{writer}의 세 줄</s.Writer>
               <s.BookName>&apos;{bookname}&apos;</s.BookName>
-            </s.Test>
-          </s.Content>
+            </s.Content>
+          </s.ContentWrapper>
         </SejulThumbnail>
       ))}
     </CardScoller>

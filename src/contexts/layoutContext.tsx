@@ -9,10 +9,12 @@ import {
 import { useRouter } from 'next/router';
 import { signIn, signOut } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
-import { css } from '@emotion/react';
+
+import Footer from '@/components/atoms/Footer';
 import HeaderBar from '@/components/organisms/HeaderBar';
 import ScreenModeButton from '@/components/organisms/SceenModeButton';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
+
 import { ModalKey } from '@/constants/keys';
 import Route from '@/constants/routes';
 import useUserStatus from '@/hooks/useUserStatus';
@@ -21,25 +23,7 @@ import { signUp } from '@/services/api/user';
 import UserError from '@/services/errors/UserError';
 import { Introduce, UserName } from '@/types/features/user';
 import 'react-toastify/dist/ReactToastify.css';
-
-const mainStyle = ({
-  isHome = false,
-  isVisibleHeaderBar,
-}: {
-  isHome?: boolean;
-  isVisibleHeaderBar: boolean;
-}) => css`
-  margin: auto;
-  padding: ${isVisibleHeaderBar ? `5rem 20px` : `20px`};
-  ${isHome
-    ? `
-      padding: 0;
-      padding-bottom: 5rem;
-    `
-    : `
-      max-width: 80rem;
-    `};
-`;
+import MainContainer from '@/components/atoms/MainContainer';
 
 interface LayoutContextProps {
   isVisibleHeaderBar: boolean;
@@ -106,19 +90,22 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
   return (
     <LayoutContext.Provider value={contextProps}>
       {isVisibleHeaderBar && <HeaderBar />}
-      <main css={mainStyle({ isHome, isVisibleHeaderBar })}>{children}</main>
-      {isVisibleScreenModeButton && <ScreenModeButton />}
-      <ProfileSettingModal
-        modalKey={ModalKey.SIGNUP}
-        title="회원가입"
-        onComplete={handleSignUp}
-        onCancel={() => signOut()}
-      />
-      <ToastContainer
-        theme="colored"
-        position="bottom-left"
-        style={{ lineHeight: 1.4 }}
-      />
+      <MainContainer isHome={isHome} isVisibleHeaderBar={isVisibleHeaderBar}>
+        {children}
+        <ProfileSettingModal
+          modalKey={ModalKey.SIGNUP}
+          title="회원가입"
+          onComplete={handleSignUp}
+          onCancel={() => signOut()}
+        />
+        {isVisibleScreenModeButton && <ScreenModeButton />}
+        <ToastContainer
+          theme="colored"
+          position="bottom-left"
+          style={{ lineHeight: 1.4 }}
+        />
+      </MainContainer>
+      {isHome && <Footer />}
     </LayoutContext.Provider>
   );
 };
