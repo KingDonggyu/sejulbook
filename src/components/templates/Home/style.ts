@@ -29,7 +29,7 @@ export const BannerContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
   color: ${({ theme }) => theme.COLOR.WHITE};
   & > img:first-of-type {
     margin-bottom: 10px;
@@ -37,10 +37,11 @@ export const BannerContent = styled.div`
   & > img:last-of-type {
     margin-top: 10px;
   }
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
     gap: 20px;
     & > img {
       width: 20px;
+      margin: 0 !important;
     }
   }
 `;
@@ -48,7 +49,7 @@ export const BannerContent = styled.div`
 export const Title = styled.h1`
   font-size: 3rem;
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
   }
 `;
@@ -56,7 +57,7 @@ export const Title = styled.h1`
 export const SubTitle = styled.h2`
   font-size: 2.2rem;
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
   }
 `;
