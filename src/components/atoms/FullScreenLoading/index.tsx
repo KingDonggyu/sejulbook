@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import styled from '@emotion/styled';
 import ellipsisSrc from '@public/images/animation-ellipsis.svg';
+import { LOADING_Z_INDEX } from '@/constants/zIndex';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -11,6 +12,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: ${LOADING_Z_INDEX};
   background: ${({ theme }) => theme.COLOR.BACKGROUND};
 `;
 
