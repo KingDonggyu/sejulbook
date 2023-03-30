@@ -30,7 +30,10 @@ const Footer = () => (
   <footer css={footerStyle}>
     <p>
       © 2023{' '}
-      <Link href="https://sejulbook.notion.site/62e31077c0934b989acaa6819ef9947a">
+      <Link
+        href="https://sejulbook.notion.site/62e31077c0934b989acaa6819ef9947a"
+        target="_blank"
+      >
         Sejulbook
       </Link>
       . All rights reserved.

@@ -3,6 +3,7 @@ import { HiOutlineArrowLeft } from '@react-icons/all-files/hi/HiOutlineArrowLeft
 import { HiOutlineArrowRight } from '@react-icons/all-files/hi/HiOutlineArrowRight';
 import Button from '@/components/atoms/Button';
 import { StyleProps } from '@/types/style';
+import { iconButtonStyle } from '@/styles/common';
 import * as s from './style';
 
 interface CardScollerProps extends StyleProps {
@@ -68,7 +69,8 @@ const CardScoller = ({
   return (
     <s.Wrapper>
       {isVisiblePrevButton && (
-        <Button radius={50} style={{ left: '30px' }}>
+        <Button radius={50} style={{ left: '30px' }} css={iconButtonStyle}>
+          오른쪽 슬라이드 버튼
           <HiOutlineArrowLeft
             size={70}
             onClick={() => handleClickArrowButton('prev')}
@@ -84,7 +86,8 @@ const CardScoller = ({
         {children}
       </s.Scoller>
       {isVisibleNextButton && (
-        <Button radius={50} style={{ right: '30px' }}>
+        <Button radius={50} style={{ right: '30px' }} css={iconButtonStyle}>
+          왼쪽 슬라이드 버튼
           <HiOutlineArrowRight
             size={70}
             onClick={() => handleClickArrowButton('next')}

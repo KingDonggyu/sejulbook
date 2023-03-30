@@ -9,8 +9,9 @@ interface SEOProps {
 }
 
 const defaultSEO = {
-  description: '세 줄로 마음을 정리해요.',
-  url: 'https://sejulbook.vercel.app',
+  description:
+    '의미있는 책을 담는 공간, 부담없이 책을 기록하는 공간, 당신에게 그런 공간이 되기를.',
+  url: 'https://www.sejulbook.com',
   image: 'https://sejulbook.s3.ap-northeast-2.amazonaws.com/logo-icon.svg',
 };
 
@@ -21,7 +22,10 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
     <Head>
       <meta charSet="UTF-8" />
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
 
       <title>{pageTitle}</title>
       <meta
@@ -39,8 +43,8 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       <meta property="og:site_name" content="세 줄 독후감" />
       <meta property="og:locale" content="ko_kr" />
 
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="original" data-rh="true" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={pageTitle} data-rh="true" />
       <meta
         name="twitter:description"
         content={description || defaultSEO.description}

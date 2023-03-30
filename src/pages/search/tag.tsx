@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate } from '@tanstack/react-query';
 import SEO from '@/components/atoms/SEO';
@@ -9,6 +8,7 @@ import BookSearchBar from '@/components/organisms/BookSearchBar';
 import prefetchQuery from '@/services/prefetchQuery';
 import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
 import useInfinityBookReviewListByTag from '@/hooks/services/infinityQueries/useInfinityBookReviewListByTag';
+import useSortedBookReviewList from '@/hooks/useSortedBookReviewList';
 import { Tag } from '@/types/features/tag';
 import Route from '@/constants/routes';
 
@@ -16,20 +16,11 @@ const SearchResultPage = ({ tag }: { tag: Tag }) => {
   const { bookReviewList: initBookReviewList, refetchBookReviewList } =
     useInfinityBookReviewListByTag(tag);
 
-  const [bookReviewList, setBookReviewList] = useState(initBookReviewList);
-
-  useEffect(() => {
-    setBookReviewList(initBookReviewList);
-  }, [initBookReviewList]);
-
-  const handleClickLatestSortButton = () => {
-    setBookReviewList(initBookReviewList);
-  };
-
-  const handleClickLikeSortButton = () => {
-    const list = [...bookReviewList];
-    setBookReviewList(list.sort((a, b) => b.likeCount - a.likeCount));
-  };
+  const {
+    bookReviewList,
+    handleClickLatestSortButton,
+    handleClickLikeSortButton,
+  } = useSortedBookReviewList(initBookReviewList);
 
   return (
     <>

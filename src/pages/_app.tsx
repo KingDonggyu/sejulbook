@@ -12,9 +12,12 @@ import { LayoutProvider } from '@/contexts/layoutContext';
 import { ScreenModeProvider } from '@/contexts/screenModeContext';
 import { NewbookProvider } from '@/contexts/newbookContext';
 import defaultOptions from '@/services/queries/defaultOptions';
+import useLoading from '@/hooks/useLoading';
+import FullScreenLoading from '@/components/atoms/FullScreenLoading';
 
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient({ defaultOptions }));
+  const { isLoading } = useLoading();
 
   return (
     <ScreenModeProvider>
@@ -25,6 +28,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
             <LayoutProvider>
               <NewbookProvider>
                 <Component {...pageProps} />
+                {isLoading && <FullScreenLoading />}
               </NewbookProvider>
             </LayoutProvider>
           </Hydrate>

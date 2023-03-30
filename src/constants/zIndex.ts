@@ -9,3 +9,4 @@ export const MODAL_Z_INDEX = HEADER_Z_INDEX + above;
 export const NON_MODAL_Z_INDEX = base;
 export const SIDEBAR_Z_INDEX = HEADER_Z_INDEX + above;
 export const SCREEN_MODE_BUTTON_Z_INDEX = MODAL_Z_INDEX + below + below;
+export const LOADING_Z_INDEX = HEADER_Z_INDEX + below;
