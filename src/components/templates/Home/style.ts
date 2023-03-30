@@ -18,7 +18,7 @@ export const Banner = styled.div`
   background: ${({ theme }) => theme.COLOR.PRIMARY};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    padding: 30px 0 30px 15%;
+    padding: 30px 0 30px 12%;
     padding-top: ${({ theme }) => theme.HEADERBAR_HEIGHT + 30}px;
   }
 `;
