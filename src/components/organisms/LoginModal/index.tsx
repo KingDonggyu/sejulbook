@@ -23,10 +23,10 @@ const LoginModal = ({
       <s.EasyLoginText>SNS 계정으로 간편 로그인</s.EasyLoginText>
       <s.LoginButtonWrapper>
         <Button elevation={4} onClick={() => handleLogin(OAuthName.KAKAO)}>
-          <Image src={kakaoButtonSrc} alt="카카오 로그인 버튼" />
+          <Image priority src={kakaoButtonSrc} alt="카카오 로그인 버튼" />
         </Button>
         <Button elevation={4} onClick={() => handleLogin(OAuthName.NAVER)}>
-          <Image src={naverButtonSrc} alt="네이버 로그인 버튼" />
+          <Image priority src={naverButtonSrc} alt="네이버 로그인 버튼" />
         </Button>
       </s.LoginButtonWrapper>
     </Modal>
