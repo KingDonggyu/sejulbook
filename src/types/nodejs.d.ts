@@ -1,6 +1,7 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
     SEJULBOOK_BASE_URL: string;
+    ANALYZE?: 'true';
 
     SEJULBOOK_KAKAO_CLIENT_ID: string;
     SEJULBOOK_KAKAO_CLIENT_SECRET: string;
