@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
     "vercel-deploy": "next build && next export"
@@ -14,6 +15,7 @@
     "@aws-sdk/s3-presigned-post": "^3.279.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@next/bundle-analyzer": "^13.2.4",
     "@next/font": "13.1.1",
     "@react-icons/all-files": "^4.1.0",
     "@tanstack/react-query": "^4.24.10",
