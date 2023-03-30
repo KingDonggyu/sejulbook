@@ -27,7 +27,7 @@ export const BookName = styled.h1`
   text-align: center;
   font-size: ${({ theme }) => theme.FONT_SIZE.DISPLAY};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
+    font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   }
 `;
 
@@ -57,6 +57,9 @@ export const HeaderBottom = styled.div`
   button {
     font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
     font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_SMALL};
+    @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+      margin-left: auto;
+    }
   }
 `;
 
@@ -64,9 +67,16 @@ export const WritingInfo = styled.div`
   span {
     margin: 0 8px;
     color: ${({ theme }) => theme.COLOR.SECOND_TEXT};
+    @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+      visibility: hidden;
+    }
   }
   a {
     font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
+  }
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
+    display: flex;
+    flex-direction: column;
   }
 `;
 
