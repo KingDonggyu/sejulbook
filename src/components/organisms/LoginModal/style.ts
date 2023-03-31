@@ -10,7 +10,7 @@ export const modalStyle = css`
 `;
 
 export const Title = styled.h2`
-  margin-bottom: 20px;
+  margin: 20px 0;
   color: ${({ theme }) => theme.COLOR.TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
   & > span {
@@ -39,5 +39,5 @@ export const EasyLoginDivider = styled.hr`
 export const LoginButtonWrapper = styled.div`
   display: flex;
   gap: 20px;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
 `;
