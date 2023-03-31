@@ -30,6 +30,10 @@ export const TabPanel = styled.div<{
     ` &:not(&:last-of-type) {
       border-right: 1px solid ${theme.COLOR.LINE};
     }`};
+
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
+    padding: ${({ small }) => (small ? '5px 0' : '10px 0')};
+  }
 `;
 
 export const TabPanelTitle = styled.div<{
@@ -40,4 +44,8 @@ export const TabPanelTitle = styled.div<{
 
   font-size: ${({ theme, small }) =>
     small ? theme.FONT_SIZE.SMALL : theme.FONT_SIZE.MEDIUM};
+
+  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
+    font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  }
 `;
