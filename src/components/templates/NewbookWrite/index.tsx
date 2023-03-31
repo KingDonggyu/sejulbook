@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import Button from '@/components/atoms/Button';
 import Route from '@/constants/routes';
+import useLoading from '@/hooks/useLoading';
 import * as s from './style';
 
 interface NewbookWriteProps {
@@ -23,6 +24,7 @@ const NewbookWrite = ({
 }: NewbookWriteProps) => {
   const isShowTemplate = Boolean(bookName);
   const router = useRouter();
+  const { isLoading } = useLoading();
 
   if (!isShowTemplate) {
     return (
@@ -37,13 +39,15 @@ const NewbookWrite = ({
 
   return (
     <>
-      <s.Top>
-        <s.Logo>{logo}</s.Logo>
-        <s.ButtonWrapper>
-          {draftSaveButton}
-          {publishButton}
-        </s.ButtonWrapper>
-      </s.Top>
+      {!isLoading && (
+        <s.Top>
+          <s.Logo>{logo}</s.Logo>
+          <s.ButtonWrapper>
+            {draftSaveButton}
+            {publishButton}
+          </s.ButtonWrapper>
+        </s.Top>
+      )}
       <s.ContentWrapper>
         <s.BookName>{bookName}</s.BookName>
         {sejulTextarea}
