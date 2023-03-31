@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
   padding: 10px;
-  height: 45rem;
+  height: 70vh;
   width: ${({ theme }) => theme.MAX_WIDTH.MOBILE};
   overflow-x: hidden;
   overflow-y: auto;
