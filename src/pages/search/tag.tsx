@@ -13,8 +13,11 @@ import { Tag } from '@/types/features/tag';
 import Route from '@/constants/routes';
 
 const SearchResultPage = ({ tag }: { tag: Tag }) => {
-  const { bookReviewList: initBookReviewList, refetchBookReviewList } =
-    useInfinityBookReviewListByTag(tag);
+  const {
+    bookReviewList: initBookReviewList,
+    refetchBookReviewList,
+    isLoading,
+  } = useInfinityBookReviewListByTag(tag);
 
   const {
     bookReviewList,
@@ -42,6 +45,7 @@ const SearchResultPage = ({ tag }: { tag: Tag }) => {
         bookshelf={
           !!bookReviewList.length && (
             <Bookshelf
+              isLoading={isLoading}
               hasWriteBookReviewItem={false}
               bookReviewList={bookReviewList}
               onRefetch={refetchBookReviewList}
