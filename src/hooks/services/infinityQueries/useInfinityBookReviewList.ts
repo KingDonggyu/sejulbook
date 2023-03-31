@@ -4,7 +4,9 @@ import { BookTitle } from '@/types/features/book';
 import { FeedBookReviewSummary } from '@/types/features/bookReview';
 
 const useInfinityBookReviewList = (title: BookTitle) => {
-  const { data, fetchNextPage } = useInfiniteQuery<FeedBookReviewSummary[]>({
+  const { data, fetchNextPage, isLoading } = useInfiniteQuery<
+    FeedBookReviewSummary[]
+  >({
     ...getBookReviewListInfinityQuery({ query: title }),
     options: {
       getNextPageParam: (lastPage) => {
@@ -22,6 +24,7 @@ const useInfinityBookReviewList = (title: BookTitle) => {
   return {
     bookReviewList: data || [],
     refetchBookReviewList: fetchNextPage,
+    isLoading,
   };
 };
 

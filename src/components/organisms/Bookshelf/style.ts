@@ -19,6 +19,11 @@ export const wrtieBookReviewButtonStyle = (theme: Theme) => css`
   }
 `;
 
+export const spinnerStyle = css`
+  margin: auto;
+  display: block;
+`;
+
 export const Wrapper = styled.div``;
 
 export const Row = styled.div`
