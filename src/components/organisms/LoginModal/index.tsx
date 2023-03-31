@@ -2,6 +2,7 @@ import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import kakaoButtonSrc from '@public/images/btn-kakao.svg';
 import naverButtonSrc from '@public/images/btn-naver.svg';
+import quotesLeftSrc from '@public/images/icon-quotes-left.svg';
 import { APP_NAME, OAuthName } from '@/constants';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
@@ -19,14 +20,15 @@ const LoginModal = ({
 
   return (
     <Modal modalKey={modalKey} css={s.modalStyle}>
+      <Image src={quotesLeftSrc} alt="왼쪽 큰따옴표 아이콘" width={20} />
       <s.Title>{APP_NAME} 시작하기</s.Title>
       <s.EasyLoginText>SNS 계정으로 간편 로그인</s.EasyLoginText>
       <s.LoginButtonWrapper>
         <Button elevation={4} onClick={() => handleLogin(OAuthName.KAKAO)}>
-          <Image src={kakaoButtonSrc} alt="카카오 로그인 버튼" />
+          <Image priority src={kakaoButtonSrc} alt="카카오 로그인 버튼" />
         </Button>
         <Button elevation={4} onClick={() => handleLogin(OAuthName.NAVER)}>
-          <Image src={naverButtonSrc} alt="네이버 로그인 버튼" />
+          <Image priority src={naverButtonSrc} alt="네이버 로그인 버튼" />
         </Button>
       </s.LoginButtonWrapper>
     </Modal>
