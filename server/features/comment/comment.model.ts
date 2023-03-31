@@ -21,7 +21,7 @@ const commentModel = {
     `;
 
     const [result] = await query<{ count: number }[]>(sql);
-    return result;
+    return result.count;
   },
 
   getComments: async ({
