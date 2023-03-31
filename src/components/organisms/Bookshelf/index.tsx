@@ -1,8 +1,11 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { css, Theme } from '@emotion/react';
 import { GiPencil } from '@react-icons/all-files/gi/GiPencil';
 import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
+
+import spinnerSrc from '@public/images/animation-spinner.svg';
 import Route from '@/constants/routes';
 import convert1DArrayTo2DArray from '@/utils/convert1DArrayTo2DArray';
 import useIntersect from '@/hooks/useIntersect';
@@ -17,6 +20,7 @@ import * as s from './style';
 type BookReview = LibraryBookReviewSummary | FeedBookReviewSummary;
 
 interface BookshelfProps {
+  isLoading?: boolean;
   bookReviewList: BookReview[];
   hasWriteBookReviewItem: boolean;
   onRefetch?: () => void;
@@ -49,6 +53,7 @@ const BookshelfRow = ({ row }: { row: (BookReview | null)[] }) => (
 );
 
 const Bookshelf = ({
+  isLoading = false,
   bookReviewList,
   hasWriteBookReviewItem,
   onRefetch,
@@ -74,6 +79,15 @@ const Bookshelf = ({
           <s.Divider />
         </Fragment>
       ))}
+      {isLoading && (
+        <Image
+          src={spinnerSrc}
+          alt="로딩 이미지"
+          width={70}
+          height={70}
+          css={s.spinnerStyle}
+        />
+      )}
       {bookshelf.length ? (
         <s.IntersectTarget ref={intersectRef} />
       ) : (

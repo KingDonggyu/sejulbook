@@ -7,24 +7,24 @@ const prefetchQuery = async (
 ) => {
   const queryClient = new QueryClient();
 
-  let promises = queries.map(async ({ queryKey, queryFn }) => {
-    await queryClient.prefetchQuery(queryKey, queryFn);
-  });
+  await Promise.allSettled([
+    ...queries.map(({ queryKey, queryFn }) =>
+      queryClient.prefetchQuery(queryKey, queryFn),
+    ),
+    ...infinityQueries.map(({ queryKey, queryFn }) =>
+      queryClient.prefetchInfiniteQuery(queryKey, () =>
+        queryFn({ pageParam: null }),
+      ),
+    ),
+  ]);
 
-  await Promise.all(promises);
-
-  promises = infinityQueries.map(async ({ queryKey, queryFn }) => {
-    await queryClient.prefetchInfiniteQuery(queryKey, () =>
-      queryFn({ pageParam: null }),
-    );
+  infinityQueries.forEach(({ queryKey }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     queryClient.setQueryData(queryKey, (data: any) => ({
       ...data,
       pageParams: [null],
     }));
   });
-
-  await Promise.all(promises);
 
   return queryClient;
 };

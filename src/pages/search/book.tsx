@@ -13,8 +13,11 @@ import SortDropdown from '@/components/molecules/SortDropdown';
 import Route from '@/constants/routes';
 
 const SearchResultPage = ({ title }: { title: BookTitle }) => {
-  const { bookReviewList: initBookReviewList, refetchBookReviewList } =
-    useInfinityBookReviewList(title);
+  const {
+    bookReviewList: initBookReviewList,
+    refetchBookReviewList,
+    isLoading,
+  } = useInfinityBookReviewList(title);
 
   const {
     bookReviewList,
@@ -42,6 +45,7 @@ const SearchResultPage = ({ title }: { title: BookTitle }) => {
         bookshelf={
           !!bookReviewList.length && (
             <Bookshelf
+              isLoading={isLoading}
               hasWriteBookReviewItem={false}
               bookReviewList={bookReviewList}
               onRefetch={refetchBookReviewList}

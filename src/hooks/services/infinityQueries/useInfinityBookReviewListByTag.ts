@@ -4,7 +4,9 @@ import { FeedBookReviewSummary } from '@/types/features/bookReview';
 import { Tag } from '@/types/features/tag';
 
 const useInfinityBookReviewListByTag = (tag: Tag) => {
-  const { data, fetchNextPage } = useInfiniteQuery<FeedBookReviewSummary[]>({
+  const { data, fetchNextPage, isLoading } = useInfiniteQuery<
+    FeedBookReviewSummary[]
+  >({
     ...getBookReviewListByTagInfinityQuery({ query: tag }),
     options: {
       getNextPageParam: (lastPage) => {
@@ -22,6 +24,7 @@ const useInfinityBookReviewListByTag = (tag: Tag) => {
   return {
     bookReviewList: data || [],
     refetchBookReviewList: fetchNextPage,
+    isLoading,
   };
 };
 

@@ -23,7 +23,7 @@ const likeService = {
         })
       : [];
 
-    const { count: likeCount } = await likeModel.getLikeCount({
+    const likeCount = await likeModel.getLikeCount({
       sejulbook_id: bookReviewId,
     });
 

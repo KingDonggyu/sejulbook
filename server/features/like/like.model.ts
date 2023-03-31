@@ -29,7 +29,7 @@ const likeModel = {
     `;
 
     const [result] = await query<{ count: number }[]>(sql);
-    return result;
+    return result.count;
   },
 
   deleteAllLikes: async ({
