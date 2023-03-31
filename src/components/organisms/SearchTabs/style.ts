@@ -7,7 +7,6 @@ export const TabContentWrapper = styled.div`
 `;
 
 export const CategoryWrapper = styled.div`
-  padding-top: 10px;
   margin: auto;
   width: 100%;
   button {
@@ -23,6 +22,6 @@ export const searchTabsStyle = (theme: Theme) =>
 export const bookReviewSearchTabsStyle = (theme: Theme) => css`
   grid-template-columns: repeat(8, 1fr);
   @media screen and (max-width: ${theme.MAX_WIDTH.TABLET}) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
