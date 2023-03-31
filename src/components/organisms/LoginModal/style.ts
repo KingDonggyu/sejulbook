@@ -13,7 +13,6 @@ export const Title = styled.h2`
   margin-bottom: 20px;
   color: ${({ theme }) => theme.COLOR.TEXT};
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
-  font-weight: ${({ theme }) => theme.FONT_WEIGHT.BOLD};
   & > span {
     color: ${({ theme }) => theme.COLOR.PRIMARY};
   }
