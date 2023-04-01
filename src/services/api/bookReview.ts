@@ -225,7 +225,10 @@ export const getDraftSavedList = async (userId: UserId) => {
   }
 };
 
-export const getBookReview = async (bookReviewId: BookReviewId) => {
+export const getBookReview = async (
+  bookReviewId: BookReviewId,
+  onError?: () => void,
+) => {
   try {
     const response = await get<HttpResponse<BookReviewResponse>>(
       `${API_URL}/${bookReviewId}`,
@@ -240,6 +243,9 @@ export const getBookReview = async (bookReviewId: BookReviewId) => {
 
     return response.data;
   } catch (error) {
+    if (onError) {
+      onError();
+    }
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'GET_BOOKREVIEW_ERROR', message });
   }

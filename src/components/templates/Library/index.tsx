@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import * as s from './style';
 
 interface LibraryProps {
+  hasUser: boolean;
   profile: ReactNode;
   profileEditButton: ReactNode;
   bookReivewSortButton: ReactNode;
@@ -10,6 +11,7 @@ interface LibraryProps {
 }
 
 const Library = ({
+  hasUser,
   profile,
   profileEditButton,
   bookReivewSortButton,
@@ -18,13 +20,17 @@ const Library = ({
   <s.Wrapper>
     <s.TopSectionWrapper>
       {profile}
-      <s.ButtonWrapper>
-        {profileEditButton}
-        {bookReivewSortButton}
-      </s.ButtonWrapper>
+      {hasUser ? (
+        <s.ButtonWrapper>
+          {profileEditButton}
+          {bookReivewSortButton}
+        </s.ButtonWrapper>
+      ) : (
+        <s.TopSectionSkeleton />
+      )}
     </s.TopSectionWrapper>
     <s.Divider />
-    {bookshelf}
+    {hasUser && bookshelf}
   </s.Wrapper>
 );
 

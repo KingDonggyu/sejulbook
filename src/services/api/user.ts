@@ -31,7 +31,7 @@ export const signUp = async (user: SignUpRequset) => {
   }
 };
 
-export const getUser = async (userId: UserId) => {
+export const getUser = async (userId: UserId, onError?: () => void) => {
   try {
     const response = await get<HttpResponse<User>>(`${API_URL}/${userId}`);
 
@@ -44,6 +44,9 @@ export const getUser = async (userId: UserId) => {
 
     return response.data;
   } catch (error) {
+    if (onError) {
+      onError();
+    }
     const { message } = getDataFromAxiosError(error);
     throw new UserError({ name: 'GET_USER_ERROR', message });
   }

@@ -34,6 +34,10 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       />
 
       <meta property="og:title" content={title} />
+      <meta
+        name="og:description"
+        content={description || defaultSEO.description}
+      />
       <meta property="og:type" content="website" />
       <meta
         property="og:url"
