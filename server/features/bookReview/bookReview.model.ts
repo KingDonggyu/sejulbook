@@ -88,7 +88,7 @@ const bookReviewModel = {
       where S.${Column.DATE_CREATED} 
         regexp "${prevYear}-${prevMonth}|${currYear}-${currMonth}"
       group by L.${LikeColumn.BOOKREVIEW_ID}
-      order by ${LikeCountAlias} desc
+      order by ${LikeCountAlias} desc, ${Column.ID} desc
       limit 10;
     `;
 

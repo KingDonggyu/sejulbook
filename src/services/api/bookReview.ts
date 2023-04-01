@@ -101,6 +101,7 @@ export const publishBookReview = async ({
       originThumbnail: bookReview.book.thumbnail,
       categoryId: bookReview.category.id,
       tags: Array.from(bookReview.tag),
+      createdAt: bookReview.createdAt,
       isDraftSave,
       userId,
     };

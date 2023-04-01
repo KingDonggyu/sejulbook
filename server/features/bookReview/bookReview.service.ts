@@ -18,6 +18,7 @@ import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 import getMaxBookReviewId from './utils/getMaxBookReviewId';
 import TagDTO from '../tag/tag.dto';
+import getSQLFormattedDate from './utils/getSQLFormattedDate';
 
 interface BookReviewSummary
   extends Pick<
@@ -497,7 +498,10 @@ const bookReviewService = {
   },
 
   publishBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & {
+      id?: BookReviewId;
+      createdAt?: string;
+    },
   ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
@@ -511,11 +515,14 @@ const bookReviewService = {
       isDraftSave: false,
     });
 
-    // 임시저장 독후감 발행
+    // 임시저장 독후감 발행 또는 독후감 수정
     if (bookReview.id) {
       await bookReviewModel.updateBookReview({
         ...entityData,
         id: bookReview.id,
+        datecreated: bookReview.createdAt
+          ? getSQLFormattedDate(bookReview.createdAt)
+          : undefined,
       });
 
       return { error: false, data: bookReview.id };
