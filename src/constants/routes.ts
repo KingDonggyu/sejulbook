@@ -8,8 +8,6 @@ enum Route {
   NEWBOOK_WRITE = '/newbook/write',
   BOOKREVIEW = '/bookreivew',
   SUBSCRIPTIONS = '/subscriptions',
-
-  // [userId]/...
   LIBRARY = '/library',
 }
 
