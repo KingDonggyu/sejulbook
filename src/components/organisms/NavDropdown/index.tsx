@@ -45,10 +45,10 @@ const NavDropdown = ({ userId }: { userId: UserId }) => {
         handleClose={handleClose}
       >
         <s.MenuItem>
-          <Link href={`/${userId}${Route.LIBRARY}`}>내 서재</Link>
+          <Link href={`${Route.LIBRARY}/${userId}`}>내 서재</Link>
         </s.MenuItem>
         <s.MenuItem>
-          <Link href={`/${userId}${Route.SUBSCRIPTIONS}`}>관심 서재</Link>
+          <Link href={`${Route.SUBSCRIPTIONS}`}>관심 서재</Link>
         </s.MenuItem>
         <s.MenuItem>
           <Link href={Route.NEWBOOK_SEARCH}>독후감 쓰기</Link>

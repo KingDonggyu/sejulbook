@@ -9,7 +9,7 @@ import * as s from './style';
 
 const UserSearchedItem = ({ id, name, introduce }: User) => (
   <li>
-    <Link href={`/${id}${Route.LIBRARY}`}>
+    <Link href={`${Route.LIBRARY}/${id}`}>
       <s.UserName>
         <span>{name}</span>의 서재
       </s.UserName>

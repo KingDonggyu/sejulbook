@@ -121,3 +121,23 @@ export const searchUsers = async (query: string) => {
     throw new UserError({ name: 'SEARCH_USERS_ERROR', message });
   }
 };
+
+export const getAllUserId = async () => {
+  try {
+    const response = await get<HttpResponse<Pick<User, 'id'>[]>>(
+      `${API_URL}/list/all`,
+    );
+
+    if (response.error) {
+      throw new UserError({
+        name: 'GET_ALL_USER_ID',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new UserError({ name: 'GET_ALL_USER_ID', message });
+  }
+};

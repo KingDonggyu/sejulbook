@@ -394,3 +394,26 @@ export const getPagingFollowingBookReviewList = async ({
     });
   }
 };
+
+export const getAllBookReviewId = async () => {
+  try {
+    const response = await get<HttpResponse<Pick<BookReviewResponse, 'id'>[]>>(
+      `${API_URL}/list/all`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_ALL_BOOKREVIEW_ID_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_ALL_BOOKREVIEW_ID_ERROR',
+      message,
+    });
+  }
+};

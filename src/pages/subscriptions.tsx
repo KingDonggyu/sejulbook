@@ -69,7 +69,7 @@ export const getServerSideProps = async (
     return serverSideProps;
   }
 
-  const myUserId = Number(ctx.query.userId);
+  const myUserId = serverSideProps.props.userId;
 
   const queryClient = await prefetchQuery(
     [getFollowInfoQuery({ targetUserId: myUserId, myUserId })],

@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /subscriptions
+Disallow: /newbook/search
+Disallow: /newbook/write
+Allow: /
+
+Sitemap: https://www.sejulbook.com/sitemap.xml
