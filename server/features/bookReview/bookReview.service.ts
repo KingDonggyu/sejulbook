@@ -51,6 +51,13 @@ interface FeedFollowingBookReview
 }
 
 const bookReviewService = {
+  getAllBookReviewId: async (): Promise<
+    HttpResponse<Pick<BookReviewDTO, 'id'>[]>
+  > => {
+    const data = await bookReviewModel.getAllBookReviewId();
+    return { error: false, data };
+  },
+
   getMostLikeBookReviewList: async (): Promise<
     HttpResponse<
       Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]

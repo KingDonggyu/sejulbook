@@ -61,6 +61,12 @@ interface FeedBookReview
 }
 
 const bookReviewModel = {
+  getAllBookReviewId: async () => {
+    const sql = `select ${Column.ID} from ${TABLE_NAME}`;
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result;
+  },
+
   getMostLikeBookReviewList: async ({
     currYear,
     currMonth,
