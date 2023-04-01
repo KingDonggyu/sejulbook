@@ -60,6 +60,9 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
         rel="canonical"
         href={url ? `${defaultSEO.url}${url.split('?')[0]}` : defaultSEO.url}
       />
+
+      <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </Head>
   );
 };
