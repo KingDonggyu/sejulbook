@@ -54,7 +54,7 @@ const BookreviewPage = () => {
     bookReviewId,
     onSuccess: () => {
       if (userId) {
-        router.replace(`/${userId}${Route.LIBRARY}`);
+        router.replace(`${Route.LIBRARY}/${userId}`);
         return;
       }
       router.replace(Route.HOME);
