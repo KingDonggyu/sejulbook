@@ -52,11 +52,6 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       <meta name="twitter:site" content={`@${defaultSEO.url} 세 줄 독후감`} />
       <meta name="twitter:image" content={image || defaultSEO.image} />
 
-      <meta name="robots" content="all" />
-      <meta name="googlebot" content="noindex,nofollow" />
-      <meta name="google" content="nositelinkssearchbox" key="sitelinks" />
-      <meta name="google" content="notranslate" key="notranslate" />
-
       <link
         rel="canonical"
         href={url ? `${defaultSEO.url}${url.split('?')[0]}` : defaultSEO.url}
