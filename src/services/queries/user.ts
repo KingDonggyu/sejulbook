@@ -2,12 +2,14 @@ import { signOut } from 'next-auth/react';
 import { getFollowUserList, getUser } from '@/services/api/user';
 import { FollowUserListRequst, UserId } from '@/types/features/user';
 import Query, { InfiniteQuery } from '@/types/query';
+import Route from '@/constants/routes';
 
 const BASE_QUERY_KEY = 'user';
 
 export const getUserQuery = (userId?: UserId, onError?: () => void): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getUser`, userId],
-  queryFn: () => userId && getUser(userId),
+  queryFn: () =>
+    userId && getUser(userId, () => window.location.replace(Route.HOME)),
   options: {
     enabled: !!userId,
     onError: () => {

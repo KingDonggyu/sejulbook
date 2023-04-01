@@ -1,3 +1,4 @@
+import Route from '@/constants/routes';
 import Query, { InfiniteQuery } from '@/types/query';
 import {
   BookReviewId,
@@ -42,7 +43,11 @@ export const getBookReviewListQuery = (userId: UserId): Query => ({
 
 export const getBookReviewQuery = (bookReviewId?: BookReviewId): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getBookReviewQuery`, bookReviewId],
-  queryFn: () => bookReviewId && getBookReview(bookReviewId),
+  queryFn: () =>
+    bookReviewId &&
+    getBookReview(bookReviewId, () => {
+      window.location.replace(Route.HOME);
+    }),
   options: {
     enabled: !!bookReviewId,
   },
