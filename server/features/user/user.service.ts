@@ -16,6 +16,11 @@ interface FollowUser {
 }
 
 const userService = {
+  getAllUserId: async (): Promise<HttpResponse<Pick<UserDTO, 'id'>[]>> => {
+    const data = await userModel.getAllUserId();
+    return { error: false, data };
+  },
+
   getUserId: async ({
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<
