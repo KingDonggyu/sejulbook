@@ -64,13 +64,13 @@ const bookReviewModel = {
   getMostLikeBookReviewList: async ({
     currYear,
     currMonth,
-    nextYear,
-    nextMonth,
+    prevYear,
+    prevMonth,
   }: {
     currYear: string;
     currMonth: string;
-    nextYear: string;
-    nextMonth: string;
+    prevYear: string;
+    prevMonth: string;
   }) => {
     const LikeCountAlias = 'likes_sum';
     const sql = `
@@ -86,7 +86,7 @@ const bookReviewModel = {
         inner join ${LIKE_TABLE_NAME} as L
           on S.${Column.ID} = L.${LikeColumn.BOOKREVIEW_ID}
       where S.${Column.DATE_CREATED} 
-        regexp "${currYear}-${currMonth}|${nextYear}-${nextMonth}"
+        regexp "${prevYear}-${prevMonth}|${currYear}-${currMonth}"
       group by L.${LikeColumn.BOOKREVIEW_ID}
       order by ${LikeCountAlias} desc
       limit 10;
