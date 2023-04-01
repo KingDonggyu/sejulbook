@@ -44,7 +44,7 @@ const BookReviewItem = ({ bookReview }: BookReviewItemProps) => {
         {isLibraryBookReviewItem ? (
           <>&apos;{bookReview.bookname}&apos;</>
         ) : (
-          <Link href={`/${bookReview.userId}${Route.LIBRARY}`}>
+          <Link href={`${Route.LIBRARY}/${bookReview.userId}`}>
             <span>{bookReview.writer}</span>의 서재
           </Link>
         )}

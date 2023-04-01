@@ -53,7 +53,7 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
         description={`${user?.name}의 서재 ${
           !!user?.introduce && `- ${user.introduce}`
         }`}
-        url={`/${userId}${Route.LIBRARY}`}
+        url={`${Route.LIBRARY}/${userId}`}
       />
       <Library
         profile={

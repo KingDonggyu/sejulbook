@@ -39,7 +39,7 @@ const useSavedBookReviewFetch = (bookReviewId: BookReviewId | undefined) => {
         },
         rating: Number(savedBookReview.rating),
         tag: new Set(tags),
-        thumbnail: undefined,
+        thumbnail: savedBookReview.thumbnail,
       });
     }
   }, [savedBookReview, setBookReivew, setNewbook, tags]);

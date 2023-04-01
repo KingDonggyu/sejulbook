@@ -69,6 +69,16 @@ export const getServerSideProps = async ({
 }: ExtededGetServerSidePropsContext) => {
   const { q } = query;
 
+  if (q === undefined) {
+    return {
+      props: {},
+      redirect: {
+        destination: Route.SEARCH,
+        permanent: false,
+      },
+    };
+  }
+
   const queryClient = await prefetchQuery(
     [],
     [getBookReviewListInfinityQuery({ query: q })],

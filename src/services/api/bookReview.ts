@@ -101,6 +101,7 @@ export const publishBookReview = async ({
       originThumbnail: bookReview.book.thumbnail,
       categoryId: bookReview.category.id,
       tags: Array.from(bookReview.tag),
+      createdAt: bookReview.createdAt,
       isDraftSave,
       userId,
     };
@@ -389,6 +390,29 @@ export const getPagingFollowingBookReviewList = async ({
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({
       name: 'GET_PAGING_FOLLOWING_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
+export const getAllBookReviewId = async () => {
+  try {
+    const response = await get<HttpResponse<Pick<BookReviewResponse, 'id'>[]>>(
+      `${API_URL}/list/all`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_ALL_BOOKREVIEW_ID_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_ALL_BOOKREVIEW_ID_ERROR',
       message,
     });
   }

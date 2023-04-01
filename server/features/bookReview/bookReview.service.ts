@@ -18,6 +18,7 @@ import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 import getMaxBookReviewId from './utils/getMaxBookReviewId';
 import TagDTO from '../tag/tag.dto';
+import getSQLFormattedDate from './utils/getSQLFormattedDate';
 
 interface BookReviewSummary
   extends Pick<
@@ -50,6 +51,13 @@ interface FeedFollowingBookReview
 }
 
 const bookReviewService = {
+  getAllBookReviewId: async (): Promise<
+    HttpResponse<Pick<BookReviewDTO, 'id'>[]>
+  > => {
+    const data = await bookReviewModel.getAllBookReviewId();
+    return { error: false, data };
+  },
+
   getMostLikeBookReviewList: async (): Promise<
     HttpResponse<
       Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
@@ -420,9 +428,13 @@ const bookReviewService = {
     }
 
     const bookReview = formatEntityToDTO(bookReviewData);
-    const userName = await userModel.getUserName({ id: bookReview.userId });
 
-    if (!userName) {
+    const settledResult = await Promise.allSettled([
+      userModel.getUserName({ id: bookReview.userId }),
+      categoryModel.getCategory({ id: bookReview.categoryId }),
+    ]);
+
+    if (settledResult[0].status !== 'fulfilled' || !settledResult[0].value) {
       return {
         error: true,
         code: 400,
@@ -430,9 +442,11 @@ const bookReviewService = {
       };
     }
 
-    const { category } = await categoryModel.getCategory({
-      id: bookReview.categoryId,
-    });
+    const userName = settledResult[0].value;
+    const category =
+      settledResult[1].status === 'fulfilled'
+        ? settledResult[1].value.category
+        : '';
 
     const data: PublishedBookReview = {
       ...bookReview,
@@ -497,7 +511,10 @@ const bookReviewService = {
   },
 
   publishBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & {
+      id?: BookReviewId;
+      createdAt?: string;
+    },
   ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
@@ -511,11 +528,14 @@ const bookReviewService = {
       isDraftSave: false,
     });
 
-    // 임시저장 독후감 발행
+    // 임시저장 독후감 발행 또는 독후감 수정
     if (bookReview.id) {
       await bookReviewModel.updateBookReview({
         ...entityData,
         id: bookReview.id,
+        datecreated: bookReview.createdAt
+          ? getSQLFormattedDate(bookReview.createdAt)
+          : undefined,
       });
 
       return { error: false, data: bookReview.id };
@@ -529,10 +549,12 @@ const bookReviewService = {
   deletedBookReview: async ({
     id,
   }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    await commentModel.deleteComments({ sejulbook_id: id });
-    await tagModel.deleteTags({ sejulbook_id: id });
-    await likeModel.deleteAllLikes({ sejulbook_id: id });
-    await bookReviewModel.deleteBookReview({ id });
+    await Promise.allSettled([
+      commentModel.deleteComments({ sejulbook_id: id }),
+      tagModel.deleteTags({ sejulbook_id: id }),
+      likeModel.deleteAllLikes({ sejulbook_id: id }),
+      bookReviewModel.deleteBookReview({ id }),
+    ]);
 
     return { error: false, data: undefined };
   },

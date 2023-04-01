@@ -7,10 +7,8 @@ enum Route {
   NEWBOOK_SEARCH = '/newbook/search',
   NEWBOOK_WRITE = '/newbook/write',
   BOOKREVIEW = '/bookreivew',
-
-  // [userId]/...
-  LIBRARY = '/library',
   SUBSCRIPTIONS = '/subscriptions',
+  LIBRARY = '/library',
 }
 
 export default Route;

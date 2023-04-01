@@ -20,7 +20,7 @@ const BookReviewBottom = ({
   <s.Bottom>
     <s.RatingWrapper>
       <s.Writer>
-        <Link href={`/${bookReivew.userId}${Route.LIBRARY}`}>
+        <Link href={`${Route.LIBRARY}/${bookReivew.userId}`}>
           {bookReivew.writer}
         </Link>
         의 평점

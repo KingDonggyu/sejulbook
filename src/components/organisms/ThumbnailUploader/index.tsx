@@ -42,8 +42,10 @@ const ThumbnailUploader = ({ originThumbnail }: ThumbnailUploaderProps) => {
   };
 
   useEffect(() => {
-    setThumbnail(originThumbnail);
-  }, [originThumbnail, setThumbnail]);
+    if (!thumbnail) {
+      setThumbnail(originThumbnail);
+    }
+  }, [originThumbnail, setThumbnail, thumbnail]);
 
   return (
     <>

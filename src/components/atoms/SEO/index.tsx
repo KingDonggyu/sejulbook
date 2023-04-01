@@ -43,7 +43,7 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       <meta property="og:site_name" content="세 줄 독후감" />
       <meta property="og:locale" content="ko_kr" />
 
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} data-rh="true" />
       <meta
         name="twitter:description"
@@ -51,6 +51,11 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       />
       <meta name="twitter:site" content={`@${defaultSEO.url} 세 줄 독후감`} />
       <meta name="twitter:image" content={image || defaultSEO.image} />
+
+      <meta name="robots" content="all" />
+      <meta name="googlebot" content="noindex,nofollow" />
+      <meta name="google" content="nositelinkssearchbox" key="sitelinks" />
+      <meta name="google" content="notranslate" key="notranslate" />
 
       <link
         rel="canonical"
