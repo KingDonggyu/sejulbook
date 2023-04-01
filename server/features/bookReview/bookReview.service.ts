@@ -421,9 +421,13 @@ const bookReviewService = {
     }
 
     const bookReview = formatEntityToDTO(bookReviewData);
-    const userName = await userModel.getUserName({ id: bookReview.userId });
 
-    if (!userName) {
+    const settledResult = await Promise.allSettled([
+      userModel.getUserName({ id: bookReview.userId }),
+      categoryModel.getCategory({ id: bookReview.categoryId }),
+    ]);
+
+    if (settledResult[0].status !== 'fulfilled' || !settledResult[0].value) {
       return {
         error: true,
         code: 400,
@@ -431,9 +435,11 @@ const bookReviewService = {
       };
     }
 
-    const { category } = await categoryModel.getCategory({
-      id: bookReview.categoryId,
-    });
+    const userName = settledResult[0].value;
+    const category =
+      settledResult[1].status === 'fulfilled'
+        ? settledResult[1].value.category
+        : '';
 
     const data: PublishedBookReview = {
       ...bookReview,
@@ -536,10 +542,12 @@ const bookReviewService = {
   deletedBookReview: async ({
     id,
   }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    await commentModel.deleteComments({ sejulbook_id: id });
-    await tagModel.deleteTags({ sejulbook_id: id });
-    await likeModel.deleteAllLikes({ sejulbook_id: id });
-    await bookReviewModel.deleteBookReview({ id });
+    await Promise.allSettled([
+      commentModel.deleteComments({ sejulbook_id: id }),
+      tagModel.deleteTags({ sejulbook_id: id }),
+      likeModel.deleteAllLikes({ sejulbook_id: id }),
+      bookReviewModel.deleteBookReview({ id }),
+    ]);
 
     return { error: false, data: undefined };
   },
