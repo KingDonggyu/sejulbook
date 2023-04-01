@@ -9,14 +9,14 @@ const getCurrTwoMonthDate = () => {
   const currDate = new Date();
   const currYear = currDate.getFullYear();
   const currMonth = currDate.getMonth() + 1;
-  const nextYear = currMonth === 12 ? currYear + 1 : currYear;
-  const nextMonth = currMonth === 12 ? 1 : currMonth + 1;
+  const prevYear = currMonth === 1 ? currYear - 1 : currYear;
+  const prevMonth = currMonth === 1 ? 12 : currMonth - 1;
 
   return {
     currYear: `${currYear}`,
-    nextYear: `${nextYear}`,
+    prevYear: `${prevYear}`,
     currMonth: addZeroPaddingToMonth(currMonth),
-    nextMonth: addZeroPaddingToMonth(nextMonth),
+    prevMonth: addZeroPaddingToMonth(prevMonth),
   };
 };
 
