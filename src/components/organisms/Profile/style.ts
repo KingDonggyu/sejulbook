@@ -11,7 +11,7 @@ export const editProfileButtonStyle = (theme: Theme) => css`
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     gap: 20px;
@@ -19,6 +19,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Title = styled.h1`
+  line-height: 1.5;
   font-size: ${({ theme }) => theme.FONT_SIZE.LARGE};
   & > span {
     font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
@@ -26,6 +27,7 @@ export const Title = styled.h1`
 `;
 
 export const Introduce = styled.p`
+  line-height: 1.5;
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
 `;
 
