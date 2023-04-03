@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import useUser from '@/hooks/services/queries/useUser';
 import { UserId } from '@/types/features/user';
 import { FollowInfoResponse } from '@/types/features/follow';
@@ -20,22 +18,8 @@ const Profile = ({
   followerCount,
   followingCount,
 }: ProfileProps) => {
-  const router = useRouter();
   const user = useUser(userId);
-  const { openModal, closeModal } = modalStore();
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      closeModal(ModalKey.FOLLOWING_USER_LIST);
-      closeModal(ModalKey.FOLLOWER_USER_LIST);
-    };
-
-    router.events.on('routeChangeStart', handleBeforeUnload);
-
-    return () => {
-      router.events.off('routeChangeStart', handleBeforeUnload);
-    };
-  }, [closeModal, router.events]);
+  const { openModal } = modalStore();
 
   if (!user) {
     return null;
