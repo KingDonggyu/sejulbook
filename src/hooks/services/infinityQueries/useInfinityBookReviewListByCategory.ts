@@ -4,7 +4,9 @@ import { FeedBookReviewSummary } from '@/types/features/bookReview';
 import { Category } from '@/types/features/category';
 
 const useInfinityBookReviewListByCategory = (category: Category) => {
-  const { data, fetchNextPage } = useInfiniteQuery<FeedBookReviewSummary[]>({
+  const { data, fetchNextPage, isLoading } = useInfiniteQuery<
+    FeedBookReviewSummary[]
+  >({
     ...getBookReviewListByCategoryInfinityQuery({ query: category }),
     options: {
       getNextPageParam: (lastPage) => {
@@ -22,6 +24,7 @@ const useInfinityBookReviewListByCategory = (category: Category) => {
   return {
     bookReviewList: data || [],
     refetchBookReviewList: fetchNextPage,
+    isLoading,
   };
 };
 

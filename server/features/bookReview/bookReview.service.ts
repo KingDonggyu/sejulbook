@@ -18,6 +18,7 @@ import formatDTOToEntity from './utils/formatDTOToEntity';
 import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 import getMaxBookReviewId from './utils/getMaxBookReviewId';
 import TagDTO from '../tag/tag.dto';
+import getSQLFormattedDate from './utils/getSQLFormattedDate';
 
 interface BookReviewSummary
   extends Pick<
@@ -50,6 +51,13 @@ interface FeedFollowingBookReview
 }
 
 const bookReviewService = {
+  getAllBookReviewId: async (): Promise<
+    HttpResponse<Pick<BookReviewDTO, 'id'>[]>
+  > => {
+    const data = await bookReviewModel.getAllBookReviewId();
+    return { error: false, data };
+  },
+
   getMostLikeBookReviewList: async (): Promise<
     HttpResponse<
       Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
@@ -60,27 +68,29 @@ const bookReviewService = {
       twoMonthDateInfo,
     );
 
-    const promises = bookReviewList.map(
-      async ({
-        user_id,
-        ...bookReview
-      }): Promise<
-        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
-      > => {
-        const userName = await userModel.getUserName({ id: user_id });
-
-        return {
-          id: bookReview.id,
-          bookname: bookReview.bookname,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          createdAt: bookReview.datecreated,
-          writer: userName || '',
-        };
-      },
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(
+        ({ user_id }): Promise<UserName | null> =>
+          userModel.getUserName({ id: user_id }),
+      ),
     );
 
-    const data = await Promise.all(promises);
+    const writers = settledResult.map((_, i) => {
+      const result = settledResult[i];
+      if (result.status === 'fulfilled') {
+        return result.value || '';
+      }
+      return '';
+    });
+
+    const data = bookReviewList.map((bookReview, i) => ({
+      id: bookReview.id,
+      bookname: bookReview.bookname,
+      sejul: bookReview.sejul,
+      thumbnail: bookReview.thumbnail,
+      createdAt: bookReview.datecreated,
+      writer: writers[i],
+    }));
 
     return { error: false, data };
   },
@@ -96,27 +106,29 @@ const bookReviewService = {
       user_id: userId,
     });
 
-    const promises = bookReviewList.map(
-      async ({
-        user_id,
-        ...bookReview
-      }): Promise<
-        Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>
-      > => {
-        const userName = await userModel.getUserName({ id: user_id });
-
-        return {
-          id: bookReview.id,
-          bookname: bookReview.bookname,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          createdAt: bookReview.datecreated,
-          writer: userName || '',
-        };
-      },
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(
+        ({ user_id }): Promise<UserName | null> =>
+          userModel.getUserName({ id: user_id }),
+      ),
     );
 
-    const data = await Promise.all(promises);
+    const writers = settledResult.map((_, i) => {
+      const result = settledResult[i];
+      if (result.status === 'fulfilled') {
+        return result.value || '';
+      }
+      return '';
+    });
+
+    const data = bookReviewList.map((bookReview, i) => ({
+      id: bookReview.id,
+      bookname: bookReview.bookname,
+      sejul: bookReview.sejul,
+      thumbnail: bookReview.thumbnail,
+      createdAt: bookReview.datecreated,
+      writer: writers[i],
+    }));
 
     return { error: false, data };
   },
@@ -140,15 +152,23 @@ const bookReviewService = {
       maxId: bookReviewId,
     });
 
-    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
-      async ({ id, user_id, sejul, thumbnail, nick }) => {
-        const { count: likeCount } = await likeModel.getLikeCount({
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(async ({ id }) => {
+        const likeCount = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
+        const commentCount = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+        return [likeCount, commentCount];
+      }),
+    );
 
-        const { count: commentCount } = await commentModel.getCommentCount({
-          sejulbook_id: id,
-        });
+    const data = bookReviewList.map(
+      ({ id, user_id, sejul, thumbnail, nick }, i) => {
+        const result = settledResult[i];
+        const [likeCount, commentCount] =
+          result.status === 'fulfilled' ? result.value : [0, 0];
 
         return {
           id,
@@ -162,7 +182,6 @@ const bookReviewService = {
       },
     );
 
-    const data = await Promise.all(promises);
     return { error: false, data };
   },
 
@@ -188,15 +207,23 @@ const bookReviewService = {
         maxId: bookReviewId,
       });
 
-    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
-      async ({ id, user_id, sejul, thumbnail, nick }) => {
-        const { count: likeCount } = await likeModel.getLikeCount({
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(async ({ id }) => {
+        const likeCount = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
+        const commentCount = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+        return [likeCount, commentCount];
+      }),
+    );
 
-        const { count: commentCount } = await commentModel.getCommentCount({
-          sejulbook_id: id,
-        });
+    const data = bookReviewList.map(
+      ({ id, user_id, sejul, thumbnail, nick }, i) => {
+        const result = settledResult[i];
+        const [likeCount, commentCount] =
+          result.status === 'fulfilled' ? result.value : [0, 0];
 
         return {
           id,
@@ -210,7 +237,6 @@ const bookReviewService = {
       },
     );
 
-    const data = await Promise.all(promises);
     return { error: false, data };
   },
 
@@ -233,31 +259,41 @@ const bookReviewService = {
       maxId: bookReviewId,
     });
 
-    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
-      async ({ id, user_id, sejul, thumbnail }) => {
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(async ({ id, user_id }) => {
         const writer = (await userModel.getUserName({ id: user_id })) || '';
-
-        const { count: likeCount } = await likeModel.getLikeCount({
+        const likeCount = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
-
-        const { count: commentCount } = await commentModel.getCommentCount({
+        const commentCount = await commentModel.getCommentCount({
           sejulbook_id: id,
         });
-
-        return {
-          id,
-          sejul,
-          thumbnail,
-          writer,
-          likeCount,
-          commentCount,
-          userId: user_id,
-        };
-      },
+        return { writer, likeCount, commentCount };
+      }),
     );
 
-    const data = await Promise.all(promises);
+    const data = bookReviewList.map(({ id, user_id, sejul, thumbnail }, i) => {
+      const result = settledResult[i];
+      const { writer, likeCount, commentCount } =
+        result.status === 'fulfilled'
+          ? result.value
+          : {
+              writer: '',
+              likeCount: 0,
+              commentCount: 0,
+            };
+
+      return {
+        id,
+        sejul,
+        thumbnail,
+        writer,
+        likeCount,
+        commentCount,
+        userId: user_id,
+      };
+    });
+
     return { error: false, data };
   },
 
@@ -281,31 +317,41 @@ const bookReviewService = {
         maxId: bookReviewId,
       });
 
-    const promises: Promise<FeedFollowingBookReview>[] = bookReviewList.map(
-      async ({ id, user_id, sejul, thumbnail }) => {
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(async ({ id, user_id }) => {
         const writer = (await userModel.getUserName({ id: user_id })) || '';
-
-        const { count: likeCount } = await likeModel.getLikeCount({
+        const likeCount = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
-
-        const { count: commentCount } = await commentModel.getCommentCount({
+        const commentCount = await commentModel.getCommentCount({
           sejulbook_id: id,
         });
-
-        return {
-          id,
-          sejul,
-          thumbnail,
-          writer,
-          likeCount,
-          commentCount,
-          userId: user_id,
-        };
-      },
+        return { writer, likeCount, commentCount };
+      }),
     );
 
-    const data = await Promise.all(promises);
+    const data = bookReviewList.map(({ id, user_id, sejul, thumbnail }, i) => {
+      const result = settledResult[i];
+      const { writer, likeCount, commentCount } =
+        result.status === 'fulfilled'
+          ? result.value
+          : {
+              writer: '',
+              likeCount: 0,
+              commentCount: 0,
+            };
+
+      return {
+        id,
+        sejul,
+        thumbnail,
+        writer,
+        likeCount,
+        commentCount,
+        userId: user_id,
+      };
+    });
+
     return { error: false, data };
   },
 
@@ -318,15 +364,23 @@ const bookReviewService = {
       user_id: userId,
     });
 
-    const promises: Promise<BookReviewSummary>[] = bookReviewList.map(
-      async ({ id, datecreated, ...bookReviewSummary }) => {
-        const { count: likeCount } = await likeModel.getLikeCount({
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(async ({ id }) => {
+        const likeCount = await likeModel.getLikeCount({
           sejulbook_id: id,
         });
+        const commentCount = await commentModel.getCommentCount({
+          sejulbook_id: id,
+        });
+        return [likeCount, commentCount];
+      }),
+    );
 
-        const { count: commentCount } = await commentModel.getCommentCount({
-          sejulbook_id: id,
-        });
+    const data = bookReviewList.map(
+      ({ id, datecreated, ...bookReviewSummary }, i) => {
+        const result = settledResult[i];
+        const [likeCount, commentCount] =
+          result.status === 'fulfilled' ? result.value : [0, 0];
 
         return {
           id,
@@ -338,7 +392,6 @@ const bookReviewService = {
       },
     );
 
-    const data = await Promise.all(promises);
     return { error: false, data };
   },
 
@@ -375,9 +428,13 @@ const bookReviewService = {
     }
 
     const bookReview = formatEntityToDTO(bookReviewData);
-    const userName = await userModel.getUserName({ id: bookReview.userId });
 
-    if (!userName) {
+    const settledResult = await Promise.allSettled([
+      userModel.getUserName({ id: bookReview.userId }),
+      categoryModel.getCategory({ id: bookReview.categoryId }),
+    ]);
+
+    if (settledResult[0].status !== 'fulfilled' || !settledResult[0].value) {
       return {
         error: true,
         code: 400,
@@ -385,9 +442,11 @@ const bookReviewService = {
       };
     }
 
-    const { category } = await categoryModel.getCategory({
-      id: bookReview.categoryId,
-    });
+    const userName = settledResult[0].value;
+    const category =
+      settledResult[1].status === 'fulfilled'
+        ? settledResult[1].value.category
+        : '';
 
     const data: PublishedBookReview = {
       ...bookReview,
@@ -452,7 +511,10 @@ const bookReviewService = {
   },
 
   publishBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
+    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & {
+      id?: BookReviewId;
+      createdAt?: string;
+    },
   ): Promise<HttpResponse<BookReviewId>> => {
     const bookReviewGuard = new BookReviewGuard(bookReview);
     const guardResult = bookReviewGuard.checkInvalidPublish();
@@ -466,11 +528,14 @@ const bookReviewService = {
       isDraftSave: false,
     });
 
-    // 임시저장 독후감 발행
+    // 임시저장 독후감 발행 또는 독후감 수정
     if (bookReview.id) {
       await bookReviewModel.updateBookReview({
         ...entityData,
         id: bookReview.id,
+        datecreated: bookReview.createdAt
+          ? getSQLFormattedDate(bookReview.createdAt)
+          : undefined,
       });
 
       return { error: false, data: bookReview.id };
@@ -484,10 +549,12 @@ const bookReviewService = {
   deletedBookReview: async ({
     id,
   }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    await commentModel.deleteComments({ sejulbook_id: id });
-    await tagModel.deleteTags({ sejulbook_id: id });
-    await likeModel.deleteAllLikes({ sejulbook_id: id });
-    await bookReviewModel.deleteBookReview({ id });
+    await Promise.allSettled([
+      commentModel.deleteComments({ sejulbook_id: id }),
+      tagModel.deleteTags({ sejulbook_id: id }),
+      likeModel.deleteAllLikes({ sejulbook_id: id }),
+      bookReviewModel.deleteBookReview({ id }),
+    ]);
 
     return { error: false, data: undefined };
   },

@@ -25,6 +25,7 @@ export interface NewPublishInfo {
   tag: TagList;
   sejul: Sejul;
   content: Content;
+  createdAt?: string;
 }
 
 export interface NewBookReview extends NewPublishInfo {
@@ -49,6 +50,7 @@ export interface PublishRequest {
   categoryId: CategoryId;
   originThumbnail: BookThumbnail;
   isDraftSave: boolean;
+  createdAt?: string;
 }
 
 /**

@@ -49,7 +49,7 @@ export const TextFieldBorder = styled.div<TextFieldStyleProps>`
     align-items: center;
     ${variant === TextFieldVariant.OUTLINED && `padding-left: 8px;`}
     & > input {
-      padding-left: 5px;
+      padding-left: 7px;
     }
   `}
 

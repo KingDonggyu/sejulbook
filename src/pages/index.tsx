@@ -41,7 +41,7 @@ const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
         subscriptionsPageLink={
           !!myUserId && (
             <Link
-              href={`/${myUserId}${Route.SUBSCRIPTIONS}`}
+              href={`${Route.SUBSCRIPTIONS}`}
               title="관심서재 페이지 이동 링크"
             >
               <ArrowRightIcon size={25} />

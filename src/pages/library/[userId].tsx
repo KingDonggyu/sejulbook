@@ -49,13 +49,16 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
   return (
     <>
       <SEO
-        title={`${user?.name}의 서재`}
-        description={`${user?.name}의 서재 ${
-          !!user?.introduce && `- ${user.introduce}`
-        }`}
-        url={`/${userId}${Route.LIBRARY}`}
+        title={user ? `${user.name}의 서재` : undefined}
+        description={
+          user
+            ? `${user.name}의 서재 ${!!user.introduce && `- ${user.introduce}`}`
+            : undefined
+        }
+        url={`${Route.LIBRARY}/${userId}`}
       />
       <Library
+        hasUser={!!user}
         profile={
           <Profile
             userId={userId}

@@ -86,7 +86,7 @@ const SearchBar = ({
         value={keyword}
         onClick={handleClick}
         onChange={handleChange}
-        icon={<SearchIcon size={20} />}
+        icon={<SearchIcon size={25} />}
         {...textFieldProps}
       />
       <Menu

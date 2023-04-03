@@ -51,7 +51,7 @@ const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
             followUserList.map(({ id, name, introduce, isFollow }) => (
               <s.UserItem key={id}>
                 <s.ProfileWrapper>
-                  <Link href={`/${id}${Route.LIBRARY}`}>
+                  <Link href={`${Route.LIBRARY}/${id}`}>
                     <s.Name>{name}</s.Name>
                   </Link>
                   {!!introduce && <s.Introduce>{introduce}</s.Introduce>}

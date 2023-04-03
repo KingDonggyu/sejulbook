@@ -3,7 +3,6 @@ import { css, Theme } from '@emotion/react';
 
 export const Wrapper = styled.div`
   width: 100%;
-  max-height: 500px;
   padding: 5px;
   gap: 10px;
   display: grid;

@@ -101,6 +101,7 @@ export const publishBookReview = async ({
       originThumbnail: bookReview.book.thumbnail,
       categoryId: bookReview.category.id,
       tags: Array.from(bookReview.tag),
+      createdAt: bookReview.createdAt,
       isDraftSave,
       userId,
     };
@@ -224,7 +225,10 @@ export const getDraftSavedList = async (userId: UserId) => {
   }
 };
 
-export const getBookReview = async (bookReviewId: BookReviewId) => {
+export const getBookReview = async (
+  bookReviewId: BookReviewId,
+  onError?: () => void,
+) => {
   try {
     const response = await get<HttpResponse<BookReviewResponse>>(
       `${API_URL}/${bookReviewId}`,
@@ -239,6 +243,9 @@ export const getBookReview = async (bookReviewId: BookReviewId) => {
 
     return response.data;
   } catch (error) {
+    if (onError) {
+      onError();
+    }
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({ name: 'GET_BOOKREVIEW_ERROR', message });
   }
@@ -389,6 +396,29 @@ export const getPagingFollowingBookReviewList = async ({
     const { message } = getDataFromAxiosError(error);
     throw new BookReviewError({
       name: 'GET_PAGING_FOLLOWING_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
+export const getAllBookReviewId = async () => {
+  try {
+    const response = await get<HttpResponse<Pick<BookReviewResponse, 'id'>[]>>(
+      `${API_URL}/list/all`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_ALL_BOOKREVIEW_ID_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_ALL_BOOKREVIEW_ID_ERROR',
       message,
     });
   }

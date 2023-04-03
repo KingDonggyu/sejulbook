@@ -20,8 +20,11 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
   const { openModal } = modalStore();
   const { followingCount } = useFollowInfo(myUserId);
 
-  const { followingBookReviewList, refetchNextFollowingBookReviewList } =
-    useInfinityFollowingBookReviewList(myUserId);
+  const {
+    followingBookReviewList,
+    refetchNextFollowingBookReviewList,
+    isLoading,
+  } = useInfinityFollowingBookReviewList(myUserId);
 
   return (
     <>
@@ -34,6 +37,7 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
         }
         bookshelf={
           <Bookshelf
+            isLoading={isLoading}
             hasWriteBookReviewItem={false}
             bookReviewList={followingBookReviewList}
             onRefetch={refetchNextFollowingBookReviewList}
@@ -65,7 +69,7 @@ export const getServerSideProps = async (
     return serverSideProps;
   }
 
-  const myUserId = Number(ctx.query.userId);
+  const myUserId = serverSideProps.props.userId;
 
   const queryClient = await prefetchQuery(
     [getFollowInfoQuery({ targetUserId: myUserId, myUserId })],

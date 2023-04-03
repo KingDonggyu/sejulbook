@@ -19,9 +19,9 @@ const editorOption = {
   lightSkin: 'snow',
   darkSkin: 'oxide-dark',
   language: 'ko_KR',
-  plugins: 'autoresize lists code table codesample',
+  plugins: 'autoresize lists code table codesample image',
   toolbar:
-    'blocks | forecolor backcolor | bold italic underline strikethrough | link blockquote codesample | align bullist numlist ',
+    'blocks | forecolor backcolor | bold italic underline strikethrough | link blockquote codesample | align bullist numlist | image',
   placeholder: '[선택] 추가 내용 작성',
   blockFormats: `본문=p;제목 1=h1;제목 2=h2;제목 3=h3;`,
   imageFileTypes: 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp,svg',
@@ -73,6 +73,7 @@ const ContentEditor = ({
           placeholder: editorOption.placeholder,
           block_formats: editorOption.blockFormats,
           images_file_types: editorOption.imageFileTypes,
+          file_picker_types: 'image',
           images_upload_handler: async (blobInfo) =>
             handleUploadLoacalImage(blobInfo.blob()),
         }}

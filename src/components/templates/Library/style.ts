@@ -32,6 +32,11 @@ export const TopSectionWrapper = styled.div`
   }
 `;
 
+export const TopSectionSkeleton = styled.div`
+  width: 100%;
+  height: 12vh;
+`;
+
 export const ButtonWrapper = styled.div`
   min-width: 100px;
   display: flex;

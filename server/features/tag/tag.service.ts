@@ -23,11 +23,11 @@ const tagService = {
   }: { tags: Tag[] } & Pick<TagDTO, 'bookReviewId'>): Promise<
     HttpResponse<undefined>
   > => {
-    const promises = tags.map(async (tag) => {
-      await tagModel.createTags({ tag, sejulbook_id: bookReviewId });
-    });
-
-    Promise.all(promises);
+    await Promise.allSettled(
+      tags.map((tag) =>
+        tagModel.createTags({ tag, sejulbook_id: bookReviewId }),
+      ),
+    );
 
     return { error: false, data: undefined };
   },

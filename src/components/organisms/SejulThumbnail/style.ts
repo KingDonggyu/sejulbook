@@ -22,9 +22,6 @@ export const SejulBookReview = styled.div`
   height: 100%;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
-  display: flex;
-  align-items: center;
-  justify-content: center;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
     display: none;
   }

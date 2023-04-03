@@ -26,6 +26,12 @@ export enum Column {
 }
 
 const userModel = {
+  getAllUserId: async () => {
+    const sql = `select ${Column.ID} from ${TABLE_NAME}`;
+    const result = await query<Pick<UserEntity, 'id'>[]>(sql);
+    return result;
+  },
+
   getUserById: async ({ id }: Pick<UserEntity, 'id'>) => {
     const sql = `select * from ${TABLE_NAME} where ${Column.ID} = ${id};`;
 

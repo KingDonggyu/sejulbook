@@ -16,6 +16,11 @@ interface FollowUser {
 }
 
 const userService = {
+  getAllUserId: async (): Promise<HttpResponse<Pick<UserDTO, 'id'>[]>> => {
+    const data = await userModel.getAllUserId();
+    return { error: false, data };
+  },
+
   getUserId: async ({
     sub,
   }: Pick<UserDTO, 'sub'>): Promise<
@@ -173,14 +178,21 @@ const userService = {
           maxFollowId: followId,
         });
 
-    const promises = followUserList.map(
-      async ({ id: otherUserId, nick, introduce, follow_id }) => {
-        const isFollow = myUserId
-          ? await followModel.getIsFollow({
+    const settledResult = await Promise.allSettled(
+      followUserList.map(({ id: otherUserId }) =>
+        myUserId
+          ? followModel.getIsFollow({
               following_id: otherUserId,
               follower_id: myUserId,
             })
-          : false;
+          : false,
+      ),
+    );
+
+    const data = followUserList.map(
+      ({ id: otherUserId, nick, introduce, follow_id }, i) => {
+        const result = settledResult[i];
+        const isFollow = result.status === 'fulfilled' ? result.value : false;
 
         return {
           id: otherUserId,
@@ -191,8 +203,6 @@ const userService = {
         };
       },
     );
-
-    const data = await Promise.all(promises);
 
     return {
       error: false,

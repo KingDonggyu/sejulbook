@@ -14,8 +14,11 @@ import { Category } from '@/types/features/category';
 import Route from '@/constants/routes';
 
 const SearchResultPage = ({ category }: { category: Category }) => {
-  const { bookReviewList: initBookReviewList, refetchBookReviewList } =
-    useInfinityBookReviewListByCategory(category);
+  const {
+    bookReviewList: initBookReviewList,
+    refetchBookReviewList,
+    isLoading,
+  } = useInfinityBookReviewListByCategory(category);
 
   const {
     bookReviewList,
@@ -43,6 +46,7 @@ const SearchResultPage = ({ category }: { category: Category }) => {
         bookshelf={
           !!bookReviewList.length && (
             <Bookshelf
+              isLoading={isLoading}
               hasWriteBookReviewItem={false}
               bookReviewList={bookReviewList}
               onRefetch={refetchBookReviewList}
@@ -65,6 +69,16 @@ export const getServerSideProps = async ({
   query,
 }: ExtededGetServerSidePropsContext) => {
   const { q } = query;
+
+  if (q === undefined) {
+    return {
+      props: {},
+      redirect: {
+        destination: Route.SEARCH,
+        permanent: false,
+      },
+    };
+  }
 
   const queryClient = await prefetchQuery(
     [],

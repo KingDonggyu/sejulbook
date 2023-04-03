@@ -34,6 +34,10 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       />
 
       <meta property="og:title" content={title} />
+      <meta
+        name="og:description"
+        content={description || defaultSEO.description}
+      />
       <meta property="og:type" content="website" />
       <meta
         property="og:url"
@@ -43,7 +47,7 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
       <meta property="og:site_name" content="세 줄 독후감" />
       <meta property="og:locale" content="ko_kr" />
 
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} data-rh="true" />
       <meta
         name="twitter:description"
@@ -56,6 +60,9 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
         rel="canonical"
         href={url ? `${defaultSEO.url}${url.split('?')[0]}` : defaultSEO.url}
       />
+
+      <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </Head>
   );
 };

@@ -31,6 +31,24 @@ class BookReviewGuard {
     };
   }
 
+  checkReachedSejulLimit(): HttpFailed | false {
+    const isEmptySejul = this.checkEmptySejul();
+
+    if (isEmptySejul) {
+      return isEmptySejul;
+    }
+
+    if (this.bookReview.sejul && this.bookReview.sejul.length < 201) {
+      return false;
+    }
+
+    return {
+      error: true,
+      code: 400,
+      message: bookReviewError.LIMIT_REACHED_SEJUL,
+    };
+  }
+
   checkEmptyThumbnail(): HttpFailed | false {
     if (this.bookReview.thumbnail) {
       return false;
@@ -89,7 +107,7 @@ class BookReviewGuard {
   checkInvalidPublish(): HttpFailed | false {
     const result =
       this.checkEmptyBook() ||
-      this.checkEmptySejul() ||
+      this.checkReachedSejulLimit() ||
       this.checkEmptyThumbnail() ||
       this.checkEmptyCategory() ||
       this.checkReachedRatingLimit();

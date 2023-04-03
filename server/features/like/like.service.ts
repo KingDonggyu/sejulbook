@@ -16,17 +16,20 @@ const likeService = {
   }: Omit<LikeDTO, 'likerId'> & { likerId?: UserId }): Promise<
     HttpSuccess<LikeStatus> | HttpFailed
   > => {
-    const myLike = likerId
-      ? await likeModel.getLike({
-          sejulbook_id: bookReviewId,
-          liker_id: likerId,
-        })
-      : [];
+    const result = await Promise.allSettled([
+      likerId
+        ? likeModel.getLike({
+            sejulbook_id: bookReviewId,
+            liker_id: likerId,
+          })
+        : [],
+      likeModel.getLikeCount({
+        sejulbook_id: bookReviewId,
+      }),
+    ]);
 
-    const { count: likeCount } = await likeModel.getLikeCount({
-      sejulbook_id: bookReviewId,
-    });
-
+    const myLike = result[0].status === 'fulfilled' ? result[0].value : [];
+    const likeCount = result[1].status === 'fulfilled' ? result[1].value : 0;
     const isLike = !!myLike.length;
 
     return { error: false, data: { isLike, likeCount } };

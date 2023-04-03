@@ -31,7 +31,7 @@ export const signUp = async (user: SignUpRequset) => {
   }
 };
 
-export const getUser = async (userId: UserId) => {
+export const getUser = async (userId: UserId, onError?: () => void) => {
   try {
     const response = await get<HttpResponse<User>>(`${API_URL}/${userId}`);
 
@@ -44,6 +44,9 @@ export const getUser = async (userId: UserId) => {
 
     return response.data;
   } catch (error) {
+    if (onError) {
+      onError();
+    }
     const { message } = getDataFromAxiosError(error);
     throw new UserError({ name: 'GET_USER_ERROR', message });
   }
@@ -119,5 +122,25 @@ export const searchUsers = async (query: string) => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new UserError({ name: 'SEARCH_USERS_ERROR', message });
+  }
+};
+
+export const getAllUserId = async () => {
+  try {
+    const response = await get<HttpResponse<Pick<User, 'id'>[]>>(
+      `${API_URL}/list/all`,
+    );
+
+    if (response.error) {
+      throw new UserError({
+        name: 'GET_ALL_USER_ID',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new UserError({ name: 'GET_ALL_USER_ID', message });
   }
 };
