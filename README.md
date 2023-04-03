@@ -93,5 +93,5 @@
 | :-----------: | :-------------: |
 |<img src="https://user-images.githubusercontent.com/33220404/229421082-7d12a692-ecc7-48aa-a854-8d9fb84d0e54.jpeg"  width="200" height="200"/>|<img src="https://avatars.githubusercontent.com/u/99062088?v=4"  width="200" height="200"/>|
 | Full Stack 개발 | DB 설계 및 데이터 분석 |
-| east-star.tistory.com | wnwa.tistory.com |
+| https://east-star.tistory.com | https://wnwa.tistory.com |
 
