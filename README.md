@@ -10,7 +10,7 @@
 
 - [세 줄 독후감](https://www.sejulbook.com)
 - [팀 노션](https://sejulbook.notion.site/b187913986de4428903c6f4410e1bc53)
-- [인스타그램](www.instagram.com/sejulbook)
+- [인스타그램](https://www.instagram.com/sejulbook)
 
 <br />
 
