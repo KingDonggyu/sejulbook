@@ -14,10 +14,10 @@ const API_URL = `/api/users`;
 
 export const signUp = async (user: SignUpRequset) => {
   try {
-    const response = await post<HttpResponse<undefined>>(
-      `${API_URL}/signup`,
-      user,
-    );
+    const response = await post<HttpResponse<undefined>>(`${API_URL}/signup`, {
+      ...user,
+      age: user.age || null,
+    });
 
     if (response.error) {
       throw new UserError({

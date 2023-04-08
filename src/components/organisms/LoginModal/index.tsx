@@ -27,7 +27,11 @@ const LoginModal = ({
         <Button elevation={4} onClick={() => handleLogin(OAuthName.KAKAO)}>
           <Image priority src={kakaoButtonSrc} alt="카카오 로그인 버튼" />
         </Button>
-        <Button elevation={4} onClick={() => handleLogin(OAuthName.NAVER)}>
+        <Button
+          disabled
+          elevation={4}
+          onClick={() => handleLogin(OAuthName.NAVER)}
+        >
           <Image priority src={naverButtonSrc} alt="네이버 로그인 버튼" />
         </Button>
       </s.LoginButtonWrapper>

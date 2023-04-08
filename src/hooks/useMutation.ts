@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  QueryKey,
-  useMutation as useOriginMutation,
-} from '@tanstack/react-query';
+import { useMutation as useOriginMutation } from '@tanstack/react-query';
 import { userError } from '@/constants/message';
 import { UserId } from '@/types/features/user';
 import useUserStatus from './useUserStatus';
@@ -16,7 +13,6 @@ interface MutationProps<T, U> {
   mutationFn: (userId: UserId, args: U) => Promise<T>;
   onSuccess: (data: T) => void;
   onError: (error: unknown) => void;
-  queryKeysToRefetch?: QueryKey[];
 }
 
 const useMutation = <T, U = void>({
