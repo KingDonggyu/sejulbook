@@ -42,10 +42,10 @@ export const ProfileWrapper = styled.div`
 `;
 
 export const Name = styled.h2`
-  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.5;
   font-size: ${({ theme }) => theme.FONT_SIZE.MEDIUM};
 `;
 
