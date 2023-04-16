@@ -38,6 +38,7 @@ const Button = ({
       variant={variant}
       radius={radius}
       hover={hover}
+      disabled={!!buttonAttrs.disabled}
       {...buttonAttrs}
     />
   );

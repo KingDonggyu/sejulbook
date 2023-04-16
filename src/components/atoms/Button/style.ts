@@ -7,6 +7,7 @@ interface ButtonStyleProps {
   radius?: number;
   variant: ButtonVariant;
   hover: boolean;
+  disabled: boolean;
 }
 
 export const Button = styled.button<ButtonStyleProps>`
@@ -45,5 +46,13 @@ export const Button = styled.button<ButtonStyleProps>`
 
   ${({ variant }) => variant === ButtonVariant.TEXT && `background: inherit;`};
 
-  ${({ hover }) => hover && `&:hover { filter: opacity(0.8); }`}
+  ${({ disabled, hover }) =>
+    !disabled && hover && `&:hover { filter: opacity(0.8); }`}
+
+  ${({ disabled }) =>
+    disabled &&
+    `
+    cursor: default;
+    filter: saturate(0.5);
+  `}
 `;

@@ -38,6 +38,7 @@ export const TopSectionSkeleton = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
+  min-width: 100px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

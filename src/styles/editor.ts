@@ -86,6 +86,7 @@ export const editorContentStyle = (theme: Theme) => css`
 
 export const editorToolbarStyle = css`
   & .tox.tox-tinymce.tox-tinymce-inline.tox-tinymce--toolbar-bottom {
+    width: auto !important;
     position: fixed !important;
     top: auto !important;
     bottom: 0 !important;

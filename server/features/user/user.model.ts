@@ -87,23 +87,17 @@ const userModel = {
   },
 
   createUser: async (user: Omit<UserEntity, 'id'>) => {
-    const sql = `insert into ${TABLE_NAME} (
-      ${Column.EMAIL}, 
-      ${Column.NICK}, 
-      ${Column.GENDER}, 
-      ${Column.AGE}, 
-      ${Column.JOINDATED}, 
-      ${Column.INTRODUCE}, 
-      ${Column.SUB}
-    ) values (
+    const sql = `
+    insert into ${TABLE_NAME} values (
+      null,
       "${user.email}", 
       "${user.nick}", 
-      "${user.gender}", 
+      ${user.gender}, 
       "${user.age}", 
       default, 
       "${user.introduce}", 
       "${user.sub}"
-    );`;
+    )`;
 
     await query(sql);
   },

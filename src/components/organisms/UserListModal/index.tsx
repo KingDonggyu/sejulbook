@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { Router } from 'next/router';
 import Link from 'next/link';
 import Route from '@/constants/routes';
 import { ModalKey } from '@/constants/keys';
@@ -7,6 +9,7 @@ import useIntersect from '@/hooks/useIntersect';
 import useUser from '@/hooks/services/queries/useUser';
 import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
 import useInfinityFollowUserList from '@/hooks/services/queries/useInfinityFollowUserList';
+import modalStore from '@/stores/modalStore';
 import Modal from '@/components/molecules/Modal';
 import SubscribeToggleButton from '../SubscribeToggleButton';
 import * as s from './style';
@@ -21,6 +24,7 @@ const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
   const user = useUser(userId);
   const { session, isLogin } = useUserStatus();
   const { followingCount, followerCount } = useFollowInfo(userId);
+  const { closeModal } = modalStore();
 
   const { followUserList, refetchNextFollowUserList } =
     useInfinityFollowUserList({
@@ -31,6 +35,19 @@ const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
   const intersectRef = useIntersect(() => {
     refetchNextFollowUserList();
   });
+
+  useEffect(() => {
+    const handleBeforeRouteChange = () => {
+      closeModal(ModalKey.FOLLOWING_USER_LIST);
+      closeModal(ModalKey.FOLLOWER_USER_LIST);
+    };
+
+    Router.events.on('routeChangeStart', handleBeforeRouteChange);
+
+    return () => {
+      Router.events.off('routeChangeStart', handleBeforeRouteChange);
+    };
+  }, [closeModal]);
 
   return (
     <Modal modalKey={modalKey}>
