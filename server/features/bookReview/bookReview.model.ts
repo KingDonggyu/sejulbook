@@ -37,7 +37,7 @@ enum Column {
   SEJUL_PLUS = 'sejulplus',
   USER_ID = 'user_id',
   CATEGORY_ID = 'category_id',
-  DiVIDE = 'divide',
+  DIVIDE = 'divide',
   ORIGIN_THUMBNAIL = 'origin_thumbnail',
   DATE_CREATED = 'datecreated',
 }
@@ -271,9 +271,9 @@ const bookReviewModel = {
         ${Column.BOOK_NAME}, 
         ${Column.SEJUL}, 
         ${Column.THUMBNAIL}, 
-        ${Column.DATE_CREATED}
+        ${Column.DATE_CREATED},
       from ${TABLE_NAME} 
-      where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 1
+      where ${Column.USER_ID} = ${user_id} and ${Column.DIVIDE} = 1
     `;
 
     const result = await query<BookReviewSummary[]>(sql);
@@ -284,7 +284,7 @@ const bookReviewModel = {
     const sql = `
       select ${Column.ID}, ${Column.BOOK_NAME}, ${Column.DATE_CREATED}
       from ${TABLE_NAME} 
-      where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 0
+      where ${Column.USER_ID} = ${user_id} and ${Column.DIVIDE} = 0
     `;
 
     const result = await query<DraftSavedBookReview[]>(sql);
@@ -339,7 +339,7 @@ const bookReviewModel = {
       ${Column.SEJUL_PLUS} = "${bookReview.sejulplus}",
       ${Column.DATE_CREATED} = ${dateCreated},
       ${Column.CATEGORY_ID} = ${bookReview.category_id},
-      ${Column.DiVIDE} = ${bookReview.divide}
+      ${Column.DIVIDE} = ${bookReview.divide}
       where ${Column.ID} = ${bookReview.id}
     `;
 

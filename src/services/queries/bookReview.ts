@@ -41,11 +41,14 @@ export const getBookReviewListQuery = (userId: UserId): Query => ({
   queryFn: () => getBookReviewList(userId),
 });
 
-export const getBookReviewQuery = (bookReviewId?: BookReviewId): Query => ({
+export const getBookReviewQuery = (
+  bookReviewId?: BookReviewId,
+  isSaveRequired?: boolean,
+): Query => ({
   queryKey: [`${BASE_QUERY_KEY}_getBookReviewQuery`, bookReviewId],
   queryFn: () =>
     bookReviewId &&
-    getBookReview(bookReviewId, () => {
+    getBookReview(bookReviewId, isSaveRequired, () => {
       window.location.replace(Route.HOME);
     }),
   options: {

@@ -227,6 +227,7 @@ export const getDraftSavedList = async (userId: UserId) => {
 
 export const getBookReview = async (
   bookReviewId: BookReviewId,
+  isSaveRequired?: boolean,
   onError?: () => void,
 ) => {
   try {
@@ -238,6 +239,13 @@ export const getBookReview = async (
       throw new BookReviewError({
         name: 'GET_BOOKREVIEW_ERROR',
         message: response.message,
+      });
+    }
+
+    if (isSaveRequired && response.data.isDraftSave) {
+      throw new BookReviewError({
+        name: 'GET_BOOKREVIEW_ERROR',
+        message: '존재하지 않는 독후감입니다.',
       });
     }
 
