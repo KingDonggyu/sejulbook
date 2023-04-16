@@ -14,6 +14,7 @@ import { NewbookProvider } from '@/contexts/newbookContext';
 import defaultOptions from '@/services/queries/defaultOptions';
 import useLoading from '@/hooks/useLoading';
 import FullScreenLoading from '@/components/atoms/FullScreenLoading';
+import GA from '@/components/atoms/GA';
 
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient({ defaultOptions }));
@@ -27,6 +28,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
           <Hydrate state={pageProps.dehydratedState}>
             <LayoutProvider>
               <NewbookProvider>
+                <GA />
                 <Component {...pageProps} />
                 {isLoading && <FullScreenLoading />}
               </NewbookProvider>
