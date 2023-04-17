@@ -9,6 +9,7 @@ type SejulThumbnailProps = {
   bookReviewId: BookReviewId;
   sejul: Sejul;
   defaultFilter?: string;
+  isLargeSejul?: boolean;
   isHiddenChildren?: boolean;
   children?: ReactNode;
 } & ThumbnailProps;
@@ -18,20 +19,27 @@ const SejulThumbnail = ({
   sejul,
   children,
   defaultFilter = 'none',
+  isLargeSejul = false,
   isHiddenChildren = false,
   ...thumbnailProps
 }: SejulThumbnailProps) => {
   const thumbnailRef = useRef<HTMLImageElement>(null);
   const [isShowSejul, setIsShowSejul] = useState(false);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   const handleMouseEnterThumbnail = () => {
-    setIsShowSejul(true);
+    const timeout = setTimeout(() => setIsShowSejul(true), 200);
+    setTimer(timeout);
     if (thumbnailRef.current) {
       thumbnailRef.current.style.filter = 'brightness(0.3)';
     }
   };
 
   const handleMouseLeaveThumbnail = () => {
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
     setIsShowSejul(false);
     if (thumbnailRef.current) {
       thumbnailRef.current.style.filter = defaultFilter;
@@ -51,7 +59,9 @@ const SejulThumbnail = ({
         onMouseLeave={handleMouseLeaveThumbnail}
       >
         <Thumbnail ref={thumbnailRef} {...thumbnailProps} />
-        {isShowSejul && <s.SejulBookReview>{sejul}</s.SejulBookReview>}
+        {isShowSejul && (
+          <s.SejulBookReview isLarge={isLargeSejul}>{sejul}</s.SejulBookReview>
+        )}
         {isHiddenChildren ? !isShowSejul && children : children}
       </s.ThumnailWrapper>
     </Link>

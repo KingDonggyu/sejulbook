@@ -6,9 +6,15 @@ export const ThumnailWrapper = styled.div`
   position: relative;
   z-index: ${THUMBNAIL_Z_INDEX};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
+  &:hover {
+    img {
+      transform: scale(1.05);
+      transition: 0.5s;
+    }
+  }
 `;
 
-export const SejulBookReview = styled.div`
+export const SejulBookReview = styled.p<{ isLarge: boolean }>`
   line-height: 1.7;
   overflow-y: auto;
   overflow-x: hidden;
@@ -21,7 +27,8 @@ export const SejulBookReview = styled.div`
   padding-bottom: 30px;
   height: 100%;
   color: ${({ theme }) => theme.COLOR.WHITE};
-  font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
+  font-size: ${({ theme, isLarge }) =>
+    isLarge ? theme.FONT_SIZE.MEDIUM : theme.FONT_SIZE.SMALL};
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
     display: none;
   }

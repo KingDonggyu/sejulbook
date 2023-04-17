@@ -12,7 +12,7 @@ interface CardScollerProps extends StyleProps {
 }
 
 const CardScoller = ({
-  gap = 30,
+  gap = 20,
   children,
   ...styleProps
 }: CardScollerProps) => {
