@@ -12,6 +12,7 @@ import {
   getBookReviewList,
   getDraftSavedList,
   getFollowingBookReviewList,
+  getLatestBookReviewList,
   getMostLikedBookReviewList,
   getPagingBookReviewList,
   getPagingBookReviewListByCategory,
@@ -22,6 +23,11 @@ import { getCategories } from '../api/category';
 import { getTags } from '../api/tag';
 
 const BASE_QUERY_KEY = 'bookReview';
+
+export const getLatestBookReviewListQuery: Query = {
+  queryKey: [`${BASE_QUERY_KEY}_getLatestBookReviewListQuery`],
+  queryFn: () => getLatestBookReviewList(),
+};
 
 export const getMostLikedBookReviewListQuery: Query = {
   queryKey: [`${BASE_QUERY_KEY}_getMostLikedBookReviewListQuery`],
