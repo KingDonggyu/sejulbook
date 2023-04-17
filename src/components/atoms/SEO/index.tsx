@@ -32,6 +32,10 @@ const SEO = ({ title, description, url, image }: SEOProps) => {
         name="description"
         content={description || defaultSEO.description}
       />
+      <meta
+        name="keywords"
+        content="독후감, 책 요약, 책 기록, 책 리뷰, 책 후기, 세줄요약, 세줄독후감, 짧은 독후감, 독서 기록 사이트, 독후감 모음"
+      />
 
       <meta property="og:title" content={title} />
       <meta
