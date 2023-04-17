@@ -137,6 +137,29 @@ export const draftSaveBookReview = async ({
     isDraftSave: true,
   });
 
+export const getLatestBookReviewList = async () => {
+  try {
+    const response = await get<HttpResponse<HomeBookReviewSummary[]>>(
+      `${API_URL}/list/latest`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_LATEST_BOOKREVIEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_LATEST_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
 export const getMostLikedBookReviewList = async () => {
   try {
     const response = await get<HttpResponse<HomeBookReviewSummary[]>>(

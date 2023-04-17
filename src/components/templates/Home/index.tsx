@@ -5,12 +5,14 @@ import quotesRightSrc from '@public/images/icon-white-quotes-right.svg';
 import * as s from './style';
 
 interface HomeProps {
+  latestBookReviewScroller: ReactNode;
   mostLikedBookReviewScroller: ReactNode;
   subscribeBookReviewScroller: ReactNode;
   subscriptionsPageLink: ReactNode;
 }
 
 const Home = ({
+  latestBookReviewScroller,
   mostLikedBookReviewScroller,
   subscribeBookReviewScroller,
   subscriptionsPageLink,
@@ -25,6 +27,12 @@ const Home = ({
         <Image src={quotesRightSrc} alt="오른쪽 큰따옴표 아이콘" />
       </s.BannerContent>
     </s.Banner>
+    <div>
+      <s.BookReviewListLabel>
+        따끈따끈한 <span>세 줄</span>
+      </s.BookReviewListLabel>
+      {latestBookReviewScroller}
+    </div>
     <div>
       <s.BookReviewListLabel>
         사람들의 마음을 얻은 <span>세 줄</span>
