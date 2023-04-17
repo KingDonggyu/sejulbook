@@ -37,7 +37,7 @@ enum Column {
   SEJUL_PLUS = 'sejulplus',
   USER_ID = 'user_id',
   CATEGORY_ID = 'category_id',
-  DiVIDE = 'divide',
+  DIVIDE = 'divide',
   ORIGIN_THUMBNAIL = 'origin_thumbnail',
   DATE_CREATED = 'datecreated',
 }
@@ -62,7 +62,7 @@ interface FeedBookReview
 
 const bookReviewModel = {
   getAllBookReviewId: async () => {
-    const sql = `select ${Column.ID} from ${TABLE_NAME}`;
+    const sql = `select ${Column.ID} from ${TABLE_NAME} where ${Column.DIVIDE} = 1`;
     const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
     return result;
   },
@@ -91,8 +91,10 @@ const bookReviewModel = {
       from ${TABLE_NAME} as S
         inner join ${LIKE_TABLE_NAME} as L
           on S.${Column.ID} = L.${LikeColumn.BOOKREVIEW_ID}
-      where S.${Column.DATE_CREATED} 
-        regexp "${prevYear}-${prevMonth}|${currYear}-${currMonth}"
+      where 
+        S.${Column.DIVIDE} = 1 and
+        S.${Column.DATE_CREATED} 
+          regexp "${prevYear}-${prevMonth}|${currYear}-${currMonth}" 
       group by L.${LikeColumn.BOOKREVIEW_ID}
       order by ${LikeCountAlias} desc, ${Column.ID} desc
       limit 10;
@@ -108,7 +110,7 @@ const bookReviewModel = {
     const sql = `
       select max(${Column.ID}) as id
       from ${TABLE_NAME}
-      where ${Column.BOOK_NAME} = "${bookname}"
+      where ${Column.BOOK_NAME} = "${bookname}" and ${Column.DIVIDE} = 1
     `;
 
     const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
@@ -121,7 +123,7 @@ const bookReviewModel = {
     const sql = `
       select max(${Column.ID}) as id
       from ${TABLE_NAME}
-      where ${Column.CATEGORY_ID} = ${category_id}
+      where ${Column.CATEGORY_ID} = ${category_id} and ${Column.DIVIDE} = 1
     `;
 
     const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
@@ -136,7 +138,8 @@ const bookReviewModel = {
       from ${TABLE_NAME} as S, ${FOLLOW_TABLE_NAME} as F 
       where 
         F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
-        S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
+        S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID} and 
+        S.${Column.DIVIDE} = 1
     `;
 
     const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
@@ -157,7 +160,9 @@ const bookReviewModel = {
       from ${TABLE_NAME} as S
         inner join ${FOLLOW_TABLE_NAME} as F
           on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
-      where F.${FollowColumn.FOLLOWER_ID} = ${user_id}
+      where 
+        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
+        S.${Column.DIVIDE} = 1
       order by ${Column.DATE_CREATED} DESC
       limit 10;
     `;
@@ -182,8 +187,9 @@ const bookReviewModel = {
         on S.${Column.USER_ID} = U.${UserColumn.ID}
       where 
         S.${Column.BOOK_NAME} = "${bookname}" and 
-        S.${Column.ID} < ${maxId}
-        order by ${Column.ID} DESC
+        S.${Column.ID} < ${maxId} and 
+        S.${Column.DIVIDE} = 1
+      order by ${Column.ID} DESC
       limit 12
     `;
 
@@ -205,8 +211,9 @@ const bookReviewModel = {
         inner join ${TAG_TABLE_NAME} as T
         on S.${Column.ID} = T.${TagColumn.BOOKREVIEW_ID}
       where 
-        T.${TagColumn.TAG} = "${tag}" and 
-        S.${Column.ID} < ${maxId}
+        S.${Column.ID} < ${maxId} and
+        T.${TagColumn.TAG} = "${tag}" and
+        S.${Column.DIVIDE} = 1
       order by S.${Column.ID} DESC
       limit 12
     `;
@@ -230,8 +237,9 @@ const bookReviewModel = {
         inner join ${USER_TABLE_NAME} as U
         on S.${Column.USER_ID} = U.${UserColumn.ID}
       where
-        S.${Column.CATEGORY_ID} = ${category_id} and 
-        S.${Column.ID} < ${maxId}
+        S.${Column.ID} < ${maxId} and
+        S.${Column.CATEGORY_ID} = ${category_id} and
+        S.${Column.DIVIDE} = 1
       order by S.${Column.ID} DESC
       limit 12
     `;
@@ -254,8 +262,9 @@ const bookReviewModel = {
         inner join ${FOLLOW_TABLE_NAME} as F
         on S.${Column.USER_ID} = F.${FollowColumn.FOLLOWING_ID}
       where 
-        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
-        S.${Column.ID} < ${maxId}
+        S.${Column.ID} < ${maxId} and
+        F.${FollowColumn.FOLLOWER_ID} = ${user_id} and
+        S.${Column.DIVIDE} = 1
       order by ${Column.ID} DESC
       limit 12
     `;
@@ -273,7 +282,7 @@ const bookReviewModel = {
         ${Column.THUMBNAIL}, 
         ${Column.DATE_CREATED}
       from ${TABLE_NAME} 
-      where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 1
+      where ${Column.USER_ID} = ${user_id} and ${Column.DIVIDE} = 1
     `;
 
     const result = await query<BookReviewSummary[]>(sql);
@@ -284,7 +293,7 @@ const bookReviewModel = {
     const sql = `
       select ${Column.ID}, ${Column.BOOK_NAME}, ${Column.DATE_CREATED}
       from ${TABLE_NAME} 
-      where ${Column.USER_ID} = ${user_id} and ${Column.DiVIDE} = 0
+      where ${Column.USER_ID} = ${user_id} and ${Column.DIVIDE} = 0
     `;
 
     const result = await query<DraftSavedBookReview[]>(sql);
@@ -339,7 +348,7 @@ const bookReviewModel = {
       ${Column.SEJUL_PLUS} = "${bookReview.sejulplus}",
       ${Column.DATE_CREATED} = ${dateCreated},
       ${Column.CATEGORY_ID} = ${bookReview.category_id},
-      ${Column.DiVIDE} = ${bookReview.divide}
+      ${Column.DIVIDE} = ${bookReview.divide}
       where ${Column.ID} = ${bookReview.id}
     `;
 

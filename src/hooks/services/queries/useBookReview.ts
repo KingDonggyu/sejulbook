@@ -2,9 +2,12 @@ import useQuery from '@/hooks/useQuery';
 import { getBookReviewQuery } from '@/services/queries/bookReview';
 import { BookReviewId, BookReviewResponse } from '@/types/features/bookReview';
 
-const useBookReview = (bookReviewId?: BookReviewId) => {
+const useBookReview = (
+  bookReviewId?: BookReviewId,
+  isSaveRequired?: boolean,
+) => {
   const { data: bookReview } = useQuery<BookReviewResponse | undefined>(
-    getBookReviewQuery(bookReviewId),
+    getBookReviewQuery(bookReviewId, isSaveRequired),
   );
 
   return bookReview;
