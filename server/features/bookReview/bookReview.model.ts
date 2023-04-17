@@ -146,6 +146,25 @@ const bookReviewModel = {
     return result.length ? result[0].id : null;
   },
 
+  getLatestBookReviewList: async () => {
+    const sql = `
+      select
+        ${Column.ID},
+        ${Column.BOOK_NAME},
+        ${Column.SEJUL},
+        ${Column.THUMBNAIL},
+        ${Column.USER_ID},
+        ${Column.DATE_CREATED}
+      from ${TABLE_NAME}
+      where ${Column.DIVIDE} = 1
+      order by ${Column.ID} desc
+      limit 10
+    `;
+
+    const result = await query<ExtendedBookReviewSummary[]>(sql);
+    return result;
+  },
+
   getFollowingBookReviewList: async ({
     user_id,
   }: Pick<BookReviewEntity, 'user_id'>) => {
@@ -163,7 +182,7 @@ const bookReviewModel = {
       where 
         F.${FollowColumn.FOLLOWER_ID} = ${user_id} and 
         S.${Column.DIVIDE} = 1
-      order by ${Column.DATE_CREATED} DESC
+      order by S.${Column.ID} DESC
       limit 10;
     `;
 
