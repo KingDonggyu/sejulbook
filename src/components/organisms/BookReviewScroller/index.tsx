@@ -32,6 +32,7 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
           alt={`${bookname} 책 표지 이미지`}
           defaultFilter="brightness(0.5)"
           isHiddenChildren
+          isLargeSejul
           width={300}
           height={400}
         >

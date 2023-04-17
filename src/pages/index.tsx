@@ -13,14 +13,18 @@ import { getUserQuery } from '@/services/queries/user';
 import prefetchQuery from '@/services/prefetchQuery';
 import {
   getFollowingBookReviewListQuery,
+  getLatestBookReviewListQuery,
   getMostLikedBookReviewListQuery,
 } from '@/services/queries/bookReview';
+
+import useLatestBookReviewList from '@/hooks/services/queries/useLatestBookReviewList';
 import useMostLikedBookReviewList from '@/hooks/services/queries/useMostLikedBookReviewList';
 import useFollowingBookReviewList from '@/hooks/services/queries/useFollowingBookReviewList';
 import Route from '@/constants/routes';
 import { UserId } from '@/types/features/user';
 
 const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
+  const latestBookReviewList = useLatestBookReviewList();
   const mostLikedBookReviewList = useMostLikedBookReviewList();
   const followingBookReviewList = useFollowingBookReviewList(
     myUserId || undefined,
@@ -30,6 +34,9 @@ const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
     <>
       <SEO />
       <Home
+        latestBookReviewScroller={
+          <BookReviewScroller bookReviewList={latestBookReviewList} />
+        }
         mostLikedBookReviewScroller={
           <BookReviewScroller bookReviewList={mostLikedBookReviewList} />
         }
@@ -63,6 +70,7 @@ export const getServerSideProps = async ({
   const queryClient = await prefetchQuery([
     getUserQuery(myUserId),
     getFollowingBookReviewListQuery(myUserId),
+    getLatestBookReviewListQuery,
     getMostLikedBookReviewListQuery,
   ]);
 

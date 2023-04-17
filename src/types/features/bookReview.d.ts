@@ -91,7 +91,7 @@ export interface FeedBookReviewSummary
 }
 
 export interface HomeBookReviewSummary
-  extends Omit<LibraryBookReviewSummary, 'commentCount'> {
+  extends Omit<LibraryBookReviewSummary, 'likeCount' | 'commentCount'> {
   writer: UserName;
 }
 

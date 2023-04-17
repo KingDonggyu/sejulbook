@@ -137,6 +137,29 @@ export const draftSaveBookReview = async ({
     isDraftSave: true,
   });
 
+export const getLatestBookReviewList = async () => {
+  try {
+    const response = await get<HttpResponse<HomeBookReviewSummary[]>>(
+      `${API_URL}/list/latest`,
+    );
+
+    if (response.error) {
+      throw new BookReviewError({
+        name: 'GET_LATEST_BOOKREVIEW_LIST_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new BookReviewError({
+      name: 'GET_LATEST_BOOKREVIEW_LIST_ERROR',
+      message,
+    });
+  }
+};
+
 export const getMostLikedBookReviewList = async () => {
   try {
     const response = await get<HttpResponse<HomeBookReviewSummary[]>>(
@@ -227,6 +250,7 @@ export const getDraftSavedList = async (userId: UserId) => {
 
 export const getBookReview = async (
   bookReviewId: BookReviewId,
+  isSaveRequired?: boolean,
   onError?: () => void,
 ) => {
   try {
@@ -238,6 +262,13 @@ export const getBookReview = async (
       throw new BookReviewError({
         name: 'GET_BOOKREVIEW_ERROR',
         message: response.message,
+      });
+    }
+
+    if (isSaveRequired && response.data.isDraftSave) {
+      throw new BookReviewError({
+        name: 'GET_BOOKREVIEW_ERROR',
+        message: '존재하지 않는 독후감입니다.',
       });
     }
 

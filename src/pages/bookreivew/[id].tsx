@@ -45,7 +45,7 @@ const BookreviewPage = () => {
   const { session } = useUserStatus();
   const userId = session ? session.id || undefined : undefined;
 
-  const bookReview = useBookReview(bookReviewId);
+  const bookReview = useBookReview(bookReviewId, true);
   const tags = useTags(bookReviewId);
   const comments = useComments(bookReviewId);
   const { likeCount } = useLikeStatus({ userId, bookReviewId });
@@ -166,7 +166,7 @@ export const getServerSideProps = async ({
 
   const bookReviewId = Number(query.id);
   const queries = [
-    getBookReviewQuery(bookReviewId),
+    getBookReviewQuery(bookReviewId, true),
     getTagsQuery(bookReviewId),
     getCommentsQuery(bookReviewId),
     getLikeStatusQuery({ userId, bookReviewId }),

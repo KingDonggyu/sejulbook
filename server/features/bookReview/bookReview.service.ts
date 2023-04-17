@@ -31,7 +31,7 @@ interface BookReviewSummary
 
 type ExtendedBookReviewSummary = {
   writer: UserName;
-} & BookReviewSummary;
+} & Omit<BookReviewSummary, 'likeCount' | 'commentCount'>;
 
 type DraftSavedBookReview = Pick<
   BookReviewDTO,
@@ -59,9 +59,7 @@ const bookReviewService = {
   },
 
   getMostLikeBookReviewList: async (): Promise<
-    HttpResponse<
-      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
-    >
+    HttpResponse<ExtendedBookReviewSummary[]>
   > => {
     const twoMonthDateInfo = getCurrTwoMonthDate();
     const bookReviewList = await bookReviewModel.getMostLikeBookReviewList(
@@ -95,12 +93,42 @@ const bookReviewService = {
     return { error: false, data };
   },
 
+  getLatestBookReviewList: async (): Promise<
+    HttpResponse<ExtendedBookReviewSummary[]>
+  > => {
+    const bookReviewList = await bookReviewModel.getLatestBookReviewList();
+
+    const settledResult = await Promise.allSettled(
+      bookReviewList.map(
+        ({ user_id }): Promise<UserName | null> =>
+          userModel.getUserName({ id: user_id }),
+      ),
+    );
+
+    const writers = settledResult.map((_, i) => {
+      const result = settledResult[i];
+      if (result.status === 'fulfilled') {
+        return result.value || '';
+      }
+      return '';
+    });
+
+    const data = bookReviewList.map((bookReview, i) => ({
+      id: bookReview.id,
+      bookname: bookReview.bookname,
+      sejul: bookReview.sejul,
+      thumbnail: bookReview.thumbnail,
+      createdAt: bookReview.datecreated,
+      writer: writers[i],
+    }));
+
+    return { error: false, data };
+  },
+
   getFollowingBookReviewList: async ({
     userId,
   }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<
-      Omit<ExtendedBookReviewSummary, 'likeCount' | 'commentCount'>[]
-    >
+    HttpResponse<ExtendedBookReviewSummary[]>
   > => {
     const bookReviewList = await bookReviewModel.getFollowingBookReviewList({
       user_id: userId,
