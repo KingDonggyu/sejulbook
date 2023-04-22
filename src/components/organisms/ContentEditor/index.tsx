@@ -54,30 +54,40 @@ const ContentEditor = ({
 
   return (
     <s.EditorContainer editorId={editorElementId} readonly={readonly}>
-      <Editor
-        apiKey={process.env.NEXT_PUBLIC_TINY_API_KEY}
-        id={editorElementId}
-        inline
-        tagName="div"
-        disabled={readonly}
-        value={bookReview.content}
-        initialValue={initialValue && sanitize(initialValue)}
-        onEditorChange={handleEditorChange}
-        init={{
-          menubar: false,
-          skin: isDarkMode ? editorOption.darkSkin : editorOption.lightSkin,
-          language: editorOption.language,
-          plugins: editorOption.plugins,
-          toolbar: editorOption.toolbar,
-          toolbar_location: 'bottom',
-          placeholder: editorOption.placeholder,
-          block_formats: editorOption.blockFormats,
-          images_file_types: editorOption.imageFileTypes,
-          file_picker_types: 'image',
-          images_upload_handler: async (blobInfo) =>
-            handleUploadLoacalImage(blobInfo.blob()),
-        }}
-      />
+      {readonly ? (
+        <div
+          id={editorElementId}
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={
+            initialValue ? { __html: sanitize(initialValue) } : undefined
+          }
+        />
+      ) : (
+        <Editor
+          apiKey={process.env.NEXT_PUBLIC_TINY_API_KEY}
+          id={editorElementId}
+          inline
+          tagName="div"
+          disabled={readonly}
+          value={bookReview.content}
+          initialValue={initialValue && sanitize(initialValue)}
+          onEditorChange={handleEditorChange}
+          init={{
+            menubar: false,
+            skin: isDarkMode ? editorOption.darkSkin : editorOption.lightSkin,
+            language: editorOption.language,
+            plugins: editorOption.plugins,
+            toolbar: editorOption.toolbar,
+            toolbar_location: 'bottom',
+            placeholder: editorOption.placeholder,
+            block_formats: editorOption.blockFormats,
+            images_file_types: editorOption.imageFileTypes,
+            file_picker_types: 'image',
+            images_upload_handler: async (blobInfo) =>
+              handleUploadLoacalImage(blobInfo.blob()),
+          }}
+        />
+      )}
     </s.EditorContainer>
   );
 };
