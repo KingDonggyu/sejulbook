@@ -2,6 +2,7 @@ import { ForwardedRef, forwardRef } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { AiOutlineQuestionCircle } from '@react-icons/all-files/ai/AiOutlineQuestionCircle';
 import { StyleProps } from '@/types/style';
+import getS3DomainAddress from '@/utils/getS3DomainAddress';
 import * as s from './style';
 
 type ExtendedImageProps =
@@ -14,14 +15,18 @@ const Thumbnail = forwardRef(
   (
     { src, width, height, ...imageProps }: ThumbnailProps,
     ref: ForwardedRef<HTMLImageElement>,
-  ) =>
-    src ? (
+  ) => {
+    const s3DomainAddress = getS3DomainAddress();
+    const unoptimized = !src?.toString().startsWith(s3DomainAddress);
+
+    return src ? (
       <Image
         priority
         ref={ref}
         src={src}
         width={width}
         height={height}
+        unoptimized={unoptimized}
         css={s.thumbnailStyle}
         {...imageProps}
       />
@@ -29,7 +34,8 @@ const Thumbnail = forwardRef(
       <s.AltThumbnail width={width as number} height={height as number}>
         <AiOutlineQuestionCircle size={25} />
       </s.AltThumbnail>
-    ),
+    );
+  },
 );
 
 export default Thumbnail;
