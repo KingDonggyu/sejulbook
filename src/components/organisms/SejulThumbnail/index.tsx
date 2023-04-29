@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Thumbnail, { ThumbnailProps } from '@/components/atoms/Thumbnail';
 import { BookReviewId, Sejul } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
+import checkIsMobile from '@/utils/checkIsMobile';
 import * as s from './style';
 
 type SejulThumbnailProps = {
@@ -26,6 +27,7 @@ const SejulThumbnail = ({
   const thumbnailRef = useRef<HTMLImageElement>(null);
   const [isShowSejul, setIsShowSejul] = useState(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const isMobile = checkIsMobile();
 
   const handleMouseEnterThumbnail = () => {
     const timeout = setTimeout(() => setIsShowSejul(true), 200);
@@ -55,8 +57,8 @@ const SejulThumbnail = ({
   return (
     <Link href={`${Route.BOOKREVIEW}/${bookReviewId}`}>
       <s.ThumnailWrapper
-        onMouseEnter={handleMouseEnterThumbnail}
-        onMouseLeave={handleMouseLeaveThumbnail}
+        onMouseEnter={!isMobile ? handleMouseEnterThumbnail : undefined}
+        onMouseLeave={!isMobile ? handleMouseLeaveThumbnail : undefined}
       >
         <Thumbnail ref={thumbnailRef} {...thumbnailProps} />
         {isShowSejul && (

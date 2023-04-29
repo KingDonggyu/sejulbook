@@ -49,6 +49,12 @@ export const editorContentStyle = (theme: Theme) => css`
     padding: 1px 15px;
     border-left: 7px solid ${theme.COLOR.PRIMARY};
     background: ${theme.COLOR.BOX};
+
+    h1,
+    h2,
+    h3 {
+      margin: 15px 0;
+    }
   }
 
   ul,

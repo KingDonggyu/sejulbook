@@ -1,4 +1,8 @@
 const checkIsMobile = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   const mobileRegex = [
     /Android/i,
     /iPhone/i,
