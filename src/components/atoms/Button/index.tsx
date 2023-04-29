@@ -4,6 +4,7 @@ import { ColorVariant, ButtonVariant } from '@/constants';
 import { StyleProps } from '@/types/style';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
+import checkIsMobile from '@/utils/checkIsMobile';
 import { iconButtonStyle } from '@/styles/common';
 import * as s from './style';
 
@@ -29,6 +30,7 @@ const Button = ({
   ...buttonAttrs
 }: ButtonProps) => {
   const { theme } = useScreenModeContext();
+  const isMobile = checkIsMobile();
 
   return (
     <s.Button
@@ -37,7 +39,7 @@ const Button = ({
       color={getColorByColorVariant(color, theme)}
       variant={variant}
       radius={radius}
-      hover={hover}
+      hover={hover && !isMobile}
       disabled={!!buttonAttrs.disabled}
       {...buttonAttrs}
     />

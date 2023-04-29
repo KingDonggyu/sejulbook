@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StarIcon } from '@/components/atoms/Icon';
 import { StyleProps } from '@/types/style';
+import checkIsMobile from '@/utils/checkIsMobile';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';
 
@@ -27,12 +28,14 @@ const Rating = ({
 }: RatingProps) => {
   const [rating, setRating] = useState(init);
   const [selectedRating, setSelectedRating] = useState(init);
+  const isBindingMouseEvent = !readonly && !checkIsMobile();
 
   const handleClick = (clickedRating: number) => {
     if (readonly) {
       return;
     }
 
+    setRating(clickedRating);
     setSelectedRating(clickedRating);
 
     if (handleClickRating) {
@@ -53,7 +56,11 @@ const Rating = ({
   };
 
   return (
-    <s.Wrapper readonly={readonly} gap={gap} onMouseLeave={handleMouseLeave}>
+    <s.Wrapper
+      readonly={readonly}
+      gap={gap}
+      onMouseLeave={isBindingMouseEvent ? handleMouseLeave : undefined}
+    >
       {Array.from(Array(rating), (_, i) => (
         <StarIcon
           active
@@ -61,7 +68,9 @@ const Rating = ({
           size={size}
           color={activeColor}
           onClick={() => handleClick(i + 1)}
-          onMouseOver={() => handleMouseOver(i + 1)}
+          onMouseOver={
+            isBindingMouseEvent ? () => handleMouseOver(i + 1) : undefined
+          }
         />
       ))}
       {Array.from(Array(max - rating), (_, i) => (
@@ -70,7 +79,11 @@ const Rating = ({
           size={size}
           color={deactiveColor}
           onClick={() => handleClick(i + rating + 1)}
-          onMouseOver={() => handleMouseOver(i + rating + 1)}
+          onMouseOver={
+            isBindingMouseEvent
+              ? () => handleMouseOver(i + rating + 1)
+              : undefined
+          }
         />
       ))}
     </s.Wrapper>
