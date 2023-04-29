@@ -12,6 +12,7 @@ export const Title = styled.h2`
 export const categoryContainerStyle = css`
   overflow-y: auto;
   overflow-x: hidden;
+  max-height: 70vh;
 `;
 
 export const categoryButtonStyle = (theme: Theme) => css`
