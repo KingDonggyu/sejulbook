@@ -75,7 +75,6 @@
 - [AWS S3 용량 최적화 Hook 구현기 (with Service Worker)](https://east-star.tistory.com/41)
 - [아토믹 디자인 시스템 잘써보기 (with NextJS)](https://east-star.tistory.com/42)
 - [성능 분석](https://sejulbook.notion.site/d666ac5460b441c09a9a2aafa254d4e7)
-- [비동기 작업 성능 개선](https://sejulbook.notion.site/efb9cef5d5cb43758678ba7e18bc60df)
 
 <br />
 
