@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StarIcon } from '@/components/atoms/Icon';
 import { StyleProps } from '@/types/style';
-import checkIsMobile from '@/utils/checkIsMobile';
+import useMobile from '@/hooks/useMobile';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';
 
@@ -28,7 +28,9 @@ const Rating = ({
 }: RatingProps) => {
   const [rating, setRating] = useState(init);
   const [selectedRating, setSelectedRating] = useState(init);
-  const isBindingMouseEvent = !readonly && !checkIsMobile();
+  const isMobile = useMobile();
+
+  const isBindingMouseEvent = !readonly && !isMobile;
 
   const handleClick = (clickedRating: number) => {
     if (readonly) {

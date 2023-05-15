@@ -1,24 +1,21 @@
 import styled from '@emotion/styled';
 import { THUMBNAIL_Z_INDEX } from '@/constants/zIndex';
-import checkIsMobile from '@/utils/checkIsMobile';
-
-const isMobile = checkIsMobile();
 
 export const ThumnailWrapper = styled.div`
   cursor: pointer;
   position: relative;
+  overflow: hidden;
   z-index: ${THUMBNAIL_Z_INDEX};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
 
-  ${!isMobile &&
-  `
-    &:hover {
+  @media (hover: hover) and (pointer: fine) {
+    :hover {
       img {
-        transform: scale(1.05);
+        transform: scale(1.07);
         transition: 0.5s;
       }
     }
-  `}
+  }
 `;
 
 export const SejulBookReview = styled.p<{ isLarge: boolean }>`
