@@ -19,6 +19,7 @@ export const bookReviewError = {
   LIMIT_DRAFT_SAVE: '최대 10개의 독후감만 임시저장할 수 있습니다.',
   NOT_EXIST_BOOKREVIEW: '존재하지 않는 독후감입니다.',
   NOT_PUBLISHED_BOOKREVIEW: '발행되지 않은 독후감입니다.',
+  NOT_DELETED_BOOKREVIEW: '독후감이 정상적으로 삭제되지 않았습니다.',
 };
 
 export const commentError = {

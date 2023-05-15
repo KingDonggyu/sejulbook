@@ -237,7 +237,7 @@ const bookReviewModel = {
       limit 12
     `;
 
-    const result = await query<FeedBookReview[]>(sql);
+    const result = await query<Omit<FeedBookReview, 'nick'>[]>(sql);
     return result;
   },
 
@@ -288,7 +288,7 @@ const bookReviewModel = {
       limit 12
     `;
 
-    const result = await query<FeedBookReview[]>(sql);
+    const result = await query<Omit<FeedBookReview, 'nick'>[]>(sql);
     return result;
   },
 
