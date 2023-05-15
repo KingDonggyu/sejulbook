@@ -4,13 +4,14 @@ import { THUMBNAIL_Z_INDEX } from '@/constants/zIndex';
 export const ThumnailWrapper = styled.div`
   cursor: pointer;
   position: relative;
+  overflow: hidden;
   z-index: ${THUMBNAIL_Z_INDEX};
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
 
   @media (hover: hover) and (pointer: fine) {
     :hover {
       img {
-        transform: scale(1.05);
+        transform: scale(1.07);
         transition: 0.5s;
       }
     }
