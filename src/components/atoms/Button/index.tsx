@@ -4,7 +4,7 @@ import { ColorVariant, ButtonVariant } from '@/constants';
 import { StyleProps } from '@/types/style';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
-import checkIsMobile from '@/utils/checkIsMobile';
+import useMobile from '@/hooks/useMobile';
 import { iconButtonStyle } from '@/styles/common';
 import * as s from './style';
 
@@ -30,7 +30,7 @@ const Button = ({
   ...buttonAttrs
 }: ButtonProps) => {
   const { theme } = useScreenModeContext();
-  const isMobile = checkIsMobile();
+  const isMobile = useMobile();
 
   return (
     <s.Button
