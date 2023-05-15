@@ -178,21 +178,19 @@ const userService = {
           maxFollowId: followId,
         });
 
-    const settledResult = await Promise.allSettled(
-      followUserList.map(({ id: otherUserId }) =>
-        myUserId
+    const promises = followUserList.map(
+      async ({
+        id: otherUserId,
+        nick,
+        introduce,
+        follow_id,
+      }): Promise<User & { followId: FollowId; isFollow: boolean }> => {
+        const isFollow = await (myUserId
           ? followModel.getIsFollow({
               following_id: otherUserId,
               follower_id: myUserId,
             })
-          : false,
-      ),
-    );
-
-    const data = followUserList.map(
-      ({ id: otherUserId, nick, introduce, follow_id }, i) => {
-        const result = settledResult[i];
-        const isFollow = result.status === 'fulfilled' ? result.value : false;
+          : false);
 
         return {
           id: otherUserId,
@@ -203,6 +201,8 @@ const userService = {
         };
       },
     );
+
+    const data = await Promise.all(promises);
 
     return {
       error: false,
