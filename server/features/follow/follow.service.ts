@@ -41,7 +41,7 @@ const followService = {
     targetUserId: UserId;
     myUserId?: UserId;
   }): Promise<HttpResponse<FollowInfo>> => {
-    const result = await Promise.allSettled([
+    const [followerCount, followingCount, isFollow] = await Promise.all([
       followModel.getFollowerCount({
         following_id: targetUserId,
       }),
@@ -55,14 +55,6 @@ const followService = {
           })
         : false,
     ]);
-
-    const followerCount =
-      result[0].status === 'fulfilled' ? result[0].value : 0;
-
-    const followingCount =
-      result[1].status === 'fulfilled' ? result[1].value : 0;
-
-    const isFollow = result[2].status === 'fulfilled' ? result[2].value : false;
 
     return {
       error: false,
