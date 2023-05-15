@@ -7,7 +7,7 @@ const prefetchQuery = async (
 ) => {
   const queryClient = new QueryClient();
 
-  await Promise.allSettled([
+  await Promise.all([
     ...queries.map(({ queryKey, queryFn }) =>
       queryClient.prefetchQuery(queryKey, queryFn),
     ),
