@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Thumbnail, { ThumbnailProps } from '@/components/atoms/Thumbnail';
 import { BookReviewId, Sejul } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
-import checkIsMobile from '@/utils/checkIsMobile';
+import useMobile from '@/hooks/useMobile';
 import * as s from './style';
 
 type SejulThumbnailProps = {
@@ -24,10 +24,10 @@ const SejulThumbnail = ({
   isHiddenChildren = false,
   ...thumbnailProps
 }: SejulThumbnailProps) => {
+  const isMobile = useMobile();
   const thumbnailRef = useRef<HTMLImageElement>(null);
   const [isShowSejul, setIsShowSejul] = useState(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const isMobile = checkIsMobile();
 
   const handleMouseEnterThumbnail = () => {
     const timeout = setTimeout(() => setIsShowSejul(true), 200);

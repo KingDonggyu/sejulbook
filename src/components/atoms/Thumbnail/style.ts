@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { searchedItemThumbnailStyle } from '@/styles/common';
 
 export const AltThumbnail = styled.div<{ width: number; height: number }>`
-  ${({ theme }) => searchedItemThumbnailStyle(theme)};
   width: ${({ width }) => `${width}px`};
   height: ${({ height }) => `${height}px`};
   display: flex;
