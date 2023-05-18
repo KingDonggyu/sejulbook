@@ -43,6 +43,7 @@ export const SejulBookReview = styled.p<{ isLarge: boolean }>`
   padding-bottom: 30px;
   height: 100%;
   opacity: 0;
+  transition: all 1s;
   color: ${({ theme }) => theme.COLOR.WHITE};
   font-size: ${({ theme, isLarge }) =>
     isLarge ? theme.FONT_SIZE.MEDIUM : theme.FONT_SIZE.SMALL};
@@ -50,4 +51,5 @@ export const SejulBookReview = styled.p<{ isLarge: boolean }>`
 
 export const DefaultContent = styled.div`
   opacity: 1;
+  transition: all 0.5s;
 `;
