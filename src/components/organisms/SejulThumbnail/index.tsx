@@ -1,17 +1,16 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useRef } from 'react';
 import Link from 'next/link';
 import Thumbnail, { ThumbnailProps } from '@/components/atoms/Thumbnail';
 import { BookReviewId, Sejul } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
-import useMobile from '@/hooks/useMobile';
 import * as s from './style';
 
 type SejulThumbnailProps = {
   bookReviewId: BookReviewId;
   sejul: Sejul;
-  defaultFilter?: string;
+  isGrayscale?: boolean;
   isLargeSejul?: boolean;
-  isHiddenChildren?: boolean;
+  isHiddenChildrenOnHover?: boolean;
   children?: ReactNode;
 } & ThumbnailProps;
 
@@ -19,52 +18,18 @@ const SejulThumbnail = ({
   bookReviewId,
   sejul,
   children,
-  defaultFilter = 'none',
+  isGrayscale = false,
   isLargeSejul = false,
-  isHiddenChildren = false,
   ...thumbnailProps
 }: SejulThumbnailProps) => {
-  const isMobile = useMobile();
   const thumbnailRef = useRef<HTMLImageElement>(null);
-  const [isShowSejul, setIsShowSejul] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-
-  const handleMouseEnterThumbnail = () => {
-    const timeout = setTimeout(() => setIsShowSejul(true), 200);
-    setTimer(timeout);
-    if (thumbnailRef.current) {
-      thumbnailRef.current.style.filter = 'brightness(0.3)';
-    }
-  };
-
-  const handleMouseLeaveThumbnail = () => {
-    if (timer) {
-      clearTimeout(timer);
-      setTimer(null);
-    }
-    setIsShowSejul(false);
-    if (thumbnailRef.current) {
-      thumbnailRef.current.style.filter = defaultFilter;
-    }
-  };
-
-  useEffect(() => {
-    if (thumbnailRef.current) {
-      thumbnailRef.current.style.filter = defaultFilter;
-    }
-  }, [defaultFilter]);
 
   return (
     <Link href={`${Route.BOOKREVIEW}/${bookReviewId}`}>
-      <s.ThumnailWrapper
-        onMouseEnter={!isMobile ? handleMouseEnterThumbnail : undefined}
-        onMouseLeave={!isMobile ? handleMouseLeaveThumbnail : undefined}
-      >
+      <s.ThumnailWrapper isGrayscale={isGrayscale}>
         <Thumbnail ref={thumbnailRef} {...thumbnailProps} />
-        {isShowSejul && (
-          <s.SejulBookReview isLarge={isLargeSejul}>{sejul}</s.SejulBookReview>
-        )}
-        {isHiddenChildren ? !isShowSejul && children : children}
+        <s.SejulBookReview isLarge={isLargeSejul}>{sejul}</s.SejulBookReview>
+        <s.DefaultContent>{children}</s.DefaultContent>
       </s.ThumnailWrapper>
     </Link>
   );
