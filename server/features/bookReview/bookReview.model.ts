@@ -92,13 +92,16 @@ const bookReviewModel = {
         inner join ${LIKE_TABLE_NAME} as L
           on S.${Column.ID} = L.${LikeColumn.BOOKREVIEW_ID}
       where 
-        S.${Column.DIVIDE} = 1 and
-        S.${Column.DATE_CREATED} 
-          regexp "${prevYear}-${prevMonth}|${currYear}-${currMonth}" 
+        S.${Column.DIVIDE} = 1
       group by L.${LikeColumn.BOOKREVIEW_ID}
       order by ${LikeCountAlias} desc, ${Column.ID} desc
       limit 10;
     `;
+
+    // where
+    // S.${Column.DIVIDE} = 1 and
+    // S.${Column.DATE_CREATED}
+    //   regexp "${prevYear}-${prevMonth}|${currYear}-${currMonth}"
 
     const result = await query<ExtendedBookReviewSummary[]>(sql);
     return result;
