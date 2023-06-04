@@ -164,6 +164,11 @@ const userModel = {
     const result = await query<User[]>(sql);
     return result;
   },
+
+  deleteUser: async ({ id }: Pick<UserEntity, 'id'>) => {
+    const sql = `delete from ${TABLE_NAME} where ${Column.ID} = ${id}`;
+    await query(sql);
+  },
 };
 
 export default userModel;

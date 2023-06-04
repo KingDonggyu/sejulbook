@@ -42,6 +42,14 @@ const likeModel = {
     await query(sql);
   },
 
+  deleteAllLikesByUser: async ({ liker_id }: Pick<LikeEntity, 'liker_id'>) => {
+    const sql = `
+      delete from ${TABLE_NAME} 
+      where ${Column.LIKER_ID} = ${liker_id}
+   `;
+    await query(sql);
+  },
+
   createLike: async ({ sejulbook_id, liker_id }: LikeEntity) => {
     const sql = `
       insert into ${TABLE_NAME} 

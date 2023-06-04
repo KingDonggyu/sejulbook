@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import Button from '@/components/atoms/Button';
 import TextField from '@/components/atoms/TextField';
 import TextArea from '@/components/atoms/TextArea';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
+import Route from '@/constants/routes';
 import { User, UserName, Introduce } from '@/types/features/user';
 import * as s from './style';
 
 interface ProfileSettingModalProps {
+  isLogged?: boolean;
   title: string;
   initName?: string;
   initIntroduce?: string;
@@ -21,6 +24,7 @@ const ProfileSettingModal = ({
   onComplete,
   initName = '',
   initIntroduce = '',
+  isLogged = false,
   ...modalProps
 }: ProfileSettingModalProps & Omit<ModalProps, 'children'>) => {
   const [name, setName] = useState<UserName>(initName);
@@ -57,6 +61,9 @@ const ProfileSettingModal = ({
       >
         완료
       </Button>
+      {isLogged && (
+        <Link href={{ pathname: `${Route.LIBRARY}/delete` }}>탈퇴하기</Link>
+      )}
     </Modal>
   );
 };
