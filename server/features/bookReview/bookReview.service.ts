@@ -15,7 +15,7 @@ import tagModel from '../tag/tag.model';
 import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
-import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
+// import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 import getMaxBookReviewId from './utils/getMaxBookReviewId';
 import TagDTO from '../tag/tag.dto';
 import getSQLFormattedDate from './utils/getSQLFormattedDate';
@@ -61,10 +61,8 @@ const bookReviewService = {
   getMostLikeBookReviewList: async (): Promise<
     HttpResponse<ExtendedBookReviewSummary[]>
   > => {
-    const twoMonthDateInfo = getCurrTwoMonthDate();
-    const bookReviewList = await bookReviewModel.getMostLikeBookReviewList(
-      twoMonthDateInfo,
-    );
+    // const twoMonthDateInfo = getCurrTwoMonthDate();
+    const bookReviewList = await bookReviewModel.getMostLikeBookReviewList();
 
     const promises = bookReviewList.map(
       async ({
