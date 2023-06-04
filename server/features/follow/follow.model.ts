@@ -1,5 +1,6 @@
 import query from 'server/database/query';
 import { FollowEntity } from './follow.entity';
+import { UserId } from '../user/user.entity';
 
 export const TABLE_NAME = 'follow';
 
@@ -97,6 +98,16 @@ const followModel = {
     ${Column.FOLLOWER_ID} = ${follower_id} and
     ${Column.FOLLOWING_ID} = ${following_id}
   `;
+
+    await query(sql);
+  },
+
+  deleteAllFollowByUser: async ({ userId }: { userId: UserId }) => {
+    const sql = `
+      delete from ${TABLE_NAME} where
+      ${Column.FOLLOWER_ID} = ${userId} or
+      ${Column.FOLLOWING_ID} = ${userId}
+    `;
 
     await query(sql);
   },

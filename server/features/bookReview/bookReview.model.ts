@@ -67,7 +67,21 @@ const bookReviewModel = {
     return result;
   },
 
-  getMostLikeBookReviewList: async ({
+  getAllBookReviewIdByUser: async ({
+    user_id,
+  }: Pick<BookReviewEntity, 'user_id'>) => {
+    const sql = `
+      select ${Column.ID} from ${TABLE_NAME} 
+      where ${Column.USER_ID} = ${user_id}
+    `;
+
+    const result = await query<Pick<BookReviewEntity, 'id'>[]>(sql);
+    return result;
+  },
+
+  /**
+   * 
+   * @params {
     currYear,
     currMonth,
     prevYear,
@@ -77,7 +91,9 @@ const bookReviewModel = {
     currMonth: string;
     prevYear: string;
     prevMonth: string;
-  }) => {
+  }
+   */
+  getMostLikeBookReviewList: async () => {
     const LikeCountAlias = 'likes_sum';
     const sql = `
       select

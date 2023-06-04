@@ -47,6 +47,16 @@ const commentModel = {
     await query(sql);
   },
 
+  deleteAllCommentsByUser: async ({
+    replyer_id,
+  }: Pick<CommentEntity, 'replyer_id'>) => {
+    const sql = `
+      delete from ${TABLE_NAME}
+      where ${Column.COMMENTER_ID} = ${replyer_id}
+    `;
+    await query(sql);
+  },
+
   deleteSingleComment: async ({ id }: Pick<CommentEntity, 'id'>) => {
     const sql = `
       delete from ${TABLE_NAME}
