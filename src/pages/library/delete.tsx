@@ -5,8 +5,8 @@ import { signOut } from 'next-auth/react';
 import DeleteTemplate from '@/components/templates/Delete';
 import checkLogin from '@/services/middlewares/checkLogin';
 import { UserId } from '@/types/features/user';
-import { userError } from '@/constants/message';
 import Route from '@/constants/routes';
+import useUserDeletion from '@/hooks/services/mutations/useUserDeletion';
 
 interface DeletePageProps {
   myId: UserId | null;
@@ -16,9 +16,14 @@ const DeletePage = ({ myId }: DeletePageProps) => {
   const [isAgree, setIsAgree] = useState(false);
   const router = useRouter();
 
+  const deleteUser = useUserDeletion({
+    onSuccess: () => {
+      router.replace(Route.HOME);
+    },
+  });
+
   useEffect(() => {
     if (!myId) {
-      alert(userError.NOT_LOGGED);
       router.replace(Route.HOME);
     }
   }, [myId, router]);
@@ -38,6 +43,7 @@ const DeletePage = ({ myId }: DeletePageProps) => {
     }
 
     signOut();
+    deleteUser();
   };
 
   return (

@@ -1,4 +1,4 @@
-import { get, post, put } from '@/lib/HTTPClient';
+import { get, post, put, remove } from '@/lib/HTTPClient';
 import { HttpResponse } from '@/types/http';
 import {
   FollowUser,
@@ -142,5 +142,25 @@ export const getAllUserId = async () => {
   } catch (error) {
     const { message } = getDataFromAxiosError(error);
     throw new UserError({ name: 'GET_ALL_USER_ID', message });
+  }
+};
+
+export const deleteUser = async (userId: UserId) => {
+  try {
+    const response = await remove<HttpResponse<undefined>>(
+      `${API_URL}/${userId}`,
+    );
+
+    if (response.error) {
+      throw new UserError({
+        name: 'DELETE_USER_ERROR',
+        message: response.message,
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    const { message } = getDataFromAxiosError(error);
+    throw new UserError({ name: 'DELETE_USER_ERROR', message });
   }
 };
