@@ -1,13 +1,20 @@
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const modalStyle = css`
+export const modalStyle = (theme: Theme) => css`
   width: 300px;
   & > div {
     margin-bottom: 20px;
   }
   textarea {
     border-radius: 5px;
+  }
+  a {
+    display: block;
+    width: fit-content;
+    margin: auto;
+    padding-top: 20px;
+    color: ${theme.COLOR.SECOND_TEXT};
   }
 `;
 

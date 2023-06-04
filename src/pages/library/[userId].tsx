@@ -22,7 +22,7 @@ import { getFollowInfoQuery } from '@/services/queries/follow';
 import { UserId } from '@/types/features/user';
 import { BookReivewList } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
-import { authOptions } from '../api/auth/[...nextauth]';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const LibraryPage = ({ userId }: { userId: UserId }) => {
   const user = useUser(userId);

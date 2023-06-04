@@ -36,6 +36,7 @@ const ProfileEditButton = () => {
         프로필 편집
       </Button>
       <ProfileSettingModal
+        isLogged
         modalKey={ModalKey.PROFILE_SETTING}
         onComplete={handleComplete}
         initName={me?.name}

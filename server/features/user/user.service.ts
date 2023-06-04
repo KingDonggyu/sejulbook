@@ -5,6 +5,10 @@ import userModel from './user.model';
 import UserGuard from './user.guard';
 import { FollowId } from '../follow/follow.dto';
 import followModel from '../follow/follow.model';
+import bookReviewModel from '../bookReview/bookReview.model';
+import tagModel from '../tag/tag.model';
+import commentModel from '../comment/comment.model';
+import likeModel from '../like/like.model';
 
 type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
 
@@ -222,6 +226,37 @@ const userService = {
         introduce,
         name: nick,
       })),
+    };
+  },
+
+  deleteUser: async ({
+    id,
+  }: Pick<UserDTO, 'id'>): Promise<HttpResponse<undefined>> => {
+    const bookReviewIdList = await bookReviewModel.getAllBookReviewIdByUser({
+      user_id: id,
+    });
+
+    await Promise.all([
+      ...bookReviewIdList.map(async ({ id: bookReviewId }) => {
+        tagModel.deleteTags({ sejulbook_id: bookReviewId });
+        likeModel.deleteAllLikes({ sejulbook_id: bookReviewId });
+      }),
+      commentModel.deleteAllCommentsByUser({ replyer_id: id }),
+      likeModel.deleteAllLikesByUser({ liker_id: id }),
+      followModel.deleteAllFollowByUser({ userId: id }),
+    ]);
+
+    await Promise.all(
+      bookReviewIdList.map(async ({ id: bookReviewId }) => {
+        bookReviewModel.deleteBookReview({ id: bookReviewId });
+      }),
+    );
+
+    await userModel.deleteUser({ id });
+
+    return {
+      error: false,
+      data: undefined,
     };
   },
 };
