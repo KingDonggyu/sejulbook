@@ -1,10 +1,8 @@
 import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
 import { publishBookReview } from '@/services/api/bookReview';
 import { BookReviewError } from '@/services/errors/BookReviewError';
 import useMutation from '@/hooks/useMutation';
 import { BookReviewId, NewBookReview } from '@/types/features/bookReview';
-import { getBookReviewQuery } from '@/services/queries/bookReview';
 
 interface BookReviewPublicationProps {
   bookReview: NewBookReview;
@@ -17,8 +15,6 @@ const useBookReviewPublication = ({
   savedBookReviewId,
   onSuccess,
 }: BookReviewPublicationProps) => {
-  const queryClient = useQueryClient();
-
   const { mutate } = useMutation({
     mutationFn: async (userId) => {
       const bookReviewId = await publishBookReview({
@@ -31,9 +27,6 @@ const useBookReviewPublication = ({
     },
 
     onSuccess: (data) => {
-      const { queryKey } = getBookReviewQuery(savedBookReviewId);
-      queryClient.invalidateQueries(queryKey);
-
       if (onSuccess) {
         onSuccess(data);
       }
