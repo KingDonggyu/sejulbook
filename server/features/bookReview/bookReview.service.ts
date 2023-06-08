@@ -11,13 +11,14 @@ import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
 import likeModel from '../like/like.model';
 import tagModel from '../tag/tag.model';
+import TagDTO from '../tag/tag.dto';
 
 import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
 import formatDTOToEntity from './utils/formatDTOToEntity';
 // import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
 import getMaxBookReviewId from './utils/getMaxBookReviewId';
-import TagDTO from '../tag/tag.dto';
+import getSQLFormattedDate from './utils/getSQLFormattedDate';
 
 interface BookReviewSummary
   extends Pick<
@@ -492,17 +493,41 @@ const bookReviewService = {
       isDraftSave: false,
     });
 
+    if (bookReview.id) {
+      const isPrevDraftSaved = await bookReviewModel.getIsDraftSave({
+        id: bookReview.id,
+      });
+
+      // 발행된 독후감 수정
+      if (!isPrevDraftSaved) {
+        await bookReviewModel.updateBookReview({
+          ...entityData,
+          id: bookReview.id,
+          datecreated: bookReview.createdAt
+            ? getSQLFormattedDate(bookReview.createdAt)
+            : undefined,
+        });
+
+        return { error: false, data: bookReview.id };
+      }
+    }
+
     const promises: [Promise<number>, Promise<void>?] = [
       bookReviewModel.createBookReview(entityData),
     ];
 
     // 임시저장 독후감 제거
     if (bookReview.id) {
-      promises.push(bookReviewModel.deleteBookReview({ id: bookReview.id }));
+      const isPrevDraftSaved = await bookReviewModel.getIsDraftSave({
+        id: bookReview.id,
+      });
+
+      if (isPrevDraftSaved) {
+        promises.push(bookReviewModel.deleteBookReview({ id: bookReview.id }));
+      }
     }
 
     const [data] = await Promise.all(promises);
-
     return { error: false, data };
   },
 
