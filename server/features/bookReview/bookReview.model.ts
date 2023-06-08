@@ -345,6 +345,16 @@ const bookReviewModel = {
     return result;
   },
 
+  getIsDraftSave: async ({ id }: Pick<BookReviewEntity, 'id'>) => {
+    const sql = `
+      select ${Column.DIVIDE} from ${TABLE_NAME} 
+      where ${Column.ID} = ${id}
+    `;
+
+    const [result] = await query<Pick<BookReviewEntity, 'divide'>[]>(sql);
+    return !result.divide;
+  },
+
   createBookReview: async (
     bookReview: Omit<BookReviewEntity, 'id' | 'datecreated'>,
   ) => {
@@ -380,13 +390,13 @@ const bookReviewModel = {
 
     const sql = `
       update ${TABLE_NAME} set 
-      ${Column.GRADE} = ${bookReview.grade},
-      ${Column.THUMBNAIL} = "${bookReview.thumbnail}",
-      ${Column.SEJUL} = "${bookReview.sejul}",
-      ${Column.SEJUL_PLUS} = "${bookReview.sejulplus}",
-      ${Column.DATE_CREATED} = ${dateCreated},
-      ${Column.CATEGORY_ID} = ${bookReview.category_id},
-      ${Column.DIVIDE} = ${bookReview.divide}
+        ${Column.GRADE} = ${bookReview.grade},
+        ${Column.THUMBNAIL} = "${bookReview.thumbnail}",
+        ${Column.SEJUL} = "${bookReview.sejul}",
+        ${Column.SEJUL_PLUS} = "${bookReview.sejulplus}",
+        ${Column.DATE_CREATED} = ${dateCreated},
+        ${Column.CATEGORY_ID} = ${bookReview.category_id},
+        ${Column.DIVIDE} = ${bookReview.divide}
       where ${Column.ID} = ${bookReview.id}
     `;
 
