@@ -1,70 +1,73 @@
+import { PrismaClient } from '@prisma/client';
 import { HttpResponse } from 'server/types/http';
-import { UserId } from '../user/user.dto';
-import { FollowDTO } from './follow.dto';
-import followModel from './follow.model';
+import FollowDto, { UserId } from './follow.dto';
 
-interface FollowInfo {
-  followerCount: number;
-  followingCount: number;
-  isFollow: boolean;
+class FollowService {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
+
+  async has({
+    followerId,
+    followingId,
+  }: FollowDto): Promise<HttpResponse<boolean>> {
+    const follow = await this.prisma.follow.findFirst({
+      where: {
+        follower_id: followerId,
+        following_id: followingId,
+      },
+    });
+    return { error: false, data: !!follow };
+  }
+
+  async countFollwing(followerId: UserId): Promise<HttpResponse<number>> {
+    const count = await this.prisma.follow.count({
+      where: { follower_id: followerId },
+    });
+    return { error: false, data: count };
+  }
+
+  async countFollower(followingId: UserId): Promise<HttpResponse<number>> {
+    const count = await this.prisma.follow.count({
+      where: { following_id: followingId },
+    });
+    return { error: false, data: count };
+  }
+
+  async create({
+    followerId,
+    followingId,
+  }: FollowDto): Promise<HttpResponse<undefined>> {
+    await this.prisma.follow.create({
+      data: { follower_id: followerId, following_id: followingId },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async delete({
+    followerId,
+    followingId,
+  }: FollowDto): Promise<HttpResponse<undefined>> {
+    await this.prisma.follow.deleteMany({
+      where: {
+        follower_id: followerId,
+        following_id: followingId,
+      },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async deleteAllByUser(userId: UserId) {
+    await this.prisma.follow.deleteMany({
+      where: {
+        follower_id: userId,
+        following_id: userId,
+      },
+    });
+    return { error: false, data: undefined };
+  }
 }
 
-const followService = {
-  subscribe: async ({
-    followerId,
-    followingId,
-  }: Omit<FollowDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    await followModel.createFollow({
-      follower_id: followerId,
-      following_id: followingId,
-    });
-
-    return { error: false, data: undefined };
-  },
-
-  unsubscribe: async ({
-    followerId,
-    followingId,
-  }: Omit<FollowDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    await followModel.deleteFollow({
-      follower_id: followerId,
-      following_id: followingId,
-    });
-
-    return { error: false, data: undefined };
-  },
-
-  getFollowInfo: async ({
-    targetUserId,
-    myUserId,
-  }: {
-    targetUserId: UserId;
-    myUserId?: UserId;
-  }): Promise<HttpResponse<FollowInfo>> => {
-    const [followerCount, followingCount, isFollow] = await Promise.all([
-      followModel.getFollowerCount({
-        following_id: targetUserId,
-      }),
-      followModel.getFollowingCount({
-        follower_id: targetUserId,
-      }),
-      myUserId
-        ? await followModel.getIsFollow({
-            follower_id: myUserId,
-            following_id: targetUserId,
-          })
-        : false,
-    ]);
-
-    return {
-      error: false,
-      data: {
-        followerCount,
-        followingCount,
-        isFollow,
-      },
-    };
-  },
-};
-
-export default followService;
+export default FollowService;
