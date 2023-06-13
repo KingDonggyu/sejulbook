@@ -45,7 +45,6 @@ model reply {
   @@index([sejulbook_id], map: "sejulbook_id_idx")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model sejulbook {
   id               Int       @id @default(autoincrement()) @db.UnsignedInt
   bookname         String    @db.VarChar(50)
