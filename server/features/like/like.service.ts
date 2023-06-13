@@ -1,69 +1,68 @@
-import { userError } from 'server/constants/message';
-import { HttpSuccess, HttpFailed } from 'server/types/http';
-import { UserId } from '../user/user.dto';
-import LikeDTO from './like.dto';
-import likeModel from './like.model';
+import { PrismaClient } from '@prisma/client';
+import { HttpResponse } from 'server/types/http';
+import LikeDto, { BookReviewId, LikerId } from './like.dto';
 
-interface LikeStatus {
-  likeCount: number;
-  isLike: boolean;
+class LikeService {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
+
+  async has({
+    bookReviewId,
+    likerId,
+  }: LikeDto): Promise<HttpResponse<boolean>> {
+    const like = await this.prisma.likes.findFirst({
+      where: { sejulbook_id: bookReviewId, liker_id: likerId },
+    });
+    return { error: false, data: !!like };
+  }
+
+  async countByBookReview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<number>> {
+    const count = await this.prisma.likes.count({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return { error: false, data: count };
+  }
+
+  async deleteAllByBookReview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<undefined>> {
+    await this.prisma.likes.deleteMany({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async deleteAllByUser(likerId: LikerId) {
+    await this.prisma.likes.deleteMany({
+      where: { liker_id: likerId },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async delete({
+    bookReviewId,
+    likerId,
+  }: LikeDto): Promise<HttpResponse<undefined>> {
+    await this.prisma.likes.deleteMany({
+      where: { sejulbook_id: bookReviewId, liker_id: likerId },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async create({
+    bookReviewId,
+    likerId,
+  }: LikeDto): Promise<HttpResponse<undefined>> {
+    await this.prisma.likes.create({
+      data: { sejulbook_id: bookReviewId, liker_id: likerId },
+    });
+    return { error: false, data: undefined };
+  }
 }
 
-const likeService = {
-  getLikeStatus: async ({
-    bookReviewId,
-    likerId,
-  }: Omit<LikeDTO, 'likerId'> & { likerId?: UserId }): Promise<
-    HttpSuccess<LikeStatus> | HttpFailed
-  > => {
-    const [myLike, likeCount] = await Promise.all([
-      likerId
-        ? likeModel.getLike({
-            sejulbook_id: bookReviewId,
-            liker_id: likerId,
-          })
-        : [],
-      likeModel.getLikeCount({
-        sejulbook_id: bookReviewId,
-      }),
-    ]);
-
-    const isLike = !!myLike.length;
-
-    return { error: false, data: { isLike, likeCount } };
-  },
-
-  like: async ({
-    bookReviewId,
-    likerId,
-  }: LikeDTO): Promise<HttpSuccess<undefined> | HttpFailed> => {
-    if (!likerId) {
-      return { error: true, code: 401, message: userError.NOT_LOGGED };
-    }
-
-    await likeModel.createLike({
-      sejulbook_id: bookReviewId,
-      liker_id: likerId,
-    });
-
-    return { error: false, data: undefined };
-  },
-
-  unlike: async ({
-    bookReviewId,
-    likerId,
-  }: LikeDTO): Promise<HttpSuccess<undefined> | HttpFailed> => {
-    if (!likerId) {
-      return { error: true, code: 401, message: userError.NOT_LOGGED };
-    }
-
-    await likeModel.deleteLike({
-      sejulbook_id: bookReviewId,
-      liker_id: likerId,
-    });
-
-    return { error: false, data: undefined };
-  },
-};
-
-export default likeService;
+export default LikeService;
