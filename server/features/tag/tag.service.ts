@@ -1,27 +1,24 @@
 import { PrismaClient } from '@prisma/client';
 import { HttpResponse } from 'server/types/http';
-import TagDto, { BookReviewId, CreateTagDto, Tag } from './tag.dto';
 import tagUtils from './tag.util';
+import TagDto, { BookReviewId, CreateTagDto, Tag } from './tag.dto';
 
 class TagService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  private model = new PrismaClient().tag;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<TagDto[]>> {
-    const tags = await this.prisma.tag.findMany({
+    const tags = await this.model.findMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: tags.map((e) => tagUtils.entityToDto(e)) };
   }
 
   async findAllByTagName(tag: Tag): Promise<HttpResponse<TagDto[]>> {
-    const tags = await this.prisma.tag.findMany({
-      where: { tag },
+    const tags = await this.model.findMany({
+      where: { tag: { search: `${tag}*` } },
+      take: 10,
     });
     return { error: false, data: tags.map((e) => tagUtils.entityToDto(e)) };
   }
@@ -30,7 +27,7 @@ class TagService {
     bookReviewId,
     tag,
   }: CreateTagDto): Promise<HttpResponse<undefined>> {
-    await this.prisma.tag.create({
+    await this.model.create({
       data: { sejulbook_id: bookReviewId, tag },
     });
     return { error: false, data: undefined };
@@ -39,7 +36,7 @@ class TagService {
   async deleteAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<undefined>> {
-    await this.prisma.tag.deleteMany({
+    await this.model.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: undefined };

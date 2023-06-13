@@ -10,16 +10,12 @@ import CommentDto, {
 import commentUtils from './comment.util';
 
 class CommentService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  private model = new PrismaClient().reply;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<CommentDto[]>> {
-    const comments = await this.prisma.reply.findMany({
+    const comments = await this.model.findMany({
       where: { sejulbook_id: bookReviewId },
     });
     return {
@@ -31,7 +27,7 @@ class CommentService {
   async countByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<number>> {
-    const count = await this.prisma.reply.count({
+    const count = await this.model.count({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: count };
@@ -40,7 +36,7 @@ class CommentService {
   async deleteAllByBookreview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<undefined>> {
-    await this.prisma.reply.deleteMany({
+    await this.model.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: undefined };
@@ -49,14 +45,14 @@ class CommentService {
   async deleteAllByUser(
     commenterId: CommenterId,
   ): Promise<HttpResponse<undefined>> {
-    await this.prisma.reply.deleteMany({
+    await this.model.deleteMany({
       where: { replyer_id: commenterId },
     });
     return { error: false, data: undefined };
   }
 
   async delete(id: Id): Promise<HttpResponse<undefined>> {
-    await this.prisma.reply.delete({ where: { id } });
+    await this.model.delete({ where: { id } });
     return { error: false, data: undefined };
   }
 
@@ -65,7 +61,7 @@ class CommentService {
     commenterId,
     content,
   }: CreateCommnetDto): Promise<HttpResponse<CommentDto>> {
-    const comment = await this.prisma.reply.create({
+    const comment = await this.model.create({
       data: {
         sejulbook_id: bookReviewId,
         replyer_id: commenterId,
@@ -79,7 +75,7 @@ class CommentService {
     id,
     content,
   }: UpdateCommentDto): Promise<HttpResponse<CommentDto>> {
-    const comment = await this.prisma.reply.update({
+    const comment = await this.model.update({
       where: { id },
       data: { reply: content },
     });

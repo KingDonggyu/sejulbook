@@ -3,17 +3,13 @@ import { HttpResponse } from 'server/types/http';
 import LikeDto, { BookReviewId, LikerId } from './like.dto';
 
 class LikeService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  private model = new PrismaClient().likes;
 
   async has({
     bookReviewId,
     likerId,
   }: LikeDto): Promise<HttpResponse<boolean>> {
-    const like = await this.prisma.likes.findFirst({
+    const like = await this.model.findFirst({
       where: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
     return { error: false, data: !!like };
@@ -22,7 +18,7 @@ class LikeService {
   async countByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<number>> {
-    const count = await this.prisma.likes.count({
+    const count = await this.model.count({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: count };
@@ -31,14 +27,14 @@ class LikeService {
   async deleteAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<undefined>> {
-    await this.prisma.likes.deleteMany({
+    await this.model.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: undefined };
   }
 
   async deleteAllByUser(likerId: LikerId) {
-    await this.prisma.likes.deleteMany({
+    await this.model.deleteMany({
       where: { liker_id: likerId },
     });
     return { error: false, data: undefined };
@@ -48,7 +44,7 @@ class LikeService {
     bookReviewId,
     likerId,
   }: LikeDto): Promise<HttpResponse<undefined>> {
-    await this.prisma.likes.deleteMany({
+    await this.model.deleteMany({
       where: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
     return { error: false, data: undefined };
@@ -58,7 +54,7 @@ class LikeService {
     bookReviewId,
     likerId,
   }: LikeDto): Promise<HttpResponse<undefined>> {
-    await this.prisma.likes.create({
+    await this.model.create({
       data: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
     return { error: false, data: undefined };
