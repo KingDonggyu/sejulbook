@@ -1,264 +1,231 @@
-import { HttpResponse } from 'server/types/http';
-import { userError } from 'server/constants/message';
-import UserDTO, { UserId } from './user.dto';
-import userModel from './user.model';
-import UserGuard from './user.guard';
-import { FollowId } from '../follow/follow.dto';
-import followModel from '../follow/follow.model';
-import bookReviewModel from '../bookReview/bookReview.model';
-import tagModel from '../tag/tag.model';
-import commentModel from '../comment/comment.model';
-import likeModel from '../like/like.model';
+import { PrismaClient } from '@prisma/client';
+import { HttpResponse, HttpSuccess } from 'server/types/http';
+import userUtils from './user.util';
+import FollowService from '../follow/follow.service';
 
-type User = Pick<UserDTO, 'id' | 'name' | 'introduce'>;
+import UserDto, {
+  Id,
+  Name,
+  Sub,
+  CreateUserDto,
+  UpdateUserDto,
+  RequestPagedUserDto,
+  ResponsePagedUserDto,
+  ResponseSerchedUserDto,
+} from './user.dto';
 
-interface FollowUser {
-  myUserId?: UserId;
-  targetUserId: UserId;
-  isFollowing: boolean;
-  maxFollowId: FollowId | null;
-}
+class UserService {
+  private model = new PrismaClient().user;
 
-const userService = {
-  getAllUserId: async (): Promise<HttpResponse<Pick<UserDTO, 'id'>[]>> => {
-    const data = await userModel.getAllUserId();
-    return { error: false, data };
-  },
+  async findAllId(): Promise<HttpResponse<Id[]>> {
+    const ids = await this.model.findMany({ select: { id: true } });
+    return { error: false, data: ids.map(({ id }) => id) };
+  }
 
-  getUserId: async ({
-    sub,
-  }: Pick<UserDTO, 'sub'>): Promise<
-    HttpResponse<Pick<UserDTO, 'id'> | { id: null }>
-  > => {
-    const result = await userModel.getUserId({ sub });
-
-    return {
-      error: false,
-      data: { id: result },
-    };
-  },
-
-  getUserById: async ({
-    id,
-  }: Pick<UserDTO, 'id'>): Promise<HttpResponse<User>> => {
-    const userGuard = new UserGuard({ id });
-    const guardResult = userGuard.checkUserNotFound();
-
-    if (guardResult) {
-      return guardResult;
-    }
-
-    const result = await userModel.getUserById({ id });
-
-    if (result === null) {
-      return {
-        error: true,
-        code: 404,
-        message: userError.USER_NOT_FOUND,
-      };
-    }
-
-    return {
-      error: false,
-      data: {
-        id: result.id,
-        name: result.nick,
-        introduce: result.introduce,
-      },
-    };
-  },
-
-  getUserByName: async ({
-    name,
-  }: Pick<UserDTO, 'name'>): Promise<HttpResponse<User | null>> => {
-    const result = await userModel.getUserByName({ nick: name });
-
-    if (!result) {
-      return {
-        error: false,
-        data: null,
-      };
-    }
-
-    return {
-      error: false,
-      data: {
-        id: result.id,
-        name: result.nick,
-        introduce: result.introduce,
-      },
-    };
-  },
-
-  updateUser: async ({
-    id,
-    name,
-    introduce,
-  }: Pick<UserDTO, 'id' | 'name' | 'introduce'>): Promise<
-    HttpResponse<undefined>
-  > => {
-    const userGuard = new UserGuard({ id, name, introduce });
-    const guardResult = userGuard.checkInvalidProfile();
-
-    if (guardResult) {
-      return guardResult;
-    }
-
-    const lowerCaseName = name.toLowerCase();
-    const otherUser = await userModel.getUserByName({
-      nick: lowerCaseName,
+  async findAllByNamePrefix(
+    name: Name,
+  ): Promise<HttpSuccess<ResponseSerchedUserDto>> {
+    const users = await this.model.findMany({
+      select: { id: true, nick: true, introduce: true },
+      where: { nick: { search: `${name}*` } },
+      take: 10,
     });
 
-    if (otherUser && otherUser.id !== id) {
-      return {
-        error: true,
-        code: 400,
-        message: userError.DUPLICATE_NAME,
-      };
-    }
-
-    await userModel.updateUser({ id, nick: lowerCaseName, introduce });
-    return { error: false, data: undefined };
-  },
-
-  signUp: async (user: UserDTO): Promise<HttpResponse<undefined>> => {
-    const userGuard = new UserGuard(user);
-    const guardResult = userGuard.checkInvalidProfile();
-
-    if (guardResult) {
-      return guardResult;
-    }
-
-    const lowerCaseName = user.name.toLowerCase();
-    const isDuplicateName = !!(await userModel.getUserByName({
-      nick: lowerCaseName,
-    }));
-
-    if (isDuplicateName) {
-      return {
-        error: true,
-        code: 400,
-        message: userError.DUPLICATE_NAME,
-      };
-    }
-
-    await userModel.createUser({ ...user, nick: lowerCaseName });
-    return { error: false, data: undefined };
-  },
-
-  getFollowUserList: async ({
-    myUserId,
-    targetUserId,
-    maxFollowId,
-    isFollowing,
-  }: FollowUser): Promise<
-    HttpResponse<(User & { followId: FollowId; isFollow: boolean })[]>
-  > => {
-    let followId = maxFollowId;
-
-    if (!maxFollowId) {
-      followId = isFollowing
-        ? await followModel.getMaxIdByFollowing({ follower_id: targetUserId })
-        : await followModel.getMaxIdByFollower({ following_id: targetUserId });
-
-      if (!followId) {
-        return { error: false, data: [] };
-      }
-
-      followId += 1;
-    }
-
-    if (!followId) {
-      return { error: false, data: [] };
-    }
-
-    const followUserList = isFollowing
-      ? await userModel.getFollowingUserList({
-          id: targetUserId,
-          maxFollowId: followId,
-        })
-      : await userModel.getFollowerUserList({
-          id: targetUserId,
-          maxFollowId: followId,
-        });
-
-    const promises = followUserList.map(
-      async ({
-        id: otherUserId,
-        nick,
-        introduce,
-        follow_id,
-      }): Promise<User & { followId: FollowId; isFollow: boolean }> => {
-        const isFollow = await (myUserId
-          ? followModel.getIsFollow({
-              following_id: otherUserId,
-              follower_id: myUserId,
-            })
-          : false);
-
-        return {
-          id: otherUserId,
-          followId: follow_id,
-          name: nick,
-          introduce,
-          isFollow,
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
     return {
       error: false,
-      data: data.sort((a, b) => b.followId - a.followId),
-    };
-  },
-
-  searchUsers: async ({
-    name,
-  }: Pick<User, 'name'>): Promise<HttpResponse<User[]>> => {
-    const userList = await userModel.getUserListByName({ nick: name });
-
-    return {
-      error: false,
-      data: userList.map(({ id, nick, introduce }) => ({
+      data: users.map(({ id, nick, introduce }) => ({
         id,
         introduce,
         name: nick,
       })),
     };
-  },
+  }
 
-  deleteUser: async ({
+  async findById(id: Id): Promise<HttpResponse<UserDto>> {
+    const user = await this.model.findUnique({ where: { id } });
+    if (user) {
+      return { error: false, data: userUtils.entityToDto(user) };
+    }
+    return userUtils.notFoundException;
+  }
+
+  async findByName(name: Name): Promise<HttpResponse<UserDto>> {
+    const user = await this.model.findUnique({ where: { nick: name } });
+    if (user) {
+      return { error: false, data: userUtils.entityToDto(user) };
+    }
+    return userUtils.notFoundException;
+  }
+
+  async findIdBySub(sub: Sub): Promise<HttpResponse<Id | null>> {
+    const result = await this.model.findFirst({
+      select: { id: true },
+      where: { sub },
+    });
+    if (result) {
+      return { error: false, data: result.id };
+    }
+    return { error: false, data: result };
+  }
+
+  async findNameById(id: Id): Promise<HttpResponse<Name>> {
+    const result = await this.model.findUnique({
+      select: { nick: true },
+      where: { id },
+    });
+    if (result) {
+      return { error: false, data: result.nick };
+    }
+    return { error: false, data: 'unknown' };
+  }
+
+  async findPagedFollowers({
     id,
-  }: Pick<UserDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    const bookReviewIdList = await bookReviewModel.getAllBookReviewIdByUser({
-      user_id: id,
+    targetId,
+  }: RequestPagedUserDto): Promise<HttpResponse<ResponsePagedUserDto>> {
+    const { data } = await new FollowService().findPagedFollowers({
+      followingId: id,
+      targetId,
     });
 
-    await Promise.all([
-      ...bookReviewIdList.map(async ({ id: bookReviewId }) => {
-        tagModel.deleteTags({ sejulbook_id: bookReviewId });
-        likeModel.deleteAllLikes({ sejulbook_id: bookReviewId });
-      }),
-      commentModel.deleteAllCommentsByUser({ replyer_id: id }),
-      likeModel.deleteAllLikesByUser({ liker_id: id }),
-      followModel.deleteAllFollowByUser({ userId: id }),
-    ]);
+    const nextTargetId = data[data.length - 1].id;
 
-    await Promise.all(
-      bookReviewIdList.map(async ({ id: bookReviewId }) => {
-        bookReviewModel.deleteBookReview({ id: bookReviewId });
-      }),
-    );
+    try {
+      const promises = data.map(async ({ followerId }) => {
+        const follower = await this.model.findUnique({
+          select: { id: true, nick: true, introduce: true },
+          where: { id: followerId },
+        });
 
-    await userModel.deleteUser({ id });
+        if (!follower) {
+          throw new Error();
+        }
 
-    return {
-      error: false,
-      data: undefined,
-    };
-  },
-};
+        return {
+          id: follower.id,
+          name: follower.nick,
+          introduce: follower.introduce,
+          targetId: nextTargetId,
+        };
+      });
 
-export default userService;
+      const followers = await Promise.all(promises);
+      return { error: false, data: followers };
+    } catch {
+      return userUtils.notFoundException;
+    }
+  }
+
+  async findPagedFollowing({
+    id,
+    targetId,
+  }: RequestPagedUserDto): Promise<HttpResponse<ResponsePagedUserDto>> {
+    const { data } = await new FollowService().findPagedFollowings({
+      followerId: id,
+      targetId,
+    });
+
+    const nextTargetId = data[data.length - 1].id;
+
+    try {
+      const promises = data.map(async ({ followingId }) => {
+        const following = await this.model.findUnique({
+          select: { id: true, nick: true, introduce: true },
+          where: { id: followingId },
+        });
+
+        if (!following) {
+          throw new Error();
+        }
+
+        return {
+          id: following.id,
+          name: following.nick,
+          introduce: following.introduce,
+          targetId: nextTargetId,
+        };
+      });
+
+      const followings = await Promise.all(promises);
+      return { error: false, data: followings };
+    } catch {
+      return userUtils.notFoundException;
+    }
+  }
+
+  async create(user: CreateUserDto): Promise<HttpResponse<undefined>> {
+    const validation = await this.validate(user.name, user.introduce);
+
+    if (validation.error) {
+      return validation;
+    }
+
+    await this.model.create({
+      data: {
+        ...user,
+        nick: user.name,
+        age: user.age || 'null',
+      },
+    });
+
+    return { error: false, data: undefined };
+  }
+
+  async update({
+    id,
+    name,
+    introduce,
+  }: UpdateUserDto): Promise<HttpResponse<undefined>> {
+    const validation = await this.validate(name, introduce);
+
+    if (validation.error) {
+      return validation;
+    }
+
+    await this.model.update({
+      data: { nick: name, introduce },
+      where: { id },
+    });
+
+    return { error: false, data: undefined };
+  }
+
+  async delete(id: Id): Promise<HttpResponse<undefined>> {
+    await this.model.delete({
+      where: { id },
+    });
+    return { error: false, data: undefined };
+  }
+
+  private async validate(
+    name: string,
+    introduce: string,
+  ): Promise<HttpResponse<undefined>> {
+    if (name === '') {
+      return userUtils.emptyNameException;
+    }
+
+    if (userUtils.checkIsLimitReachedName(name)) {
+      return userUtils.limitReachedNameException;
+    }
+
+    if (!userUtils.checkIsMatchedPatternName(name)) {
+      return userUtils.notMatchedPatternNameException;
+    }
+
+    const lowerCaseName = name.toLowerCase();
+    const isDuplicateName = !!(await this.findByName(lowerCaseName));
+
+    if (isDuplicateName) {
+      return userUtils.duplicateNameException;
+    }
+
+    if (!userUtils.checkIsLimitReachedIntroduce(introduce)) {
+      return userUtils.limitReachedIntroduceException;
+    }
+
+    return { error: false, data: undefined };
+  }
+}
+
+export default UserService;
