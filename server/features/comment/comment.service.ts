@@ -1,80 +1,90 @@
-import { bookReviewError, commentError } from 'server/constants/message';
+import { PrismaClient } from '@prisma/client';
 import { HttpResponse } from 'server/types/http';
-import CommentDTO from './comment.dto';
-import commentModel from './comment.model';
+import CommentDto, {
+  Id,
+  BookReviewId,
+  CommenterId,
+  CreateCommnetDto,
+  UpdateCommentDto,
+} from './comment.dto';
+import commentUtils from './comment.util';
 
-const commentService = {
-  getComments: async ({
-    bookReviewId,
-  }: Pick<CommentDTO, 'bookReviewId'>): Promise<HttpResponse<CommentDTO[]>> => {
-    try {
-      const data = await commentModel.getComments({
-        sejulbook_id: bookReviewId,
-      });
+class CommentService {
+  private prisma: PrismaClient;
 
-      return {
-        error: false,
-        data: data.map(
-          ({ id, sejulbook_id, replyer_id, reply, replydate }) => ({
-            id,
-            bookReviewId: sejulbook_id,
-            commenterId: replyer_id,
-            content: reply,
-            createdAt: replydate,
-          }),
-        ),
-      };
-    } catch {
-      return {
-        error: true,
-        code: 404,
-        message: bookReviewError.NOT_EXIST_BOOKREVIEW,
-      };
-    }
-  },
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
 
-  AddComment: async ({
+  async findAllByBookReview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<CommentDto[]>> {
+    const comments = await this.prisma.reply.findMany({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return {
+      error: false,
+      data: comments.map((e) => commentUtils.entityToDto(e)),
+    };
+  }
+
+  async countByBookReview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<number>> {
+    const count = await this.prisma.reply.count({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return { error: false, data: count };
+  }
+
+  async deleteAllByBookreview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<undefined>> {
+    await this.prisma.reply.deleteMany({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async deleteAllByUser(
+    commenterId: CommenterId,
+  ): Promise<HttpResponse<undefined>> {
+    await this.prisma.reply.deleteMany({
+      where: { replyer_id: commenterId },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async delete(id: Id): Promise<HttpResponse<undefined>> {
+    await this.prisma.reply.delete({ where: { id } });
+    return { error: false, data: undefined };
+  }
+
+  async create({
     bookReviewId,
     commenterId,
     content,
-  }: Omit<CommentDTO, 'id' | 'createdAt'>): Promise<
-    HttpResponse<undefined>
-  > => {
-    try {
-      if (!content) {
-        return { error: true, code: 400, message: commentError.EMPTY_CONTENT };
-      }
-
-      await commentModel.createComments({
+  }: CreateCommnetDto): Promise<HttpResponse<CommentDto>> {
+    const comment = await this.prisma.reply.create({
+      data: {
         sejulbook_id: bookReviewId,
         replyer_id: commenterId,
         reply: content,
-      });
+      },
+    });
+    return { error: false, data: commentUtils.entityToDto(comment) };
+  }
 
-      return { error: false, data: undefined };
-    } catch {
-      return { error: true, code: 500, message: commentError.ADD_FAIL };
-    }
-  },
-
-  deleteComment: async ({
-    id,
-  }: Pick<CommentDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    await commentModel.deleteSingleComment({ id });
-    return { error: false, data: undefined };
-  },
-
-  updateComment: async ({
+  async update({
     id,
     content,
-  }: Pick<CommentDTO, 'id' | 'content'>): Promise<HttpResponse<undefined>> => {
-    if (!content) {
-      return { error: true, code: 400, message: commentError.EMPTY_CONTENT };
-    }
+  }: UpdateCommentDto): Promise<HttpResponse<CommentDto>> {
+    const comment = await this.prisma.reply.update({
+      where: { id },
+      data: { reply: content },
+    });
+    return { error: false, data: commentUtils.entityToDto(comment) };
+  }
+}
 
-    await commentModel.updateComment({ id, reply: content });
-    return { error: false, data: undefined };
-  },
-};
-
-export default commentService;
+export default CommentService;

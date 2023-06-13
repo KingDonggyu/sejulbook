@@ -1,15 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { HttpFailed, HttpResponse } from 'server/types/http';
+import { HttpResponse } from 'server/types/http';
 import CategoryDto, { Id, Category as CategoryName } from './category.dto';
+import categoryUtils from './category.util';
 
 class CategoryService {
   private prisma: PrismaClient;
-
-  private notFoundException: HttpFailed = {
-    error: true,
-    code: 404,
-    message: '해당 카테고리가 존재하지 않습니다.',
-  };
 
   constructor() {
     this.prisma = new PrismaClient();
@@ -17,7 +12,6 @@ class CategoryService {
 
   async findAll(): Promise<HttpResponse<CategoryDto[]>> {
     const categories = await this.prisma.category.findMany();
-
     return { error: false, data: categories };
   }
 
@@ -30,7 +24,7 @@ class CategoryService {
       return { error: false, data: category };
     }
 
-    return this.notFoundException;
+    return categoryUtils.notFoundException;
   }
 
   async findId(categoryName: CategoryName): Promise<HttpResponse<Id>> {
@@ -42,7 +36,7 @@ class CategoryService {
       return { error: false, data: category.id };
     }
 
-    return this.notFoundException;
+    return categoryUtils.notFoundException;
   }
 }
 

@@ -37,7 +37,7 @@ model likes {
 model reply {
   id           Int       @id @default(autoincrement()) @db.UnsignedInt
   reply        String    @db.Text
-  replydate    DateTime? @default(dbgenerated("(curtime())")) @db.DateTime(0)
+  replydate    DateTime @default(dbgenerated("(curtime())")) @db.DateTime(0)
   sejulbook_id Int       @db.UnsignedInt
   replyer_id   Int       @db.UnsignedInt
 
