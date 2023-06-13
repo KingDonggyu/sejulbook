@@ -1,50 +1,49 @@
+import { PrismaClient } from '@prisma/client';
 import { HttpResponse } from 'server/types/http';
-import TagDTO, { Tag } from './tag.dto';
-import tagModel from './tag.model';
+import TagDto, { BookReviewId, CreateTagDto, Tag } from './tag.dto';
+import tagUtils from './tag.util';
 
-type TagList = Pick<TagDTO, 'tag'>[];
+class TagService {
+  private prisma: PrismaClient;
 
-interface SearchedTag extends Pick<TagDTO, 'tag'> {
-  count: number;
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
+
+  async findAllByBookReview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<TagDto[]>> {
+    const tags = await this.prisma.tag.findMany({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return { error: false, data: tags.map((e) => tagUtils.entityToDto(e)) };
+  }
+
+  async findAllByTagName(tag: Tag): Promise<HttpResponse<TagDto[]>> {
+    const tags = await this.prisma.tag.findMany({
+      where: { tag },
+    });
+    return { error: false, data: tags.map((e) => tagUtils.entityToDto(e)) };
+  }
+
+  async create({
+    bookReviewId,
+    tag,
+  }: CreateTagDto): Promise<HttpResponse<undefined>> {
+    await this.prisma.tag.create({
+      data: { sejulbook_id: bookReviewId, tag },
+    });
+    return { error: false, data: undefined };
+  }
+
+  async deleteAllByBookReview(
+    bookReviewId: BookReviewId,
+  ): Promise<HttpResponse<undefined>> {
+    await this.prisma.tag.deleteMany({
+      where: { sejulbook_id: bookReviewId },
+    });
+    return { error: false, data: undefined };
+  }
 }
 
-const tagService = {
-  getTags: async ({
-    bookReviewId,
-  }: Pick<TagDTO, 'bookReviewId'>): Promise<HttpResponse<TagList>> => {
-    const data = await tagModel.getTags({ sejulbook_id: bookReviewId });
-
-    return { error: false, data };
-  },
-
-  writeTags: async ({
-    tags,
-    bookReviewId,
-  }: { tags: Tag[] } & Pick<TagDTO, 'bookReviewId'>): Promise<
-    HttpResponse<undefined>
-  > => {
-    await Promise.all(
-      tags.map(async (tag) =>
-        tagModel.createTags({ tag, sejulbook_id: bookReviewId }),
-      ),
-    );
-
-    return { error: false, data: undefined };
-  },
-
-  deleteTags: async ({
-    bookReviewId,
-  }: Pick<TagDTO, 'bookReviewId'>): Promise<HttpResponse<undefined>> => {
-    await tagModel.deleteTags({ sejulbook_id: bookReviewId });
-    return { error: false, data: undefined };
-  },
-
-  searchTags: async ({
-    tag,
-  }: Pick<TagDTO, 'tag'>): Promise<HttpResponse<SearchedTag[]>> => {
-    const tags = await tagModel.getSearchedTags({ tag });
-    return { error: false, data: tags };
-  },
-};
-
-export default tagService;
+export default TagService;

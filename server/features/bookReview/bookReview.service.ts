@@ -11,7 +11,7 @@ import categoryModel from '../category/category.model';
 import commentModel from '../comment/comment.model';
 import likeModel from '../like/like.model';
 import tagModel from '../tag/tag.model';
-import TagDTO from '../tag/tag.dto';
+import TagDto from '../tag/tag.dto';
 
 import BookReviewGuard from './bookReview.guard';
 import formatEntityToDTO from './utils/formatEntityToDTO';
@@ -239,7 +239,7 @@ const bookReviewService = {
   getPagingBookReviewListByTag: async ({
     tag,
     maxId,
-  }: Pick<TagDTO, 'tag'> & { maxId: BookReviewId | null }): Promise<
+  }: Pick<TagDto, 'tag'> & { maxId: BookReviewId | null }): Promise<
     HttpResponse<FeedFollowingBookReview[]>
   > => {
     const bookReviewId = await getMaxBookReviewId(maxId, () =>
