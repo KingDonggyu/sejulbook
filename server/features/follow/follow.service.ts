@@ -11,7 +11,7 @@ import FollowDto, {
 } from './follow.dto';
 
 class FollowService {
-  private model = new PrismaClient().follow;
+  private follow = new PrismaClient().follow;
 
   async findPagedFollowings({
     followerId,
@@ -30,7 +30,7 @@ class FollowService {
       return { error: false, data: [] };
     }
 
-    const pagedFollowingId = await this.model.findMany({
+    const pagedFollowingId = await this.follow.findMany({
       select: { id: true, following_id: true },
       where: { follower_id: followerId },
       orderBy: { id: 'desc' },
@@ -65,7 +65,7 @@ class FollowService {
       return { error: false, data: [] };
     }
 
-    const pagedFollowerId = await this.model.findMany({
+    const pagedFollowerId = await this.follow.findMany({
       select: { id: true, follower_id: true },
       where: { following_id: followingId },
       orderBy: { id: 'desc' },
@@ -86,7 +86,7 @@ class FollowService {
   async findMaxIdByFollowingId(
     followingId: UserId,
   ): Promise<HttpSuccess<Id | null>> {
-    const result = await this.model.findFirst({
+    const result = await this.follow.findFirst({
       select: { id: true },
       where: { following_id: followingId },
       orderBy: { id: 'desc' },
@@ -102,7 +102,7 @@ class FollowService {
   async findMaxIdByFollowerId(
     followerId: UserId,
   ): Promise<HttpSuccess<Id | null>> {
-    const result = await this.model.findFirst({
+    const result = await this.follow.findFirst({
       select: { id: true },
       where: { follower_id: followerId },
       orderBy: { id: 'desc' },
@@ -119,7 +119,7 @@ class FollowService {
     followerId,
     followingId,
   }: FollowDto): Promise<HttpResponse<boolean>> {
-    const follow = await this.model.findFirst({
+    const follow = await this.follow.findFirst({
       where: {
         follower_id: followerId,
         following_id: followingId,
@@ -129,14 +129,14 @@ class FollowService {
   }
 
   async countFollwing(followerId: UserId): Promise<HttpResponse<number>> {
-    const count = await this.model.count({
+    const count = await this.follow.count({
       where: { follower_id: followerId },
     });
     return { error: false, data: count };
   }
 
   async countFollower(followingId: UserId): Promise<HttpResponse<number>> {
-    const count = await this.model.count({
+    const count = await this.follow.count({
       where: { following_id: followingId },
     });
     return { error: false, data: count };
@@ -146,7 +146,7 @@ class FollowService {
     followerId,
     followingId,
   }: FollowDto): Promise<HttpResponse<undefined>> {
-    await this.model.create({
+    await this.follow.create({
       data: { follower_id: followerId, following_id: followingId },
     });
     return { error: false, data: undefined };
@@ -156,7 +156,7 @@ class FollowService {
     followerId,
     followingId,
   }: FollowDto): Promise<HttpResponse<undefined>> {
-    await this.model.deleteMany({
+    await this.follow.deleteMany({
       where: {
         follower_id: followerId,
         following_id: followingId,
@@ -166,7 +166,7 @@ class FollowService {
   }
 
   async deleteAllByUser(userId: UserId) {
-    await this.model.deleteMany({
+    await this.follow.deleteMany({
       where: {
         follower_id: userId,
         following_id: userId,

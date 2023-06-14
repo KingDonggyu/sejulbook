@@ -15,17 +15,17 @@ import UserDto, {
 } from './user.dto';
 
 class UserService {
-  private model = new PrismaClient().user;
+  private user = new PrismaClient().user;
 
   async findAllId(): Promise<HttpResponse<Id[]>> {
-    const ids = await this.model.findMany({ select: { id: true } });
+    const ids = await this.user.findMany({ select: { id: true } });
     return { error: false, data: ids.map(({ id }) => id) };
   }
 
   async findAllByNamePrefix(
     name: Name,
   ): Promise<HttpSuccess<ResponseSerchedUserDto>> {
-    const users = await this.model.findMany({
+    const users = await this.user.findMany({
       select: { id: true, nick: true, introduce: true },
       where: { nick: { search: `${name}*` } },
       take: 10,
@@ -42,7 +42,7 @@ class UserService {
   }
 
   async findById(id: Id): Promise<HttpResponse<UserDto>> {
-    const user = await this.model.findUnique({ where: { id } });
+    const user = await this.user.findUnique({ where: { id } });
     if (user) {
       return { error: false, data: userUtils.entityToDto(user) };
     }
@@ -50,7 +50,7 @@ class UserService {
   }
 
   async findByName(name: Name): Promise<HttpResponse<UserDto>> {
-    const user = await this.model.findUnique({ where: { nick: name } });
+    const user = await this.user.findUnique({ where: { nick: name } });
     if (user) {
       return { error: false, data: userUtils.entityToDto(user) };
     }
@@ -58,7 +58,7 @@ class UserService {
   }
 
   async findIdBySub(sub: Sub): Promise<HttpResponse<Id | null>> {
-    const result = await this.model.findFirst({
+    const result = await this.user.findFirst({
       select: { id: true },
       where: { sub },
     });
@@ -69,7 +69,7 @@ class UserService {
   }
 
   async findNameById(id: Id): Promise<HttpResponse<Name>> {
-    const result = await this.model.findUnique({
+    const result = await this.user.findUnique({
       select: { nick: true },
       where: { id },
     });
@@ -92,7 +92,7 @@ class UserService {
 
     try {
       const promises = data.map(async ({ followerId }) => {
-        const follower = await this.model.findUnique({
+        const follower = await this.user.findUnique({
           select: { id: true, nick: true, introduce: true },
           where: { id: followerId },
         });
@@ -129,7 +129,7 @@ class UserService {
 
     try {
       const promises = data.map(async ({ followingId }) => {
-        const following = await this.model.findUnique({
+        const following = await this.user.findUnique({
           select: { id: true, nick: true, introduce: true },
           where: { id: followingId },
         });
@@ -160,7 +160,7 @@ class UserService {
       return validation;
     }
 
-    await this.model.create({
+    await this.user.create({
       data: {
         ...user,
         nick: user.name,
@@ -182,7 +182,7 @@ class UserService {
       return validation;
     }
 
-    await this.model.update({
+    await this.user.update({
       data: { nick: name, introduce },
       where: { id },
     });
@@ -191,7 +191,7 @@ class UserService {
   }
 
   async delete(id: Id): Promise<HttpResponse<undefined>> {
-    await this.model.delete({
+    await this.user.delete({
       where: { id },
     });
     return { error: false, data: undefined };

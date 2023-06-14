@@ -3,13 +3,13 @@ import { HttpResponse } from 'server/types/http';
 import LikeDto, { BookReviewId, LikerId } from './like.dto';
 
 class LikeService {
-  private model = new PrismaClient().likes;
+  private like = new PrismaClient().likes;
 
   async has({
     bookReviewId,
     likerId,
   }: LikeDto): Promise<HttpResponse<boolean>> {
-    const like = await this.model.findFirst({
+    const like = await this.like.findFirst({
       where: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
     return { error: false, data: !!like };
@@ -18,7 +18,7 @@ class LikeService {
   async countByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<number>> {
-    const count = await this.model.count({
+    const count = await this.like.count({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: count };
@@ -27,14 +27,14 @@ class LikeService {
   async deleteAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<undefined>> {
-    await this.model.deleteMany({
+    await this.like.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: undefined };
   }
 
   async deleteAllByUser(likerId: LikerId) {
-    await this.model.deleteMany({
+    await this.like.deleteMany({
       where: { liker_id: likerId },
     });
     return { error: false, data: undefined };
@@ -44,7 +44,7 @@ class LikeService {
     bookReviewId,
     likerId,
   }: LikeDto): Promise<HttpResponse<undefined>> {
-    await this.model.deleteMany({
+    await this.like.deleteMany({
       where: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
     return { error: false, data: undefined };
@@ -54,7 +54,7 @@ class LikeService {
     bookReviewId,
     likerId,
   }: LikeDto): Promise<HttpResponse<undefined>> {
-    await this.model.create({
+    await this.like.create({
       data: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
     return { error: false, data: undefined };

@@ -4,15 +4,15 @@ import CategoryDto, { Id, Category as CategoryName } from './category.dto';
 import categoryUtils from './category.util';
 
 class CategoryService {
-  private model = new PrismaClient().category;
+  private category = new PrismaClient().category;
 
   async findAll(): Promise<HttpResponse<CategoryDto[]>> {
-    const categories = await this.model.findMany();
+    const categories = await this.category.findMany();
     return { error: false, data: categories };
   }
 
   async findById(id: Id): Promise<HttpResponse<CategoryDto>> {
-    const category = await this.model.findUnique({
+    const category = await this.category.findUnique({
       where: { id },
     });
 
@@ -24,7 +24,7 @@ class CategoryService {
   }
 
   async findId(categoryName: CategoryName): Promise<HttpResponse<Id>> {
-    const category = await this.model.findFirst({
+    const category = await this.category.findFirst({
       where: { category: categoryName },
     });
 

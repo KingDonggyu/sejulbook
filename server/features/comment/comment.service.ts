@@ -10,12 +10,12 @@ import CommentDto, {
 import commentUtils from './comment.util';
 
 class CommentService {
-  private model = new PrismaClient().reply;
+  private comment = new PrismaClient().reply;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<CommentDto[]>> {
-    const comments = await this.model.findMany({
+    const comments = await this.comment.findMany({
       where: { sejulbook_id: bookReviewId },
     });
     return {
@@ -27,7 +27,7 @@ class CommentService {
   async countByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<number>> {
-    const count = await this.model.count({
+    const count = await this.comment.count({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: count };
@@ -36,7 +36,7 @@ class CommentService {
   async deleteAllByBookreview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<undefined>> {
-    await this.model.deleteMany({
+    await this.comment.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: undefined };
@@ -45,14 +45,14 @@ class CommentService {
   async deleteAllByUser(
     commenterId: CommenterId,
   ): Promise<HttpResponse<undefined>> {
-    await this.model.deleteMany({
+    await this.comment.deleteMany({
       where: { replyer_id: commenterId },
     });
     return { error: false, data: undefined };
   }
 
   async delete(id: Id): Promise<HttpResponse<undefined>> {
-    await this.model.delete({ where: { id } });
+    await this.comment.delete({ where: { id } });
     return { error: false, data: undefined };
   }
 
@@ -61,7 +61,7 @@ class CommentService {
     commenterId,
     content,
   }: CreateCommnetDto): Promise<HttpResponse<CommentDto>> {
-    const comment = await this.model.create({
+    const comment = await this.comment.create({
       data: {
         sejulbook_id: bookReviewId,
         replyer_id: commenterId,
@@ -75,7 +75,7 @@ class CommentService {
     id,
     content,
   }: UpdateCommentDto): Promise<HttpResponse<CommentDto>> {
-    const comment = await this.model.update({
+    const comment = await this.comment.update({
       where: { id },
       data: { reply: content },
     });

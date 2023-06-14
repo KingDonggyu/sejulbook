@@ -4,19 +4,19 @@ import tagUtils from './tag.util';
 import TagDto, { BookReviewId, CreateTagDto, Tag } from './tag.dto';
 
 class TagService {
-  private model = new PrismaClient().tag;
+  private tag = new PrismaClient().tag;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<TagDto[]>> {
-    const tags = await this.model.findMany({
+    const tags = await this.tag.findMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: tags.map((e) => tagUtils.entityToDto(e)) };
   }
 
   async findAllByTagName(tag: Tag): Promise<HttpResponse<TagDto[]>> {
-    const tags = await this.model.findMany({
+    const tags = await this.tag.findMany({
       where: { tag: { search: `${tag}*` } },
       take: 10,
     });
@@ -27,7 +27,7 @@ class TagService {
     bookReviewId,
     tag,
   }: CreateTagDto): Promise<HttpResponse<undefined>> {
-    await this.model.create({
+    await this.tag.create({
       data: { sejulbook_id: bookReviewId, tag },
     });
     return { error: false, data: undefined };
@@ -36,7 +36,7 @@ class TagService {
   async deleteAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<HttpResponse<undefined>> {
-    await this.model.deleteMany({
+    await this.tag.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
     return { error: false, data: undefined };
