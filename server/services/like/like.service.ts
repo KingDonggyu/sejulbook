@@ -2,53 +2,45 @@ import { PrismaClient } from '@prisma/client';
 import { BookReviewId, LikeDefaultRequestDTO, LikerId } from './dto';
 
 class LikeService {
-  private like = new PrismaClient().likes;
+  private like = new PrismaClient().like;
 
   async has({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
     const like = await this.like.findFirst({
-      where: { sejulbook_id: bookReviewId, liker_id: likerId },
+      where: { bookReviewId, likerId },
     });
+
     return !!like;
   }
 
   async findTenMostBookReviewId(): Promise<BookReviewId[]> {
     const result = await this.like.groupBy({
-      by: ['sejulbook_id'],
-      _count: { sejulbook_id: true },
-      orderBy: [{ _count: { sejulbook_id: 'desc' } }, { sejulbook_id: 'desc' }],
+      by: ['bookReviewId'],
+      _count: { bookReviewId: true },
+      orderBy: [{ _count: { bookReviewId: 'desc' } }, { bookReviewId: 'desc' }],
       take: 10,
     });
-    return result.map(({ sejulbook_id }) => sejulbook_id);
+
+    return result.map(({ bookReviewId }) => bookReviewId);
   }
 
   async countByBookReview(bookReviewId: BookReviewId) {
-    return this.like.count({
-      where: { sejulbook_id: bookReviewId },
-    });
+    return this.like.count({ where: { bookReviewId } });
   }
 
   async deleteAllByBookReview(bookReviewId: BookReviewId) {
-    await this.like.deleteMany({
-      where: { sejulbook_id: bookReviewId },
-    });
+    await this.like.deleteMany({ where: { bookReviewId } });
   }
 
   async deleteAllByUser(likerId: LikerId) {
-    await this.like.deleteMany({
-      where: { liker_id: likerId },
-    });
+    await this.like.deleteMany({ where: { likerId } });
   }
 
   async delete({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
-    await this.like.deleteMany({
-      where: { sejulbook_id: bookReviewId, liker_id: likerId },
-    });
+    await this.like.deleteMany({ where: { bookReviewId, likerId } });
   }
 
   async create({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
-    await this.like.create({
-      data: { sejulbook_id: bookReviewId, liker_id: likerId },
-    });
+    await this.like.create({ data: { bookReviewId, likerId } });
   }
 }
 

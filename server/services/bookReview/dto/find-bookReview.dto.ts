@@ -4,13 +4,13 @@ import {
   Content,
   CreatedAt,
   Id,
-  IsDraftSave,
   OriginThumbnail,
   Publication,
   Publisher,
   Rating,
   Sejul,
   Thumbnail,
+  UserId,
   Writer,
 } from '.';
 
@@ -30,7 +30,6 @@ export interface FindPublishedBookReviewResponseDTO {
   rating: Rating;
   sejul: Sejul;
   content: Content;
-  isDraftSave: IsDraftSave;
   originThumbnail: OriginThumbnail;
   createdAt: CreatedAt;
   writer: Writer;
@@ -53,5 +52,6 @@ export interface FindHomeBookReviewResponseDTO {
   sejul: Sejul;
   thumbnail: Thumbnail;
   createdAt: CreatedAt;
+  userId: UserId;
   writer: Writer;
 }

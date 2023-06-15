@@ -1,9 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { BadRequestException, NotFoundException } from 'server/exceptions';
-import {
-  PagedBookReivewEntity,
-  HomeBookReviewEntity,
-} from './bookReview.entity';
 
 import { Id, UserId } from './dto';
 import {
@@ -19,13 +15,6 @@ import {
   FindPagedBookReviewByTagRequestDTO,
   FindPagedBookReviewResponseDTO,
 } from './dto/find-paged-bookReview.dto';
-
-import LikeService from '../like/like.service';
-import UserService from '../user/user.service';
-import FollowService from '../follow/follow.service';
-import CategoryService from '../category/category.service';
-import TagService from '../tag/tag.service';
-import CommentService from '../comment/comment.service';
 import {
   CreateDraftSavedBookReviewRequestDTO,
   CreatePublishedBookReviewRequestDTO,
@@ -35,20 +24,25 @@ import {
   UpdatePublishedBookReviewRequestDTO,
 } from './dto/update-bookReview.dto';
 
+import LikeService from '../like/like.service';
+import UserService from '../user/user.service';
+import FollowService from '../follow/follow.service';
+import CategoryService from '../category/category.service';
+import TagService from '../tag/tag.service';
+import CommentService from '../comment/comment.service';
+
 class BookReviewService {
-  private bookReview = new PrismaClient().sejulbook;
+  private bookReview = new PrismaClient().bookReview;
 
   private userService = new UserService();
 
-  private PUBLISHED = 1;
-
-  private DRAFTSAVED = 0;
+  private type = { published: 1, draftSaved: 0 };
 
   async createDraftSaved(bookReview: CreateDraftSavedBookReviewRequestDTO) {
     this.validate(bookReview, true);
 
     const count = await this.bookReview.count({
-      where: { id: bookReview.userId, divide: this.DRAFTSAVED },
+      where: { id: bookReview.userId, type: this.type.draftSaved },
     });
 
     if (count === 10) {
@@ -60,13 +54,9 @@ class BookReviewService {
     await this.bookReview.create({
       data: {
         ...bookReview,
-        user_id: bookReview.userId,
-        writer: bookReview.authors,
-        grade: bookReview.rating,
-        origin_thumbnail: bookReview.originThumbnail,
         thumbnail: bookReview.thumbnail || '',
-        category_id: bookReview.categoryId || 1,
-        divide: this.DRAFTSAVED,
+        categoryId: bookReview.categoryId || 1,
+        type: this.type.draftSaved,
       },
     });
   }
@@ -80,10 +70,9 @@ class BookReviewService {
       where: { id },
       data: {
         ...bookReview,
-        grade: bookReview.rating,
         thumbnail: bookReview.thumbnail || '',
-        category_id: bookReview.categoryId || 1,
-        divide: this.DRAFTSAVED,
+        categoryId: bookReview.categoryId || 1,
+        type: this.type.draftSaved,
       },
     });
   }
@@ -92,20 +81,7 @@ class BookReviewService {
     this.validate(bookReview);
 
     const create = this.bookReview.create({
-      data: {
-        bookname: bookReview.bookname,
-        publisher: bookReview.publisher,
-        publication: bookReview.publication,
-        sejul: bookReview.sejul,
-        user_id: bookReview.userId,
-        writer: bookReview.authors,
-        grade: bookReview.rating,
-        thumbnail: bookReview.thumbnail,
-        category_id: bookReview.categoryId,
-        sejulplus: bookReview.content,
-        origin_thumbnail: bookReview.originThumbnail,
-        divide: this.PUBLISHED,
-      },
+      data: { ...bookReview, id: undefined, type: this.type.published },
     });
 
     const promises: Promise<unknown>[] = [create];
@@ -125,13 +101,7 @@ class BookReviewService {
     this.validate(bookReview);
     await this.bookReview.update({
       where: { id },
-      data: {
-        ...bookReview,
-        grade: bookReview.rating,
-        thumbnail: bookReview.thumbnail,
-        category_id: bookReview.categoryId,
-        sejulplus: bookReview.content,
-      },
+      data: bookReview,
     });
   }
 
@@ -147,7 +117,7 @@ class BookReviewService {
   async findAllPublishedId(): Promise<Id[]> {
     const result = await this.bookReview.findMany({
       select: { id: true },
-      where: { divide: this.PUBLISHED },
+      where: { type: this.type.published },
     });
 
     return result.map(({ id }) => id);
@@ -155,7 +125,8 @@ class BookReviewService {
 
   async findAllIdByUser(userId: UserId): Promise<Id[]> {
     const result = await this.bookReview.findMany({
-      where: { user_id: userId },
+      select: { id: true },
+      where: { userId },
     });
 
     return result.map(({ id }) => id);
@@ -164,16 +135,10 @@ class BookReviewService {
   async findAllDraftSavedByUser(
     userId: UserId,
   ): Promise<FindDraftSavedBookReviewResponseDTO[]> {
-    const bookReviews = await this.bookReview.findMany({
-      select: { id: true, bookname: true, datecreated: true },
-      where: { user_id: userId, divide: this.DRAFTSAVED },
+    return this.bookReview.findMany({
+      select: { id: true, bookname: true, createdAt: true },
+      where: { userId, type: this.type.draftSaved },
     });
-
-    return bookReviews.map(({ id, bookname, datecreated }) => ({
-      id,
-      bookname,
-      createdAt: datecreated,
-    }));
   }
 
   async findPublished(id: Id): Promise<FindPublishedBookReviewResponseDTO> {
@@ -185,26 +150,16 @@ class BookReviewService {
       throw new NotFoundException('존재하지 않는 독후감입니다.');
     }
 
-    const [{ name }, { category }] = await Promise.all([
-      this.userService.findNameById(bookReview.user_id),
-      new CategoryService().findById(bookReview.category_id),
+    const [{ name: writer }, { category }] = await Promise.all([
+      this.userService.findNameById(bookReview.userId),
+      new CategoryService().findById(bookReview.userId),
     ]);
 
     return {
-      id: bookReview.id,
-      bookname: bookReview.bookname,
-      authors: bookReview.writer,
-      publication: bookReview.publication,
-      publisher: bookReview.publisher,
-      thumbnail: bookReview.thumbnail,
-      rating: bookReview.grade,
-      sejul: bookReview.sejul,
-      content: bookReview.sejulplus,
-      isDraftSave: false,
-      originThumbnail: bookReview.origin_thumbnail || undefined,
-      createdAt: bookReview.datecreated,
-      writer: name,
+      ...bookReview,
+      writer,
       category,
+      originThumbnail: bookReview.originThumbnail || undefined,
     };
   }
 
@@ -218,9 +173,9 @@ class BookReviewService {
         bookname: true,
         sejul: true,
         thumbnail: true,
-        datecreated: true,
+        createdAt: true,
       },
-      where: { user_id: userId, divide: this.PUBLISHED },
+      where: { userId, type: this.type.published },
     });
 
     const likeService = new LikeService();
@@ -232,15 +187,7 @@ class BookReviewService {
         commentService.countByBookReview(bookReview.id),
       ]);
 
-      return {
-        id: bookReview.id,
-        bookname: bookReview.bookname,
-        sejul: bookReview.sejul,
-        thumbnail: bookReview.thumbnail,
-        createdAt: bookReview.datecreated,
-        likeCount,
-        commentCount,
-      };
+      return { ...bookReview, likeCount, commentCount };
     });
 
     return Promise.all(promises);
@@ -256,8 +203,8 @@ class BookReviewService {
           bookname: true,
           sejul: true,
           thumbnail: true,
-          user_id: true,
-          datecreated: true,
+          userId: true,
+          createdAt: true,
         },
         where: { id },
       });
@@ -266,16 +213,11 @@ class BookReviewService {
         throw new NotFoundException(`${id} 독후감을 찾을 수 없습니다.`);
       }
 
-      const { name } = await this.userService.findNameById(bookReview.user_id);
+      const { name: writer } = await this.userService.findNameById(
+        bookReview.userId,
+      );
 
-      return {
-        id: bookReview.id,
-        bookname: bookReview.bookname,
-        thumbnail: bookReview.thumbnail,
-        sejul: bookReview.sejul,
-        createdAt: bookReview.datecreated,
-        writer: name,
-      };
+      return { ...bookReview, writer };
     });
 
     return Promise.all(promises);
@@ -289,15 +231,15 @@ class BookReviewService {
         bookname: true,
         sejul: true,
         thumbnail: true,
-        user_id: true,
-        datecreated: true,
+        userId: true,
+        createdAt: true,
       },
-      where: { divide: this.PUBLISHED },
+      where: { type: this.type.published },
       orderBy: { id: 'desc' },
       take: 10,
     });
 
-    return this.addWritersToBookReviewSummarys(bookReviews);
+    return this.addWritersToHomeBookReviews(bookReviews);
   }
 
   // 최신 순의 10개 구독 독후감
@@ -311,18 +253,18 @@ class BookReviewService {
         bookname: true,
         sejul: true,
         thumbnail: true,
-        user_id: true,
-        datecreated: true,
+        userId: true,
+        createdAt: true,
       },
       where: {
-        user_id: { in: followingIds },
-        divide: this.PUBLISHED,
+        userId: { in: followingIds },
+        type: this.type.published,
       },
       orderBy: { id: 'desc' },
       take: 10,
     });
 
-    return this.addWritersToBookReviewSummarys(bookReviews);
+    return this.addWritersToHomeBookReviews(bookReviews);
   }
 
   // 책이름으로 독후감 검색 - pagination
@@ -343,15 +285,15 @@ class BookReviewService {
     }
 
     const bookReviews = await this.bookReview.findMany({
-      select: { id: true, thumbnail: true, user_id: true, sejul: true },
-      where: { bookname, divide: this.PUBLISHED },
+      select: { id: true, thumbnail: true, userId: true, sejul: true },
+      where: { bookname, type: this.type.published },
       orderBy: { id: 'desc' },
       cursor: { id: maxId },
       skip: targetId ? 1 : 0,
       take: 12,
     });
 
-    return this.addWritersToBookReviewPages(bookReviews);
+    return this.addWritersToPagedBookReviews(bookReviews);
   }
 
   // 카테고리로 독후감 검색 - pagination
@@ -373,15 +315,15 @@ class BookReviewService {
 
     const { id: categoryId } = await new CategoryService().findId(category);
     const bookReviews = await this.bookReview.findMany({
-      select: { id: true, thumbnail: true, user_id: true, sejul: true },
-      where: { category_id: categoryId, divide: this.PUBLISHED },
+      select: { id: true, thumbnail: true, userId: true, sejul: true },
+      where: { categoryId, type: this.type.published },
       orderBy: { id: 'desc' },
       cursor: { id: maxId },
       skip: targetId ? 1 : 0,
       take: 12,
     });
 
-    return this.addWritersToBookReviewPages(bookReviews);
+    return this.addWritersToPagedBookReviews(bookReviews);
   }
 
   // 태그로 독후감 검색 - pagination
@@ -405,15 +347,15 @@ class BookReviewService {
     const bookReivewIds = tags.map(({ bookReviewId }) => bookReviewId);
 
     const bookReviews = await this.bookReview.findMany({
-      select: { id: true, thumbnail: true, user_id: true, sejul: true },
-      where: { id: { in: bookReivewIds }, divide: this.PUBLISHED },
+      select: { id: true, thumbnail: true, userId: true, sejul: true },
+      where: { id: { in: bookReivewIds }, type: this.type.published },
       orderBy: { id: 'desc' },
       cursor: { id: maxId },
       skip: targetId ? 1 : 0,
       take: 12,
     });
 
-    return this.addWritersToBookReviewPages(bookReviews);
+    return this.addWritersToPagedBookReviews(bookReviews);
   }
 
   // 관심 서재 독후감 - pagination
@@ -435,10 +377,10 @@ class BookReviewService {
 
     const followingIds = await new FollowService().findAllFollowing(followerId);
     const bookReviews = await this.bookReview.findMany({
-      select: { id: true, thumbnail: true, user_id: true, sejul: true },
+      select: { id: true, thumbnail: true, userId: true, sejul: true },
       where: {
-        user_id: { in: followingIds },
-        divide: this.PUBLISHED,
+        userId: { in: followingIds },
+        type: this.type.published,
       },
       orderBy: { id: 'desc' },
       cursor: { id: maxId },
@@ -446,7 +388,7 @@ class BookReviewService {
       take: 12,
     });
 
-    return this.addWritersToBookReviewPages(bookReviews);
+    return this.addWritersToPagedBookReviews(bookReviews);
   }
 
   private async findMaxId(): Promise<Id | null> {
@@ -462,41 +404,27 @@ class BookReviewService {
     return null;
   }
 
-  private async addWritersToBookReviewSummarys(
-    bookReviews: HomeBookReviewEntity[],
+  private async addWritersToHomeBookReviews(
+    bookReviews: Omit<FindHomeBookReviewResponseDTO, 'writer'>[],
   ) {
     const promises = bookReviews.map(async (bookReview) => {
-      const { name } = await this.userService.findNameById(bookReview.user_id);
+      const { name: writer } = await this.userService.findNameById(
+        bookReview.userId,
+      );
 
-      return {
-        id: bookReview.id,
-        bookname: bookReview.bookname,
-        thumbnail: bookReview.thumbnail,
-        sejul: bookReview.sejul,
-        createdAt: bookReview.datecreated,
-        writer: name,
-      };
+      return { ...bookReview, writer };
     });
 
     return Promise.all(promises);
   }
 
-  private async addWritersToBookReviewPages(
-    bookReviews: PagedBookReivewEntity[],
+  private async addWritersToPagedBookReviews(
+    bookReviews: Omit<FindPagedBookReviewResponseDTO, 'writer'>[],
   ) {
-    const promises = bookReviews.map(
-      async ({ id, thumbnail, sejul, user_id }) => {
-        const { name } = await this.userService.findNameById(user_id);
-
-        return {
-          id,
-          thumbnail,
-          sejul,
-          writer: name,
-          userId: user_id,
-        };
-      },
-    );
+    const promises = bookReviews.map(async ({ userId, ...bookReview }) => {
+      const { name: writer } = await this.userService.findNameById(userId);
+      return { ...bookReview, userId, writer };
+    });
 
     return Promise.all(promises);
   }

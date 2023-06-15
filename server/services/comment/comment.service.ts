@@ -5,40 +5,24 @@ import { UpdateCommentRequestDTO } from './dto/update-comment.dto';
 import FindCommentResponseDTO from './dto/find-comment.dto';
 
 class CommentService {
-  private comment = new PrismaClient().reply;
+  private comment = new PrismaClient().comment;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<FindCommentResponseDTO[]> {
-    const comments = await this.comment.findMany({
-      where: { sejulbook_id: bookReviewId },
-    });
-
-    return comments.map((entity) => ({
-      id: entity.id,
-      bookReviewId: entity.sejulbook_id,
-      commenterId: entity.replyer_id,
-      content: entity.reply,
-      createdAt: entity.replydate,
-    }));
+    return this.comment.findMany({ where: { bookReviewId } });
   }
 
   async countByBookReview(bookReviewId: BookReviewId): Promise<number> {
-    return this.comment.count({
-      where: { sejulbook_id: bookReviewId },
-    });
+    return this.comment.count({ where: { bookReviewId } });
   }
 
   async deleteAllByBookreview(bookReviewId: BookReviewId) {
-    this.comment.deleteMany({
-      where: { sejulbook_id: bookReviewId },
-    });
+    this.comment.deleteMany({ where: { bookReviewId } });
   }
 
   async deleteAllByUser(commenterId: CommenterId) {
-    this.comment.deleteMany({
-      where: { replyer_id: commenterId },
-    });
+    this.comment.deleteMany({ where: { commenterId } });
   }
 
   async delete(id: Id) {
@@ -50,19 +34,13 @@ class CommentService {
     commenterId,
     content,
   }: CreateCommentRequestDTO) {
-    this.comment.create({
-      data: {
-        sejulbook_id: bookReviewId,
-        replyer_id: commenterId,
-        reply: content,
-      },
-    });
+    this.comment.create({ data: { bookReviewId, commenterId, content } });
   }
 
   async update({ id, content }: UpdateCommentRequestDTO) {
     this.comment.update({
       where: { id },
-      data: { reply: content },
+      data: { content },
     });
   }
 }

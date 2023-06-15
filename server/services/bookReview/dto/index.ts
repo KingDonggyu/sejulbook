@@ -9,7 +9,6 @@ export type Thumbnail = string;
 export type Rating = number;
 export type Sejul = string;
 export type Content = string;
-export type IsDraftSave = boolean;
 export type OriginThumbnail = string | undefined;
 export type CreatedAt = Date | null;
 export type Writer = string;

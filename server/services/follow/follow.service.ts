@@ -14,11 +14,11 @@ class FollowService {
 
   async findAllFollowing(followerId: UserId): Promise<UserId[]> {
     const result = await this.follow.findMany({
-      select: { following_id: true },
-      where: { follower_id: followerId },
+      select: { followingId: true },
+      where: { followerId },
     });
 
-    return result.map(({ following_id }) => following_id);
+    return result.map(({ followingId }) => followingId);
   }
 
   async findPagedFollowings({
@@ -35,19 +35,14 @@ class FollowService {
       return [];
     }
 
-    const pagedFollowingId = await this.follow.findMany({
-      select: { id: true, following_id: true },
-      where: { follower_id: followerId },
+    return this.follow.findMany({
+      select: { id: true, followingId: true },
+      where: { followerId },
       orderBy: { id: 'desc' },
       cursor: { id: maxId },
       skip: targetId ? 1 : 0,
       take: 10,
     });
-
-    return pagedFollowingId.map(({ id, following_id }) => ({
-      id,
-      followingId: following_id,
-    }));
   }
 
   async findPagedFollowers({
@@ -64,62 +59,44 @@ class FollowService {
       return [];
     }
 
-    const pagedFollowerId = await this.follow.findMany({
-      select: { id: true, follower_id: true },
-      where: { following_id: followingId },
+    return this.follow.findMany({
+      select: { id: true, followerId: true },
+      where: { followingId },
       orderBy: { id: 'desc' },
       cursor: { id: maxId },
       skip: targetId ? 1 : 0,
       take: 10,
     });
-
-    return pagedFollowerId.map(({ id, follower_id }) => ({
-      id,
-      followerId: follower_id,
-    }));
   }
 
   async has({ followerId, followingId }: FollowDefaultReqeustDto) {
     const follow = await this.follow.findFirst({
-      where: {
-        follower_id: followerId,
-        following_id: followingId,
-      },
+      where: { followerId, followingId },
     });
+
     return !!follow;
   }
 
   async countFollwing(followerId: UserId) {
-    return this.follow.count({
-      where: { follower_id: followerId },
-    });
+    return this.follow.count({ where: { followerId } });
   }
 
   async countFollower(followingId: UserId) {
-    return this.follow.count({
-      where: { following_id: followingId },
-    });
+    return this.follow.count({ where: { followingId } });
   }
 
   async create({ followerId, followingId }: FollowDefaultReqeustDto) {
-    this.follow.create({
-      data: { follower_id: followerId, following_id: followingId },
-    });
+    this.follow.create({ data: { followerId, followingId } });
   }
 
   async delete({ followerId, followingId }: FollowDefaultReqeustDto) {
-    this.follow.deleteMany({
-      where: {
-        follower_id: followerId,
-        following_id: followingId,
-      },
-    });
+    this.follow.deleteMany({ where: { followerId, followingId } });
   }
 
   async deleteAllByUser(userId: UserId) {
     this.follow.deleteMany({
       where: {
-        OR: [{ follower_id: userId }, { following_id: userId }],
+        OR: [{ followerId: userId }, { followingId: userId }],
       },
     });
   }
@@ -129,7 +106,7 @@ class FollowService {
   ): Promise<Id | null> {
     const result = await this.follow.findFirst({
       select: { id: true },
-      where: { following_id: followingId },
+      where: { followingId },
       orderBy: { id: 'desc' },
     });
 
@@ -143,7 +120,7 @@ class FollowService {
   private async findMaxIdByFollowerId(followerId: UserId): Promise<Id | null> {
     const result = await this.follow.findFirst({
       select: { id: true },
-      where: { follower_id: followerId },
+      where: { followerId },
       orderBy: { id: 'desc' },
     });
 

@@ -16,9 +16,7 @@ class CategoryService {
   }
 
   async findById(id: Id): Promise<FindCategoryResponseDTO> {
-    const category = await this.category.findUnique({
-      where: { id },
-    });
+    const category = await this.category.findUnique({ where: { id } });
 
     if (category !== null) {
       return category;

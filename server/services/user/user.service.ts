@@ -31,17 +31,11 @@ class UserService {
   async findAllByNamePrefix(
     name: Name,
   ): Promise<FindSearchedUserResponseDTO[]> {
-    const users = await this.user.findMany({
-      select: { id: true, nick: true, introduce: true },
-      where: { nick: { search: `${name}*` } },
+    return this.user.findMany({
+      select: { id: true, name: true, introduce: true },
+      where: { name: { search: `${name}*` } },
       take: 10,
     });
-
-    return users.map(({ id, nick, introduce }) => ({
-      id,
-      introduce,
-      name: nick,
-    }));
   }
 
   async findById(id: Id): Promise<FindUserResponseDTO> {
@@ -51,33 +45,17 @@ class UserService {
       throw new NotFoundException(this.notFoundMessage);
     }
 
-    return {
-      id: user.id,
-      sub: user.sub,
-      name: user.nick,
-      introduce: user.introduce,
-      email: user.email,
-      age: user.email,
-      gender: user.gender,
-    };
+    return user;
   }
 
   async findByName(name: Name): Promise<FindUserResponseDTO> {
-    const user = await this.user.findUnique({ where: { nick: name } });
+    const user = await this.user.findUnique({ where: { name } });
 
     if (!user) {
       throw new NotFoundException(this.notFoundMessage);
     }
 
-    return {
-      id: user.id,
-      sub: user.sub,
-      name: user.nick,
-      introduce: user.introduce,
-      email: user.email,
-      age: user.email,
-      gender: user.gender,
-    };
+    return user;
   }
 
   async findIdBySub(sub: Sub): Promise<FindUserIdBySubResponseDTO> {
@@ -95,7 +73,7 @@ class UserService {
 
   async findNameById(id: Id): Promise<FindUserNameResponseDTO> {
     const user = await this.user.findUnique({
-      select: { nick: true },
+      select: { name: true },
       where: { id },
     });
 
@@ -103,7 +81,7 @@ class UserService {
       throw new NotFoundException(this.notFoundMessage);
     }
 
-    return { name: user.nick };
+    return user;
   }
 
   async findPagedFollowers({
@@ -119,7 +97,7 @@ class UserService {
 
     const promises = followerIds.map(async ({ followerId }) => {
       const follower = await this.user.findUnique({
-        select: { id: true, nick: true, introduce: true },
+        select: { id: true, name: true, introduce: true },
         where: { id: followerId },
       });
 
@@ -127,12 +105,7 @@ class UserService {
         throw new NotFoundException(`${followerId} 사용자를 찾을 수 없습니다.`);
       }
 
-      return {
-        id: follower.id,
-        name: follower.nick,
-        introduce: follower.introduce,
-        nextTargetId,
-      };
+      return { ...follower, nextTargetId };
     });
 
     return Promise.all(promises);
@@ -151,7 +124,7 @@ class UserService {
 
     const promises = followingIds.map(async ({ followingId }) => {
       const following = await this.user.findUnique({
-        select: { id: true, nick: true, introduce: true },
+        select: { id: true, name: true, introduce: true },
         where: { id: followingId },
       });
 
@@ -161,12 +134,7 @@ class UserService {
         );
       }
 
-      return {
-        id: following.id,
-        name: following.nick,
-        introduce: following.introduce,
-        nextTargetId,
-      };
+      return { ...following, nextTargetId };
     });
 
     return Promise.all(promises);
@@ -180,18 +148,14 @@ class UserService {
     }
 
     await this.user.create({
-      data: {
-        ...user,
-        nick: user.name,
-        age: user.age || 'null',
-      },
+      data: { ...user, age: user.age || 'null' },
     });
   }
 
   async update({ id, name, introduce }: UpdateUserRequestDTO) {
     await this.validate(name, introduce);
     await this.user.update({
-      data: { nick: name, introduce },
+      data: { name, introduce },
       where: { id },
     });
   }
