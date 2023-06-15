@@ -1,85 +1,69 @@
 import { PrismaClient } from '@prisma/client';
-import { HttpResponse } from 'server/types/http';
-import CommentDto, {
-  Id,
-  BookReviewId,
-  CommenterId,
-  CreateCommnetDto,
-  UpdateCommentDto,
-} from './comment.dto';
-import commentUtils from './comment.util';
+import { BookReviewId, CommenterId, Id } from './dto';
+import { CreateCommentRequestDTO } from './dto/create-comment.dto';
+import { UpdateCommentRequestDTO } from './dto/update-comment.dto';
+import FindCommentResponseDTO from './dto/find-comment.dto';
 
 class CommentService {
   private comment = new PrismaClient().reply;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
-  ): Promise<HttpResponse<CommentDto[]>> {
+  ): Promise<FindCommentResponseDTO[]> {
     const comments = await this.comment.findMany({
       where: { sejulbook_id: bookReviewId },
     });
-    return {
-      error: false,
-      data: comments.map((e) => commentUtils.entityToDto(e)),
-    };
+
+    return comments.map((entity) => ({
+      id: entity.id,
+      bookReviewId: entity.sejulbook_id,
+      commenterId: entity.replyer_id,
+      content: entity.reply,
+      createdAt: entity.replydate,
+    }));
   }
 
-  async countByBookReview(
-    bookReviewId: BookReviewId,
-  ): Promise<HttpResponse<number>> {
-    const count = await this.comment.count({
+  async countByBookReview(bookReviewId: BookReviewId): Promise<number> {
+    return this.comment.count({
       where: { sejulbook_id: bookReviewId },
     });
-    return { error: false, data: count };
   }
 
-  async deleteAllByBookreview(
-    bookReviewId: BookReviewId,
-  ): Promise<HttpResponse<undefined>> {
-    await this.comment.deleteMany({
+  async deleteAllByBookreview(bookReviewId: BookReviewId) {
+    this.comment.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
-    return { error: false, data: undefined };
   }
 
-  async deleteAllByUser(
-    commenterId: CommenterId,
-  ): Promise<HttpResponse<undefined>> {
-    await this.comment.deleteMany({
+  async deleteAllByUser(commenterId: CommenterId) {
+    this.comment.deleteMany({
       where: { replyer_id: commenterId },
     });
-    return { error: false, data: undefined };
   }
 
-  async delete(id: Id): Promise<HttpResponse<undefined>> {
-    await this.comment.delete({ where: { id } });
-    return { error: false, data: undefined };
+  async delete(id: Id) {
+    this.comment.delete({ where: { id } });
   }
 
   async create({
     bookReviewId,
     commenterId,
     content,
-  }: CreateCommnetDto): Promise<HttpResponse<CommentDto>> {
-    const comment = await this.comment.create({
+  }: CreateCommentRequestDTO) {
+    this.comment.create({
       data: {
         sejulbook_id: bookReviewId,
         replyer_id: commenterId,
         reply: content,
       },
     });
-    return { error: false, data: commentUtils.entityToDto(comment) };
   }
 
-  async update({
-    id,
-    content,
-  }: UpdateCommentDto): Promise<HttpResponse<CommentDto>> {
-    const comment = await this.comment.update({
+  async update({ id, content }: UpdateCommentRequestDTO) {
+    this.comment.update({
       where: { id },
       data: { reply: content },
     });
-    return { error: false, data: commentUtils.entityToDto(comment) };
   }
 }
 

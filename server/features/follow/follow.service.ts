@@ -1,33 +1,38 @@
 import { PrismaClient } from '@prisma/client';
-import { HttpResponse, HttpSuccess } from 'server/types/http';
-
-import FollowDto, {
-  RequestFindPagedFollowerDto,
-  RequestFindPagedFollowingDto,
-  Id,
-  UserId,
-  ResponseFindPagedFollowerDto,
-  ResponseFindPagedFollowingDto,
-} from './follow.dto';
+import { FollowDefaultReqeustDto, Id, UserId } from './dto';
+import {
+  FindPagedFollowingsRequestDTO,
+  FindPagedFollowingResponseDTO,
+} from './dto/find-following.dto';
+import {
+  FindPagedFollowersRequestDTO,
+  FindPagedFollowerResponseDTO,
+} from './dto/find-follower.dto';
 
 class FollowService {
   private follow = new PrismaClient().follow;
 
+  async findAllFollowing(followerId: UserId): Promise<UserId[]> {
+    const result = await this.follow.findMany({
+      select: { following_id: true },
+      where: { follower_id: followerId },
+    });
+
+    return result.map(({ following_id }) => following_id);
+  }
+
   async findPagedFollowings({
     followerId,
     targetId,
-  }: RequestFindPagedFollowingDto): Promise<
-    HttpSuccess<ResponseFindPagedFollowingDto>
-  > {
+  }: FindPagedFollowingsRequestDTO): Promise<FindPagedFollowingResponseDTO[]> {
     let maxId = targetId;
 
     if (maxId === null) {
-      const { data } = await this.findMaxIdByFollowerId(followerId);
-      maxId = data;
+      maxId = await this.findMaxIdByFollowerId(followerId);
     }
 
     if (maxId === null) {
-      return { error: false, data: [] };
+      return [];
     }
 
     const pagedFollowingId = await this.follow.findMany({
@@ -39,30 +44,24 @@ class FollowService {
       take: 10,
     });
 
-    return {
-      error: false,
-      data: pagedFollowingId.map(({ id, following_id }) => ({
-        id,
-        followingId: following_id,
-      })),
-    };
+    return pagedFollowingId.map(({ id, following_id }) => ({
+      id,
+      followingId: following_id,
+    }));
   }
 
   async findPagedFollowers({
     followingId,
     targetId,
-  }: RequestFindPagedFollowerDto): Promise<
-    HttpSuccess<ResponseFindPagedFollowerDto>
-  > {
+  }: FindPagedFollowersRequestDTO): Promise<FindPagedFollowerResponseDTO[]> {
     let maxId = targetId;
 
     if (maxId === null) {
-      const { data } = await this.findMaxIdByFollowingId(followingId);
-      maxId = data;
+      maxId = await this.findMaxIdByFollowingId(followingId);
     }
 
     if (maxId === null) {
-      return { error: false, data: [] };
+      return [];
     }
 
     const pagedFollowerId = await this.follow.findMany({
@@ -74,105 +73,85 @@ class FollowService {
       take: 10,
     });
 
-    return {
-      error: false,
-      data: pagedFollowerId.map(({ id, follower_id }) => ({
-        id,
-        followerId: follower_id,
-      })),
-    };
+    return pagedFollowerId.map(({ id, follower_id }) => ({
+      id,
+      followerId: follower_id,
+    }));
   }
 
-  async findMaxIdByFollowingId(
-    followingId: UserId,
-  ): Promise<HttpSuccess<Id | null>> {
-    const result = await this.follow.findFirst({
-      select: { id: true },
-      where: { following_id: followingId },
-      orderBy: { id: 'desc' },
-    });
-
-    if (result === null) {
-      return { error: false, data: null };
-    }
-
-    return { error: false, data: result.id };
-  }
-
-  async findMaxIdByFollowerId(
-    followerId: UserId,
-  ): Promise<HttpSuccess<Id | null>> {
-    const result = await this.follow.findFirst({
-      select: { id: true },
-      where: { follower_id: followerId },
-      orderBy: { id: 'desc' },
-    });
-
-    if (result === null) {
-      return { error: false, data: null };
-    }
-
-    return { error: false, data: result.id };
-  }
-
-  async has({
-    followerId,
-    followingId,
-  }: FollowDto): Promise<HttpResponse<boolean>> {
+  async has({ followerId, followingId }: FollowDefaultReqeustDto) {
     const follow = await this.follow.findFirst({
       where: {
         follower_id: followerId,
         following_id: followingId,
       },
     });
-    return { error: false, data: !!follow };
+    return !!follow;
   }
 
-  async countFollwing(followerId: UserId): Promise<HttpResponse<number>> {
-    const count = await this.follow.count({
+  async countFollwing(followerId: UserId) {
+    return this.follow.count({
       where: { follower_id: followerId },
     });
-    return { error: false, data: count };
   }
 
-  async countFollower(followingId: UserId): Promise<HttpResponse<number>> {
-    const count = await this.follow.count({
+  async countFollower(followingId: UserId) {
+    return this.follow.count({
       where: { following_id: followingId },
     });
-    return { error: false, data: count };
   }
 
-  async create({
-    followerId,
-    followingId,
-  }: FollowDto): Promise<HttpResponse<undefined>> {
-    await this.follow.create({
+  async create({ followerId, followingId }: FollowDefaultReqeustDto) {
+    this.follow.create({
       data: { follower_id: followerId, following_id: followingId },
     });
-    return { error: false, data: undefined };
   }
 
-  async delete({
-    followerId,
-    followingId,
-  }: FollowDto): Promise<HttpResponse<undefined>> {
-    await this.follow.deleteMany({
+  async delete({ followerId, followingId }: FollowDefaultReqeustDto) {
+    this.follow.deleteMany({
       where: {
         follower_id: followerId,
         following_id: followingId,
       },
     });
-    return { error: false, data: undefined };
   }
 
   async deleteAllByUser(userId: UserId) {
-    await this.follow.deleteMany({
+    this.follow.deleteMany({
       where: {
-        follower_id: userId,
-        following_id: userId,
+        OR: [{ follower_id: userId }, { following_id: userId }],
       },
     });
-    return { error: false, data: undefined };
+  }
+
+  private async findMaxIdByFollowingId(
+    followingId: UserId,
+  ): Promise<Id | null> {
+    const result = await this.follow.findFirst({
+      select: { id: true },
+      where: { following_id: followingId },
+      orderBy: { id: 'desc' },
+    });
+
+    if (result === null) {
+      return null;
+    }
+
+    return result.id;
+  }
+
+  private async findMaxIdByFollowerId(followerId: UserId): Promise<Id | null> {
+    const result = await this.follow.findFirst({
+      select: { id: true },
+      where: { follower_id: followerId },
+      orderBy: { id: 'desc' },
+    });
+
+    if (result === null) {
+      return null;
+    }
+
+    return result.id;
   }
 }
 

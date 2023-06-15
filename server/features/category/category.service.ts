@@ -1,38 +1,42 @@
 import { PrismaClient } from '@prisma/client';
-import { HttpResponse } from 'server/types/http';
-import CategoryDto, { Id, Category as CategoryName } from './category.dto';
-import categoryUtils from './category.util';
+import { NotFoundException } from 'server/exceptions';
+import { Id, Category } from './dto';
+import {
+  FindCategoryResponseDTO,
+  FindCategoryIdResponseDTO,
+} from './dto/find-category.dto';
 
 class CategoryService {
   private category = new PrismaClient().category;
 
-  async findAll(): Promise<HttpResponse<CategoryDto[]>> {
-    const categories = await this.category.findMany();
-    return { error: false, data: categories };
+  private notFoundMessage = '해당 카테고리가 존재하지 않습니다.';
+
+  async findAll(): Promise<FindCategoryResponseDTO[]> {
+    return this.category.findMany();
   }
 
-  async findById(id: Id): Promise<HttpResponse<CategoryDto>> {
+  async findById(id: Id): Promise<FindCategoryResponseDTO> {
     const category = await this.category.findUnique({
       where: { id },
     });
 
     if (category !== null) {
-      return { error: false, data: category };
+      return category;
     }
 
-    return categoryUtils.notFoundException;
+    throw new NotFoundException(this.notFoundMessage);
   }
 
-  async findId(categoryName: CategoryName): Promise<HttpResponse<Id>> {
+  async findId(categoryName: Category): Promise<FindCategoryIdResponseDTO> {
     const category = await this.category.findFirst({
       where: { category: categoryName },
     });
 
     if (category !== null) {
-      return { error: false, data: category.id };
+      return { id: category.id };
     }
 
-    return categoryUtils.notFoundException;
+    throw new NotFoundException(this.notFoundMessage);
   }
 }
 

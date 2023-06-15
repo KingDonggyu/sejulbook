@@ -2,9 +2,7 @@ export type Id = number;
 export type BookReviewId = number;
 export type LikerId = number;
 
-interface LikeDto {
+export interface LikeDefaultRequestDTO {
   bookReviewId: BookReviewId;
   likerId: LikerId;
 }
-
-export default LikeDto;

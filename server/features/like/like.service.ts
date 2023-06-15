@@ -1,63 +1,54 @@
 import { PrismaClient } from '@prisma/client';
-import { HttpResponse } from 'server/types/http';
-import LikeDto, { BookReviewId, LikerId } from './like.dto';
+import { BookReviewId, LikeDefaultRequestDTO, LikerId } from './dto';
 
 class LikeService {
   private like = new PrismaClient().likes;
 
-  async has({
-    bookReviewId,
-    likerId,
-  }: LikeDto): Promise<HttpResponse<boolean>> {
+  async has({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
     const like = await this.like.findFirst({
       where: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
-    return { error: false, data: !!like };
+    return !!like;
   }
 
-  async countByBookReview(
-    bookReviewId: BookReviewId,
-  ): Promise<HttpResponse<number>> {
-    const count = await this.like.count({
+  async findTenMostBookReviewId(): Promise<BookReviewId[]> {
+    const result = await this.like.groupBy({
+      by: ['sejulbook_id'],
+      _count: { sejulbook_id: true },
+      orderBy: [{ _count: { sejulbook_id: 'desc' } }, { sejulbook_id: 'desc' }],
+      take: 10,
+    });
+    return result.map(({ sejulbook_id }) => sejulbook_id);
+  }
+
+  async countByBookReview(bookReviewId: BookReviewId) {
+    return this.like.count({
       where: { sejulbook_id: bookReviewId },
     });
-    return { error: false, data: count };
   }
 
-  async deleteAllByBookReview(
-    bookReviewId: BookReviewId,
-  ): Promise<HttpResponse<undefined>> {
+  async deleteAllByBookReview(bookReviewId: BookReviewId) {
     await this.like.deleteMany({
       where: { sejulbook_id: bookReviewId },
     });
-    return { error: false, data: undefined };
   }
 
   async deleteAllByUser(likerId: LikerId) {
     await this.like.deleteMany({
       where: { liker_id: likerId },
     });
-    return { error: false, data: undefined };
   }
 
-  async delete({
-    bookReviewId,
-    likerId,
-  }: LikeDto): Promise<HttpResponse<undefined>> {
+  async delete({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
     await this.like.deleteMany({
       where: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
-    return { error: false, data: undefined };
   }
 
-  async create({
-    bookReviewId,
-    likerId,
-  }: LikeDto): Promise<HttpResponse<undefined>> {
+  async create({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
     await this.like.create({
       data: { sejulbook_id: bookReviewId, liker_id: likerId },
     });
-    return { error: false, data: undefined };
   }
 }
 
