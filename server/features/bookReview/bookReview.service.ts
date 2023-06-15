@@ -1,556 +1,532 @@
-import { bookReviewError, userError } from 'server/constants/message';
-import { HttpResponse } from 'server/types/http';
+import { PrismaClient } from '@prisma/client';
+import { BadRequestException, NotFoundException } from 'server/exceptions';
+import {
+  PagedBookReivewEntity,
+  HomeBookReviewEntity,
+} from './bookReview.entity';
 
-import CategoryDTO, { Category } from '../category/category.dto';
-import { UserName } from '../user/user.dto';
-import BookReviewDTO, { BookReviewId } from './bookReview.dto';
+import { Id, UserId } from './dto';
+import {
+  FindDraftSavedBookReviewResponseDTO,
+  FindHomeBookReviewResponseDTO,
+  FindLibraryBookReviewResponseDTO,
+  FindPublishedBookReviewResponseDTO,
+} from './dto/find-bookReview.dto';
+import {
+  FindPagedBookReviewByBooknameRequestDTO,
+  FindPagedBookReviewByCategoryRequestDTO,
+  FindPagedBookReviewByFollowingRequestDTO,
+  FindPagedBookReviewByTagRequestDTO,
+  FindPagedBookReviewResponseDTO,
+} from './dto/find-paged-bookReview.dto';
 
-import bookReviewModel from './bookReview.model';
-import userModel from '../user/user.model';
-import categoryModel from '../category/category.model';
-import commentModel from '../comment/comment.model';
-import likeModel from '../like/like.model';
-import tagModel from '../tag/tag.model';
-import TagDto from '../tag/tag.dto';
+import LikeService from '../like/like.service';
+import UserService from '../user/user.service';
+import FollowService from '../follow/follow.service';
+import CategoryService from '../category/category.service';
+import TagService from '../tag/tag.service';
+import CommentService from '../comment/comment.service';
+import {
+  CreateDraftSavedBookReviewRequestDTO,
+  CreatePublishedBookReviewRequestDTO,
+} from './dto/create-bookReview.dto';
+import {
+  UpdateDraftSavedBookReviewReqeustDTO,
+  UpdatePublishedBookReviewRequestDTO,
+} from './dto/update-bookReview.dto';
 
-import BookReviewGuard from './bookReview.guard';
-import formatEntityToDTO from './utils/formatEntityToDTO';
-import formatDTOToEntity from './utils/formatDTOToEntity';
-// import getCurrTwoMonthDate from './utils/getCurrTwoMonthDate';
-import getMaxBookReviewId from './utils/getMaxBookReviewId';
-import getSQLFormattedDate from './utils/getSQLFormattedDate';
+class BookReviewService {
+  private bookReview = new PrismaClient().sejulbook;
 
-interface BookReviewSummary
-  extends Pick<
-    BookReviewDTO,
-    'id' | 'bookname' | 'sejul' | 'thumbnail' | 'createdAt'
-  > {
-  likeCount: number;
-  commentCount: number;
-}
+  private userService = new UserService();
 
-type ExtendedBookReviewSummary = {
-  writer: UserName;
-} & Omit<BookReviewSummary, 'likeCount' | 'commentCount'>;
+  private PUBLISHED = 1;
 
-type DraftSavedBookReview = Pick<
-  BookReviewDTO,
-  'id' | 'bookname' | 'createdAt'
->;
+  private DRAFTSAVED = 0;
 
-interface PublishedBookReview extends BookReviewDTO {
-  writer: UserName;
-  category: Category;
-}
-
-interface FeedFollowingBookReview
-  extends Pick<BookReviewDTO, 'id' | 'sejul' | 'thumbnail' | 'userId'> {
-  writer: UserName;
-  likeCount: number;
-  commentCount: number;
-}
-
-const bookReviewService = {
-  getAllBookReviewId: async (): Promise<
-    HttpResponse<Pick<BookReviewDTO, 'id'>[]>
-  > => {
-    const data = await bookReviewModel.getAllBookReviewId();
-    return { error: false, data };
-  },
-
-  getMostLikeBookReviewList: async (): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
-  > => {
-    // const twoMonthDateInfo = getCurrTwoMonthDate();
-    const bookReviewList = await bookReviewModel.getMostLikeBookReviewList();
-
-    const promises = bookReviewList.map(
-      async ({
-        user_id,
-        ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
-        const writer = await userModel.getUserName({ id: user_id });
-
-        return {
-          id: bookReview.id,
-          bookname: bookReview.bookname,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          createdAt: bookReview.datecreated,
-          writer: writer || '',
-        };
+  async createDraftSaved(bookReview: CreateDraftSavedBookReviewRequestDTO) {
+    this.validate(bookReview, true);
+    await this.bookReview.create({
+      data: {
+        ...bookReview,
+        user_id: bookReview.userId,
+        writer: bookReview.authors,
+        grade: bookReview.rating,
+        origin_thumbnail: bookReview.originThumbnail,
+        thumbnail: bookReview.thumbnail || '',
+        category_id: bookReview.categoryId || 1,
+        divide: this.DRAFTSAVED,
       },
-    );
+    });
+  }
 
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getLatestBookReviewList: async (): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
-  > => {
-    const bookReviewList = await bookReviewModel.getLatestBookReviewList();
-
-    const promises = bookReviewList.map(
-      async ({
-        user_id,
-        ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
-        const writer = await userModel.getUserName({ id: user_id });
-
-        return {
-          id: bookReview.id,
-          bookname: bookReview.bookname,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          createdAt: bookReview.datecreated,
-          writer: writer || '',
-        };
+  async updateDraftSaved(
+    id: Id,
+    bookReview: UpdateDraftSavedBookReviewReqeustDTO,
+  ) {
+    this.validate(bookReview, true);
+    await this.bookReview.update({
+      where: { id },
+      data: {
+        ...bookReview,
+        grade: bookReview.rating,
+        thumbnail: bookReview.thumbnail || '',
+        category_id: bookReview.categoryId || 1,
+        divide: this.DRAFTSAVED,
       },
-    );
+    });
+  }
 
-    const data = await Promise.all(promises);
+  async createPublished(bookReview: CreatePublishedBookReviewRequestDTO) {
+    this.validate(bookReview);
 
-    return { error: false, data };
-  },
-
-  getFollowingBookReviewList: async ({
-    userId,
-  }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<ExtendedBookReviewSummary[]>
-  > => {
-    const bookReviewList = await bookReviewModel.getFollowingBookReviewList({
-      user_id: userId,
+    const create = this.bookReview.create({
+      data: {
+        bookname: bookReview.bookname,
+        publisher: bookReview.publisher,
+        publication: bookReview.publication,
+        sejul: bookReview.sejul,
+        user_id: bookReview.userId,
+        writer: bookReview.authors,
+        grade: bookReview.rating,
+        thumbnail: bookReview.thumbnail,
+        category_id: bookReview.categoryId,
+        sejulplus: bookReview.content,
+        origin_thumbnail: bookReview.originThumbnail,
+        divide: this.PUBLISHED,
+      },
     });
 
-    const promises = bookReviewList.map(
-      async ({
-        user_id,
-        ...bookReview
-      }): Promise<ExtendedBookReviewSummary> => {
-        const writer = await userModel.getUserName({ id: user_id });
+    const promises: Promise<unknown>[] = [create];
 
-        return {
-          id: bookReview.id,
-          bookname: bookReview.bookname,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          createdAt: bookReview.datecreated,
-          writer: writer || '',
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getPagingBookReviewList: async ({
-    bookname,
-    maxId,
-  }: Pick<BookReviewDTO, 'bookname'> & {
-    maxId: BookReviewId | null;
-  }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
-    const bookReviewId = await getMaxBookReviewId(maxId, () =>
-      bookReviewModel.getMaxBookReviewId({ bookname }),
-    );
-
-    if (!bookReviewId) {
-      return { error: false, data: [] };
+    // 임시저장 독후감이 있을 경우 제거
+    if (bookReview.id) {
+      promises.push(this.delete(bookReview.id));
     }
 
-    const bookReviewList = await bookReviewModel.getPagingBookReviewList({
+    await Promise.all(promises);
+  }
+
+  async updatePublished(
+    id: Id,
+    bookReview: UpdatePublishedBookReviewRequestDTO,
+  ) {
+    this.validate(bookReview);
+    await this.bookReview.update({
+      where: { id },
+      data: {
+        ...bookReview,
+        grade: bookReview.rating,
+        thumbnail: bookReview.thumbnail,
+        category_id: bookReview.categoryId,
+        sejulplus: bookReview.content,
+      },
+    });
+  }
+
+  async delete(id: Id) {
+    await Promise.all([
+      new CommentService().deleteAllByBookreview(id),
+      new TagService().deleteAllByBookReview(id),
+      new LikeService().deleteAllByBookReview(id),
+      this.bookReview.delete({ where: { id } }),
+    ]);
+  }
+
+  async findAllPublishedId(): Promise<Id[]> {
+    const result = await this.bookReview.findMany({
+      select: { id: true },
+      where: { divide: this.PUBLISHED },
+    });
+
+    return result.map(({ id }) => id);
+  }
+
+  async findAllIdByUser(userId: UserId): Promise<Id[]> {
+    const result = await this.bookReview.findMany({
+      where: { user_id: userId },
+    });
+
+    return result.map(({ id }) => id);
+  }
+
+  async findAllDraftSavedByUser(
+    userId: UserId,
+  ): Promise<FindDraftSavedBookReviewResponseDTO[]> {
+    const bookReviews = await this.bookReview.findMany({
+      select: { id: true, bookname: true, datecreated: true },
+      where: { user_id: userId, divide: this.DRAFTSAVED },
+    });
+
+    return bookReviews.map(({ id, bookname, datecreated }) => ({
+      id,
       bookname,
-      maxId: bookReviewId,
+      createdAt: datecreated,
+    }));
+  }
+
+  async findPublished(id: Id): Promise<FindPublishedBookReviewResponseDTO> {
+    const bookReview = await this.bookReview.findUnique({
+      where: { id },
     });
 
-    const promises = await bookReviewList.map(
-      async ({ id, ...bookReview }): Promise<FeedFollowingBookReview> => {
-        const [likeCount, commentCount] = await Promise.all([
-          likeModel.getLikeCount({ sejulbook_id: id }),
-          commentModel.getCommentCount({ sejulbook_id: id }),
-        ]);
-
-        return {
-          id,
-          likeCount,
-          commentCount,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          userId: bookReview.user_id,
-          writer: bookReview.nick || '',
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getPagingBookReviewListByCategory: async ({
-    category,
-    maxId,
-  }: Pick<CategoryDTO, 'category'> & {
-    maxId: BookReviewId | null;
-  }): Promise<HttpResponse<FeedFollowingBookReview[]>> => {
-    const categoryId = await categoryModel.getCategoryId({ category });
-
-    const bookReviewId = await getMaxBookReviewId(maxId, () =>
-      bookReviewModel.getMaxBookReviewIdByCategory({ category_id: categoryId }),
-    );
-
-    if (!bookReviewId) {
-      return { error: false, data: [] };
+    if (!bookReview) {
+      throw new NotFoundException('존재하지 않는 독후감입니다.');
     }
 
-    const bookReviewList =
-      await bookReviewModel.getPagingBookReviewListByCategory({
-        category_id: categoryId,
-        maxId: bookReviewId,
-      });
-
-    const promises = await bookReviewList.map(
-      async ({ id, ...bookReview }): Promise<FeedFollowingBookReview> => {
-        const [likeCount, commentCount] = await Promise.all([
-          likeModel.getLikeCount({ sejulbook_id: id }),
-          commentModel.getCommentCount({ sejulbook_id: id }),
-        ]);
-
-        return {
-          id,
-          likeCount,
-          commentCount,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          userId: bookReview.user_id,
-          writer: bookReview.nick || '',
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getPagingBookReviewListByTag: async ({
-    tag,
-    maxId,
-  }: Pick<TagDto, 'tag'> & { maxId: BookReviewId | null }): Promise<
-    HttpResponse<FeedFollowingBookReview[]>
-  > => {
-    const bookReviewId = await getMaxBookReviewId(maxId, () =>
-      tagModel.getMaxBookReviewIdByTag({ tag }),
-    );
-
-    if (!bookReviewId) {
-      return { error: false, data: [] };
-    }
-
-    const bookReviewList = await bookReviewModel.getPagingBookReviewListByTag({
-      tag,
-      maxId: bookReviewId,
-    });
-
-    const promises = await bookReviewList.map(
-      async ({
-        id,
-        user_id,
-        ...bookReview
-      }): Promise<FeedFollowingBookReview> => {
-        const [writer, likeCount, commentCount] = await Promise.all([
-          userModel.getUserName({ id: user_id }),
-          likeModel.getLikeCount({ sejulbook_id: id }),
-          commentModel.getCommentCount({ sejulbook_id: id }),
-        ]);
-
-        return {
-          id,
-          likeCount,
-          commentCount,
-          userId: user_id,
-          writer: writer || '',
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getPagingFollowingBookReviewList: async ({
-    userId,
-    maxId,
-  }: Pick<BookReviewDTO, 'userId'> & { maxId: BookReviewId | null }): Promise<
-    HttpResponse<FeedFollowingBookReview[]>
-  > => {
-    const bookReviewId = await getMaxBookReviewId(maxId, () =>
-      bookReviewModel.getMaxFollowingBookReviewId({ user_id: userId }),
-    );
-
-    if (!bookReviewId) {
-      return { error: false, data: [] };
-    }
-
-    const bookReviewList =
-      await bookReviewModel.getPagingFollowingBookReviewList({
-        user_id: userId,
-        maxId: bookReviewId,
-      });
-
-    const promises = await bookReviewList.map(
-      async ({
-        id,
-        user_id,
-        ...bookReview
-      }): Promise<FeedFollowingBookReview> => {
-        const [writer, likeCount, commentCount] = await Promise.all([
-          userModel.getUserName({ id: user_id }),
-          likeModel.getLikeCount({ sejulbook_id: id }),
-          commentModel.getCommentCount({ sejulbook_id: id }),
-        ]);
-
-        return {
-          id,
-          likeCount,
-          commentCount,
-          userId: user_id,
-          writer: writer || '',
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getBookReviewList: async ({
-    userId,
-  }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<BookReviewSummary[]>
-  > => {
-    const bookReviewList = await bookReviewModel.getBookReviewList({
-      user_id: userId,
-    });
-
-    const promises = bookReviewList.map(
-      async ({ id, ...bookReview }): Promise<BookReviewSummary> => {
-        const [likeCount, commentCount] = await Promise.all([
-          likeModel.getLikeCount({ sejulbook_id: id }),
-          commentModel.getCommentCount({ sejulbook_id: id }),
-        ]);
-
-        return {
-          id,
-          likeCount,
-          commentCount,
-          bookname: bookReview.bookname,
-          sejul: bookReview.sejul,
-          thumbnail: bookReview.thumbnail,
-          createdAt: bookReview.datecreated,
-        };
-      },
-    );
-
-    const data = await Promise.all(promises);
-
-    return { error: false, data };
-  },
-
-  getDraftSavedList: async ({
-    userId,
-  }: Pick<BookReviewDTO, 'userId'>): Promise<
-    HttpResponse<DraftSavedBookReview[]>
-  > => {
-    const bookReviewList = await bookReviewModel.getDraftSavedList({
-      user_id: userId,
-    });
-
-    return {
-      error: false,
-      data: bookReviewList.map(({ id, bookname, datecreated }) => ({
-        id,
-        bookname,
-        createdAt: datecreated,
-      })),
-    };
-  },
-
-  getBookReivew: async ({
-    id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<PublishedBookReview>> => {
-    const bookReviewData = await bookReviewModel.getBookReivew({ id });
-
-    if (!bookReviewData) {
-      return {
-        error: true,
-        code: 404,
-        message: bookReviewError.NOT_EXIST_BOOKREVIEW,
-      };
-    }
-
-    const bookReview = formatEntityToDTO(bookReviewData);
-
-    const [userName, { category }] = await Promise.all([
-      userModel.getUserName({ id: bookReview.userId }),
-      categoryModel.getCategory({ id: bookReview.categoryId }),
+    const [{ name }, { category }] = await Promise.all([
+      this.userService.findNameById(bookReview.user_id),
+      new CategoryService().findById(bookReview.category_id),
     ]);
 
-    if (!userName) {
-      return {
-        error: true,
-        code: 400,
-        message: userError.USER_NOT_FOUND,
-      };
-    }
-
-    const data: PublishedBookReview = {
-      ...bookReview,
-      writer: userName,
+    return {
+      id: bookReview.id,
+      bookname: bookReview.bookname,
+      authors: bookReview.writer,
+      publication: bookReview.publication,
+      publisher: bookReview.publisher,
+      thumbnail: bookReview.thumbnail,
+      rating: bookReview.grade,
+      sejul: bookReview.sejul,
+      content: bookReview.sejulplus,
+      isDraftSave: false,
+      originThumbnail: bookReview.origin_thumbnail || undefined,
+      createdAt: bookReview.datecreated,
+      writer: name,
       category,
     };
+  }
 
-    return { error: false, data };
-  },
+  // 방문 서재 독후감
+  async findAllByUser(
+    userId: UserId,
+  ): Promise<FindLibraryBookReviewResponseDTO[]> {
+    const bookReviews = await this.bookReview.findMany({
+      select: {
+        id: true,
+        bookname: true,
+        sejul: true,
+        thumbnail: true,
+        datecreated: true,
+      },
+      where: { user_id: userId, divide: this.PUBLISHED },
+    });
 
-  draftSaveBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & { id?: BookReviewId },
-  ): Promise<HttpResponse<BookReviewId>> => {
-    const bookReviewGuard = new BookReviewGuard(bookReview);
-    const result =
-      bookReviewGuard.checkEmptyBook() ||
-      bookReviewGuard.checkReachedRatingLimit();
+    const likeService = new LikeService();
+    const commentService = new CommentService();
+
+    const promises = bookReviews.map(async (bookReview) => {
+      const [likeCount, commentCount] = await Promise.all([
+        likeService.countByBookReview(bookReview.id),
+        commentService.countByBookReview(bookReview.id),
+      ]);
+
+      return {
+        id: bookReview.id,
+        bookname: bookReview.bookname,
+        sejul: bookReview.sejul,
+        thumbnail: bookReview.thumbnail,
+        createdAt: bookReview.datecreated,
+        likeCount,
+        commentCount,
+      };
+    });
+
+    return Promise.all(promises);
+  }
+
+  // 좋아요 순의 10개 독후감
+  async findTenMostLike(): Promise<FindHomeBookReviewResponseDTO[]> {
+    const ids = await new LikeService().findTenMostBookReviewId();
+    const promises = ids.map(async (id) => {
+      const bookReview = await this.bookReview.findUnique({
+        select: {
+          id: true,
+          bookname: true,
+          sejul: true,
+          thumbnail: true,
+          user_id: true,
+          datecreated: true,
+        },
+        where: { id },
+      });
+
+      if (!bookReview) {
+        throw new NotFoundException(`${id} 독후감을 찾을 수 없습니다.`);
+      }
+
+      const { name } = await this.userService.findNameById(bookReview.user_id);
+
+      return {
+        id: bookReview.id,
+        bookname: bookReview.bookname,
+        thumbnail: bookReview.thumbnail,
+        sejul: bookReview.sejul,
+        createdAt: bookReview.datecreated,
+        writer: name,
+      };
+    });
+
+    return Promise.all(promises);
+  }
+
+  // 최신 순의 10개 독후감
+  async findTenLatest(): Promise<FindHomeBookReviewResponseDTO[]> {
+    const bookReviews = await this.bookReview.findMany({
+      select: {
+        id: true,
+        bookname: true,
+        sejul: true,
+        thumbnail: true,
+        user_id: true,
+        datecreated: true,
+      },
+      where: { divide: this.PUBLISHED },
+      orderBy: { id: 'desc' },
+      take: 10,
+    });
+
+    return this.addWritersToBookReviewSummarys(bookReviews);
+  }
+
+  // 최신 순의 10개 구독 독후감
+  async findTenFollowing(
+    userId: UserId,
+  ): Promise<FindHomeBookReviewResponseDTO[]> {
+    const followingIds = await new FollowService().findAllFollowing(userId);
+    const bookReviews = await this.bookReview.findMany({
+      select: {
+        id: true,
+        bookname: true,
+        sejul: true,
+        thumbnail: true,
+        user_id: true,
+        datecreated: true,
+      },
+      where: {
+        user_id: { in: followingIds },
+        divide: this.PUBLISHED,
+      },
+      orderBy: { id: 'desc' },
+      take: 10,
+    });
+
+    return this.addWritersToBookReviewSummarys(bookReviews);
+  }
+
+  // 책이름으로 독후감 검색 - pagination
+  async findPagesByBookname({
+    bookname,
+    targetId,
+  }: FindPagedBookReviewByBooknameRequestDTO): Promise<
+    FindPagedBookReviewResponseDTO[]
+  > {
+    let maxId = targetId;
+
+    if (maxId === null) {
+      maxId = await this.findMaxId();
+    }
+
+    if (maxId === null) {
+      return [];
+    }
+
+    const bookReviews = await this.bookReview.findMany({
+      select: { id: true, thumbnail: true, user_id: true, sejul: true },
+      where: { bookname, divide: this.PUBLISHED },
+      orderBy: { id: 'desc' },
+      cursor: { id: maxId },
+      skip: targetId ? 1 : 0,
+      take: 12,
+    });
+
+    return this.addWritersToBookReviewPages(bookReviews);
+  }
+
+  // 카테고리로 독후감 검색 - pagination
+  async findPagesByCategory({
+    category,
+    targetId,
+  }: FindPagedBookReviewByCategoryRequestDTO): Promise<
+    FindPagedBookReviewResponseDTO[]
+  > {
+    let maxId = targetId;
+
+    if (maxId === null) {
+      maxId = await this.findMaxId();
+    }
+
+    if (maxId === null) {
+      return [];
+    }
+
+    const { id: categoryId } = await new CategoryService().findId(category);
+    const bookReviews = await this.bookReview.findMany({
+      select: { id: true, thumbnail: true, user_id: true, sejul: true },
+      where: { category_id: categoryId, divide: this.PUBLISHED },
+      orderBy: { id: 'desc' },
+      cursor: { id: maxId },
+      skip: targetId ? 1 : 0,
+      take: 12,
+    });
+
+    return this.addWritersToBookReviewPages(bookReviews);
+  }
+
+  // 태그로 독후감 검색 - pagination
+  async findPagesByTag({
+    tag,
+    targetId,
+  }: FindPagedBookReviewByTagRequestDTO): Promise<
+    FindPagedBookReviewResponseDTO[]
+  > {
+    let maxId = targetId;
+
+    if (maxId === null) {
+      maxId = await this.findMaxId();
+    }
+
+    if (maxId === null) {
+      return [];
+    }
+
+    const tags = await new TagService().findAllByTagName(tag);
+    const bookReivewIds = tags.map(({ bookReviewId }) => bookReviewId);
+
+    const bookReviews = await this.bookReview.findMany({
+      select: { id: true, thumbnail: true, user_id: true, sejul: true },
+      where: { id: { in: bookReivewIds }, divide: this.PUBLISHED },
+      orderBy: { id: 'desc' },
+      cursor: { id: maxId },
+      skip: targetId ? 1 : 0,
+      take: 12,
+    });
+
+    return this.addWritersToBookReviewPages(bookReviews);
+  }
+
+  // 관심 서재 독후감 - pagination
+  async findFollowingPages({
+    followerId,
+    targetId,
+  }: FindPagedBookReviewByFollowingRequestDTO): Promise<
+    FindPagedBookReviewResponseDTO[]
+  > {
+    let maxId = targetId;
+
+    if (maxId === null) {
+      maxId = await this.findMaxId();
+    }
+
+    if (maxId === null) {
+      return [];
+    }
+
+    const followingIds = await new FollowService().findAllFollowing(followerId);
+    const bookReviews = await this.bookReview.findMany({
+      select: { id: true, thumbnail: true, user_id: true, sejul: true },
+      where: {
+        user_id: { in: followingIds },
+        divide: this.PUBLISHED,
+      },
+      orderBy: { id: 'desc' },
+      cursor: { id: maxId },
+      skip: targetId ? 1 : 0,
+      take: 12,
+    });
+
+    return this.addWritersToBookReviewPages(bookReviews);
+  }
+
+  private async findMaxId(): Promise<Id | null> {
+    const result = await this.bookReview.findFirst({
+      select: { id: true },
+      orderBy: { id: 'desc' },
+    });
 
     if (result) {
-      return result;
+      return result.id;
     }
 
-    const entityData = formatDTOToEntity({
-      ...bookReview,
-      isDraftSave: true,
-      sejul: bookReview.sejul || '',
-      thumbnail: bookReview.thumbnail || '',
-      categoryId: bookReview.categoryId || 1,
-      rating: bookReview.rating || 3,
-    });
+    return null;
+  }
 
-    // 독후감 재임시저장
-    if (bookReview.id) {
-      await bookReviewModel.updateBookReview({
-        ...entityData,
-        id: bookReview.id,
-      });
+  private async addWritersToBookReviewSummarys(
+    bookReviews: HomeBookReviewEntity[],
+  ) {
+    const promises = bookReviews.map(async (bookReview) => {
+      const { name } = await this.userService.findNameById(bookReview.user_id);
 
-      return { error: false, data: bookReview.id };
-    }
-
-    // 임시저장 독후감 개수 확인
-    const draftSavedListResponse = await bookReviewService.getDraftSavedList({
-      userId: bookReview.userId,
-    });
-
-    if (draftSavedListResponse.error) {
-      return draftSavedListResponse;
-    }
-
-    if (draftSavedListResponse.data.length === 10) {
       return {
-        error: true,
-        code: 400,
-        message: bookReviewError.LIMIT_DRAFT_SAVE,
+        id: bookReview.id,
+        bookname: bookReview.bookname,
+        thumbnail: bookReview.thumbnail,
+        sejul: bookReview.sejul,
+        createdAt: bookReview.datecreated,
+        writer: name,
       };
-    }
-
-    // 독후감 임시저장
-    const data = await bookReviewModel.createBookReview(entityData);
-    return { error: false, data };
-  },
-
-  publishBookReview: async (
-    bookReview: Omit<BookReviewDTO, 'id' | 'createdAt'> & {
-      id?: BookReviewId;
-      createdAt?: string;
-    },
-  ): Promise<HttpResponse<BookReviewId>> => {
-    const bookReviewGuard = new BookReviewGuard(bookReview);
-    const guardResult = bookReviewGuard.checkInvalidPublish();
-
-    if (guardResult) {
-      return guardResult;
-    }
-
-    const entityData = formatDTOToEntity({
-      ...bookReview,
-      isDraftSave: false,
     });
 
-    if (bookReview.id) {
-      const isPrevDraftSaved = await bookReviewModel.getIsDraftSave({
-        id: bookReview.id,
-      });
+    return Promise.all(promises);
+  }
 
-      // 발행된 독후감 수정
-      if (!isPrevDraftSaved) {
-        await bookReviewModel.updateBookReview({
-          ...entityData,
-          id: bookReview.id,
-          datecreated: bookReview.createdAt
-            ? getSQLFormattedDate(bookReview.createdAt)
-            : undefined,
-        });
+  private async addWritersToBookReviewPages(
+    bookReviews: PagedBookReivewEntity[],
+  ) {
+    const promises = bookReviews.map(
+      async ({ id, thumbnail, sejul, user_id }) => {
+        const { name } = await this.userService.findNameById(user_id);
 
-        return { error: false, data: bookReview.id };
-      }
+        return {
+          id,
+          thumbnail,
+          sejul,
+          writer: name,
+          userId: user_id,
+        };
+      },
+    );
+
+    return Promise.all(promises);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private validate(
+    bookReview:
+      | CreateDraftSavedBookReviewRequestDTO
+      | CreatePublishedBookReviewRequestDTO
+      | UpdateDraftSavedBookReviewReqeustDTO
+      | UpdatePublishedBookReviewRequestDTO,
+    isDraftSave = false,
+  ) {
+    if ('bookname' in bookReview && !bookReview.bookname) {
+      throw new BadRequestException('책을 선택해주세요.');
     }
 
-    const promises: [Promise<number>, Promise<void>?] = [
-      bookReviewModel.createBookReview(entityData),
-    ];
-
-    // 임시저장 독후감 제거
-    if (bookReview.id) {
-      const isPrevDraftSaved = await bookReviewModel.getIsDraftSave({
-        id: bookReview.id,
-      });
-
-      if (isPrevDraftSaved) {
-        promises.push(bookReviewModel.deleteBookReview({ id: bookReview.id }));
-      }
+    if (!isDraftSave && !bookReview.sejul) {
+      throw new BadRequestException('세 줄 독후감을 작성해주세요.');
     }
 
-    const [data] = await Promise.all(promises);
-    return { error: false, data };
-  },
-
-  deletedBookReview: async ({
-    id,
-  }: Pick<BookReviewDTO, 'id'>): Promise<HttpResponse<undefined>> => {
-    try {
-      await Promise.all([
-        commentModel.deleteComments({ sejulbook_id: id }),
-        tagModel.deleteTags({ sejulbook_id: id }),
-        likeModel.deleteAllLikes({ sejulbook_id: id }),
-        bookReviewModel.deleteBookReview({ id }),
-      ]).catch;
-
-      return { error: false, data: undefined };
-    } catch (error) {
-      return {
-        error: true,
-        code: 500,
-        message: bookReviewError.NOT_DELETED_BOOKREVIEW,
-      };
+    if (bookReview.sejul && bookReview.sejul.length > 200) {
+      throw new BadRequestException(
+        '세 줄 독후감은 200자 이하만 작성할 수 있습니다.',
+      );
     }
-  },
-};
 
-export default bookReviewService;
+    if (!isDraftSave && !bookReview.thumbnail) {
+      throw new BadRequestException('책 표지 사진을 설정해주세요.');
+    }
+
+    if (!isDraftSave && bookReview.categoryId && bookReview.categoryId < 2) {
+      throw new BadRequestException('카테고리를 선택해주세요.');
+    }
+
+    if (bookReview.rating < 1 || bookReview.rating > 5) {
+      throw new BadRequestException(
+        '평점은 1 이상 5 이하만 선택할 수 있습니다.',
+      );
+    }
+  }
+}
+
+export default BookReviewService;
