@@ -46,6 +46,17 @@ class BookReviewService {
 
   async createDraftSaved(bookReview: CreateDraftSavedBookReviewRequestDTO) {
     this.validate(bookReview, true);
+
+    const count = await this.bookReview.count({
+      where: { id: bookReview.userId, divide: this.DRAFTSAVED },
+    });
+
+    if (count === 10) {
+      throw new BadRequestException(
+        '최대 10개의 독후감만 임시저장할 수 있습니다.',
+      );
+    }
+
     await this.bookReview.create({
       data: {
         ...bookReview,
