@@ -1,15 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import userService from 'server/features/user/user.service';
+import UserService from 'server/services/user/user.service';
+import { MethodNotAllowedException } from 'server/exceptions';
+import HttpMethods from '@/constants/httpMethods';
+import { SignUpRequest } from '@/types/user/signup';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const result = await userService.signUp(req.body);
+interface NextPostApiRequest extends NextApiRequest {
+  method: HttpMethods.POST;
+  body: SignUpRequest;
+}
 
-  if (!result.error) {
-    res.status(200).json(result);
-    return;
+const handler = async (req: NextPostApiRequest, res: NextApiResponse) => {
+  if (req.method !== HttpMethods.POST) {
+    throw new MethodNotAllowedException();
   }
 
-  res.status(result.code).json(result);
+  await new UserService().create(req.body);
+  res.status(200).end();
 };
 
 export default handler;

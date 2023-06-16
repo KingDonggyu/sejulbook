@@ -1,12 +1,12 @@
+import HttpMethods from '@/constants/httpMethods';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MethodNotAllowedException } from 'server/exceptions';
 import UserService from 'server/services/user/user.service';
-import HttpMethods from '@/constants/httpMethods';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: HttpMethods.GET;
   query: {
-    id: string;
-    targetId: string;
+    query: string;
   };
 }
 
@@ -15,15 +15,10 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     throw new MethodNotAllowedException();
   }
 
-  const id = Number(req.query.id);
-  const targetId = Number(req.query.targetId);
+  const { query } = req.query;
+  const users = await new UserService().findAllByNamePrefix(query);
 
-  const followers = await new UserService().findPagedFollowers({
-    id,
-    targetId,
-  });
-
-  res.status(200).json(followers);
+  res.status(200).json(users);
 };
 
 export default handler;

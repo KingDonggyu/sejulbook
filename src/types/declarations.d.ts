@@ -4,10 +4,8 @@ import { lightTheme } from '@/styles/theme';
 import { SessionAfterLogin, SessionBeforeLogin } from './session.';
 
 /* next-auth */
-type CustomSession = SessionAfterLogin | SessionBeforeLogin;
-
 declare module 'next-auth' {
-  interface Session extends CustomSession {}
+  export type Session = SessionAfterLogin | SessionBeforeLogin;
   interface Profile extends OriginProfile {
     id?: number | null;
   }
