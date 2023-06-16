@@ -111,7 +111,7 @@ class UserService {
     return Promise.all(promises);
   }
 
-  async findPagedFollowing({
+  async findPagedFollowings({
     id,
     targetId,
   }: FindPagedUserRequestDTO): Promise<FindPagedUserResponseDTO[]> {

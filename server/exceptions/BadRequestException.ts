@@ -2,7 +2,7 @@ import ExceptionBase from './ExceptionBase';
 
 class BadRequestException extends ExceptionBase {
   constructor(message: string) {
-    super({ code: 400, message });
+    super({ code: 400, name: 'Bad Request', message });
   }
 }
 
