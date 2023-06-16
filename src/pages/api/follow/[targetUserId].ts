@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { MethodNotAllowedException } from 'server/exceptions';
 import FollowService from 'server/services/follow/follow.service';
 import HttpMethods from '@/constants/httpMethods';
+import checkAuth from '@/services/middlewares/checkAuth';
 
 interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.GET;
@@ -38,6 +39,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     }
     // 구독 취소
     case HttpMethods.DELETE:
+      await checkAuth(req, res, +req.query.myUserId);
       await followService.delete({
         followingId: targetUserId,
         followerId: +req.query.myUserId,
@@ -45,6 +47,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       break;
     // 구독
     case HttpMethods.POST:
+      await checkAuth(req, res, +req.query.myUserId);
       await followService.create({
         followingId: targetUserId,
         followerId: +req.query.myUserId,
