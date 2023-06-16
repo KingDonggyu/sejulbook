@@ -1,32 +1,35 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import commentService from 'server/features/comment/comment.service';
-import {
-  CommentDeleteRequest,
-  CommentRequest,
-  CommentUpdateRequest,
-} from '@/types/features/comment';
+import CommentService from 'server/services/comment/comment.service';
 import checkAuth from '@/services/middlewares/checkAuth';
+import HttpMethods from '@/constants/httpMethods';
+import { UpdateCommentRequest } from '@/types/comment/update';
+import { CreateCommentRequest } from '@/types/comment/create';
 
-interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: 'GET';
-  query: Pick<CommentRequest, 'bookReviewId'>;
+interface CommentAPiRequestextends extends Omit<NextApiRequest, 'query'> {
+  query: { bookReviewId: string };
 }
 
-interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: 'DELETE';
-  query: CommentDeleteRequest;
+interface NextGetApiRequest extends CommentAPiRequestextends {
+  method: HttpMethods.GET;
 }
 
-interface NextPutApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: 'PUT';
-  query: Pick<CommentRequest, 'bookReviewId'>;
-  body: Omit<CommentUpdateRequest, 'bookReviewId'>;
+interface NextDeleteApiRequest extends CommentAPiRequestextends {
+  method: HttpMethods.DELETE;
+  query: {
+    id: string;
+    commenterId: string;
+    bookReviewId: string;
+  };
 }
 
-interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: 'POST';
-  query: Pick<CommentRequest, 'bookReviewId'>;
-  body: Omit<CommentRequest, 'bookReviewId'>;
+interface NextPutApiRequest extends CommentAPiRequestextends {
+  method: HttpMethods.PUT;
+  body: UpdateCommentRequest;
+}
+
+interface NextPostApiRequest extends CommentAPiRequestextends {
+  method: HttpMethods.POST;
+  body: CreateCommentRequest;
 }
 
 type ExtendedNextApiRequest =
@@ -36,48 +39,33 @@ type ExtendedNextApiRequest =
   | NextPutApiRequest;
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  let result;
-  const { bookReviewId } = req.query;
+  const commentService = new CommentService();
+  const bookReviewId = Number(req.query.bookReviewId);
 
   switch (req.method) {
-    case 'POST':
-      if (!(await checkAuth(req, res, req.body.commenterId))) {
-        return;
-      }
-      result = await commentService.AddComment({
-        bookReviewId,
-        commenterId: req.body.commenterId,
-        content: req.body.content,
-      });
+    case HttpMethods.POST: {
+      const { commenterId, content } = req.body;
+      await checkAuth(req, res, commenterId);
+      await commentService.create({ bookReviewId, commenterId, content });
       break;
-
-    case 'DELETE':
-      if (!(await checkAuth(req, res, req.query.userId))) {
-        return;
-      }
-      result = await commentService.deleteComment({ id: req.query.id });
+    }
+    case HttpMethods.PUT: {
+      const { id, content, commenterId } = req.body;
+      await checkAuth(req, res, commenterId);
+      await commentService.update({ id, content });
       break;
-
-    case 'PUT':
-      if (!(await checkAuth(req, res, req.body.userId))) {
-        return;
-      }
-      result = await commentService.updateComment({
-        id: req.body.id,
-        content: req.body.content,
-      });
+    }
+    case HttpMethods.DELETE:
+      await checkAuth(req, res, +req.query.commenterId);
+      await commentService.delete(+req.query.id);
       break;
-
-    default:
-      result = await commentService.getComments({ bookReviewId });
+    default: {
+      const comments = await commentService.findAllByBookReview(bookReviewId);
+      res.status(200).json(comments);
+    }
   }
 
-  if (!result.error) {
-    res.status(200).json(result);
-    return;
-  }
-
-  res.status(result.code).json(result);
+  res.status(200).end();
 };
 
 export default handler;
