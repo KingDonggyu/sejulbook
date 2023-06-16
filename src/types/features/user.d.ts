@@ -6,6 +6,15 @@ export type Sub = string;
 export type Introduce = string;
 export type Gender = 0 | 1 | 2;
 
+export interface Session {
+  id: number | null;
+  sub?: Sub;
+  gender?: Gender;
+  email?: string;
+  age?: string | null;
+  oAuth?: OAuthName;
+}
+
 export interface InitilaizedUser {
   id: null;
   sub: Sub;

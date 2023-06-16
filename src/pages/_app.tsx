@@ -28,7 +28,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
           <Hydrate state={pageProps.dehydratedState}>
             <LayoutProvider>
               <NewbookProvider>
-                {!process.env.NEXT_PUBLIC_IS_LOCAL && <GA />}
+                {!process.env.NEXT_PUBLIC_IS_DEVELOPMENT && <GA />}
                 <Component {...pageProps} />
                 {isLoading && <FullScreenLoading />}
               </NewbookProvider>
