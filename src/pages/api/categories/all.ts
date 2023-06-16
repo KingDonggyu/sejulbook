@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import categoryService from 'server/features/category/category.service';
+import { MethodNotAllowedException } from 'server/exceptions';
+import CategoryService from 'server/services/category/category.service';
+import HttpMethods from '@/constants/httpMethods';
 
-const handler = async (_: NextApiRequest, res: NextApiResponse) => {
-  const result = await categoryService.getCategories();
-
-  if (!result.error) {
-    res.status(200).json(result);
-    return;
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== HttpMethods.GET) {
+    throw new MethodNotAllowedException();
   }
 
-  res.status(result.code).json(result);
+  const categories = await new CategoryService().findAll();
+  res.status(200).json(categories);
 };
 
 export default handler;
