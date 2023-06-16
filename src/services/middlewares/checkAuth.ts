@@ -1,44 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
-import { HttpFailed } from '@/types/http';
+import { UnauthorizedException } from 'server/exceptions';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { Id } from '@/types/user';
 import { userError } from '@/constants/message';
-import { UserId } from '@/types/features/user';
-
-interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
-  query: unknown;
-}
 
 const checkAuth = async (
-  req: ExtendedNextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse,
-  userId: UserId,
+  userId: Id,
 ) => {
+  if (!userId) {
+    throw new UnauthorizedException(userError.NOT_LOGGED);
+  }
+
   const session = await getServerSession(req, res, authOptions);
 
-  if (!userId) {
-    const result: HttpFailed = {
-      error: true,
-      code: 401,
-      message: userError.NOT_LOGGED,
-    };
-
-    res.status(result.code).json(result);
-    return false;
+  if (!session) {
+    throw new UnauthorizedException(userError.NO_AUTH);
   }
 
-  if (session && session.id === Number(userId)) {
-    return session.id;
+  if (session.id !== Number(userId)) {
+    throw new UnauthorizedException(userError.NO_AUTH);
   }
-
-  const result: HttpFailed = {
-    error: true,
-    code: 401,
-    message: userError.NO_AUTH,
-  };
-
-  res.status(result.code).json(result);
-  return false;
 };
 
 export default checkAuth;

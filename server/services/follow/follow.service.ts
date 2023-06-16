@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { FollowDefaultReqeustDto, Id, UserId } from './dto';
+import { FindInfoRequestDTO, FindInfoResponseDTO } from './dto/find-info.dto';
 import {
   FindPagedFollowingsRequestDTO,
   FindPagedFollowingResponseDTO,
@@ -11,6 +12,21 @@ import {
 
 class FollowService {
   private follow = new PrismaClient().follow;
+
+  async findFollowInfo({
+    myUserId,
+    targetUserId,
+  }: FindInfoRequestDTO): Promise<FindInfoResponseDTO> {
+    const [isFollow, followerCount, followingCount] = await Promise.all([
+      myUserId
+        ? this.has({ followerId: myUserId, followingId: targetUserId })
+        : false,
+      this.countFollower(targetUserId),
+      this.countFollwing(targetUserId),
+    ]);
+
+    return { isFollow, followerCount, followingCount };
+  }
 
   async findAllFollowing(followerId: UserId): Promise<UserId[]> {
     const result = await this.follow.findMany({
