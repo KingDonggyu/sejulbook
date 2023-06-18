@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import CommentService from 'server/services/comment/comment.service';
-import checkAuth from '@/services/middlewares/checkAuth';
+import auth from '@/lib/auth';
 import HttpMethods from '@/constants/httpMethods';
 import { MethodNotAllowedException } from 'server/exceptions';
 
@@ -31,7 +31,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const bookReviewId = +req.query.bookReviewId;
   const commenterId = +req.query.commenterId;
 
-  await checkAuth(req, res, commenterId);
+  await auth(req, res, commenterId);
 
   switch (req.method) {
     case HttpMethods.POST: {

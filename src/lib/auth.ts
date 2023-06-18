@@ -5,11 +5,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { Id } from '@/types/user';
 import { userError } from '@/constants/message';
 
-const checkAuth = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-  userId: Id,
-) => {
+const auth = async (req: NextApiRequest, res: NextApiResponse, userId: Id) => {
   if (!userId) {
     throw new UnauthorizedException(userError.NOT_LOGGED);
   }
@@ -25,4 +21,4 @@ const checkAuth = async (
   }
 };
 
-export default checkAuth;
+export default auth;

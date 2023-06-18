@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import BookReviewService from 'server/services/bookReview/bookReview.service';
 import { MethodNotAllowedException } from 'server/exceptions';
 import HttpMethods from '@/constants/httpMethods';
-import checkAuth from '@/services/middlewares/checkAuth';
+import auth from '@/lib/auth';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   method: HttpMethods.POST;
@@ -29,7 +29,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
 
   const { userId, rating, categoryId } = req.body;
 
-  await checkAuth(req, res, +userId);
+  await auth(req, res, +userId);
 
   const bookReviewId = await new BookReviewService().createDraftSaved({
     ...req.body,

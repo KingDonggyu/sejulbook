@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import BookReviewService from 'server/services/bookReview/bookReview.service';
 import { MethodNotAllowedException } from 'server/exceptions';
-import checkAuth from '@/services/middlewares/checkAuth';
+import auth from '@/lib/auth';
 import HttpMethods from '@/constants/httpMethods';
 
 interface DeleteApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -45,7 +45,7 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   const id = +req.query.id;
   const userId = +req.query.userId;
 
-  await checkAuth(req, res, userId);
+  await auth(req, res, userId);
 
   if (req.method === HttpMethods.DELETE) {
     await bookReviewService.delete(id);
