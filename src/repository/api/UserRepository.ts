@@ -4,7 +4,7 @@ import UserService, {
   UpdateUserRequestDTO,
   FindPagedUserRequestDTO,
 } from 'server/services/user/user.service';
-import HttpClient from './HttpClient';
+import HttpClient from '../../lib/HttpClient';
 
 class UserRepository extends HttpClient {
   private service = new UserService();

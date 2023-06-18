@@ -10,7 +10,7 @@ import BookReviewService, {
   FindPagedBookReviewByTagRequestDTO,
   FindPagedBookReviewByFollowingRequestDTO,
 } from 'server/services/bookReview/bookReview.service';
-import HttpClient from './HttpClient';
+import HttpClient from '../../lib/HttpClient';
 
 class BookReviewRepository extends HttpClient {
   private service = new BookReviewService();

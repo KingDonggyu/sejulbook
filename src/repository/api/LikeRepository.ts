@@ -1,7 +1,7 @@
 import LikeService, {
   LikeDefaultRequestDTO,
 } from 'server/services/like/like.service';
-import HttpClient from './HttpClient';
+import HttpClient from '../../lib/HttpClient';
 
 class LikeRepository extends HttpClient {
   private service = new LikeService();

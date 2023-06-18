@@ -1,4 +1,4 @@
-import LocalStorage from './LocalStorage';
+import LocalStorage from '../../lib/LocalStorage';
 
 class ScreenModeRepository extends LocalStorage<string> {
   private state = {

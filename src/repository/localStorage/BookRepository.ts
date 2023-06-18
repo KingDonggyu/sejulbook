@@ -1,4 +1,4 @@
-import LocalStorage from './LocalStorage';
+import LocalStorage from '../../lib/LocalStorage';
 
 interface Book {
   title: string;
