@@ -4,7 +4,7 @@ import CommentService, {
   CommenterId,
   Content,
   CreateRequestDTO,
-} from 'server/services/comment/comment.service';
+} from '@/server/services/comment/comment.service';
 import HttpClient from '../../lib/HttpClient';
 
 interface DeleteRequest {

@@ -1,7 +1,7 @@
 import FollowService, {
   FollowDefaultReqeustDTO,
   FindInfoRequestDTO,
-} from 'server/services/follow/follow.service';
+} from '@/server/services/follow/follow.service';
 import HttpClient from '../../lib/HttpClient';
 
 class FollowRepository extends HttpClient {

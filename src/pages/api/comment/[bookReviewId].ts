@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import CommentService from 'server/services/comment/comment.service';
-import auth from '@/lib/auth';
+import CommentService from '@/server/services/comment/comment.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
-import { MethodNotAllowedException } from 'server/exceptions';
 
 interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.POST;
@@ -31,7 +31,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const bookReviewId = +req.query.bookReviewId;
   const commenterId = +req.query.commenterId;
 
-  await auth(req, res, commenterId);
+  await authentication(req, res, commenterId);
 
   switch (req.method) {
     case HttpMethods.POST: {

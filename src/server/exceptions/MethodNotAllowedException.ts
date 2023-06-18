@@ -1,4 +1,4 @@
-import ExceptionBase from './ExceptionBase';
+import ExceptionBase from '@/lib/HttpErrorException';
 
 class MethodNotAllowedException extends ExceptionBase {
   constructor() {

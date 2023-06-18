@@ -9,7 +9,7 @@ import BookReviewService, {
   FindPagedBookReviewByCategoryRequestDTO,
   FindPagedBookReviewByTagRequestDTO,
   FindPagedBookReviewByFollowingRequestDTO,
-} from 'server/services/bookReview/bookReview.service';
+} from '@/server/services/bookReview/bookReview.service';
 import HttpClient from '../../lib/HttpClient';
 
 class BookReviewRepository extends HttpClient {

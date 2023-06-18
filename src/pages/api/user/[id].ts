@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import UserService from 'server/services/user/user.service';
-import { MethodNotAllowedException } from 'server/exceptions';
-import auth from '@/lib/auth';
+import UserService from '@/server/services/user/user.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
 
 interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -21,7 +21,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const userService = new UserService();
   const id = +req.query.id;
 
-  await auth(req, res, id);
+  await authentication(req, res, id);
 
   if (req.method === HttpMethods.PUT) {
     await userService.update({ id, ...req.body });

@@ -3,7 +3,7 @@ import UserService, {
   CreateUserRequestDTO,
   UpdateUserRequestDTO,
   FindPagedUserRequestDTO,
-} from 'server/services/user/user.service';
+} from '@/server/services/user/user.service';
 import HttpClient from '../../lib/HttpClient';
 
 class UserRepository extends HttpClient {

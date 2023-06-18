@@ -1,4 +1,4 @@
-import ExceptionBase from './ExceptionBase';
+import ExceptionBase from '@/lib/HttpErrorException';
 
 class InternalServerException extends ExceptionBase {
   constructor(message: string) {

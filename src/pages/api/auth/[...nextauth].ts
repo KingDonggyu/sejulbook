@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import NextAuth, { NextAuthOptions, Profile as P } from 'next-auth';
 import KakaoProvider, { KakaoProfile } from 'next-auth/providers/kakao';
 import NaverProvider, { NaverProfile } from 'next-auth/providers/naver';
-import UserService from 'server/services/user/user.service';
+import UserService from '@/server/services/user/user.service';
 
 import formatGenderToNumber from '@/utils/formatGenderToNumber';
 import formatAgeRange from '@/utils/formatAgeRange';

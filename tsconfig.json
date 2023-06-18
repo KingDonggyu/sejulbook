@@ -16,8 +16,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@public/*": ["public/*"],
-      "@server/*": ["src/server/*"]
+      "@public/*": ["public/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
@@ -29,7 +28,7 @@
     "**/*.tsx",
     "next.config.js",
     "src",
-    "server"
+    "src/server"
   ],
   "exclude": ["node_modules"]
 }

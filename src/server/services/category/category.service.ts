@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { NotFoundException } from 'server/exceptions';
+import { NotFoundException } from '@/server/exceptions';
 import { Id, Category } from './dto';
 import {
   FindCategoryResponseDTO,

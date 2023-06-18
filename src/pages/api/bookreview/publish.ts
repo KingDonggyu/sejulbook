@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import BookReviewService from 'server/services/bookReview/bookReview.service';
-import { MethodNotAllowedException } from 'server/exceptions';
-import auth from '@/lib/auth';
+import BookReviewService from '@/server/services/bookReview/bookReview.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -30,7 +30,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
 
   const { id, userId, rating, categoryId } = req.body;
 
-  await auth(req, res, +userId);
+  await authentication(req, res, +userId);
 
   const bookReviewId = await new BookReviewService().createPublished({
     ...req.body,

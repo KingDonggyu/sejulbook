@@ -1,4 +1,4 @@
-import TagService, { BookReviewId } from 'server/services/tag/tag.service';
+import TagService, { BookReviewId } from '@/server/services/tag/tag.service';
 
 class TagRepository {
   private service = new TagService();

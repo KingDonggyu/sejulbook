@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { BadRequestException, NotFoundException } from 'server/exceptions';
+import { BadRequestException, NotFoundException } from '@/server/exceptions';
 
 import { Id, UserId } from './dto';
 import {

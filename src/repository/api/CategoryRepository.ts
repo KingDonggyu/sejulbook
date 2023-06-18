@@ -1,4 +1,4 @@
-import CategoryService from 'server/services/category/category.service';
+import CategoryService from '@/server/services/category/category.service';
 
 class CategoryRepository {
   private service = new CategoryService();

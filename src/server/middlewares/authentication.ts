@@ -1,11 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
-import { UnauthorizedException } from 'server/exceptions';
+import { UnauthorizedException } from '@/server/exceptions';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { Id } from '@/types/user';
 import { userError } from '@/constants/message';
 
-const auth = async (req: NextApiRequest, res: NextApiResponse, userId: Id) => {
+const authentication = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  userId: Id,
+) => {
   if (!userId) {
     throw new UnauthorizedException(userError.NOT_LOGGED);
   }
@@ -21,4 +25,4 @@ const auth = async (req: NextApiRequest, res: NextApiResponse, userId: Id) => {
   }
 };
 
-export default auth;
+export default authentication;

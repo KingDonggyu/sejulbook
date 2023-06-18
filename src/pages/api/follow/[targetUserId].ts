@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { MethodNotAllowedException } from 'server/exceptions';
-import FollowService from 'server/services/follow/follow.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import FollowService from '@/server/services/follow/follow.service';
 import HttpMethods from '@/constants/httpMethods';
-import auth from '@/lib/auth';
+import authentication from '@/server/middlewares/authentication';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.POST | HttpMethods.DELETE;
@@ -14,7 +14,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const targetUserId = Number(req.query.targetUserId);
   const myUserId = Number(req.query.myUserId);
 
-  await auth(req, res, myUserId);
+  await authentication(req, res, myUserId);
 
   if (req.method === HttpMethods.POST) {
     await followService.create({ myUserId, targetUserId });
