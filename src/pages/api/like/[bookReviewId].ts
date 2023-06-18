@@ -16,25 +16,21 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const bookReviewId = Number(req.query.bookReviewId);
   const likerId = Number(req.query.likerId);
 
-  switch (req.method) {
-    case HttpMethods.GET: {
-      const isLike = await likeService.has({ bookReviewId, likerId });
-      res.status(200).json(isLike);
-      break;
-    }
-    case HttpMethods.DELETE:
-      await checkAuth(req, res, likerId);
-      await likeService.delete({ bookReviewId, likerId });
-      break;
-    case HttpMethods.POST:
-      await checkAuth(req, res, likerId);
-      await likeService.create({ bookReviewId, likerId });
-      break;
-    default:
-      throw new MethodNotAllowedException();
+  await checkAuth(req, res, likerId);
+
+  if (req.method === HttpMethods.POST) {
+    await likeService.create({ bookReviewId, likerId });
+    res.status(200).end();
+    return;
   }
 
-  res.status(200).end();
+  if (req.method === HttpMethods.DELETE) {
+    await likeService.delete({ bookReviewId, likerId });
+    res.status(200).end();
+    return;
+  }
+
+  throw new MethodNotAllowedException();
 };
 
 export default handler;

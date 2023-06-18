@@ -4,60 +4,31 @@ import FollowService from 'server/services/follow/follow.service';
 import HttpMethods from '@/constants/httpMethods';
 import checkAuth from '@/services/middlewares/checkAuth';
 
-interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: HttpMethods.GET;
-  query: { targetUserId: string; myUserId?: string };
-}
-
-interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: HttpMethods.DELETE;
+interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: HttpMethods.POST | HttpMethods.DELETE;
   query: { targetUserId: string; myUserId: string };
 }
-
-interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: HttpMethods.POST;
-  query: { targetUserId: string; myUserId: string };
-}
-
-type ExtendedNextApiRequest =
-  | NextGetApiRequest
-  | NextDeleteApiRequest
-  | NextPostApiRequest;
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const followService = new FollowService();
   const targetUserId = Number(req.query.targetUserId);
+  const myUserId = Number(req.query.myUserId);
 
-  switch (req.method) {
-    case HttpMethods.GET: {
-      const followInfo = await followService.findFollowInfo({
-        targetUserId,
-        myUserId: req.query.myUserId ? +req.query.myUserId : undefined,
-      });
-      res.status(200).json(followInfo);
-      break;
-    }
-    // 구독 취소
-    case HttpMethods.DELETE:
-      await checkAuth(req, res, +req.query.myUserId);
-      await followService.delete({
-        followingId: targetUserId,
-        followerId: +req.query.myUserId,
-      });
-      break;
-    // 구독
-    case HttpMethods.POST:
-      await checkAuth(req, res, +req.query.myUserId);
-      await followService.create({
-        followingId: targetUserId,
-        followerId: +req.query.myUserId,
-      });
-      break;
-    default:
-      throw new MethodNotAllowedException();
+  await checkAuth(req, res, myUserId);
+
+  if (req.method === HttpMethods.POST) {
+    await followService.create({ myUserId, targetUserId });
+    res.status(200).end();
+    return;
   }
 
-  res.status(200).end();
+  if (req.method === HttpMethods.DELETE) {
+    await followService.delete({ myUserId, targetUserId });
+    res.status(200).end();
+    return;
+  }
+
+  throw new MethodNotAllowedException();
 };
 
 export default handler;
