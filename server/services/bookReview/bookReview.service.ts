@@ -16,8 +16,8 @@ import {
   FindPagedBookReviewResponseDTO,
 } from './dto/find-paged-bookReview.dto';
 import {
-  CreateDraftSavedBookReviewRequestDTO,
-  CreatePublishedBookReviewRequestDTO,
+  CreateDraftSaveRequestDTO,
+  CreatePublishRequestDTO,
 } from './dto/create-bookReview.dto';
 import {
   UpdateDraftSavedBookReviewReqeustDTO,
@@ -38,7 +38,7 @@ class BookReviewService {
 
   private type = { published: 1, draftSaved: 0 };
 
-  async createDraftSaved(bookReview: CreateDraftSavedBookReviewRequestDTO) {
+  async createDraftSaved(bookReview: CreateDraftSaveRequestDTO) {
     this.validate(bookReview, true);
 
     const count = await this.bookReview.count({
@@ -51,7 +51,7 @@ class BookReviewService {
       );
     }
 
-    await this.bookReview.create({
+    const { id: bookReviewId } = await this.bookReview.create({
       data: {
         ...bookReview,
         thumbnail: bookReview.thumbnail || '',
@@ -59,6 +59,9 @@ class BookReviewService {
         type: this.type.draftSaved,
       },
     });
+
+    await new TagService().create({ bookReviewId, tags: bookReview.tags });
+    return bookReviewId;
   }
 
   async updateDraftSaved(
@@ -66,32 +69,38 @@ class BookReviewService {
     bookReview: UpdateDraftSavedBookReviewReqeustDTO,
   ) {
     this.validate(bookReview, true);
-    await this.bookReview.update({
-      where: { id },
-      data: {
-        ...bookReview,
-        thumbnail: bookReview.thumbnail || '',
-        categoryId: bookReview.categoryId || 1,
-        type: this.type.draftSaved,
-      },
-    });
-  }
 
-  async createPublished(bookReview: CreatePublishedBookReviewRequestDTO) {
-    this.validate(bookReview);
+    const tagService = new TagService();
 
-    const create = this.bookReview.create({
-      data: { ...bookReview, id: undefined, type: this.type.published },
-    });
-
-    const promises: Promise<unknown>[] = [create];
-
-    // 임시저장 독후감이 있을 경우 제거
-    if (bookReview.id) {
-      promises.push(this.delete(bookReview.id));
-    }
+    const promises = [
+      this.bookReview.update({
+        where: { id },
+        data: {
+          ...bookReview,
+          thumbnail: bookReview.thumbnail || '',
+          categoryId: bookReview.categoryId || 1,
+          type: this.type.draftSaved,
+        },
+      }),
+      tagService.create({ bookReviewId: id, tags: bookReview.tags }),
+      tagService.deleteAllByBookReview(id),
+    ];
 
     await Promise.all(promises);
+  }
+
+  async createPublished(bookReview: CreatePublishRequestDTO) {
+    this.validate(bookReview);
+
+    const [{ id: bookReviewId }] = await Promise.all([
+      this.bookReview.create({
+        data: { ...bookReview, id: undefined, type: this.type.published },
+      }),
+      bookReview.id && this.delete(bookReview.id),
+    ]);
+
+    await new TagService().create({ bookReviewId, tags: bookReview.tags });
+    return bookReviewId;
   }
 
   async updatePublished(
@@ -99,10 +108,17 @@ class BookReviewService {
     bookReview: UpdatePublishedBookReviewRequestDTO,
   ) {
     this.validate(bookReview);
-    await this.bookReview.update({
-      where: { id },
-      data: bookReview,
-    });
+    const tagService = new TagService();
+    const promises = [
+      this.bookReview.update({
+        where: { id },
+        data: bookReview,
+      }),
+      tagService.create({ bookReviewId: id, tags: bookReview.tags }),
+      tagService.deleteAllByBookReview(id),
+    ];
+
+    await Promise.all(promises);
   }
 
   async delete(id: Id) {
@@ -112,6 +128,10 @@ class BookReviewService {
       new LikeService().deleteAllByBookReview(id),
       this.bookReview.delete({ where: { id } }),
     ]);
+  }
+
+  async findAllId() {
+    return this.bookReview.findMany({ select: { id: true } });
   }
 
   async findAllPublishedId(): Promise<Id[]> {
@@ -432,8 +452,8 @@ class BookReviewService {
   // eslint-disable-next-line class-methods-use-this
   private validate(
     bookReview:
-      | CreateDraftSavedBookReviewRequestDTO
-      | CreatePublishedBookReviewRequestDTO
+      | CreateDraftSaveRequestDTO
+      | CreatePublishRequestDTO
       | UpdateDraftSavedBookReviewReqeustDTO
       | UpdatePublishedBookReviewRequestDTO,
     isDraftSave = false,
@@ -469,3 +489,16 @@ class BookReviewService {
 }
 
 export default BookReviewService;
+
+export type {
+  Id,
+  UserId,
+  CreatePublishRequestDTO,
+  CreateDraftSaveRequestDTO,
+  UpdatePublishedBookReviewRequestDTO,
+  UpdateDraftSavedBookReviewReqeustDTO,
+  FindPagedBookReviewByBooknameRequestDTO,
+  FindPagedBookReviewByCategoryRequestDTO,
+  FindPagedBookReviewByTagRequestDTO,
+  FindPagedBookReviewByFollowingRequestDTO,
+};

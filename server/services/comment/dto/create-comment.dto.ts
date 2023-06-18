@@ -1,6 +1,6 @@
 import { BookReviewId, CommenterId, Content } from '.';
 
-export interface CreateCommentRequestDTO {
+export interface CreateRequestDTO {
   bookReviewId: BookReviewId;
   commenterId: CommenterId;
   content: Content;

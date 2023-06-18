@@ -19,8 +19,12 @@ class TagService {
     });
   }
 
-  async create({ bookReviewId, tag }: CreateTagReqeustDTO) {
-    await this.tag.create({ data: { bookReviewId, tag } });
+  async create({ bookReviewId, tags }: CreateTagReqeustDTO) {
+    const promises = tags.map(async (tag) => {
+      this.tag.create({ data: { bookReviewId, tag } });
+    });
+
+    await Promise.all(promises);
   }
 
   async deleteAllByBookReview(bookReviewId: BookReviewId) {
@@ -29,3 +33,5 @@ class TagService {
 }
 
 export default TagService;
+
+export type { BookReviewId };

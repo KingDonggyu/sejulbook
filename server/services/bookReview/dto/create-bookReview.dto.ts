@@ -13,7 +13,7 @@ import {
   UserId,
 } from '.';
 
-export interface CreateDraftSavedBookReviewRequestDTO {
+export interface CreateDraftSaveRequestDTO {
   userId: UserId;
   bookname: Bookname;
   authors: Authors;
@@ -25,9 +25,10 @@ export interface CreateDraftSavedBookReviewRequestDTO {
   originThumbnail: OriginThumbnail;
   thumbnail?: Thumbnail;
   categoryId?: CategoryId;
+  tags: string[];
 }
 
-export interface CreatePublishedBookReviewRequestDTO {
+export interface CreatePublishRequestDTO {
   id?: Id;
   bookname: Bookname;
   authors: Authors;
@@ -40,4 +41,5 @@ export interface CreatePublishedBookReviewRequestDTO {
   userId: UserId;
   categoryId: CategoryId;
   originThumbnail: OriginThumbnail;
+  tags: string[];
 }

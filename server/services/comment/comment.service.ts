@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { BookReviewId, CommenterId, Id } from './dto';
-import { CreateCommentRequestDTO } from './dto/create-comment.dto';
+import { BookReviewId, CommenterId, Id, Content } from './dto';
+import { CreateRequestDTO } from './dto/create-comment.dto';
 import { UpdateCommentRequestDTO } from './dto/update-comment.dto';
-import FindCommentResponseDTO from './dto/find-comment.dto';
+import { FindCommentResponseDTO } from './dto/find-comment.dto';
 
 class CommentService {
   private comment = new PrismaClient().comment;
@@ -29,11 +29,7 @@ class CommentService {
     this.comment.delete({ where: { id } });
   }
 
-  async create({
-    bookReviewId,
-    commenterId,
-    content,
-  }: CreateCommentRequestDTO) {
+  async create({ bookReviewId, commenterId, content }: CreateRequestDTO) {
     this.comment.create({ data: { bookReviewId, commenterId, content } });
   }
 
@@ -46,3 +42,13 @@ class CommentService {
 }
 
 export default CommentService;
+
+export type {
+  Id,
+  BookReviewId,
+  CommenterId,
+  Content,
+  CreateRequestDTO,
+  UpdateCommentRequestDTO,
+  FindCommentResponseDTO,
+};

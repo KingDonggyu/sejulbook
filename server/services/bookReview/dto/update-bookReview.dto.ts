@@ -6,6 +6,7 @@ export interface UpdateDraftSavedBookReviewReqeustDTO {
   content: Content;
   thumbnail?: Thumbnail;
   categoryId?: CategoryId;
+  tags: string[];
 }
 
 export interface UpdatePublishedBookReviewRequestDTO {
@@ -14,4 +15,5 @@ export interface UpdatePublishedBookReviewRequestDTO {
   content: Content;
   thumbnail: Thumbnail;
   categoryId: CategoryId;
+  tags: string[];
 }

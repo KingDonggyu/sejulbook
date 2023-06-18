@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { FollowDefaultReqeustDto, Id, UserId } from './dto';
+import { FollowDefaultReqeustDTO, Id, UserId } from './dto';
 import { FindInfoRequestDTO, FindInfoResponseDTO } from './dto/find-info.dto';
 import {
   FindPagedFollowingsRequestDTO,
@@ -18,9 +18,7 @@ class FollowService {
     targetUserId,
   }: FindInfoRequestDTO): Promise<FindInfoResponseDTO> {
     const [isFollow, followerCount, followingCount] = await Promise.all([
-      myUserId
-        ? this.has({ followerId: myUserId, followingId: targetUserId })
-        : false,
+      myUserId ? this.has({ myUserId, targetUserId }) : false,
       this.countFollower(targetUserId),
       this.countFollwing(targetUserId),
     ]);
@@ -85,9 +83,9 @@ class FollowService {
     });
   }
 
-  async has({ followerId, followingId }: FollowDefaultReqeustDto) {
+  async has({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
     const follow = await this.follow.findFirst({
-      where: { followerId, followingId },
+      where: { followerId: myUserId, followingId: targetUserId },
     });
 
     return !!follow;
@@ -101,12 +99,16 @@ class FollowService {
     return this.follow.count({ where: { followingId } });
   }
 
-  async create({ followerId, followingId }: FollowDefaultReqeustDto) {
-    this.follow.create({ data: { followerId, followingId } });
+  async create({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
+    this.follow.create({
+      data: { followerId: myUserId, followingId: targetUserId },
+    });
   }
 
-  async delete({ followerId, followingId }: FollowDefaultReqeustDto) {
-    this.follow.deleteMany({ where: { followerId, followingId } });
+  async delete({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
+    this.follow.deleteMany({
+      where: { followerId: myUserId, followingId: targetUserId },
+    });
   }
 
   async deleteAllByUser(userId: UserId) {
@@ -149,3 +151,5 @@ class FollowService {
 }
 
 export default FollowService;
+
+export type { FollowDefaultReqeustDTO, FindInfoRequestDTO };

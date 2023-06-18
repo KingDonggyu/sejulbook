@@ -45,3 +45,5 @@ class LikeService {
 }
 
 export default LikeService;
+
+export type { LikeDefaultRequestDTO };

@@ -203,3 +203,10 @@ class UserService {
 }
 
 export default UserService;
+
+export type {
+  Id,
+  CreateUserRequestDTO,
+  UpdateUserRequestDTO,
+  FindPagedUserRequestDTO,
+};
