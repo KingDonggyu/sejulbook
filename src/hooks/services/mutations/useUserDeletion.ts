@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import useMutation from '@/lib/react-query/useMutation';
+import useMutation from '@/lib/react-query/hooks/useMutation';
 import UserRepository from '@/repository/api/UserRepository';
 
 const useUserDeletion = ({ onSuccess }: { onSuccess?: () => void } = {}) => {

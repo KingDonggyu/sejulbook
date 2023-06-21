@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useInfiniteQuery as useInfiniteQueryOrigin } from '@tanstack/react-query';
 import ExceptionBase from '@/lib/HttpErrorException';
-import type { InfiniteQuery } from './query';
+import type { InfiniteQuery } from '../types/query';
 
 const useInfiniteQuery = <TQueryFnData extends Array<TQueryFnData[number]>>({
   queryKey,

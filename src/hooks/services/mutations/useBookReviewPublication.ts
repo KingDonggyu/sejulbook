@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import useMutation from '@/lib/react-query/useMutation';
+import useMutation from '@/lib/react-query/hooks/useMutation';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
 type Request = Omit<Parameters<BookReviewRepository['publish']>[0], 'userId'>;

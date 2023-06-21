@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
-import useMutation from '@/lib/react-query/useMutation';
+import useMutation from '@/lib/react-query/hooks/useMutation';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
 import { bookReviewSuccess } from '@/constants/message';
 import { getBookReviewQuery } from '../queries/useBookReview';

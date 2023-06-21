@@ -1,5 +1,5 @@
-import useQuery from '@/lib/react-query/useQuery';
-import type { Query } from '@/lib/react-query/query';
+import useQuery from '@/lib/react-query/hooks/useQuery';
+import type { Query } from '@/lib/react-query/types/query';
 import CategoryRepository from '@/repository/api/CategoryRepository';
 
 type Response = Awaited<ReturnType<CategoryRepository['get']>>;

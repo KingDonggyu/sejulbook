@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryClient } from '@tanstack/react-query';
-import type { Query, InfiniteQuery } from './query';
+import type { Query, InfiniteQuery } from './types/query';
 
 const prefetchQuery = async (
-  queries: Query<unknown>[],
-  infinityQueries: InfiniteQuery<unknown>[] = [],
+  queries: Query<any>[],
+  infinityQueries: InfiniteQuery<any>[] = [],
 ) => {
   const queryClient = new QueryClient();
 
@@ -19,7 +20,6 @@ const prefetchQuery = async (
   ]);
 
   infinityQueries.forEach(({ queryKey }) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     queryClient.setQueryData(queryKey, (data: any) => ({
       ...data,
       pageParams: [null],

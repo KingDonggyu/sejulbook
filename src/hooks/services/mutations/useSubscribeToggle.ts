@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
-import useMutation from '@/lib/react-query/useMutation';
+import useMutation from '@/lib/react-query/hooks/useMutation';
 import FollowRepository from '@/repository/api/FollowRepository';
 import { getFollowInfoQuery } from '../queries/useFollowInfo';
 

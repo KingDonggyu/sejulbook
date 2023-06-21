@@ -1,5 +1,5 @@
-import useInfiniteQuery from '@/lib/react-query/useInfiniteQuery';
-import type { InfiniteQuery } from '@/lib/react-query/query';
+import useInfiniteQuery from '@/lib/react-query/hooks/useInfiniteQuery';
+import type { InfiniteQuery } from '@/lib/react-query/types/query';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
 type Response = Awaited<ReturnType<BookReviewRepository['getPagesByCategory']>>;

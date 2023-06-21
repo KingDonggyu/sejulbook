@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
-import useMutation from '@/lib/react-query/useMutation';
+import useMutation from '@/lib/react-query/hooks/useMutation';
 import CommentRepository from '@/repository/api/CommentRepository';
 import { getCommentsQuery } from '../queries/useComments';
 

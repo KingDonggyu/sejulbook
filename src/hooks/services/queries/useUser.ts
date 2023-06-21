@@ -1,5 +1,5 @@
-import useQuery from '@/lib/react-query/useQuery';
-import type { Query } from '@/lib/react-query/query';
+import useQuery from '@/lib/react-query/hooks/useQuery';
+import type { Query } from '@/lib/react-query/types/query';
 import UserRepository from '@/repository/api/UserRepository';
 
 type Response = Awaited<ReturnType<UserRepository['get']>> | undefined;
