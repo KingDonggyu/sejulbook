@@ -53,13 +53,13 @@ model BookReview {
   id               Int       @id @default(autoincrement()) @db.UnsignedInt
   bookname         String    @db.VarChar(50)
   authors          String    @db.VarChar(50) @map("writer")
-  publication      DateTime? @default(dbgenerated("(curdate())")) @db.Date
+  publication      DateTime  @default(dbgenerated("(curdate())")) @db.Date
   publisher        String    @db.VarChar(20)
   rating           Int       @default(3) @db.UnsignedInt @map("grade")
   thumbnail        String    @db.VarChar(250)
   sejul            String    @default(" ") @db.VarChar(200)
   content          String    @default(dbgenerated("(_utf8mb4\\'\\')")) @db.Text @map("sejulplus")
-  createdAt        DateTime? @default(dbgenerated("(curtime())")) @db.DateTime(0) @map("datecreated")
+  createdAt        DateTime  @default(dbgenerated("(curtime())")) @db.DateTime(0) @map("datecreated")
   userId           Int       @db.UnsignedInt @map("user_id")
   categoryId       Int       @default(1) @db.UnsignedInt @map("category_id")
   type             Int       @db.UnsignedInt @map("divide")
@@ -88,7 +88,7 @@ model User {
   name      String    @unique(map: "nick") @db.VarChar(10) @map("nick")
   gender    Int       @default(0)
   age       String    @db.VarChar(8)
-  joindated DateTime? @default(dbgenerated("(curdate())")) @db.Date
+  joindated DateTime  @default(dbgenerated("(curdate())")) @db.Date
   introduce String    @db.VarChar(200)
   sub       String    @db.VarChar(50)
 

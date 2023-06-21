@@ -14,13 +14,13 @@ import {
   Writer,
 } from '.';
 
-export interface FindDraftSavedBookReviewResponseDTO {
+export interface FindDraftSavedResponseDTO {
   id: Id;
   bookname: Bookname;
   createdAt: CreatedAt;
 }
 
-export interface FindPublishedBookReviewResponseDTO {
+export interface FindResponseDTO {
   id: Id;
   bookname: Bookname;
   authors: Authors;
@@ -36,7 +36,7 @@ export interface FindPublishedBookReviewResponseDTO {
   category: string;
 }
 
-export interface FindLibraryBookReviewResponseDTO {
+export interface FindLibraryResponseDTO {
   id: Id;
   bookname: Bookname;
   sejul: Sejul;
@@ -46,7 +46,7 @@ export interface FindLibraryBookReviewResponseDTO {
   commentCount: number;
 }
 
-export interface FindHomeBookReviewResponseDTO {
+export interface FindHomeResponseDTO {
   id: Id;
   bookname: Bookname;
   sejul: Sejul;

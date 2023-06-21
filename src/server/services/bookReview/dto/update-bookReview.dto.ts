@@ -1,6 +1,6 @@
 import { CategoryId, Content, Rating, Sejul, Thumbnail } from '.';
 
-export interface UpdateDraftSavedBookReviewReqeustDTO {
+export interface UpdateDraftSavedReqeustDTO {
   rating: Rating;
   sejul: Sejul;
   content: Content;
@@ -9,7 +9,7 @@ export interface UpdateDraftSavedBookReviewReqeustDTO {
   tags: string[];
 }
 
-export interface UpdatePublishedBookReviewRequestDTO {
+export interface UpdatePublishedRequestDTO {
   rating: Rating;
   sejul: Sejul;
   content: Content;

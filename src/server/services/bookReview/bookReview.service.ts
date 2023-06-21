@@ -3,25 +3,25 @@ import { BadRequestException, NotFoundException } from '@/server/exceptions';
 
 import { Id, UserId } from './dto';
 import {
-  FindDraftSavedBookReviewResponseDTO,
-  FindHomeBookReviewResponseDTO,
-  FindLibraryBookReviewResponseDTO,
-  FindPublishedBookReviewResponseDTO,
+  FindDraftSavedResponseDTO,
+  FindHomeResponseDTO,
+  FindLibraryResponseDTO,
+  FindResponseDTO,
 } from './dto/find-bookReview.dto';
 import {
-  FindPagedBookReviewByBooknameRequestDTO,
-  FindPagedBookReviewByCategoryRequestDTO,
-  FindPagedBookReviewByFollowingRequestDTO,
-  FindPagedBookReviewByTagRequestDTO,
-  FindPagedBookReviewResponseDTO,
+  FindPagesByBooknameRequestDTO,
+  FindPagesByCategoryRequestDTO,
+  FindPagesByFollowingRequestDTO,
+  FindPagesByTagRequestDTO,
+  FindPagesResponseDTO,
 } from './dto/find-paged-bookReview.dto';
 import {
   CreateDraftSaveRequestDTO,
   CreatePublishRequestDTO,
 } from './dto/create-bookReview.dto';
 import {
-  UpdateDraftSavedBookReviewReqeustDTO,
-  UpdatePublishedBookReviewRequestDTO,
+  UpdateDraftSavedReqeustDTO,
+  UpdatePublishedRequestDTO,
 } from './dto/update-bookReview.dto';
 
 import LikeService from '../like/like.service';
@@ -64,10 +64,7 @@ class BookReviewService {
     return bookReviewId;
   }
 
-  async updateDraftSaved(
-    id: Id,
-    bookReview: UpdateDraftSavedBookReviewReqeustDTO,
-  ) {
+  async updateDraftSaved(id: Id, bookReview: UpdateDraftSavedReqeustDTO) {
     this.validate(bookReview, true);
 
     const tagService = new TagService();
@@ -103,10 +100,7 @@ class BookReviewService {
     return bookReviewId;
   }
 
-  async updatePublished(
-    id: Id,
-    bookReview: UpdatePublishedBookReviewRequestDTO,
-  ) {
+  async updatePublished(id: Id, bookReview: UpdatePublishedRequestDTO) {
     this.validate(bookReview);
     const tagService = new TagService();
     const promises = [
@@ -154,14 +148,14 @@ class BookReviewService {
 
   async findAllDraftSavedByUser(
     userId: UserId,
-  ): Promise<FindDraftSavedBookReviewResponseDTO[]> {
+  ): Promise<FindDraftSavedResponseDTO[]> {
     return this.bookReview.findMany({
       select: { id: true, bookname: true, createdAt: true },
       where: { userId, type: this.type.draftSaved },
     });
   }
 
-  async findPublished(id: Id): Promise<FindPublishedBookReviewResponseDTO> {
+  async find(id: Id): Promise<FindResponseDTO> {
     const bookReview = await this.bookReview.findUnique({
       where: { id },
     });
@@ -184,9 +178,7 @@ class BookReviewService {
   }
 
   // 방문 서재 독후감
-  async findAllByUser(
-    userId: UserId,
-  ): Promise<FindLibraryBookReviewResponseDTO[]> {
+  async findAllByUser(userId: UserId): Promise<FindLibraryResponseDTO[]> {
     const bookReviews = await this.bookReview.findMany({
       select: {
         id: true,
@@ -214,7 +206,7 @@ class BookReviewService {
   }
 
   // 좋아요 순의 10개 독후감
-  async findTenMostLike(): Promise<FindHomeBookReviewResponseDTO[]> {
+  async findTenMostLike(): Promise<FindHomeResponseDTO[]> {
     const ids = await new LikeService().findTenMostBookReviewId();
     const promises = ids.map(async (id) => {
       const bookReview = await this.bookReview.findUnique({
@@ -244,7 +236,7 @@ class BookReviewService {
   }
 
   // 최신 순의 10개 독후감
-  async findTenLatest(): Promise<FindHomeBookReviewResponseDTO[]> {
+  async findTenLatest(): Promise<FindHomeResponseDTO[]> {
     const bookReviews = await this.bookReview.findMany({
       select: {
         id: true,
@@ -263,9 +255,7 @@ class BookReviewService {
   }
 
   // 최신 순의 10개 구독 독후감
-  async findTenFollowing(
-    userId: UserId,
-  ): Promise<FindHomeBookReviewResponseDTO[]> {
+  async findTenFollowing(userId: UserId): Promise<FindHomeResponseDTO[]> {
     const followingIds = await new FollowService().findAllFollowing(userId);
     const bookReviews = await this.bookReview.findMany({
       select: {
@@ -291,9 +281,7 @@ class BookReviewService {
   async findPagesByBookname({
     bookname,
     targetId,
-  }: FindPagedBookReviewByBooknameRequestDTO): Promise<
-    FindPagedBookReviewResponseDTO[]
-  > {
+  }: FindPagesByBooknameRequestDTO): Promise<FindPagesResponseDTO[]> {
     let maxId = targetId;
 
     if (maxId === null) {
@@ -320,9 +308,7 @@ class BookReviewService {
   async findPagesByCategory({
     category,
     targetId,
-  }: FindPagedBookReviewByCategoryRequestDTO): Promise<
-    FindPagedBookReviewResponseDTO[]
-  > {
+  }: FindPagesByCategoryRequestDTO): Promise<FindPagesResponseDTO[]> {
     let maxId = targetId;
 
     if (maxId === null) {
@@ -350,9 +336,7 @@ class BookReviewService {
   async findPagesByTag({
     tag,
     targetId,
-  }: FindPagedBookReviewByTagRequestDTO): Promise<
-    FindPagedBookReviewResponseDTO[]
-  > {
+  }: FindPagesByTagRequestDTO): Promise<FindPagesResponseDTO[]> {
     let maxId = targetId;
 
     if (maxId === null) {
@@ -382,9 +366,7 @@ class BookReviewService {
   async findFollowingPages({
     followerId,
     targetId,
-  }: FindPagedBookReviewByFollowingRequestDTO): Promise<
-    FindPagedBookReviewResponseDTO[]
-  > {
+  }: FindPagesByFollowingRequestDTO): Promise<FindPagesResponseDTO[]> {
     let maxId = targetId;
 
     if (maxId === null) {
@@ -425,7 +407,7 @@ class BookReviewService {
   }
 
   private async addWritersToHomeBookReviews(
-    bookReviews: Omit<FindHomeBookReviewResponseDTO, 'writer'>[],
+    bookReviews: Omit<FindHomeResponseDTO, 'writer'>[],
   ) {
     const promises = bookReviews.map(async (bookReview) => {
       const { name: writer } = await this.userService.findNameById(
@@ -439,7 +421,7 @@ class BookReviewService {
   }
 
   private async addWritersToPagedBookReviews(
-    bookReviews: Omit<FindPagedBookReviewResponseDTO, 'writer'>[],
+    bookReviews: Omit<FindPagesResponseDTO, 'writer'>[],
   ) {
     const promises = bookReviews.map(async ({ userId, ...bookReview }) => {
       const { name: writer } = await this.userService.findNameById(userId);
@@ -454,8 +436,8 @@ class BookReviewService {
     bookReview:
       | CreateDraftSaveRequestDTO
       | CreatePublishRequestDTO
-      | UpdateDraftSavedBookReviewReqeustDTO
-      | UpdatePublishedBookReviewRequestDTO,
+      | UpdateDraftSavedReqeustDTO
+      | UpdatePublishedRequestDTO,
     isDraftSave = false,
   ) {
     if ('bookname' in bookReview && !bookReview.bookname) {
@@ -495,10 +477,10 @@ export type {
   UserId,
   CreatePublishRequestDTO,
   CreateDraftSaveRequestDTO,
-  UpdatePublishedBookReviewRequestDTO,
-  UpdateDraftSavedBookReviewReqeustDTO,
-  FindPagedBookReviewByBooknameRequestDTO,
-  FindPagedBookReviewByCategoryRequestDTO,
-  FindPagedBookReviewByTagRequestDTO,
-  FindPagedBookReviewByFollowingRequestDTO,
+  UpdatePublishedRequestDTO,
+  UpdateDraftSavedReqeustDTO,
+  FindPagesByBooknameRequestDTO,
+  FindPagesByCategoryRequestDTO,
+  FindPagesByTagRequestDTO,
+  FindPagesByFollowingRequestDTO,
 };

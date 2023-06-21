@@ -2,27 +2,27 @@ import { Id, Sejul, Thumbnail, UserId, Writer } from '.';
 
 type Cursor = Id | null;
 
-export interface FindPagedBookReviewByBooknameRequestDTO {
+export interface FindPagesByBooknameRequestDTO {
   bookname: string;
   targetId: Cursor;
 }
 
-export interface FindPagedBookReviewByCategoryRequestDTO {
+export interface FindPagesByCategoryRequestDTO {
   category: string;
   targetId: Cursor;
 }
 
-export interface FindPagedBookReviewByTagRequestDTO {
+export interface FindPagesByTagRequestDTO {
   tag: string;
   targetId: Cursor;
 }
 
-export interface FindPagedBookReviewByFollowingRequestDTO {
+export interface FindPagesByFollowingRequestDTO {
   followerId: number;
   targetId: Cursor;
 }
 
-export interface FindPagedBookReviewResponseDTO {
+export interface FindPagesResponseDTO {
   id: Id;
   userId: UserId;
   sejul: Sejul;
