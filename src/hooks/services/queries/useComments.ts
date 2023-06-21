@@ -1,14 +1,20 @@
-import useQuery from '@/hooks/useQuery';
-import { getCommentsQuery } from '@/services/queries/comment';
-import { BookReviewId } from '@/types/features/bookReview';
-import { CommentResponse } from '@/types/features/comment';
+import useQuery from '@/lib/react-query/useQuery';
+import type { Query } from '@/lib/react-query/query';
+import CommentRepository from '@/repository/api/CommentRepository';
 
-const useComments = (bookReviewId: BookReviewId) => {
-  const { data: comments } = useQuery<CommentResponse[]>(
+type Response = Awaited<ReturnType<CommentRepository['get']>>;
+
+export const getCommentsQuery = (bookReviewId: number): Query<Response> => ({
+  queryKey: ['comment_get', bookReviewId],
+  queryFn: () => new CommentRepository().get(bookReviewId),
+});
+
+const useComments = (bookReviewId: number) => {
+  const { data: comments, isLoading } = useQuery<Response>(
     getCommentsQuery(bookReviewId),
   );
 
-  return comments;
+  return { comments, isLoading };
 };
 
 export default useComments;

@@ -1,16 +1,20 @@
-import useQuery from '@/hooks/useQuery';
-import { getBookReviewQuery } from '@/services/queries/bookReview';
-import { BookReviewId, BookReviewResponse } from '@/types/features/bookReview';
+import useQuery from '@/lib/react-query/useQuery';
+import type { Query } from '@/lib/react-query/query';
+import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
-const useBookReview = (
-  bookReviewId?: BookReviewId,
-  isSaveRequired?: boolean,
-) => {
-  const { data: bookReview } = useQuery<BookReviewResponse | undefined>(
-    getBookReviewQuery(bookReviewId, isSaveRequired),
+type Response = Awaited<ReturnType<BookReviewRepository['get']>>;
+
+export const getBookReviewQuery = (bookReviewId: number): Query<Response> => ({
+  queryKey: ['bookReview_get', bookReviewId],
+  queryFn: () => new BookReviewRepository().get(bookReviewId),
+});
+
+const useBookReview = (bookReviewId: number) => {
+  const { data: bookReview, isLoading } = useQuery<Response>(
+    getBookReviewQuery(bookReviewId),
   );
 
-  return bookReview;
+  return { bookReview, isLoading };
 };
 
 export default useBookReview;

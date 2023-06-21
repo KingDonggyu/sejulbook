@@ -3,10 +3,10 @@ import useUser from './useUser';
 
 const useMe = () => {
   const { session, isLogin } = useUserStatus();
-  const myId = isLogin ? session.id : undefined;
-  const me = useUser(myId);
+  const myUserId = isLogin ? session.id : undefined;
 
-  return me;
+  const { user, isLoading } = useUser(myUserId);
+  return { user, isLoading };
 };
 
 export default useMe;

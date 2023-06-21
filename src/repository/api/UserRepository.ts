@@ -35,12 +35,12 @@ class UserRepository extends HttpClient {
     return this.service.findAllId();
   }
 
-  getPagedFollowers(request: FindPagedUserRequestDTO) {
-    return this.service.findPagedFollowers(request);
+  getPagedFollowers({ id, targetId }: FindPagedUserRequestDTO) {
+    return this.service.findPagedFollowers({ id, targetId });
   }
 
-  getPagedFollowings(request: FindPagedUserRequestDTO) {
-    return this.service.findPagedFollowings(request);
+  getPagedFollowings({ id, targetId }: FindPagedUserRequestDTO) {
+    return this.service.findPagedFollowings({ id, targetId });
   }
 }
 

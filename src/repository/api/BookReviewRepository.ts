@@ -3,12 +3,12 @@ import BookReviewService, {
   UserId,
   CreatePublishRequestDTO,
   CreateDraftSaveRequestDTO,
-  UpdatePublishedBookReviewRequestDTO,
-  UpdateDraftSavedBookReviewReqeustDTO,
-  FindPagedBookReviewByBooknameRequestDTO,
-  FindPagedBookReviewByCategoryRequestDTO,
-  FindPagedBookReviewByTagRequestDTO,
-  FindPagedBookReviewByFollowingRequestDTO,
+  UpdatePublishedRequestDTO,
+  UpdateDraftSavedReqeustDTO,
+  FindPagesByBooknameRequestDTO,
+  FindPagesByCategoryRequestDTO,
+  FindPagesByTagRequestDTO,
+  FindPagesByFollowingRequestDTO,
 } from '@/server/services/bookReview/bookReview.service';
 import HttpClient from '../../lib/HttpClient';
 
@@ -18,39 +18,55 @@ class BookReviewRepository extends HttpClient {
   private baseUrl = '/bookreview';
 
   async publish(bookReview: CreatePublishRequestDTO) {
-    this.axiosInstance.post(`${this.baseUrl}/publish`, bookReview);
+    const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
+      `${this.baseUrl}/publish`,
+      bookReview,
+    );
+    return data;
   }
 
   async draftSave(bookReview: CreateDraftSaveRequestDTO) {
-    this.axiosInstance.post(`${this.baseUrl}/draftsave`, bookReview);
+    const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
+      `${this.baseUrl}/draftsave`,
+      bookReview,
+    );
+    return data;
   }
 
   async delete(id: Id, userId: UserId) {
     this.axiosInstance.delete(`${this.baseUrl}/${id}`, { params: { userId } });
   }
 
-  async updatePublished(
-    id: Id,
-    userId: UserId,
-    bookReview: UpdatePublishedBookReviewRequestDTO,
-  ) {
+  async updatePublished({
+    id,
+    userId,
+    bookReview,
+  }: {
+    id: Id;
+    userId: UserId;
+    bookReview: UpdatePublishedRequestDTO;
+  }) {
     this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: true },
     });
   }
 
-  async updateDraftSaved(
-    id: Id,
-    userId: UserId,
-    bookReview: UpdateDraftSavedBookReviewReqeustDTO,
-  ) {
+  async updateDraftSaved({
+    id,
+    userId,
+    bookReview,
+  }: {
+    id: Id;
+    userId: UserId;
+    bookReview: UpdateDraftSavedReqeustDTO;
+  }) {
     this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: false },
     });
   }
 
-  getPublished(id: Id) {
-    return this.service.findPublished(id);
+  get(id: Id) {
+    return this.service.find(id);
   }
 
   getLatests() {
@@ -73,28 +89,19 @@ class BookReviewRepository extends HttpClient {
     return this.service.findAllDraftSavedByUser(userId);
   }
 
-  getPagesByBookname({
-    bookname,
-    targetId,
-  }: FindPagedBookReviewByBooknameRequestDTO) {
+  getPagesByBookname({ bookname, targetId }: FindPagesByBooknameRequestDTO) {
     return this.service.findPagesByBookname({ bookname, targetId });
   }
 
-  getPagesByCategory({
-    category,
-    targetId,
-  }: FindPagedBookReviewByCategoryRequestDTO) {
+  getPagesByCategory({ category, targetId }: FindPagesByCategoryRequestDTO) {
     return this.service.findPagesByCategory({ category, targetId });
   }
 
-  getPagesByTag({ tag, targetId }: FindPagedBookReviewByTagRequestDTO) {
+  getPagesByTag({ tag, targetId }: FindPagesByTagRequestDTO) {
     return this.service.findPagesByTag({ tag, targetId });
   }
 
-  getFollowingPages({
-    followerId,
-    targetId,
-  }: FindPagedBookReviewByFollowingRequestDTO) {
+  getFollowingPages({ followerId, targetId }: FindPagesByFollowingRequestDTO) {
     return this.service.findFollowingPages({ followerId, targetId });
   }
 

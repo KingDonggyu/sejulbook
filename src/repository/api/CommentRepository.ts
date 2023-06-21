@@ -22,7 +22,7 @@ class CommentRepository extends HttpClient {
 
   private baseUrl = '/comment';
 
-  async set({ bookReviewId, commenterId, content }: CreateRequestDTO) {
+  async create({ bookReviewId, commenterId, content }: CreateRequestDTO) {
     this.axiosInstance.post(
       `${this.baseUrl}/${bookReviewId}`,
       { content },
