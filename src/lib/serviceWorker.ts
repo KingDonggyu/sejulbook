@@ -1,5 +1,5 @@
 import { DeleteObjectsCommand } from '@aws-sdk/client-s3';
-import s3Client from '@/lib/S3Client';
+import s3Client from './s3Client';
 
 const handleDeleteS3Objects = async (imageKeys: string[]) => {
   const command = new DeleteObjectsCommand({
