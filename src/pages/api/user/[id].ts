@@ -4,6 +4,11 @@ import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
 
+interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: HttpMethods.GET;
+  query: { id: string };
+}
+
 interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.DELETE;
   query: { id: string };
@@ -15,11 +20,20 @@ interface NextPutApiRequest extends Omit<NextApiRequest, 'query'> {
   body: { name: string; introduce: string };
 }
 
-type ExtendedNextApiRequest = NextDeleteApiRequest | NextPutApiRequest;
+type ExtendedNextApiRequest =
+  | NextGetApiRequest
+  | NextDeleteApiRequest
+  | NextPutApiRequest;
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const userService = new UserService();
   const id = +req.query.id;
+
+  if (req.method === HttpMethods.GET) {
+    const data = await userService.findById(id);
+    res.status(200).json(data);
+    return;
+  }
 
   await authentication(req, res, id);
 

@@ -12,7 +12,7 @@ class ScreenModeRepository extends LocalStorage<string> {
 
   checkIsDarkMode() {
     const data = this.get();
-    return data && data === this.state.dark;
+    return !!data && data === this.state.dark;
   }
 
   setLightMode() {

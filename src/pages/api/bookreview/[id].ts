@@ -4,6 +4,11 @@ import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
 
+interface GetApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: HttpMethods.GET;
+  query: { id: string };
+}
+
 interface DeleteApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.DELETE;
   query: { id: string; userId: string };
@@ -36,6 +41,7 @@ interface DraftSavedPutApiRequest extends Omit<NextApiRequest, 'query'> {
 }
 
 type ExtenedNextApiRequest =
+  | GetApiRequest
   | DeleteApiRequest
   | PublishedPutApiRequest
   | DraftSavedPutApiRequest;
@@ -43,6 +49,13 @@ type ExtenedNextApiRequest =
 const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   const bookReviewService = new BookReviewService();
   const id = +req.query.id;
+
+  if (req.method === HttpMethods.GET) {
+    const data = await bookReviewService.find(id);
+    res.status(200).json(data);
+    return;
+  }
+
   const userId = +req.query.userId;
 
   await authentication(req, res, userId);

@@ -4,9 +4,14 @@ import LikeService, {
 import HttpClient from '../../lib/HttpClient';
 
 class LikeRepository extends HttpClient {
-  private service = new LikeService();
+  private service: LikeService | null;
 
   private baseUrl = '/like';
+
+  constructor() {
+    super();
+    this.service = this.checkIsSSR() ? new LikeService() : null;
+  }
 
   async like({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
     this.axiosInstance.post(
@@ -25,7 +30,12 @@ class LikeRepository extends HttpClient {
   }
 
   has({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
-    return this.service.has({ bookReviewId, likerId });
+    if (this.service) {
+      return this.service.has({ bookReviewId, likerId });
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/${bookReviewId}`, {
+      params: { likerId },
+    });
   }
 }
 

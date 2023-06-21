@@ -5,9 +5,14 @@ import FollowService, {
 import HttpClient from '../../lib/HttpClient';
 
 class FollowRepository extends HttpClient {
-  private service = new FollowService();
+  private service: FollowService | null;
 
   private baseUrl = '/follow';
+
+  constructor() {
+    super();
+    this.service = this.checkIsSSR() ? new FollowService() : null;
+  }
 
   async follow({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
     this.axiosInstance.post(
@@ -23,8 +28,16 @@ class FollowRepository extends HttpClient {
     });
   }
 
-  get({ myUserId, targetUserId }: FindInfoRequestDTO) {
-    return this.service.findFollowInfo({ targetUserId, myUserId });
+  get({
+    myUserId,
+    targetUserId,
+  }: FindInfoRequestDTO): ReturnType<FollowService['findFollowInfo']> {
+    if (this.service) {
+      return this.service.findFollowInfo({ targetUserId, myUserId });
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/${myUserId}`, {
+      params: { targetUserId },
+    });
   }
 }
 

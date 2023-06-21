@@ -1,10 +1,21 @@
+import HttpClient from '@/lib/HttpClient';
 import CategoryService from '@/server/services/category/category.service';
 
-class CategoryRepository {
-  private service = new CategoryService();
+class CategoryRepository extends HttpClient {
+  private service: CategoryService | null;
 
-  get() {
-    return this.service.findAll();
+  private baseUrl = 'category';
+
+  constructor() {
+    super();
+    this.service = this.checkIsSSR() ? new CategoryService() : null;
+  }
+
+  get(): ReturnType<CategoryService['findAll']> {
+    if (this.service) {
+      return this.service.findAll();
+    }
+    return this.axiosInstance(this.baseUrl);
   }
 }
 

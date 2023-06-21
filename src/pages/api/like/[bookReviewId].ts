@@ -16,6 +16,12 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const bookReviewId = Number(req.query.bookReviewId);
   const likerId = Number(req.query.likerId);
 
+  if (req.method === HttpMethods.GET) {
+    const data = await likeService.has({ bookReviewId, likerId });
+    res.status(200).json(data);
+    return;
+  }
+
   await authentication(req, res, likerId);
 
   if (req.method === HttpMethods.POST) {

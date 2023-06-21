@@ -13,9 +13,14 @@ import BookReviewService, {
 import HttpClient from '../../lib/HttpClient';
 
 class BookReviewRepository extends HttpClient {
-  private service = new BookReviewService();
+  private service: BookReviewService | null;
 
   private baseUrl = '/bookreview';
+
+  constructor() {
+    super();
+    this.service = this.checkIsSSR() ? new BookReviewService() : null;
+  }
 
   async publish(bookReview: CreatePublishRequestDTO) {
     const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
@@ -65,48 +70,121 @@ class BookReviewRepository extends HttpClient {
     });
   }
 
-  get(id: Id) {
-    return this.service.find(id);
+  get(id: Id): ReturnType<BookReviewService['find']> {
+    if (this.service) {
+      return this.service.find(id);
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/${id}`);
   }
 
-  getLatests() {
-    return this.service.findTenLatest();
+  getLatests(): ReturnType<BookReviewService['findTenLatest']> {
+    if (this.service) {
+      return this.service.findTenLatest();
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/list/latest`);
   }
 
-  getMostLikes() {
-    return this.service.findTenMostLike();
+  getMostLikes(): ReturnType<BookReviewService['findTenMostLike']> {
+    if (this.service) {
+      return this.service.findTenMostLike();
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/list/mostlike`);
   }
 
-  getFollowings(userId: UserId) {
-    return this.service.findTenFollowing(userId);
+  getAllPublishedOfUser(
+    userId: UserId,
+  ): ReturnType<BookReviewService['findAllByUser']> {
+    if (this.service) {
+      return this.service.findAllByUser(userId);
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/list/published`, {
+      params: { userId },
+    });
   }
 
-  getAllPublishedOfUser(userId: UserId) {
-    return this.service.findAllByUser(userId);
+  getAllDraftSavedOfUser(
+    userId: UserId,
+  ): ReturnType<BookReviewService['findAllDraftSavedByUser']> {
+    if (this.service) {
+      return this.service.findAllDraftSavedByUser(userId);
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/list/draftsaved`, {
+      params: { userId },
+    });
   }
 
-  getAllDraftSavedOfUser(userId: UserId) {
-    return this.service.findAllDraftSavedByUser(userId);
+  getFollowings(
+    userId: UserId,
+  ): ReturnType<BookReviewService['findTenFollowing']> {
+    if (this.service) {
+      return this.service.findTenFollowing(userId);
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
+      params: { userId },
+    });
   }
 
-  getPagesByBookname({ bookname, targetId }: FindPagesByBooknameRequestDTO) {
-    return this.service.findPagesByBookname({ bookname, targetId });
+  getFollowingPages({
+    followerId,
+    targetId,
+  }: FindPagesByFollowingRequestDTO): ReturnType<
+    BookReviewService['findFollowingPages']
+  > {
+    if (this.service) {
+      return this.service.findFollowingPages({ followerId, targetId });
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
+      params: { userId: followerId, cursor: targetId },
+    });
   }
 
-  getPagesByCategory({ category, targetId }: FindPagesByCategoryRequestDTO) {
-    return this.service.findPagesByCategory({ category, targetId });
+  getPagesByBookname({
+    bookname,
+    targetId,
+  }: FindPagesByBooknameRequestDTO): ReturnType<
+    BookReviewService['findPagesByBookname']
+  > {
+    if (this.service) {
+      return this.service.findPagesByBookname({ bookname, targetId });
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/search/book`, {
+      params: { query: bookname, cursor: targetId },
+    });
   }
 
-  getPagesByTag({ tag, targetId }: FindPagesByTagRequestDTO) {
-    return this.service.findPagesByTag({ tag, targetId });
+  getPagesByCategory({
+    category,
+    targetId,
+  }: FindPagesByCategoryRequestDTO): ReturnType<
+    BookReviewService['findPagesByCategory']
+  > {
+    if (this.service) {
+      return this.service.findPagesByCategory({ category, targetId });
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/search/category`, {
+      params: { query: category, cursor: targetId },
+    });
   }
 
-  getFollowingPages({ followerId, targetId }: FindPagesByFollowingRequestDTO) {
-    return this.service.findFollowingPages({ followerId, targetId });
+  getPagesByTag({
+    tag,
+    targetId,
+  }: FindPagesByTagRequestDTO): ReturnType<
+    BookReviewService['findPagesByTag']
+  > {
+    if (this.service) {
+      return this.service.findPagesByTag({ tag, targetId });
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/search/tag`, {
+      params: { query: tag, cursor: targetId },
+    });
   }
 
-  getIds() {
-    return this.service.findAllId();
+  getIds(): ReturnType<BookReviewService['findAllId']> | undefined {
+    if (this.service) {
+      return this.service.findAllId();
+    }
+    return undefined;
   }
 }
 

@@ -18,9 +18,14 @@ interface UpdateRequest extends DeleteRequest {
 }
 
 class CommentRepository extends HttpClient {
-  private service = new CommentService();
+  private service: CommentService | null;
 
   private baseUrl = '/comment';
+
+  constructor() {
+    super();
+    this.service = this.checkIsSSR() ? new CommentService() : null;
+  }
 
   async create({ bookReviewId, commenterId, content }: CreateRequestDTO) {
     this.axiosInstance.post(
@@ -44,8 +49,13 @@ class CommentRepository extends HttpClient {
     });
   }
 
-  get(bookReviewId: BookReviewId) {
-    return this.service.findAllByBookReview(bookReviewId);
+  get(
+    bookReviewId: BookReviewId,
+  ): ReturnType<CommentService['findAllByBookReview']> {
+    if (this.service) {
+      return this.service.findAllByBookReview(bookReviewId);
+    }
+    return this.axiosInstance.get(`${this.baseUrl}/${bookReviewId}`);
   }
 }
 

@@ -1,8 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import CommentService from '@/server/services/comment/comment.service';
-import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
+
+interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
+  method: HttpMethods.GET;
+  query: { bookReviewId: string };
+}
 
 interface NextPostApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.POST;
@@ -22,6 +26,7 @@ interface NextDeleteApiRequest extends Omit<NextApiRequest, 'query'> {
 }
 
 type ExtendedNextApiRequest =
+  | NextGetApiRequest
   | NextPostApiRequest
   | NextPutApiRequest
   | NextDeleteApiRequest;
@@ -29,6 +34,13 @@ type ExtendedNextApiRequest =
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   const commentService = new CommentService();
   const bookReviewId = +req.query.bookReviewId;
+
+  if (req.method === HttpMethods.GET) {
+    const data = await commentService.findAllByBookReview(bookReviewId);
+    res.status(200).json(data);
+    return;
+  }
+
   const commenterId = +req.query.commenterId;
 
   await authentication(req, res, commenterId);
@@ -49,9 +61,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       await commentService.delete(+id);
       break;
     }
-    default: {
-      throw new MethodNotAllowedException();
-    }
+    default:
   }
 
   res.status(200).end();
