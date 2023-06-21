@@ -1,34 +1,28 @@
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
-import useMutation from '@/hooks/useMutation';
-import { updateUser } from '@/services/api/user';
-import { User } from '@/types/features/user';
-import { getUserQuery } from '@/services/queries/user';
-import UserError from '@/services/errors/UserError';
-import { useState } from 'react';
+import useMutation from '@/lib/react-query/useMutation';
+import UserRepository from '@/repository/api/UserRepository';
+import { getUserQuery } from '../queries/useUser';
+
+type Request = Omit<Parameters<UserRepository['update']>[0], 'id'>;
 
 const useUserEdit = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+  let queryKey: QueryKey;
   const queryClient = useQueryClient();
-  const [queryKey, setQueryKey] = useState<QueryKey>([]);
 
-  const { mutate } = useMutation<void, Omit<User, 'id'>>({
-    mutationFn: async (userId, { name, introduce }) => {
-      setQueryKey(getUserQuery(userId).queryKey);
-      await updateUser({ id: userId, name, introduce });
+  const { mutate } = useMutation<void, Request>({
+    mutationFn: async (id, { name, introduce }) => {
+      queryKey = getUserQuery(id).queryKey;
+      await new UserRepository().update({ id, name, introduce });
     },
-
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
-
       if (onSuccess) {
         onSuccess();
       }
     },
-
     onError: (error) => {
-      if (error instanceof UserError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 

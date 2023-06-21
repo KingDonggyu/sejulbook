@@ -1,24 +1,19 @@
 import { toast } from 'react-toastify';
-import useMutation from '@/hooks/useMutation';
-import { deleteUser } from '@/services/api/user';
-import UserError from '@/services/errors/UserError';
+import useMutation from '@/lib/react-query/useMutation';
+import UserRepository from '@/repository/api/UserRepository';
 
 const useUserDeletion = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   const { mutate } = useMutation({
     mutationFn: async (userId) => {
-      await deleteUser(userId);
+      await new UserRepository().delete(userId);
     },
-
     onSuccess: () => {
       if (onSuccess) {
         onSuccess();
       }
     },
-
     onError: (error) => {
-      if (error instanceof UserError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 
