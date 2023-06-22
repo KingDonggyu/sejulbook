@@ -7,15 +7,8 @@ import {
   ReactNode,
 } from 'react';
 import { ThemeProvider, Theme } from '@emotion/react';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { lightTheme, darkTheme } from '@/styles/theme';
-
-const STORAGE_KEY = 'SEJULBOOL_DARK';
-
-enum ScreenModeState {
-  DARK = 'Y',
-  LIGHT = 'N',
-}
+import ScreenModeRepository from '@/repository/localStorage/ScreenModeRepository';
 
 interface ScreenModeContextProps {
   isDarkMode: boolean;
@@ -30,31 +23,34 @@ const ScreenModeContext = createContext<ScreenModeContextProps>({
 });
 
 const ScreenModeProvider = ({ children }: { children: ReactNode }) => {
+  const [screenModeRepository, setScreenModeRepository] =
+    useState<ScreenModeRepository | null>(null);
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [theme, setTheme] = useState(lightTheme);
-  const screenModeStorage = useLocalStorage<ScreenModeState>(STORAGE_KEY);
 
   const contextProps: ScreenModeContextProps = useMemo(
     () => ({
       isDarkMode,
-      theme: isDarkMode ? darkTheme : lightTheme,
+      theme,
       toggleScreenMode: () => {
         if (isDarkMode) {
-          screenModeStorage?.set(ScreenModeState.LIGHT);
+          screenModeRepository?.setLightMode();
           setIsDarkMode(false);
           return;
         }
-        screenModeStorage?.set(ScreenModeState.DARK);
+        screenModeRepository?.setDarkMode();
         setIsDarkMode(true);
       },
     }),
-    [isDarkMode, screenModeStorage],
+    [isDarkMode, screenModeRepository, theme],
   );
 
-  useEffect(
-    () => setIsDarkMode(screenModeStorage?.get() === ScreenModeState.DARK),
-    [screenModeStorage],
-  );
+  useEffect(() => {
+    const repository = new ScreenModeRepository();
+    setScreenModeRepository(repository);
+    setIsDarkMode(repository.checkIsDarkMode());
+  }, []);
 
   useEffect(() => setTheme(isDarkMode ? darkTheme : lightTheme), [isDarkMode]);
 

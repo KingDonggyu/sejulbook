@@ -6,7 +6,7 @@ type Response = Awaited<ReturnType<BookReviewRepository['getLatests']>>;
 
 export const latestBookReviewListQuery: Query<Response> = {
   queryKey: ['bookReview_getLatests'],
-  queryFn: new BookReviewRepository().getLatests,
+  queryFn: () => new BookReviewRepository().getLatests(),
 };
 
 const useLatestBookReviewList = () => {

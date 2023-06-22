@@ -3,7 +3,7 @@ import Box from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
 import { CommentIcon } from '@/components/atoms/Icon';
 import LikeButton from '@/components/molecules/LikeButton';
-import useLikeStatus from '@/hooks/services/queries/useLike';
+import useLikeStatus from '@/hooks/services/queries/useLikeStatus';
 import useUserStatus from '@/hooks/useUserStatus';
 import useLikeToggle from '@/hooks/services/mutations/useLikeToggle';
 import * as s from './style';

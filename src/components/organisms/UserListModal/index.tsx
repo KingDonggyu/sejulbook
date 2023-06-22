@@ -8,7 +8,7 @@ import useUserStatus from '@/hooks/useUserStatus';
 import useIntersect from '@/hooks/useIntersect';
 import useUser from '@/hooks/services/queries/useUser';
 import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
-import useInfinityFollowUserList from '@/hooks/services/queries/useInfinityFollowUserList';
+import useInfinityFollowUserList from '@/hooks/services/infiniteQueries/useInfiniteFollowUserList';
 import modalStore from '@/stores/modalStore';
 import Modal from '@/components/molecules/Modal';
 import SubscribeToggleButton from '../SubscribeToggleButton';

@@ -173,6 +173,8 @@ class BookReviewService {
       ...bookReview,
       writer,
       category,
+      publication: bookReview.publication.toString(),
+      createdAt: bookReview.createdAt.toString(),
       originThumbnail: bookReview.originThumbnail || undefined,
     };
   }
@@ -199,7 +201,12 @@ class BookReviewService {
         commentService.countByBookReview(bookReview.id),
       ]);
 
-      return { ...bookReview, likeCount, commentCount };
+      return {
+        ...bookReview,
+        likeCount,
+        commentCount,
+        createdAt: bookReview.createdAt.toString(),
+      };
     });
 
     return Promise.all(promises);
@@ -229,7 +236,11 @@ class BookReviewService {
         bookReview.userId,
       );
 
-      return { ...bookReview, writer };
+      return {
+        ...bookReview,
+        writer,
+        createdAt: bookReview.createdAt.toString(),
+      };
     });
 
     return Promise.all(promises);
@@ -407,14 +418,20 @@ class BookReviewService {
   }
 
   private async addWritersToHomeBookReviews(
-    bookReviews: Omit<FindHomeResponseDTO, 'writer'>[],
+    bookReviews: (Omit<FindHomeResponseDTO, 'writer' | 'createdAt'> & {
+      createdAt: Date;
+    })[],
   ) {
     const promises = bookReviews.map(async (bookReview) => {
       const { name: writer } = await this.userService.findNameById(
         bookReview.userId,
       );
 
-      return { ...bookReview, writer };
+      return {
+        ...bookReview,
+        writer,
+        createdAt: bookReview.createdAt.toString(),
+      };
     });
 
     return Promise.all(promises);

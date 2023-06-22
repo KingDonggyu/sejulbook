@@ -6,7 +6,7 @@ import TextArea from '@/components/atoms/TextArea';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import Route from '@/constants/routes';
-import { User, UserName, Introduce } from '@/types/features/user';
+import type { Profile } from '@/types/domain/user';
 import * as s from './style';
 
 interface ProfileSettingModalProps {
@@ -15,7 +15,7 @@ interface ProfileSettingModalProps {
   initName?: string;
   initIntroduce?: string;
   modalKey: string;
-  onComplete: ({ name, introduce }: Pick<User, 'name' | 'introduce'>) => void;
+  onComplete: ({ name, introduce }: Profile) => void;
 }
 
 const ProfileSettingModal = ({
@@ -27,8 +27,8 @@ const ProfileSettingModal = ({
   isLogged = false,
   ...modalProps
 }: ProfileSettingModalProps & Omit<ModalProps, 'children'>) => {
-  const [name, setName] = useState<UserName>(initName);
-  const [introduce, setIntroduce] = useState<Introduce>(initIntroduce);
+  const [name, setName] = useState(initName);
+  const [introduce, setIntroduce] = useState(initIntroduce);
 
   const handleClose = () => {
     setName(initName);

@@ -9,12 +9,14 @@ const prefetchQuery = async (
   const queryClient = new QueryClient();
 
   await Promise.all([
-    ...queries.map(({ queryKey, queryFn }) =>
-      queryClient.prefetchQuery(queryKey, queryFn),
+    ...queries.map(({ queryKey, queryFn, options }) =>
+      queryClient.prefetchQuery(queryKey, queryFn, { ...options }),
     ),
-    ...infinityQueries.map(({ queryKey, queryFn }) =>
-      queryClient.prefetchInfiniteQuery(queryKey, () =>
-        queryFn({ pageParam: null }),
+    ...infinityQueries.map(({ queryKey, queryFn, options }) =>
+      queryClient.prefetchInfiniteQuery(
+        queryKey,
+        () => queryFn({ pageParam: null }),
+        { ...options },
       ),
     ),
   ]);

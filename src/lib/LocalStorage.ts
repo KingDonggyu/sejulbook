@@ -1,4 +1,4 @@
-class LocalStorage<Data> {
+class LocalStorage<Data = unknown> {
   private key;
 
   constructor(key: string) {

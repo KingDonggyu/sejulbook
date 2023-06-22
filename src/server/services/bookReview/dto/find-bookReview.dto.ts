@@ -5,7 +5,6 @@ import {
   CreatedAt,
   Id,
   OriginThumbnail,
-  Publication,
   Publisher,
   Rating,
   Sejul,
@@ -24,14 +23,14 @@ export interface FindResponseDTO {
   id: Id;
   bookname: Bookname;
   authors: Authors;
-  publication: Publication;
+  publication: string;
   publisher: Publisher;
   thumbnail: Thumbnail;
   rating: Rating;
   sejul: Sejul;
   content: Content;
   originThumbnail: OriginThumbnail;
-  createdAt: CreatedAt;
+  createdAt: string;
   writer: Writer;
   category: string;
 }
@@ -41,7 +40,7 @@ export interface FindLibraryResponseDTO {
   bookname: Bookname;
   sejul: Sejul;
   thumbnail: Thumbnail;
-  createdAt: CreatedAt;
+  createdAt: string;
   likeCount: number;
   commentCount: number;
 }
@@ -51,7 +50,7 @@ export interface FindHomeResponseDTO {
   bookname: Bookname;
   sejul: Sejul;
   thumbnail: Thumbnail;
-  createdAt: CreatedAt;
+  createdAt: string;
   userId: UserId;
   writer: Writer;
 }
