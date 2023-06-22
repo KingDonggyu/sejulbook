@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { StyleProps } from '@/types/style';
+import type { StyleProps } from '@emotion/react';
 import Box, { BoxProps } from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
 import modalStore from '@/stores/modalStore';

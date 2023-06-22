@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import UserService from '@/server/services/user/user.service';
+import UserService from '@/server/services/user.service';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
 import errorHandler from '@/server/middlewares/errorHandler';

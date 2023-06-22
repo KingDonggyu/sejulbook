@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import HttpMethods from '@/constants/httpMethods';
-import UserService from '@/server/services/user/user.service';
+import UserService from '@/server/services/user.service';
 import errorHandler from '@/server/middlewares/errorHandler';
 
 interface ExtendedNextApiRequest extends NextApiRequest {

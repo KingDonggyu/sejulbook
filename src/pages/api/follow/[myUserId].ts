@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { MethodNotAllowedException } from '@/server/exceptions';
-import FollowService from '@/server/services/follow/follow.service';
+import FollowService from '@/server/services/follow.service';
 import HttpMethods from '@/constants/httpMethods';
 import authentication from '@/server/middlewares/authentication';
 import errorHandler from '@/server/middlewares/errorHandler';

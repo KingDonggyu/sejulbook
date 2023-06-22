@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { SessionAfterLogin, SessionBeforeLogin } from '@/types/session.';
+import { SessionAfterLogin, SessionBeforeLogin } from '@/@types/session.';
 
 interface UserStatus {
   isLoading: boolean;

@@ -1,11 +1,13 @@
-import CommentService, {
+import CommentService from '@/server/services/comment.service';
+import HttpClient from '@/lib/HttpClient';
+
+import type {
   Id,
   BookReviewId,
   CommenterId,
   Content,
-  CreateRequestDTO,
-} from '@/server/services/comment/comment.service';
-import HttpClient from '../../lib/HttpClient';
+  CreateCommentRequest,
+} from 'comment';
 
 interface DeleteRequest {
   id: Id;
@@ -27,7 +29,7 @@ class CommentRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new CommentService() : null;
   }
 
-  async create({ bookReviewId, commenterId, content }: CreateRequestDTO) {
+  async create({ bookReviewId, commenterId, content }: CreateCommentRequest) {
     await this.axiosInstance.post(
       `${this.baseUrl}/${bookReviewId}`,
       { content },

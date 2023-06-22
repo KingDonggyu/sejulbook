@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
+import { StyleProps } from '@emotion/react';
 import { BoxVariant } from '@/constants';
-import { StyleProps } from '@/types/style';
 import * as s from './style';
 
 export type BoxProps = {

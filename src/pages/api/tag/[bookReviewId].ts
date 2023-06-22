@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import TagService from '@/server/services/tag/tag.service';
+import TagService from '@/server/services/tag.service';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';

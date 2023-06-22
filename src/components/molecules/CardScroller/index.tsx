@@ -1,8 +1,8 @@
 import { ReactNode, UIEvent, useEffect, useRef, useState } from 'react';
+import type { StyleProps } from '@emotion/react';
 import { HiOutlineArrowLeft } from '@react-icons/all-files/hi/HiOutlineArrowLeft';
 import { HiOutlineArrowRight } from '@react-icons/all-files/hi/HiOutlineArrowRight';
 import Button from '@/components/atoms/Button';
-import { StyleProps } from '@/types/style';
 import { iconButtonStyle } from '@/styles/common';
 import * as s from './style';
 

@@ -1,10 +1,12 @@
-import UserService, {
+import UserService from '@/server/services/user.service';
+import HttpClient from '@/lib/HttpClient';
+
+import type {
   Id,
-  CreateUserRequestDTO,
-  UpdateUserRequestDTO,
-  FindPagedUserRequestDTO,
-} from '@/server/services/user/user.service';
-import HttpClient from '../../lib/HttpClient';
+  CreateUserRequest,
+  GetUserPageRequest,
+  UpdateUserRequest,
+} from 'user';
 
 class UserRepository extends HttpClient {
   private service: UserService | null;
@@ -16,11 +18,11 @@ class UserRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new UserService() : null;
   }
 
-  async signUp(user: CreateUserRequestDTO) {
+  async signUp(user: CreateUserRequest) {
     await this.axiosInstance.post(`${this.baseUrl}/signup`, user);
   }
 
-  async update(user: UpdateUserRequestDTO) {
+  async update(user: UpdateUserRequest) {
     await this.axiosInstance.put(`${this.baseUrl}/${user.id}`, user);
   }
 
@@ -54,7 +56,7 @@ class UserRepository extends HttpClient {
   getPagedFollowers({
     id,
     targetId,
-  }: FindPagedUserRequestDTO): ReturnType<UserService['findPagedFollowers']> {
+  }: GetUserPageRequest): ReturnType<UserService['findPagedFollowers']> {
     if (this.service) {
       return this.service.findPagedFollowers({ id, targetId });
     }
@@ -69,7 +71,7 @@ class UserRepository extends HttpClient {
   getPagedFollowings({
     id,
     targetId,
-  }: FindPagedUserRequestDTO): ReturnType<UserService['findPagedFollowings']> {
+  }: GetUserPageRequest): ReturnType<UserService['findPagedFollowings']> {
     if (this.service) {
       return this.service.findPagedFollowings({ id, targetId });
     }

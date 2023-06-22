@@ -1,7 +1,6 @@
-import LikeService, {
-  LikeDefaultRequestDTO,
-} from '@/server/services/like/like.service';
-import HttpClient from '../../lib/HttpClient';
+import LikeService from '@/server/services/like.service';
+import HttpClient from '@/lib/HttpClient';
+import type { LikeRequest } from 'like';
 
 class LikeRepository extends HttpClient {
   private service: LikeService | null;
@@ -13,7 +12,7 @@ class LikeRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new LikeService() : null;
   }
 
-  async like({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
+  async like({ bookReviewId, likerId }: LikeRequest) {
     await this.axiosInstance.post(
       `${this.baseUrl}/${bookReviewId}`,
       {},
@@ -23,13 +22,13 @@ class LikeRepository extends HttpClient {
     );
   }
 
-  async unlike({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
+  async unlike({ bookReviewId, likerId }: LikeRequest) {
     await this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
       params: { likerId },
     });
   }
 
-  has({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
+  has({ bookReviewId, likerId }: LikeRequest) {
     if (this.service) {
       return this.service.has({ bookReviewId, likerId });
     }

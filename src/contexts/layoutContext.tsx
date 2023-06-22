@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { signOut } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Footer from '@/components/atoms/Footer';
 import HeaderBar from '@/components/organisms/HeaderBar';
@@ -18,8 +19,7 @@ import { ModalKey } from '@/constants/keys';
 import useUserStatus from '@/hooks/useUserStatus';
 import modalStore from '@/stores/modalStore';
 import useSignUp from '@/hooks/services/mutations/useSignUp';
-import type { Profile } from '@/types/domain/user';
-import 'react-toastify/dist/ReactToastify.css';
+import type { Profile } from 'user';
 
 interface LayoutContextProps {
   showHeaderBar: () => void;

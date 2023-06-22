@@ -1,8 +1,6 @@
-import FollowService, {
-  FollowDefaultReqeustDTO,
-  FindInfoRequestDTO,
-} from '@/server/services/follow/follow.service';
-import HttpClient from '../../lib/HttpClient';
+import FollowService from '@/server/services/follow.service';
+import HttpClient from '@/lib/HttpClient';
+import type { FollowDefaultReqeust, GetFollowInfoRequest } from 'follow';
 
 class FollowRepository extends HttpClient {
   private service: FollowService | null;
@@ -14,7 +12,7 @@ class FollowRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new FollowService() : null;
   }
 
-  async follow({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
+  async follow({ myUserId, targetUserId }: FollowDefaultReqeust) {
     await this.axiosInstance.post(
       `${this.baseUrl}/${myUserId}`,
       {},
@@ -22,7 +20,7 @@ class FollowRepository extends HttpClient {
     );
   }
 
-  async unfollow({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
+  async unfollow({ myUserId, targetUserId }: FollowDefaultReqeust) {
     await this.axiosInstance.delete(`${this.baseUrl}/${myUserId}`, {
       params: { targetUserId },
     });
@@ -31,7 +29,7 @@ class FollowRepository extends HttpClient {
   get({
     myUserId,
     targetUserId,
-  }: FindInfoRequestDTO): ReturnType<FollowService['findFollowInfo']> {
+  }: GetFollowInfoRequest): ReturnType<FollowService['findFollowInfo']> {
     if (this.service) {
       return this.service.findFollowInfo({ targetUserId, myUserId });
     }

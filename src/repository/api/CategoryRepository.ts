@@ -1,5 +1,5 @@
 import HttpClient from '@/lib/HttpClient';
-import CategoryService from '@/server/services/category/category.service';
+import CategoryService from '@/server/services/category.service';
 
 class CategoryRepository extends HttpClient {
   private service: CategoryService | null;

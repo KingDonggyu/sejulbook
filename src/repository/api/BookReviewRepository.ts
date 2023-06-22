@@ -1,15 +1,17 @@
-import BookReviewService, {
+import type {
   Id,
   UserId,
-  CreatePublishRequestDTO,
-  CreateDraftSaveRequestDTO,
-  UpdatePublishedRequestDTO,
-  UpdateDraftSavedReqeustDTO,
-  FindPagesByBooknameRequestDTO,
-  FindPagesByCategoryRequestDTO,
-  FindPagesByTagRequestDTO,
-  FindPagesByFollowingRequestDTO,
-} from '@/server/services/bookReview/bookReview.service';
+  CreateDrafvSavedBookReviewReqeust,
+  CreatePublishedBookReviewRequest,
+  UpdatePublishedBookReviewRequest,
+  UpdateDraftSavedBookReviewReqeust,
+  GetFollowingBookReviewPageRequest,
+  GetBookReviewPageByBookNameRequest,
+  GetBookReviewPageByCategoryRequest,
+  GetBookReviewPageByTagRequest,
+} from 'bookReview';
+
+import BookReviewService from '@/server/services/bookReview.service';
 import HttpClient from '../../lib/HttpClient';
 
 class BookReviewRepository extends HttpClient {
@@ -22,7 +24,7 @@ class BookReviewRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new BookReviewService() : null;
   }
 
-  async publish(bookReview: CreatePublishRequestDTO) {
+  async publish(bookReview: CreatePublishedBookReviewRequest) {
     const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
       `${this.baseUrl}/publish`,
       bookReview,
@@ -30,7 +32,7 @@ class BookReviewRepository extends HttpClient {
     return data;
   }
 
-  async draftSave(bookReview: CreateDraftSaveRequestDTO) {
+  async draftSave(bookReview: CreateDrafvSavedBookReviewReqeust) {
     const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
       `${this.baseUrl}/draftsave`,
       bookReview,
@@ -51,7 +53,7 @@ class BookReviewRepository extends HttpClient {
   }: {
     id: Id;
     userId: UserId;
-    bookReview: UpdatePublishedRequestDTO;
+    bookReview: UpdatePublishedBookReviewRequest;
   }) {
     await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: true },
@@ -65,7 +67,7 @@ class BookReviewRepository extends HttpClient {
   }: {
     id: Id;
     userId: UserId;
-    bookReview: UpdateDraftSavedReqeustDTO;
+    bookReview: UpdateDraftSavedBookReviewReqeust;
   }) {
     await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: false },
@@ -129,7 +131,7 @@ class BookReviewRepository extends HttpClient {
   getFollowingPages({
     followerId,
     targetId,
-  }: FindPagesByFollowingRequestDTO): ReturnType<
+  }: GetFollowingBookReviewPageRequest): ReturnType<
     BookReviewService['findFollowingPages']
   > {
     if (this.service) {
@@ -143,7 +145,7 @@ class BookReviewRepository extends HttpClient {
   getPagesByBookname({
     bookname,
     targetId,
-  }: FindPagesByBooknameRequestDTO): ReturnType<
+  }: GetBookReviewPageByBookNameRequest): ReturnType<
     BookReviewService['findPagesByBookname']
   > {
     if (this.service) {
@@ -157,7 +159,7 @@ class BookReviewRepository extends HttpClient {
   getPagesByCategory({
     category,
     targetId,
-  }: FindPagesByCategoryRequestDTO): ReturnType<
+  }: GetBookReviewPageByCategoryRequest): ReturnType<
     BookReviewService['findPagesByCategory']
   > {
     if (this.service) {
@@ -171,7 +173,7 @@ class BookReviewRepository extends HttpClient {
   getPagesByTag({
     tag,
     targetId,
-  }: FindPagesByTagRequestDTO): ReturnType<
+  }: GetBookReviewPageByTagRequest): ReturnType<
     BookReviewService['findPagesByTag']
   > {
     if (this.service) {
