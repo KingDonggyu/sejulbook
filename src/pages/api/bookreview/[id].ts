@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import BookReviewService from '@/server/services/bookReview/bookReview.service';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
+import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';
 
 interface GetApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -67,7 +68,8 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method !== HttpMethods.PUT) {
-    throw new MethodNotAllowedException();
+    const error = new MethodNotAllowedException();
+    res.status(error.code).send(error);
   }
 
   if (req.query.isPublished === 'true') {
@@ -89,4 +91,4 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default handler;
+export default errorHandler(handler);

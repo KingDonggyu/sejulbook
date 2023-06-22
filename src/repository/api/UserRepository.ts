@@ -17,15 +17,15 @@ class UserRepository extends HttpClient {
   }
 
   async signUp(user: CreateUserRequestDTO) {
-    this.axiosInstance.post(`${this.baseUrl}/signup`, user);
+    await this.axiosInstance.post(`${this.baseUrl}/signup`, user);
   }
 
   async update(user: UpdateUserRequestDTO) {
-    this.axiosInstance.put(`${this.baseUrl}/${user.id}`, user);
+    await this.axiosInstance.put(`${this.baseUrl}/${user.id}`, user);
   }
 
   async delete(userId: Id) {
-    this.axiosInstance.delete(`${this.baseUrl}/${userId}`);
+    await this.axiosInstance.delete(`${this.baseUrl}/${userId}`);
   }
 
   get(userId: Id): ReturnType<UserService['findById']> {

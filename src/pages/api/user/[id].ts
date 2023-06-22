@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import UserService from '@/server/services/user/user.service';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
+import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';
 
 interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -49,7 +50,8 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  throw new MethodNotAllowedException();
+  const error = new MethodNotAllowedException();
+  res.status(error.code).send(error);
 };
 
-export default handler;
+export default errorHandler(handler);

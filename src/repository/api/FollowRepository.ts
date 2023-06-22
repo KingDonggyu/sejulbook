@@ -15,7 +15,7 @@ class FollowRepository extends HttpClient {
   }
 
   async follow({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
-    this.axiosInstance.post(
+    await this.axiosInstance.post(
       `${this.baseUrl}/${myUserId}`,
       {},
       { params: { targetUserId } },
@@ -23,7 +23,7 @@ class FollowRepository extends HttpClient {
   }
 
   async unfollow({ myUserId, targetUserId }: FollowDefaultReqeustDTO) {
-    this.axiosInstance.delete(`${this.baseUrl}/${myUserId}`, {
+    await this.axiosInstance.delete(`${this.baseUrl}/${myUserId}`, {
       params: { targetUserId },
     });
   }

@@ -3,6 +3,7 @@ import { MethodNotAllowedException } from '@/server/exceptions';
 import FollowService from '@/server/services/follow/follow.service';
 import HttpMethods from '@/constants/httpMethods';
 import authentication from '@/server/middlewares/authentication';
+import errorHandler from '@/server/middlewares/errorHandler';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.GET | HttpMethods.POST | HttpMethods.DELETE;
@@ -34,7 +35,8 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  throw new MethodNotAllowedException();
+  const error = new MethodNotAllowedException();
+  res.status(error.code).send(error);
 };
 
-export default handler;
+export default errorHandler(handler);

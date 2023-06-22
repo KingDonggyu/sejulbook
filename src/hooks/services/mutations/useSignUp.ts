@@ -20,8 +20,9 @@ const useSignUp = () => {
       await signIn(oAuth);
     },
     onError: (error) => {
-      toast(error.message);
+      toast.error(error.message);
     },
+    noLoginRequired: true,
   });
 
   return mutate;

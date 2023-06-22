@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import CommentService from '@/server/services/comment/comment.service';
 import authentication from '@/server/middlewares/authentication';
+import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';
 
 interface NextGetApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -67,4 +68,4 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   res.status(200).end();
 };
 
-export default handler;
+export default errorHandler(handler);

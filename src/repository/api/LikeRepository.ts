@@ -14,7 +14,7 @@ class LikeRepository extends HttpClient {
   }
 
   async like({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
-    this.axiosInstance.post(
+    await this.axiosInstance.post(
       `${this.baseUrl}/${bookReviewId}`,
       {},
       {
@@ -24,7 +24,7 @@ class LikeRepository extends HttpClient {
   }
 
   async unlike({ bookReviewId, likerId }: LikeDefaultRequestDTO) {
-    this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
+    await this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
       params: { likerId },
     });
   }

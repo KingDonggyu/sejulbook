@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import TagService from '@/server/services/tag/tag.service';
 import { MethodNotAllowedException } from '@/server/exceptions';
+import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';
 
 interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -9,7 +10,8 @@ interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   if (req.method !== HttpMethods.GET) {
-    throw new MethodNotAllowedException();
+    const error = new MethodNotAllowedException();
+    res.status(error.code).send(error);
   }
 
   const { query } = req.query;
@@ -18,4 +20,4 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   res.status(200).json(data);
 };
 
-export default handler;
+export default errorHandler(handler);

@@ -3,6 +3,7 @@ import BookReviewService from '@/server/services/bookReview/bookReview.service';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import HttpMethods from '@/constants/httpMethods';
 import authentication from '@/server/middlewares/authentication';
+import errorHandler from '@/server/middlewares/errorHandler';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   method: HttpMethods.POST;
@@ -24,7 +25,8 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   if (req.method !== HttpMethods.POST) {
-    throw new MethodNotAllowedException();
+    const error = new MethodNotAllowedException();
+    res.status(error.code).send(error);
   }
 
   const { userId, rating, categoryId } = req.body;
@@ -41,4 +43,4 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   res.status(200).json({ bookReviewId });
 };
 
-export default handler;
+export default errorHandler(handler);

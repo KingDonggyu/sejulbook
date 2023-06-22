@@ -39,7 +39,9 @@ class BookReviewRepository extends HttpClient {
   }
 
   async delete(id: Id, userId: UserId) {
-    this.axiosInstance.delete(`${this.baseUrl}/${id}`, { params: { userId } });
+    await this.axiosInstance.delete(`${this.baseUrl}/${id}`, {
+      params: { userId },
+    });
   }
 
   async updatePublished({
@@ -51,7 +53,7 @@ class BookReviewRepository extends HttpClient {
     userId: UserId;
     bookReview: UpdatePublishedRequestDTO;
   }) {
-    this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
+    await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: true },
     });
   }
@@ -65,7 +67,7 @@ class BookReviewRepository extends HttpClient {
     userId: UserId;
     bookReview: UpdateDraftSavedReqeustDTO;
   }) {
-    this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
+    await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: false },
     });
   }

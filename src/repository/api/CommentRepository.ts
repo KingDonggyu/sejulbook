@@ -28,7 +28,7 @@ class CommentRepository extends HttpClient {
   }
 
   async create({ bookReviewId, commenterId, content }: CreateRequestDTO) {
-    this.axiosInstance.post(
+    await this.axiosInstance.post(
       `${this.baseUrl}/${bookReviewId}`,
       { content },
       { params: { commenterId } },
@@ -36,7 +36,7 @@ class CommentRepository extends HttpClient {
   }
 
   async update({ id, bookReviewId, commenterId, content }: UpdateRequest) {
-    this.axiosInstance.put(
+    await this.axiosInstance.put(
       `${this.baseUrl}/${bookReviewId}`,
       { id, content },
       { params: { commenterId } },
@@ -44,7 +44,7 @@ class CommentRepository extends HttpClient {
   }
 
   async delete({ id, bookReviewId, commenterId }: DeleteRequest) {
-    this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
+    await this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
       params: { id, commenterId },
     });
   }
