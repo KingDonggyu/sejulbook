@@ -2,24 +2,21 @@ import useQuery from '@/lib/react-query/hooks/useQuery';
 import type { Query } from '@/lib/react-query/types/query';
 import LikeRepository from '@/repository/api/LikeRepository';
 import useUserStatus from '@/hooks/useUserStatus';
-
-type Request = { bookReviewId: number; likerId?: number };
-type Response = Awaited<ReturnType<LikeRepository['has']>>;
+import { LikeStatusRequest, LikeStatusResponse } from 'like';
 
 export const getLikeStatusQuery = ({
   bookReviewId,
   likerId,
-}: Request): Query<Response> => ({
+}: LikeStatusRequest): Query<LikeStatusResponse> => ({
   queryKey: ['like_has', bookReviewId],
-  queryFn: () =>
-    likerId ? new LikeRepository().has({ bookReviewId, likerId }) : false,
+  queryFn: () => new LikeRepository().has({ bookReviewId, likerId }),
 });
 
 const useLikeStatus = (bookReviewId: number) => {
   const { session, isLogin } = useUserStatus();
   const myUserId = isLogin ? session.id : undefined;
 
-  const { data: likeStatus, isLoading } = useQuery<Response>(
+  const { data: likeStatus, isLoading } = useQuery<LikeStatusResponse>(
     getLikeStatusQuery({ bookReviewId, likerId: myUserId }),
   );
 

@@ -1,4 +1,4 @@
-import { Book } from '@/types/features/book';
+import type { Book } from 'bookReview';
 import Box from '@/components/atoms/Box';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Thumbnail from '@/components/atoms/Thumbnail';
@@ -9,17 +9,13 @@ import { BoxVariant } from '@/constants';
 import { lightTheme } from '@/styles/theme';
 import * as s from './style';
 
-interface BookInfoBoxProps extends Omit<Book, 'authors'> {
-  authors: string;
-}
-
 const BookInfoBox = ({
   title,
   authors,
   thumbnail,
   publisher,
   datetime,
-}: BookInfoBoxProps) => {
+}: Book) => {
   const bookInfoList = [
     { label: '저자', content: authors },
     { label: '출판', content: publisher },
@@ -47,10 +43,7 @@ const BookInfoBox = ({
   );
 };
 
-const BookInfoBoxButton = ({
-  children,
-  ...bookInfo
-}: BookInfoBoxProps & ButtonProps) => {
+const BookInfoBoxButton = ({ children, ...bookInfo }: Book & ButtonProps) => {
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
 
   return (

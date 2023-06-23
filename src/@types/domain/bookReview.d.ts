@@ -14,6 +14,16 @@ declare module 'bookReview' {
   export type CreatedAt = string;
   export type Writer = string;
 
+  /* View */
+
+  export interface Book {
+    title: string;
+    authors: string;
+    thumbnail?: string;
+    publisher: string;
+    datetime: string;
+  }
+
   /* Request */
 
   interface CreateRequest {
@@ -91,6 +101,7 @@ declare module 'bookReview' {
 
   export interface GetPublishedBookReviewResponse
     extends GetDraftSavedBookReviewResponse {
+    userId: UserId;
     authors: Authors;
     publication: Publication;
     publisher: Publisher;

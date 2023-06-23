@@ -7,4 +7,14 @@ declare module 'like' {
     bookReviewId: BookReviewId;
     likerId: LikerId;
   }
+
+  export interface LikeStatusRequest {
+    bookReviewId: BookReviewId;
+    likerId?: LikerId;
+  }
+
+  export interface LikeStatusResponse {
+    isLike: boolean;
+    likeCount: number;
+  }
 }

@@ -23,23 +23,14 @@ import useMostLikedBookReviewList, {
 import { getFollowingBookReviewListQuery } from '@/hooks/services/queries/useFollowingBookReviewList';
 
 const HomePage = ({ myUserId }: { myUserId: number | null }) => {
-  const { showFooter } = useLayoutContext();
+  const { showFooter, hideFooter } = useLayoutContext();
   const { latestBookReviewList } = useLatestBookReviewList();
   const { mostLikedBookReviewList } = useMostLikedBookReviewList();
 
   useEffect(() => {
     showFooter();
-  }, []);
-
-  const SubscriptionsPageLink = () => (
-    <>
-      {!!myUserId && (
-        <Link href={`${Route.SUBSCRIPTIONS}`} title="관심서재 페이지 이동 링크">
-          <ArrowRightIcon size={25} />
-        </Link>
-      )}
-    </>
-  );
+    return () => hideFooter();
+  }, [hideFooter, showFooter]);
 
   return (
     <>
@@ -52,7 +43,16 @@ const HomePage = ({ myUserId }: { myUserId: number | null }) => {
           <BookReviewScroller bookReviewList={mostLikedBookReviewList} />
         }
         subscribeBookReviewScroller={<SubscribeBookReviewScoller />}
-        subscriptionsPageLink={<SubscriptionsPageLink />}
+        subscriptionsPageLink={
+          !!myUserId && (
+            <Link
+              href={`${Route.SUBSCRIPTIONS}`}
+              title="관심서재 페이지 이동 링크"
+            >
+              <ArrowRightIcon size={25} />
+            </Link>
+          )
+        }
       />
     </>
   );

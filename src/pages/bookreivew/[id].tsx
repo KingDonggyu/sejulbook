@@ -14,44 +14,36 @@ import EditDeleteButtonSet from '@/components/molecules/EditDeleteButtonSet';
 import CommentContainer from '@/components/organisms/CommentContainer';
 import LikeCommentWidget from '@/components/organisms/LikeCommentWidget';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
-
-import {
-  getBookReviewQuery,
-  getTagsQuery,
-} from '@/services/queries/bookReview';
-import { getUserQuery } from '@/services/queries/user';
-import { getCommentsQuery } from '@/services/queries/comment';
-import { getLikeStatusQuery } from '@/services/queries/like';
-import prefetchQuery from '@/services/prefetchQuery';
-
-import useBookReview from '@/hooks/services/queries/useBookReview';
-import useTags from '@/hooks/services/queries/useTags';
-import useComments from '@/hooks/services/queries/useComments';
-import useLikeStatus from '@/hooks/services/queries/useLike';
-import useUserStatus from '@/hooks/useUserStatus';
-import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
-
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import Route from '@/constants/routes';
 import { confirm } from '@/constants/message';
-import { PublishedBookReviewURLQuery } from '@/types/features/bookReview';
-import { Tag } from '@/types/features/tag';
-import { authOptions } from '../api/auth/[...nextauth]';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+
+import useBookReview, {
+  getBookReviewQuery,
+} from '@/hooks/services/queries/useBookReview';
+import useComments, {
+  getCommentsQuery,
+} from '@/hooks/services/queries/useComments';
+import useTags, { getTagsQuery } from '@/hooks/services/queries/useTags';
+import { getLikeStatusQuery } from '@/hooks/services/queries/useLikeStatus';
+import { getUserQuery } from '@/hooks/services/queries/useUser';
+import useUserStatus from '@/hooks/useUserStatus';
+import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 
 const BookreviewPage = () => {
   const router = useRouter();
   const bookReviewId = Number(router.query.id);
   const commentRef = useRef<HTMLDivElement>(null);
 
-  const { session } = useUserStatus();
-  const userId = session ? session.id || undefined : undefined;
+  const { session, isLogin } = useUserStatus();
+  const userId = isLogin ? session.id : undefined;
 
-  const bookReview = useBookReview(bookReviewId, true);
-  const tags = useTags(bookReviewId);
-  const comments = useComments(bookReviewId);
-  const { likeCount } = useLikeStatus({ userId, bookReviewId });
+  const { bookReview } = useBookReview(bookReviewId);
+  const { tags } = useTags(bookReviewId);
+  const { comments } = useComments(bookReviewId);
 
   const deleteBookReview = useBookReviewDeletion({
-    bookReviewId,
     onSuccess: () => {
       if (userId) {
         router.replace(`${Route.LIBRARY}/${userId}`);
@@ -61,21 +53,22 @@ const BookreviewPage = () => {
     },
   });
 
-  const isMyBookReview = !!(userId && userId === bookReview?.userId);
+  if (!bookReview || !comments) {
+    return null;
+  }
+
+  const isMyBookReview = userId === bookReview.userId;
 
   const handleClickDeleteButton = () => {
     if (isMyBookReview && window.confirm(confirm.DELETE_BOOKREVIEW)) {
-      deleteBookReview();
+      deleteBookReview(bookReviewId);
     }
   };
 
   const handleClickEditButton = () => {
-    const query: PublishedBookReviewURLQuery = {
-      publish: bookReviewId,
-    };
     router.push({
       pathname: `${Route.NEWBOOK_WRITE}`,
-      query,
+      query: { publish: bookReviewId },
     });
   };
 
@@ -83,12 +76,10 @@ const BookreviewPage = () => {
     commentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleClickTagButton = (tag: Tag) => {
+  const handleClickTagButton = (tag: string) => {
     router.push({
       pathname: Route.SEARCH_RESULT_BY_TAG,
-      query: {
-        q: tag,
-      },
+      query: { q: tag },
     });
   };
 
@@ -116,7 +107,7 @@ const BookreviewPage = () => {
         }
         likeCommentWidget={
           <LikeCommentWidget
-            likeCount={likeCount}
+            bookReviewId={bookReviewId}
             commentCount={comments.length}
             onClickCommentButton={handleClickCommentButton}
           />
@@ -140,7 +131,12 @@ const BookreviewPage = () => {
           <Rating init={Number(bookReview.rating)} size={17} gap={3} readonly />
         }
         tagList={
-          tags && <TagList tags={tags} onClickTag={handleClickTagButton} />
+          tags && (
+            <TagList
+              tags={tags.map(({ tag }) => tag)}
+              onClickTag={handleClickTagButton}
+            />
+          )
         }
         comment={
           <div ref={commentRef}>
@@ -163,20 +159,15 @@ export const getServerSideProps = async ({
 }: GetServerSidePropsContext) => {
   const session = await getServerSession(req, res, authOptions);
   const userId = session ? session.id || undefined : undefined;
-
   const bookReviewId = Number(query.id);
-  const queries = [
-    getBookReviewQuery(bookReviewId, true),
+
+  const queryClient = await prefetchQuery([
+    getUserQuery(userId),
+    getBookReviewQuery(bookReviewId),
     getTagsQuery(bookReviewId),
     getCommentsQuery(bookReviewId),
-    getLikeStatusQuery({ userId, bookReviewId }),
-  ];
-
-  if (userId) {
-    queries.push(getUserQuery(userId));
-  }
-
-  const queryClient = await prefetchQuery(queries);
+    getLikeStatusQuery({ likerId: userId, bookReviewId }),
+  ]);
 
   return {
     props: { dehydratedState: dehydrate(queryClient) },

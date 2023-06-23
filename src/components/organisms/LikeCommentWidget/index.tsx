@@ -1,37 +1,34 @@
-import { useRouter } from 'next/router';
+import type { Id } from 'bookReview';
 import Box from '@/components/atoms/Box';
 import Button from '@/components/atoms/Button';
 import { CommentIcon } from '@/components/atoms/Icon';
 import LikeButton from '@/components/molecules/LikeButton';
 import useLikeStatus from '@/hooks/services/queries/useLikeStatus';
-import useUserStatus from '@/hooks/useUserStatus';
 import useLikeToggle from '@/hooks/services/mutations/useLikeToggle';
 import * as s from './style';
 
 interface LikeCommentWidgetProps {
-  likeCount: number;
+  bookReviewId: Id;
   commentCount: number;
   onClickLikeButton?: () => void;
   onClickCommentButton?: () => void;
 }
 
 const LikeCommentWidget = ({
-  likeCount,
+  bookReviewId,
   commentCount,
   onClickLikeButton,
   onClickCommentButton,
 }: LikeCommentWidgetProps) => {
-  const router = useRouter();
-  const { session, isLogin } = useUserStatus();
+  const { likeStatus } = useLikeStatus(bookReviewId);
+  const likeToggle = useLikeToggle();
 
-  const userId = isLogin ? session.id : undefined;
-  const bookReviewId = Number(router.query.id);
-
-  const { isLike } = useLikeStatus({ userId, bookReviewId });
-  const likeToggle = useLikeToggle({ isLike, bookReviewId });
+  if (!likeStatus) {
+    return null;
+  }
 
   const handleClickLikeButton = () => {
-    likeToggle();
+    likeToggle({ bookReviewId, isLiked: likeStatus.isLike });
     if (onClickLikeButton) {
       onClickLikeButton();
     }
@@ -42,8 +39,11 @@ const LikeCommentWidget = ({
       <s.Widget>
         <Box radius={30} css={s.boxStyle}>
           <s.WidgetItem>
-            <LikeButton active={isLike} handleClick={handleClickLikeButton} />
-            <s.Count>{likeCount}</s.Count>
+            <LikeButton
+              active={likeStatus.isLike}
+              handleClick={handleClickLikeButton}
+            />
+            <s.Count>{likeStatus.likeCount}</s.Count>
           </s.WidgetItem>
           <s.WidgetItem>
             <Button css={s.buttonStyle} onClick={onClickCommentButton}>

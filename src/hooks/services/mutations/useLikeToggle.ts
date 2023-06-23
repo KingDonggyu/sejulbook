@@ -1,11 +1,11 @@
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
+import type { LikeRequest } from 'like';
 import useMutation from '@/lib/react-query/hooks/useMutation';
 import LikeRepository from '@/repository/api/LikeRepository';
 import { getLikeStatusQuery } from '../queries/useLikeStatus';
 
-interface Request
-  extends Omit<Parameters<LikeRepository['like']>[0], 'likerId'> {
+interface Request extends Omit<LikeRequest, 'likerId'> {
   isLiked: boolean;
 }
 

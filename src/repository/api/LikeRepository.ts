@@ -1,6 +1,6 @@
 import LikeService from '@/server/services/like.service';
 import HttpClient from '@/lib/HttpClient';
-import type { LikeRequest } from 'like';
+import type { LikeRequest, LikeStatusRequest, LikeStatusResponse } from 'like';
 
 class LikeRepository extends HttpClient {
   private service: LikeService | null;
@@ -28,7 +28,10 @@ class LikeRepository extends HttpClient {
     });
   }
 
-  has({ bookReviewId, likerId }: LikeRequest) {
+  has({
+    bookReviewId,
+    likerId,
+  }: LikeStatusRequest): Promise<LikeStatusResponse> {
     if (this.service) {
       return this.service.has({ bookReviewId, likerId });
     }

@@ -30,18 +30,26 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
   const { bookReviewList: initBookReviewList } = useBookReviewList(userId);
   const { session, isLogin } = useUserStatus();
 
-  const [bookReviewList, setBookReviewList] = useState(
-    initBookReviewList || [],
-  );
+  const [bookReviewList, setBookReviewList] = useState<
+    GetLibraryBookReviewResponse[]
+  >([]);
 
-  if (!user || !initBookReviewList || !followInfo) {
+  useEffect(() => {
+    if (initBookReviewList) {
+      setBookReviewList(initBookReviewList);
+    }
+  }, [initBookReviewList]);
+
+  if (!user || !followInfo) {
     return null;
   }
 
   const isMyLibrary = !!(isLogin && userId === session.id);
 
   const handleClickLatestSortButton = () => {
-    setBookReviewList(initBookReviewList);
+    if (initBookReviewList) {
+      setBookReviewList(initBookReviewList);
+    }
   };
 
   const handleClickLikeSortButton = () => {

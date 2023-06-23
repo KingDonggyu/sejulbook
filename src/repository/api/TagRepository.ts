@@ -1,6 +1,6 @@
 import HttpClient from '@/lib/HttpClient';
 import TagService from '@/server/services/tag.service';
-import type { BookReviewId } from 'tag';
+import type { BookReviewId, GetTagResponse } from 'tag';
 
 class TagRepository extends HttpClient {
   private service: TagService | null;
@@ -12,7 +12,7 @@ class TagRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new TagService() : null;
   }
 
-  get(bookReviewId: BookReviewId) {
+  get(bookReviewId: BookReviewId): Promise<GetTagResponse[]> {
     if (this.service) {
       return this.service.findAllByBookReview(bookReviewId);
     }

@@ -1,3 +1,5 @@
+import { bookReviewError } from '@/constants/message';
+import { BadRequestException } from '@/server/exceptions';
 import { S3Client, DeleteObjectsCommand } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import axios from 'axios';
@@ -12,27 +14,31 @@ const s3Client = new S3Client({
 });
 
 export const createS3Object = async (blob: Blob) => {
-  const { type } = blob;
-  const presignedPost = await createPresignedPost(s3Client, {
-    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-    Key: `${v1().replace(/-/g, '')}.${type.split('/')[1]}`,
-    Fields: { acl: 'public-read', 'Content-Type': type },
-    Expires: 600,
-    Conditions: [
-      ['content-length-range', 0, 10485760], // up to 10 MB
-    ],
-  });
+  try {
+    const { type } = blob;
+    const presignedPost = await createPresignedPost(s3Client, {
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
+      Key: `${v1().replace(/-/g, '')}.${type.split('/')[1]}`,
+      Fields: { acl: 'public-read', 'Content-Type': type },
+      Expires: 600,
+      Conditions: [
+        ['content-length-range', 0, 10485760], // up to 10 MB
+      ],
+    });
 
-  const { url, fields } = presignedPost;
-  const formData = new FormData();
+    const { url, fields } = presignedPost;
+    const formData = new FormData();
 
-  Object.entries(fields).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-  formData.append('file', new File([blob], blob.name));
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    formData.append('file', new File([blob], blob.name));
 
-  await axios.post(url, formData);
-  return `${url}${fields.key}`;
+    await axios.post(url, formData);
+    return `${url}${fields.key}`;
+  } catch {
+    throw new BadRequestException(bookReviewError.WRONG_FILE_FORMAT);
+  }
 };
 
 export const deleteS3Objects = async (imageKeys: string[]) => {

@@ -1,15 +1,27 @@
 import { PrismaClient } from '@prisma/client';
-import type { BookReviewId, LikerId, LikeRequest } from 'like';
+import type {
+  BookReviewId,
+  LikerId,
+  LikeRequest,
+  LikeStatusResponse,
+  LikeStatusRequest,
+} from 'like';
 
 class LikeService {
   private like = new PrismaClient().like;
 
-  async has({ bookReviewId, likerId }: LikeRequest) {
-    const like = await this.like.findFirst({
-      where: { bookReviewId, likerId },
-    });
+  async has({
+    bookReviewId,
+    likerId,
+  }: LikeStatusRequest): Promise<LikeStatusResponse> {
+    const [like, likeCount] = await Promise.all([
+      likerId
+        ? this.like.findFirst({ where: { bookReviewId, likerId } })
+        : false,
+      this.countByBookReview(bookReviewId),
+    ]);
 
-    return !!like;
+    return { isLike: !!like, likeCount };
   }
 
   async findTenMostBookReviewId(): Promise<BookReviewId[]> {
