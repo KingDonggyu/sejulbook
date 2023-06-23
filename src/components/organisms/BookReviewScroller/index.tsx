@@ -1,5 +1,5 @@
 import CardScoller from '@/components/molecules/CardScroller';
-import { HomeBookReview } from '@/types/domain/bookReview';
+import { HomeBookReview } from '@/@types/domain/bookReview';
 import SejulThumbnail from '../SejulThumbnail';
 import * as s from './style';
 

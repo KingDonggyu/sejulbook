@@ -6,13 +6,11 @@ type Response = Awaited<ReturnType<BookReviewRepository['getPagesByTag']>>;
 
 export const getBookReviewListByTagInfinityQuery = ({
   tag,
-  pageParam = null,
 }: {
   tag: string;
-  pageParam?: number | null;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getPagesByTag', tag],
-  queryFn: () =>
+  queryFn: ({ pageParam }) =>
     new BookReviewRepository().getPagesByTag({ tag, targetId: pageParam }),
 });
 

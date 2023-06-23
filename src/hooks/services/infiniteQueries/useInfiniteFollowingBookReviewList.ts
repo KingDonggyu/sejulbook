@@ -7,13 +7,11 @@ type Response = Awaited<ReturnType<BookReviewRepository['getFollowingPages']>>;
 
 export const getFollowingBookReviewListInfinityQuery = ({
   myUserId,
-  pageParam = null,
 }: {
   myUserId?: number;
-  pageParam?: number | null;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getFollowingPages'],
-  queryFn: () => {
+  queryFn: ({ pageParam }) => {
     if (!myUserId) {
       return [];
     }

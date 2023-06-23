@@ -26,23 +26,23 @@ class CommentService {
   }
 
   async deleteAllByBookreview(bookReviewId: BookReviewId) {
-    this.comment.deleteMany({ where: { bookReviewId } });
+    await this.comment.deleteMany({ where: { bookReviewId } });
   }
 
   async deleteAllByUser(commenterId: CommenterId) {
-    this.comment.deleteMany({ where: { commenterId } });
+    await this.comment.deleteMany({ where: { commenterId } });
   }
 
   async delete(id: Id) {
-    this.comment.delete({ where: { id } });
+    await this.comment.delete({ where: { id } });
   }
 
   async create({ bookReviewId, commenterId, content }: CreateCommentRequest) {
-    this.comment.create({ data: { bookReviewId, commenterId, content } });
+    await this.comment.create({ data: { bookReviewId, commenterId, content } });
   }
 
   async update({ id, content }: UpdateCommentRequest) {
-    this.comment.update({
+    await this.comment.update({
       where: { id },
       data: { content },
     });

@@ -1,10 +1,10 @@
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.main`
   margin: auto;
+  padding: 6rem 20px;
   max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
-  padding-top: 30px;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     padding: 20px 0;
     padding-bottom: 0;

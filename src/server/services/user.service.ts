@@ -83,14 +83,16 @@ class UserService {
 
   async findPagedFollowers({
     id,
+    myUserId,
     targetId,
   }: GetUserPageRequest): Promise<GetUserPageResponse[]> {
-    const followerIds = await new FollowService().findPagedFollowers({
-      followingId: id,
-      targetId,
-    });
+    const emptyArray: number[] = [];
+    const followService = new FollowService();
 
-    const nextTargetId = followerIds[followerIds.length - 1].id;
+    const [followerIds, followingIds] = await Promise.all([
+      followService.findPagedFollowers({ followingId: id, targetId }),
+      myUserId ? followService.findAllFollowingId(myUserId) : emptyArray,
+    ]);
 
     const promises = followerIds.map(async ({ followerId }) => {
       const follower = await this.user.findUnique({
@@ -102,7 +104,7 @@ class UserService {
         throw new NotFoundException(`${followerId} 사용자를 찾을 수 없습니다.`);
       }
 
-      return { ...follower, nextTargetId };
+      return { ...follower, isFollow: followingIds.includes(follower.id) };
     });
 
     return Promise.all(promises);
@@ -110,14 +112,16 @@ class UserService {
 
   async findPagedFollowings({
     id,
+    myUserId,
     targetId,
   }: GetUserPageRequest): Promise<GetUserPageResponse[]> {
-    const followingIds = await new FollowService().findPagedFollowings({
-      followerId: id,
-      targetId,
-    });
+    const emptyArray: number[] = [];
+    const followService = new FollowService();
 
-    const nextTargetId = followingIds[followingIds.length - 1].id;
+    const [followingIds, followerIds] = await Promise.all([
+      followService.findPagedFollowings({ followerId: id, targetId }),
+      myUserId ? followService.findAllFollowerId(myUserId) : emptyArray,
+    ]);
 
     const promises = followingIds.map(async ({ followingId }) => {
       const following = await this.user.findUnique({
@@ -131,7 +135,7 @@ class UserService {
         );
       }
 
-      return { ...following, nextTargetId };
+      return { ...following, isFollow: followerIds.includes(following.id) };
     });
 
     return Promise.all(promises);
@@ -150,7 +154,16 @@ class UserService {
   }
 
   async update({ id, name, introduce }: UpdateUserRequest) {
-    await this.validate(name, introduce);
+    const user = await this.user.findUnique({
+      select: { name: true },
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`${id} 사용자를 찾을 수 없습니다.`);
+    }
+
+    await this.validate(name, introduce, name !== user.name);
     await this.user.update({
       data: { name, introduce },
       where: { id },
@@ -166,7 +179,11 @@ class UserService {
     ]);
   }
 
-  private async validate(name: Name, introduce: Introduce) {
+  private async validate(
+    name: Name,
+    introduce: Introduce,
+    checkNameDuplicate = true,
+  ) {
     if (name === '') {
       throw new BadRequestException('이름을 입력해주세요.');
     }
@@ -185,12 +202,13 @@ class UserService {
       );
     }
 
-    const isDuplicateName = !!(await this.findByName(lowerCaseName));
-
-    if (isDuplicateName) {
-      throw new BadRequestException(
-        '해당 이름은 이미 다른 사용자가 사용하고 있습니다.',
-      );
+    if (checkNameDuplicate) {
+      const isDuplicateName = !!(await this.findByName(lowerCaseName));
+      if (!isDuplicateName) {
+        throw new BadRequestException(
+          '해당 이름은 이미 다른 사용자가 사용하고 있습니다.',
+        );
+      }
     }
 
     if (introduce.length > 100) {

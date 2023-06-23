@@ -5,7 +5,7 @@ import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';
 
 interface ExtenedNextApiRequest extends Omit<NextApiRequest, 'query'> {
-  query: { userId: string; cursor: string };
+  query: { targetUserId: string; myUserId: string; cursor: string };
 }
 
 const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
@@ -15,8 +15,9 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   }
 
   const data = await new UserService().findPagedFollowings({
-    id: +req.query.userId,
-    targetId: +req.query.cursor,
+    id: +req.query.targetUserId,
+    myUserId: +req.query.myUserId || null,
+    targetId: +req.query.cursor || null,
   });
 
   res.status(200).json(data);

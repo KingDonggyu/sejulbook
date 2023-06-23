@@ -270,7 +270,7 @@ class BookReviewService {
 
   // 최신 순의 10개 구독 독후감
   async findTenFollowing(userId: UserId): Promise<GetHomeBookReviewResponse[]> {
-    const followingIds = await new FollowService().findAllFollowing(userId);
+    const followingIds = await new FollowService().findAllFollowingId(userId);
     const bookReviews = await this.bookReview.findMany({
       select: {
         id: true,
@@ -391,7 +391,9 @@ class BookReviewService {
       return [];
     }
 
-    const followingIds = await new FollowService().findAllFollowing(followerId);
+    const followingIds = await new FollowService().findAllFollowingId(
+      followerId,
+    );
     const bookReviews = await this.bookReview.findMany({
       select: { id: true, thumbnail: true, userId: true, sejul: true },
       where: {

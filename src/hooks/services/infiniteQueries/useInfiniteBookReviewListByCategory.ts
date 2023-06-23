@@ -6,13 +6,11 @@ type Response = Awaited<ReturnType<BookReviewRepository['getPagesByCategory']>>;
 
 export const getBookReviewListByCategoryInfinityQuery = ({
   category,
-  pageParam = null,
 }: {
   category: string;
-  pageParam?: number | null;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getPagesByCategory', category],
-  queryFn: () =>
+  queryFn: ({ pageParam }) =>
     new BookReviewRepository().getPagesByCategory({
       category,
       targetId: pageParam,
@@ -25,7 +23,7 @@ const useInfiniteBookReviewListByCategory = (category: string) => {
     options: {
       getNextPageParam: (lastPage) => {
         if (!lastPage || !lastPage.length) {
-          return undefined;
+          return null;
         }
         return lastPage[lastPage.length - 1].id;
       },

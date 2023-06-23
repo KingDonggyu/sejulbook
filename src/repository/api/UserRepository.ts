@@ -55,14 +55,16 @@ class UserRepository extends HttpClient {
 
   getPagedFollowers({
     id,
+    myUserId,
     targetId,
   }: GetUserPageRequest): ReturnType<UserService['findPagedFollowers']> {
     if (this.service) {
-      return this.service.findPagedFollowers({ id, targetId });
+      return this.service.findPagedFollowers({ id, targetId, myUserId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/list/follower`, {
       params: {
-        userId: id,
+        myUserId,
+        targetUserId: id,
         cursor: targetId,
       },
     });
@@ -70,14 +72,16 @@ class UserRepository extends HttpClient {
 
   getPagedFollowings({
     id,
+    myUserId,
     targetId,
   }: GetUserPageRequest): ReturnType<UserService['findPagedFollowings']> {
     if (this.service) {
-      return this.service.findPagedFollowings({ id, targetId });
+      return this.service.findPagedFollowings({ id, targetId, myUserId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
       params: {
-        userId: id,
+        myUserId,
+        targetUserId: id,
         cursor: targetId,
       },
     });

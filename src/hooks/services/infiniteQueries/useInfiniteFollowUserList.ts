@@ -1,9 +1,8 @@
-import useInfiniteQuery from '@/lib/react-query/hooks/useInfiniteQuery';
+import type { FollowDefaultReqeust, UserId } from 'follow';
 import type { InfiniteQuery } from '@/lib/react-query/types/query';
+import useInfiniteQuery from '@/lib/react-query/hooks/useInfiniteQuery';
 import UserRepository from '@/repository/api/UserRepository';
 import useUserStatus from '@/hooks/useUserStatus';
-
-type Request = { myUserId?: number; pageParam?: number | null };
 
 type FollowerResponse = Awaited<
   ReturnType<UserRepository['getPagedFollowers']>
@@ -14,53 +13,63 @@ type FollowingResponse = Awaited<
 >;
 
 export const getFollowerListInfiniteQuery = ({
+  targetUserId,
   myUserId,
-  pageParam = null,
-}: Request): InfiniteQuery<FollowerResponse> => ({
-  queryKey: ['user_getPagedFollowers'],
-  queryFn: () => {
-    if (!myUserId) {
+}: FollowDefaultReqeust): InfiniteQuery<FollowerResponse> => ({
+  queryKey: ['user_getPagedFollowers', targetUserId],
+  queryFn: ({ pageParam }) => {
+    if (!targetUserId) {
       return [];
     }
     return new UserRepository().getPagedFollowers({
-      id: myUserId,
+      id: targetUserId,
       targetId: pageParam,
+      myUserId,
     });
   },
 });
 
 export const getFollowingListInfiniteQuery = ({
+  targetUserId,
   myUserId,
-  pageParam = null,
-}: Request): InfiniteQuery<FollowingResponse> => ({
-  queryKey: ['user_getPagedFollowings'],
-  queryFn: () => {
-    if (!myUserId) {
+}: FollowDefaultReqeust): InfiniteQuery<FollowingResponse> => ({
+  queryKey: ['user_getPagedFollowings', targetUserId],
+  queryFn: ({ pageParam }) => {
+    if (!targetUserId) {
       return [];
     }
     return new UserRepository().getPagedFollowings({
-      id: myUserId,
+      id: targetUserId,
       targetId: pageParam,
+      myUserId,
     });
   },
 });
 
-const useInfiniteFollowUserList = (isFollowing: boolean) => {
+interface UseInfiniteFollowUserListOption {
+  userId: UserId;
+  isFollowing: boolean;
+}
+
+const useInfiniteFollowUserList = ({
+  userId,
+  isFollowing,
+}: UseInfiniteFollowUserListOption) => {
   const { session, isLogin } = useUserStatus();
-  const myUserId = isLogin ? session.id : undefined;
+  const myUserId = isLogin ? session.id : null;
 
   const infiniteQuery = isFollowing
-    ? getFollowingListInfiniteQuery({ myUserId })
-    : getFollowerListInfiniteQuery({ myUserId });
+    ? getFollowingListInfiniteQuery({ targetUserId: userId, myUserId })
+    : getFollowerListInfiniteQuery({ targetUserId: userId, myUserId });
 
   const { data, fetchNextPage, isLoading } = useInfiniteQuery({
     ...infiniteQuery,
     options: {
       getNextPageParam: (lastPage) => {
         if (!lastPage || !lastPage.length) {
-          return undefined;
+          return null;
         }
-        return lastPage[lastPage.length - 1].nextTargetId;
+        return lastPage[lastPage.length - 1].id;
       },
     },
   });

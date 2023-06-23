@@ -7,7 +7,7 @@ type Response = Awaited<
   ReturnType<BookReviewRepository['getAllPublishedOfUser']>
 >;
 
-const getBookReviewListQuery = (userId: number): Query<Response> => ({
+export const getBookReviewListQuery = (userId: number): Query<Response> => ({
   queryKey: ['bookReview_getAllPublishedOfUser', userId],
   queryFn: () => new BookReviewRepository().getAllPublishedOfUser(userId),
 });
@@ -19,7 +19,10 @@ const useBookReviewList = (userId: number) => {
 
   const bookReviewList = useMemo(() => {
     if (data) {
-      return data.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      return data.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     }
     return data;
   }, [data]);

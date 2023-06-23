@@ -5,6 +5,7 @@ export const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
   gap: 80px;
+  padding-bottom: 5rem;
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     gap: 50px;
   }

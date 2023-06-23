@@ -6,13 +6,11 @@ type Response = Awaited<ReturnType<BookReviewRepository['getPagesByBookname']>>;
 
 export const getBookReviewListByBooknameInfiniteQuery = ({
   bookname,
-  pageParam = null,
 }: {
   bookname: string;
-  pageParam?: number | null;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getPagesByBookname', bookname],
-  queryFn: () =>
+  queryFn: ({ pageParam }) =>
     new BookReviewRepository().getPagesByBookname({
       bookname,
       targetId: pageParam,
@@ -25,7 +23,7 @@ const useInfiniteBookReviewListByBookname = (bookname: string) => {
     options: {
       getNextPageParam: (lastPage) => {
         if (!lastPage || !lastPage.length) {
-          return undefined;
+          return null;
         }
         return lastPage[lastPage.length - 1].id;
       },

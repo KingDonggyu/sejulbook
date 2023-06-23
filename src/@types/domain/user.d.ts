@@ -33,6 +33,7 @@ declare module 'user' {
 
   export interface GetUserPageRequest {
     id: Id;
+    myUserId: Id | null;
     targetId: number | null;
   }
 
@@ -50,6 +51,6 @@ declare module 'user' {
   }
 
   export interface GetUserPageResponse extends GetSearchedUserResponse {
-    nextTargetId: number;
+    isFollow: boolean;
   }
 }

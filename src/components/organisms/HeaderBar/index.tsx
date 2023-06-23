@@ -14,7 +14,7 @@ const HeaderBar = () => {
         <LogoButton />
         <s.RightItemsWrapper>
           {isLogin ? (
-            <NavDropdown userId={session.id} />
+            <NavDropdown />
           ) : (
             !isLoading && <AccountButton isLogin={false} />
           )}

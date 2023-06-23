@@ -1,6 +1,6 @@
 import { useQuery as useQueryOrigin } from '@tanstack/react-query';
 import ExceptionBase from '@/lib/HttpErrorException';
-import type { Query } from './query';
+import { Query } from '../types/query';
 
 const useQuery = <TQueryFnData>({
   queryKey,

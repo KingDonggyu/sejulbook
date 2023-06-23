@@ -26,13 +26,22 @@ class FollowService {
     return { isFollow, followerCount, followingCount };
   }
 
-  async findAllFollowing(followerId: UserId): Promise<UserId[]> {
+  async findAllFollowingId(followerId: UserId): Promise<UserId[]> {
     const result = await this.follow.findMany({
       select: { followingId: true },
       where: { followerId },
     });
 
     return result.map(({ followingId }) => followingId);
+  }
+
+  async findAllFollowerId(followingId: UserId): Promise<UserId[]> {
+    const result = await this.follow.findMany({
+      select: { followerId: true },
+      where: { followingId },
+    });
+
+    return result.map(({ followerId }) => followerId);
   }
 
   async findPagedFollowings({
@@ -100,19 +109,19 @@ class FollowService {
   }
 
   async create({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    this.follow.create({
+    await this.follow.create({
       data: { followerId: myUserId, followingId: targetUserId },
     });
   }
 
   async delete({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    this.follow.deleteMany({
+    await this.follow.deleteMany({
       where: { followerId: myUserId, followingId: targetUserId },
     });
   }
 
   async deleteAllByUser(userId: UserId) {
-    this.follow.deleteMany({
+    await this.follow.deleteMany({
       where: {
         OR: [{ followerId: userId }, { followingId: userId }],
       },

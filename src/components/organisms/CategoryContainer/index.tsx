@@ -1,7 +1,7 @@
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { CategoryResponse } from '@/types/features/category';
-import { StyleProps } from '@/types/style';
+import { StyleProps } from '@/@types/style';
 import * as s from './style';
 
 interface CategoryContainerProps extends StyleProps {
