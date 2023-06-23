@@ -9,7 +9,9 @@ interface UseBookReviewDeletionOption {
   onSuccess?: () => void;
 }
 
-const useBookReviewDeletion = ({ onSuccess }: UseBookReviewDeletionOption) => {
+const useBookReviewDeletion = ({
+  onSuccess,
+}: UseBookReviewDeletionOption = {}) => {
   let queryKey: QueryKey;
   const queryClient = useQueryClient();
 

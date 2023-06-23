@@ -1,4 +1,4 @@
-import type { Book } from 'bookReview';
+import type { Book } from 'book';
 import Box from '@/components/atoms/Box';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Thumbnail from '@/components/atoms/Thumbnail';

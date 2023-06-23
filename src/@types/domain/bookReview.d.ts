@@ -14,16 +14,6 @@ declare module 'bookReview' {
   export type CreatedAt = string;
   export type Writer = string;
 
-  /* View */
-
-  export interface Book {
-    title: string;
-    authors: string;
-    thumbnail?: string;
-    publisher: string;
-    datetime: string;
-  }
-
   /* Request */
 
   interface CreateRequest {

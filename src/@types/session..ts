@@ -1,5 +1,5 @@
 import { OAuthName } from '@/constants';
-import { Age, Email, Gender, Id, Sub } from './user';
+import type { Age, Email, Gender, Id, Sub } from 'user';
 
 export interface SessionAfterLogin {
   id: Id;
