@@ -1,18 +1,21 @@
+import type { GetPublishedBookReviewResponse, Id } from 'bookReview';
 import useQuery from '@/lib/react-query/hooks/useQuery';
 import type { Query } from '@/lib/react-query/types/query';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
-type Response = Awaited<ReturnType<BookReviewRepository['get']>>;
-
-export const getBookReviewQuery = (bookReviewId: number): Query<Response> => ({
+export const getBookReviewQuery = (
+  bookReviewId?: Id,
+): Query<GetPublishedBookReviewResponse | null> => ({
   queryKey: ['bookReview_get', bookReviewId],
-  queryFn: () => new BookReviewRepository().get(bookReviewId),
+  queryFn: () =>
+    bookReviewId ? new BookReviewRepository().get(bookReviewId) : null,
 });
 
-const useBookReview = (bookReviewId: number) => {
-  const { data: bookReview, isLoading } = useQuery<Response>(
-    getBookReviewQuery(bookReviewId),
-  );
+const useBookReview = (bookReviewId?: Id) => {
+  const { data: bookReview, isLoading } =
+    useQuery<GetPublishedBookReviewResponse | null>(
+      getBookReviewQuery(bookReviewId),
+    );
 
   return { bookReview, isLoading };
 };

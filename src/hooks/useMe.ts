@@ -1,5 +1,5 @@
 import useUserStatus from '@/hooks/useUserStatus';
-import useUser from './useUser';
+import useUser from './services/queries/useUser';
 
 const useMe = () => {
   const { session, isLogin } = useUserStatus();

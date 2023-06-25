@@ -29,7 +29,7 @@ export const ButtonWrapper = styled.div`
   }
 `;
 
-export const ContentWrapper = styled.div`
+export const ContentWrapper = styled.main`
   margin: auto;
   margin-top: 5rem;
   gap: 50px;

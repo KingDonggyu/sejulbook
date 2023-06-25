@@ -4,8 +4,7 @@ import { BadRequestException, NotFoundException } from '@/server/exceptions';
 import type {
   Id,
   UserId,
-  CreateDrafvSavedBookReviewReqeust,
-  CreatePublishedBookReviewRequest,
+  CreateBookReviewReqeust,
   GetBookReviewPageByBookNameRequest,
   GetBookReviewPageByCategoryRequest,
   GetBookReviewPageByTagRequest,
@@ -15,8 +14,7 @@ import type {
   GetHomeBookReviewResponse,
   GetLibraryBookReviewResponse,
   GetPublishedBookReviewResponse,
-  UpdateDraftSavedBookReviewReqeust,
-  UpdatePublishedBookReviewRequest,
+  UpdateBookReviewRequest,
 } from 'bookReview';
 
 import LikeService from './like.service';
@@ -33,7 +31,7 @@ class BookReviewService {
 
   private type = { published: 1, draftSaved: 0 };
 
-  async createDraftSaved(bookReview: CreateDrafvSavedBookReviewReqeust) {
+  async createDraftSaved(bookReview: CreateBookReviewReqeust) {
     this.validate(bookReview, true);
 
     const count = await this.bookReview.count({
@@ -48,9 +46,17 @@ class BookReviewService {
 
     const { id: bookReviewId } = await this.bookReview.create({
       data: {
-        ...bookReview,
-        thumbnail: bookReview.thumbnail || '',
-        categoryId: bookReview.categoryId || 1,
+        userId: bookReview.userId,
+        bookname: bookReview.bookname,
+        authors: bookReview.authors,
+        publisher: bookReview.publisher,
+        publication: bookReview.publication,
+        originThumbnail: bookReview.originThumbnail,
+        thumbnail: bookReview.thumbnail,
+        sejul: bookReview.sejul,
+        content: bookReview.content,
+        rating: bookReview.rating,
+        categoryId: bookReview.categoryId,
         type: this.type.draftSaved,
       },
     });
@@ -59,21 +65,19 @@ class BookReviewService {
     return bookReviewId;
   }
 
-  async updateDraftSaved(
-    id: Id,
-    bookReview: UpdateDraftSavedBookReviewReqeust,
-  ) {
+  async updateDraftSaved(id: Id, bookReview: UpdateBookReviewRequest) {
     this.validate(bookReview, true);
 
     const tagService = new TagService();
-
     const promises = [
       this.bookReview.update({
         where: { id },
         data: {
-          ...bookReview,
-          thumbnail: bookReview.thumbnail || '',
-          categoryId: bookReview.categoryId || 1,
+          rating: bookReview.rating,
+          sejul: bookReview.sejul,
+          content: bookReview.content,
+          thumbnail: bookReview.thumbnail,
+          categoryId: bookReview.categoryId,
           type: this.type.draftSaved,
         },
       }),
@@ -84,12 +88,25 @@ class BookReviewService {
     await Promise.all(promises);
   }
 
-  async createPublished(bookReview: CreatePublishedBookReviewRequest) {
+  async createPublished(bookReview: CreateBookReviewReqeust) {
     this.validate(bookReview);
 
     const [{ id: bookReviewId }] = await Promise.all([
       this.bookReview.create({
-        data: { ...bookReview, id: undefined, type: this.type.published },
+        data: {
+          userId: bookReview.userId,
+          bookname: bookReview.bookname,
+          authors: bookReview.authors,
+          publisher: bookReview.publisher,
+          publication: new Date(bookReview.publication),
+          originThumbnail: bookReview.originThumbnail,
+          thumbnail: bookReview.thumbnail,
+          sejul: bookReview.sejul,
+          content: bookReview.content,
+          rating: bookReview.rating,
+          categoryId: bookReview.categoryId,
+          type: this.type.published,
+        },
       }),
       bookReview.id && this.delete(bookReview.id),
     ]);
@@ -98,7 +115,7 @@ class BookReviewService {
     return bookReviewId;
   }
 
-  async updatePublished(id: Id, bookReview: UpdatePublishedBookReviewRequest) {
+  async updatePublished(id: Id, bookReview: UpdateBookReviewRequest) {
     this.validate(bookReview);
     const tagService = new TagService();
     const promises = [
@@ -169,13 +186,14 @@ class BookReviewService {
 
     const [{ name: writer }, { category }] = await Promise.all([
       this.userService.findNameById(bookReview.userId),
-      new CategoryService().findById(bookReview.userId),
+      new CategoryService().findById(bookReview.categoryId),
     ]);
 
     return {
       ...bookReview,
       writer,
       category,
+      categorId: bookReview.categoryId,
       publication: bookReview.publication.toString(),
       createdAt: bookReview.createdAt.toString(),
       originThumbnail: bookReview.originThumbnail || undefined,
@@ -456,10 +474,10 @@ class BookReviewService {
   // eslint-disable-next-line class-methods-use-this
   private validate(
     bookReview:
-      | CreateDrafvSavedBookReviewReqeust
-      | CreatePublishedBookReviewRequest
-      | UpdateDraftSavedBookReviewReqeust
-      | UpdatePublishedBookReviewRequest,
+      | CreateBookReviewReqeust
+      | CreateBookReviewReqeust
+      | UpdateBookReviewRequest
+      | UpdateBookReviewRequest,
     isDraftSave = false,
   ) {
     if ('bookname' in bookReview && !bookReview.bookname) {

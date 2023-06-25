@@ -1,7 +1,7 @@
 import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { toast } from 'react-toastify';
-import bookReviewStore from '@/stores/bookReviewStore';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import { createS3Object } from '@/lib/s3Client';

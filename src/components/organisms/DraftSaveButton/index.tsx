@@ -1,54 +1,59 @@
 import { useRouter } from 'next/router';
+import type { Id } from 'bookReview';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant } from '@/constants';
 import Route from '@/constants/routes';
 import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import useBookReviewDraftSave from '@/hooks/services/mutations/useBookReviewDraftSave';
-import bookReviewStore from '@/stores/bookReviewStore';
+import useBookReviewEdit from '@/hooks/services/mutations/useBookReviewEdit';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
-import {
-  BookReviewId,
-  DraftSavedBookReviewURLQuery,
-} from '@/types/features/bookReview';
 
 const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
   const router = useRouter();
   const { savedBookReviewId, setSavedBookReviewId } = useSavedBookReviewId();
 
-  const { bookReview } = bookReviewStore();
+  const { bookReview, getBookReviewToPublish } = bookReviewStore();
   const { emptyImageKeySet } = s3ImageURLStore();
 
-  const replaceURL = (bookReviewId: BookReviewId) => {
-    if (savedBookReviewId) {
-      return;
-    }
-
-    const query: DraftSavedBookReviewURLQuery = {
-      draft: bookReviewId,
-    };
-
-    router.replace({
-      pathname: Route.NEWBOOK_WRITE,
-      query,
-    });
-  };
-
-  const handleSuccess = (bookReviewId: BookReviewId) => {
+  const handleSuccess = (bookReviewId?: Id) => {
     emptyImageKeySet();
-    replaceURL(bookReviewId);
-    setSavedBookReviewId(bookReviewId);
+    if (bookReviewId) {
+      router.replace({
+        pathname: Route.NEWBOOK_WRITE,
+        query: { draft: bookReviewId },
+      });
+      setSavedBookReviewId(bookReviewId);
+    }
   };
 
   const draftSaveBookReview = useBookReviewDraftSave({
-    bookReview,
-    savedBookReviewId,
     onSuccess: handleSuccess,
   });
+
+  const redraftSaveBookReivew = useBookReviewEdit({
+    onSuccess: handleSuccess,
+  });
+
+  const handleClick = () => {
+    if (savedBookReviewId) {
+      redraftSaveBookReivew({
+        bookReview: {
+          ...bookReview,
+          id: savedBookReviewId,
+          categoryId: bookReview.category.id,
+        },
+        isPublished: false,
+      });
+      return;
+    }
+    draftSaveBookReview(getBookReviewToPublish(bookReview));
+  };
 
   return (
     <Button
       variant={ButtonVariant.OUTLINED}
-      onClick={() => draftSaveBookReview()}
+      onClick={handleClick}
       {...buttonProps}
     >
       임시저장

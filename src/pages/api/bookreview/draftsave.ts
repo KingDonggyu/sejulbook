@@ -11,14 +11,14 @@ interface ExtendedNextApiRequest extends NextApiRequest {
     userId: string;
     bookname: string;
     authors: string;
-    publication: Date;
+    publication: string;
     publisher: string;
     rating: string;
     sejul: string;
     content: string;
     originThumbnail: string;
-    thumbnail?: string;
-    categoryId?: string;
+    thumbnail: string;
+    categoryId: string;
     tags: string[];
   };
 }
@@ -37,7 +37,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     ...req.body,
     userId: +userId,
     rating: +rating,
-    categoryId: categoryId ? +categoryId : undefined,
+    categoryId: +categoryId,
   });
 
   res.status(200).json({ bookReviewId });

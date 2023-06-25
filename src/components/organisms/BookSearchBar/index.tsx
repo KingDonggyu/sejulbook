@@ -23,7 +23,7 @@ const BookSearchBar = ({
       setSearchedList([]);
       return;
     }
-    const { documents } = await bookRepositoryRef.current.get(value);
+    const { documents } = await bookRepositoryRef.current.search(value);
     setSearchedList(documents);
   }, []);
 

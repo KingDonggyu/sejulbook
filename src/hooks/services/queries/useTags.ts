@@ -1,16 +1,17 @@
-import useQuery from '@/lib/react-query/hooks/useQuery';
+import type { BookReviewId, GetTagResponse } from 'tag';
 import type { Query } from '@/lib/react-query/types/query';
+import useQuery from '@/lib/react-query/hooks/useQuery';
 import TagRepository from '@/repository/api/TagRepository';
 
-type Response = Awaited<ReturnType<TagRepository['get']>>;
-
-export const getTagsQuery = (bookReviewId: number): Query<Response> => ({
+export const getTagsQuery = (
+  bookReviewId?: BookReviewId,
+): Query<GetTagResponse[]> => ({
   queryKey: ['tag_get', bookReviewId],
-  queryFn: () => new TagRepository().get(bookReviewId),
+  queryFn: () => (bookReviewId ? new TagRepository().get(bookReviewId) : []),
 });
 
-const useTags = (bookReviewId: number) => {
-  const { data: tags, isLoading } = useQuery<Response>(
+const useTags = (bookReviewId?: BookReviewId) => {
+  const { data: tags, isLoading } = useQuery<GetTagResponse[]>(
     getTagsQuery(bookReviewId),
   );
 

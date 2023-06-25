@@ -1,97 +1,105 @@
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate } from '@tanstack/react-query';
+import checkIsLoggedIn from '@/server/middlewares/checkIsLoggedIn';
+import type { Id } from 'bookReview';
 
 import LogoButton from '@/components/molecules/LogoButton';
-import NewbookWrite from '@/components/templates/NewbookWrite';
+import NewbookWriteTemplate from '@/components/templates/NewbookWrite';
 import SEO from '@/components/atoms/SEO';
 import SejulTextArea from '@/components/organisms/SejulTextarea';
 import ContentEditor from '@/components/organisms/ContentEditor';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
+import Route from '@/constants/routes';
 
 import useS3GarbageCollection from '@/hooks/useS3GarbageCollection';
-import useNewbookFetch from '@/hooks/useNewbookFetch';
-import useSavedBookReviewFetch from '@/hooks/useSavedBookReviewFetch';
+import useNewBookStorage from '@/hooks/useNewBookStorage';
+import useNewBookReview from '@/hooks/useNewBookReview';
 import useHiddenLayout from '@/hooks/useHiddenLayout';
 
-import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
-import prefetchQuery from '@/services/prefetchQuery';
-import {
-  getBookReviewQuery,
-  getTagsQuery,
-} from '@/services/queries/bookReview';
-
-import {
-  BookReviewId,
-  DraftSavedBookReviewURLQuery,
-  PublishedBookReviewURLQuery,
-} from '@/types/features/bookReview';
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
+import { getBookReviewQuery } from '@/hooks/services/queries/useBookReview';
+import { getTagsQuery } from '@/hooks/services/queries/useTags';
+import bookReviewStore from '@/stores/newBookReviewStore';
+import { useEffect } from 'react';
 
 const NewbookWritePage = ({
-  savedBookReviewId,
+  bookReviewId,
   isPublished,
 }: {
-  savedBookReviewId?: BookReviewId;
+  bookReviewId?: Id;
   isPublished?: boolean;
 }) => {
-  const { newBook, isLoading: newBookLoading } =
-    useNewbookFetch(savedBookReviewId);
-  const { isLoading: savedBookReviewLoading } =
-    useSavedBookReviewFetch(savedBookReviewId);
-
-  const isLoading = newBookLoading || savedBookReviewLoading;
+  const { newBook, isLoading: loading1 } = useNewBookStorage();
+  const { newBookReview, isLoading: loading2 } = useNewBookReview(bookReviewId);
 
   useHiddenLayout();
-  useS3GarbageCollection();
+  useS3GarbageCollection(); // 페이지 이동, 새로고침, 탭 닫기 동작시 불필요한 S3 이미지 제거
+
+  const { setBook, setBookReivew, initBookReview } = bookReviewStore();
+
+  const isLoading = loading1 || loading2;
+  const book = newBook || newBookReview?.book;
+
+  useEffect(() => {
+    initBookReview();
+  }, [initBookReview]);
+
+  useEffect(() => {
+    if (newBookReview) {
+      setBookReivew(newBookReview);
+      return;
+    }
+    if (book) {
+      setBook(book);
+    }
+  }, [book, newBookReview, setBook, setBookReivew]);
 
   return (
     <>
       <SEO title="독후감 쓰기" />
       {!isLoading && (
-        <NewbookWrite
+        <NewbookWriteTemplate
           logo={<LogoButton />}
-          bookName={newBook ? newBook.title : undefined}
+          bookName={book ? book.title : undefined}
           sejulTextarea={<SejulTextArea />}
           contentTextarea={<ContentEditor />}
           publishButton={
-            newBook && (
-              <PublishSideBar.Button isHiddenDraftSaveButton={isPublished} />
-            )
+            <PublishSideBar.Button isHiddenDraftSaveButton={isPublished} />
           }
-          draftSaveButton={newBook && !isPublished && <DraftSaveButton />}
+          draftSaveButton={!isPublished && <DraftSaveButton />}
         />
       )}
     </>
   );
 };
 
-interface ExtendedGetServerSidePropsContext
-  extends Omit<GetServerSidePropsContext, 'query'> {
-  query: PublishedBookReviewURLQuery & DraftSavedBookReviewURLQuery;
-}
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const { isLoggedIn } = await checkIsLoggedIn(ctx);
 
-export const getServerSideProps = async (
-  ctx: ExtendedGetServerSidePropsContext,
-) => {
-  const serverSideProps = await checkLogin(ctx);
-
-  if (checkRedirect(serverSideProps)) {
-    return serverSideProps;
+  if (!isLoggedIn) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: Route.HOME,
+      },
+      props: {},
+    };
   }
 
-  const savedBookReviewId = ctx.query.draft || ctx.query.publish;
+  const bookReviewId = ctx.query.draft || ctx.query.publish;
 
-  if (savedBookReviewId) {
+  if (bookReviewId) {
     const queryClient = await prefetchQuery([
-      getBookReviewQuery(Number(savedBookReviewId)),
-      getTagsQuery(Number(savedBookReviewId)),
+      getBookReviewQuery(+bookReviewId),
+      getTagsQuery(+bookReviewId),
     ]);
 
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
-        savedBookReviewId,
         isPublished: !!ctx.query.publish,
+        bookReviewId,
       },
     };
   }

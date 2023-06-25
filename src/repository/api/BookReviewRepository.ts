@@ -1,10 +1,8 @@
 import type {
   Id,
   UserId,
-  CreateDrafvSavedBookReviewReqeust,
-  CreatePublishedBookReviewRequest,
-  UpdatePublishedBookReviewRequest,
-  UpdateDraftSavedBookReviewReqeust,
+  CreateBookReviewReqeust,
+  UpdateBookReviewRequest,
   GetFollowingBookReviewPageRequest,
   GetBookReviewPageByBookNameRequest,
   GetBookReviewPageByCategoryRequest,
@@ -24,16 +22,16 @@ class BookReviewRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new BookReviewService() : null;
   }
 
-  async publish(bookReview: CreatePublishedBookReviewRequest) {
-    const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
+  async publish(bookReview: CreateBookReviewReqeust) {
+    const data = await this.axiosInstance.post<never, { bookReviewId: Id }>(
       `${this.baseUrl}/publish`,
       bookReview,
     );
     return data;
   }
 
-  async draftSave(bookReview: CreateDrafvSavedBookReviewReqeust) {
-    const { data } = await this.axiosInstance.post<{ bookReviewId: Id }>(
+  async draftSave(bookReview: CreateBookReviewReqeust) {
+    const data = await this.axiosInstance.post<never, { bookReviewId: Id }>(
       `${this.baseUrl}/draftsave`,
       bookReview,
     );
@@ -53,7 +51,7 @@ class BookReviewRepository extends HttpClient {
   }: {
     id: Id;
     userId: UserId;
-    bookReview: UpdatePublishedBookReviewRequest;
+    bookReview: UpdateBookReviewRequest;
   }) {
     await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: true },
@@ -67,7 +65,7 @@ class BookReviewRepository extends HttpClient {
   }: {
     id: Id;
     userId: UserId;
-    bookReview: UpdateDraftSavedBookReviewReqeust;
+    bookReview: UpdateBookReviewRequest;
   }) {
     await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: false },

@@ -16,9 +16,9 @@ import useDraftSavedList, {
 } from '@/hooks/services/queries/useDraftSavedList';
 
 const NewbookSearchPage = () => {
-  const newBookRepository = new NewBookRepository();
   const router = useRouter();
   const { draftSavedList } = useDraftSavedList();
+  const newBookRepository = new NewBookRepository();
 
   const handleClickSearchedItem = (book: Book) => {
     newBookRepository.set(book);

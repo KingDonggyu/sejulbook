@@ -11,7 +11,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
     id?: string;
     bookname: string;
     authors: string;
-    publication: Date;
+    publication: string;
     publisher: string;
     thumbnail: string;
     rating: string;

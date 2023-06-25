@@ -7,7 +7,7 @@ import { IoIosArrowUp } from '@react-icons/all-files/io/IoIosArrowUp';
 import { BoxVariant } from '@/constants';
 import Route from '@/constants/routes';
 import useOpenClose from '@/hooks/useOpenClose';
-import useMe from '@/hooks/services/queries/useMe';
+import useMe from '@/hooks/useMe';
 import Button from '@/components/atoms/Button';
 import Menu from '@/components/molecules/Menu';
 import AccountButton from '@/components/organisms/AccountButton';

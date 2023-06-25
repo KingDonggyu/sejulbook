@@ -1,4 +1,8 @@
 declare module 'bookReview' {
+  import type { Book } from 'book';
+  import type { Tag } from 'tag';
+  import type { Category, GetCategoryResponse } from 'category';
+
   export type Id = number;
   export type UserId = number;
   export type CategoryId = number;
@@ -16,7 +20,8 @@ declare module 'bookReview' {
 
   /* Request */
 
-  interface CreateRequest {
+  interface CreateBookReviewReqeust {
+    id?: Id;
     userId: UserId;
     bookname: Bookname;
     authors: Authors;
@@ -25,34 +30,18 @@ declare module 'bookReview' {
     rating: Rating;
     sejul: Sejul;
     content: Content;
+    thumbnail: Thumbnail;
+    categoryId: CategoryId;
     originThumbnail: OriginThumbnail;
-    tags: string[];
+    tags: Tag[];
   }
 
-  interface UpdateRequest {
+  interface UpdateBookReviewRequest {
+    id: Id;
     rating: Rating;
     sejul: Sejul;
     content: Content;
-    tags: string[];
-  }
-
-  export interface CreateDrafvSavedBookReviewReqeust extends CreateRequest {
-    thumbnail?: Thumbnail;
-    categoryId?: CategoryId;
-  }
-
-  export interface CreatePublishedBookReviewRequest extends CreateRequest {
-    id?: Id;
-    thumbnail: Thumbnail;
-    categoryId: CategoryId;
-  }
-
-  export interface UpdateDraftSavedBookReviewReqeust extends UpdateRequest {
-    thumbnail?: Thumbnail;
-    categoryId?: CategoryId;
-  }
-
-  export interface UpdatePublishedBookReviewRequest extends UpdateRequest {
+    tags: Tag[];
     thumbnail: Thumbnail;
     categoryId: CategoryId;
   }
@@ -101,7 +90,8 @@ declare module 'bookReview' {
     content: Content;
     originThumbnail: OriginThumbnail;
     writer: Writer;
-    category: string;
+    categorId: CategoryId;
+    category: Category;
   }
 
   export interface GetLibraryBookReviewResponse
@@ -127,4 +117,22 @@ declare module 'bookReview' {
     thumbnail: Thumbnail;
     writer: Writer;
   }
+
+  /* View */
+
+  export interface PublishOption {
+    thumbnail: Thumbnail;
+    category: GetCategoryResponse;
+    rating: Rating;
+    tags: Tag[];
+    sejul: Sejul;
+    content: Content;
+  }
+
+  export interface NewBookReview extends PublishOption {
+    id?: Id;
+    book: Book;
+  }
+
+  export type BookReviewToPublish = Omit<CreateBookReviewReqeust, 'userId'>;
 }

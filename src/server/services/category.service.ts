@@ -8,7 +8,8 @@ class CategoryService {
   private notFoundMessage = '해당 카테고리가 존재하지 않습니다.';
 
   async findAll(): Promise<GetCategoryResponse[]> {
-    return this.category.findMany();
+    const categories = await this.category.findMany();
+    return categories.slice(1);
   }
 
   async findById(id: Id): Promise<GetCategoryResponse> {

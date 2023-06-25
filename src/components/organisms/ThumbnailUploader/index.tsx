@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import type { Thumbnail as OriginThumbnail } from 'book';
 import Thumbnail from '@/components/atoms/Thumbnail';
 import UploadButton from '@/components/molecules/UploadButton';
 import Button from '@/components/atoms/Button';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
-import bookReviewStore from '@/stores/bookReviewStore';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { BookThumbnail } from '@/types/features/book';
-import { uploadLocalImage } from '@/services/api/bookReview';
-import { BookReviewError } from '@/services/errors/BookReviewError';
+import { createS3Object } from '@/lib/s3Client';
+import ExceptionBase from '@/lib/HttpErrorException';
 import * as s from './style';
 
 interface ThumbnailUploaderProps {
-  originThumbnail: BookThumbnail;
+  originThumbnail: OriginThumbnail;
 }
 
 const ThumbnailUploader = ({ originThumbnail }: ThumbnailUploaderProps) => {
@@ -27,23 +27,23 @@ const ThumbnailUploader = ({ originThumbnail }: ThumbnailUploaderProps) => {
 
   const handleUpload = async (file: File) => {
     try {
-      const url = await uploadLocalImage(file);
+      const url = await createS3Object(file);
       addImageKey(url);
       setThumbnail(url);
     } catch (error) {
-      if (error instanceof BookReviewError) {
+      if (error instanceof ExceptionBase) {
         toast.error(error.message);
       }
     }
   };
 
   const handleClickOriginThumbnailButton = () => {
-    setThumbnail(originThumbnail);
+    setThumbnail(originThumbnail || '');
   };
 
   useEffect(() => {
     if (!thumbnail) {
-      setThumbnail(originThumbnail);
+      setThumbnail(originThumbnail || '');
     }
   }, [originThumbnail, setThumbnail, thumbnail]);
 

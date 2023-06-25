@@ -5,7 +5,7 @@ import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import modalStore from '@/stores/modalStore';
 import useUserEdit from '@/hooks/services/mutations/useUserEdit';
-import useMe from '@/hooks/services/queries/useMe';
+import useMe from '@/hooks/useMe';
 
 const ProfileEditButton = () => {
   const { user } = useMe();

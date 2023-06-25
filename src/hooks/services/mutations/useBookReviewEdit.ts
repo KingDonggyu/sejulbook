@@ -1,50 +1,54 @@
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
+import type { UpdateBookReviewRequest } from 'bookReview';
 import useMutation from '@/lib/react-query/hooks/useMutation';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
+import { bookReviewSuccess } from '@/constants/message';
 import { getBookReviewQuery } from '../queries/useBookReview';
 
-interface PublishedRequest
-  extends Omit<
-    Parameters<BookReviewRepository['updatePublished']>[0],
-    'userId'
-  > {
+interface PublishedRequest {
+  bookReview: UpdateBookReviewRequest;
   isPublished: true;
 }
 
-interface DraftSavedRequest
-  extends Omit<
-    Parameters<BookReviewRepository['updateDraftSaved']>[0],
-    'userId'
-  > {
+interface DraftSavedRequest {
+  bookReview: UpdateBookReviewRequest;
   isPublished: false;
 }
 
 type Request = PublishedRequest | DraftSavedRequest;
 
-const useBookReviewEdit = () => {
+interface UseBookReviewEditOption {
+  onSuccess?: () => void;
+}
+
+const useBookReviewEdit = ({ onSuccess }: UseBookReviewEditOption = {}) => {
   let queryKey: QueryKey;
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation<void, Request>({
-    mutationFn: async (userId, { isPublished, id, bookReview }) => {
-      queryKey = getBookReviewQuery(id).queryKey;
+    mutationFn: async (userId, { isPublished, bookReview }) => {
+      queryKey = getBookReviewQuery(bookReview.id).queryKey;
       if (isPublished) {
         await new BookReviewRepository().updatePublished({
-          id,
+          id: bookReview.id,
           userId,
           bookReview,
         });
         return;
       }
       await new BookReviewRepository().updateDraftSaved({
-        id,
+        id: bookReview.id,
         userId,
         bookReview,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
+      toast.success(bookReviewSuccess.DRAFT_SAVE);
+      if (onSuccess) {
+        onSuccess();
+      }
     },
     onError: (error) => {
       toast.error(error.message);

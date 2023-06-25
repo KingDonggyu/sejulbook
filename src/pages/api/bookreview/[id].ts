@@ -15,9 +15,9 @@ interface DeleteApiRequest extends Omit<NextApiRequest, 'query'> {
   query: { id: string; userId: string };
 }
 
-interface PublishedPutApiRequest extends Omit<NextApiRequest, 'query'> {
+interface PutApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.PUT;
-  query: { id: string; userId: string; isPublished: 'true' };
+  query: { id: string; userId: string; isPublished: string };
   body: {
     rating: string;
     sejul: string;
@@ -28,24 +28,7 @@ interface PublishedPutApiRequest extends Omit<NextApiRequest, 'query'> {
   };
 }
 
-interface DraftSavedPutApiRequest extends Omit<NextApiRequest, 'query'> {
-  method: HttpMethods.PUT;
-  query: { id: string; userId: string; isPublished: 'false' };
-  body: {
-    rating: string;
-    sejul: string;
-    content: string;
-    thumbnail?: string;
-    categoryId?: string;
-    tags: string[];
-  };
-}
-
-type ExtenedNextApiRequest =
-  | GetApiRequest
-  | DeleteApiRequest
-  | PublishedPutApiRequest
-  | DraftSavedPutApiRequest;
+type ExtenedNextApiRequest = GetApiRequest | DeleteApiRequest | PutApiRequest;
 
 const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   const bookReviewService = new BookReviewService();
@@ -73,22 +56,23 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.query.isPublished === 'true') {
-    const { body } = req as PublishedPutApiRequest;
     await bookReviewService.updatePublished(id, {
-      ...body,
-      rating: +body.rating,
-      categoryId: +body.categoryId,
+      ...req.body,
+      id,
+      rating: +req.body.rating,
+      categoryId: +req.body.categoryId,
     });
     res.status(200).end();
     return;
   }
 
-  const { body } = req as DraftSavedPutApiRequest;
   await bookReviewService.updateDraftSaved(id, {
-    ...body,
-    rating: +body.rating,
-    categoryId: body.categoryId ? +body.categoryId : undefined,
+    ...req.body,
+    id,
+    rating: +req.body.rating,
+    categoryId: +req.body.categoryId,
   });
+  res.status(200).end();
 };
 
 export default errorHandler(handler);

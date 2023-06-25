@@ -22,7 +22,6 @@ import useSignUp from '@/hooks/services/mutations/useSignUp';
 import type { Profile } from 'user';
 
 interface LayoutContextProps {
-  visible: { headerBar: boolean; screenModeButton: boolean; footer: boolean };
   showHeaderBar: () => void;
   showScreenModeButton: () => void;
   hideHeaderBar: () => void;
@@ -32,7 +31,6 @@ interface LayoutContextProps {
 }
 
 const LayoutContext = createContext<LayoutContextProps>({
-  visible: { headerBar: true, screenModeButton: true, footer: false },
   showHeaderBar: () => {},
   showScreenModeButton: () => {},
   hideHeaderBar: () => {},
@@ -46,47 +44,20 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const signUp = useSignUp();
   const { openModal } = modalStore();
 
-  const [visible, setVisible] = useState({
-    headerBar: true,
-    screenModeButton: true,
-    footer: false,
-  });
+  const [hasHeaderBar, setHasHeaderBar] = useState(true);
+  const [hasScreenModeButton, setHasScreenModeButton] = useState(true);
+  const [hasFooter, setHasFooter] = useState(false);
 
   const contextProps: LayoutContextProps = useMemo(
     () => ({
-      visible,
-      showHeaderBar: () => {
-        if (!visible.headerBar) {
-          setVisible({ ...visible, headerBar: true });
-        }
-      },
-      hideHeaderBar: () => {
-        if (visible.headerBar) {
-          setVisible({ ...visible, headerBar: false });
-        }
-      },
-      showFooter: () => {
-        if (!visible.footer) {
-          setVisible({ ...visible, footer: true });
-        }
-      },
-      hideFooter: () => {
-        if (visible.footer) {
-          setVisible({ ...visible, footer: false });
-        }
-      },
-      showScreenModeButton: () => {
-        if (!visible.screenModeButton) {
-          setVisible({ ...visible, screenModeButton: true });
-        }
-      },
-      hideScreenModeButton: () => {
-        if (visible.screenModeButton) {
-          setVisible({ ...visible, screenModeButton: false });
-        }
-      },
+      showHeaderBar: () => setHasHeaderBar(true),
+      hideHeaderBar: () => setHasHeaderBar(false),
+      showFooter: () => setHasFooter(true),
+      hideFooter: () => setHasFooter(false),
+      showScreenModeButton: () => setHasScreenModeButton(true),
+      hideScreenModeButton: () => setHasScreenModeButton(false),
     }),
-    [visible],
+    [],
   );
 
   const handleSignUp = async ({ name, introduce }: Profile) => {
@@ -103,7 +74,7 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <LayoutContext.Provider value={contextProps}>
-      {visible.headerBar && <HeaderBar />}
+      {hasHeaderBar && <HeaderBar />}
       {children}
       <ProfileSettingModal
         modalKey={ModalKey.SIGNUP}
@@ -111,13 +82,13 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
         onComplete={handleSignUp}
         onCancel={() => signOut()}
       />
-      {visible.screenModeButton && <ScreenModeButton />}
+      {hasScreenModeButton && <ScreenModeButton />}
       <ToastContainer
         theme="colored"
         position="bottom-left"
         style={{ lineHeight: 1.4 }}
       />
-      {visible.footer && <Footer />}
+      {hasFooter && <Footer />}
     </LayoutContext.Provider>
   );
 };

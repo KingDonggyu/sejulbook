@@ -18,9 +18,9 @@ class TagService {
   }
 
   async create({ bookReviewId, tags }: CreateTagReqeust) {
-    const promises = tags.map(async (tag) => {
-      this.tag.create({ data: { bookReviewId, tag } });
-    });
+    const promises = tags.map(async (tag) =>
+      this.tag.create({ data: { bookReviewId, tag } }),
+    );
 
     await Promise.all(promises);
   }

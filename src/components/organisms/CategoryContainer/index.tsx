@@ -1,12 +1,12 @@
+import type { StyleProps } from '@emotion/react';
+import type { GetCategoryResponse } from 'category';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { CategoryResponse } from '@/types/features/category';
-import { StyleProps } from '@/@types/style';
 import * as s from './style';
 
 interface CategoryContainerProps extends StyleProps {
-  categories: CategoryResponse[];
-  handleClickCategory: (category: CategoryResponse) => void;
+  categories: GetCategoryResponse[];
+  handleClickCategory: (category: GetCategoryResponse) => void;
 }
 
 const CategoryContainer = ({
