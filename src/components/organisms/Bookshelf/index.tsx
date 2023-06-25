@@ -4,20 +4,20 @@ import Image from 'next/image';
 import { css, Theme } from '@emotion/react';
 import { GiPencil } from '@react-icons/all-files/gi/GiPencil';
 import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
+import type {
+  GetBookReviewPageResponse,
+  GetLibraryBookReviewResponse,
+} from 'bookReview';
 
 import spinnerSrc from '@public/images/animation-spinner.svg';
 import Route from '@/constants/routes';
 import convert1DArrayTo2DArray from '@/utils/convert1DArrayTo2DArray';
 import useIntersect from '@/hooks/useIntersect';
 import { iconButtonStyle } from '@/styles/common';
-import {
-  LibraryBookReviewSummary,
-  FeedBookReviewSummary,
-} from '@/types/features/bookReview';
 import BookReviewItem from '../BookReivewItem';
 import * as s from './style';
 
-type BookReview = LibraryBookReviewSummary | FeedBookReviewSummary;
+type BookReview = GetLibraryBookReviewResponse | GetBookReviewPageResponse;
 
 interface BookshelfProps {
   isLoading?: boolean;
@@ -46,7 +46,6 @@ const BookshelfRow = ({ row }: { row: (BookReview | null)[] }) => (
       if (!bookReview) {
         return <WriteBookReviewItem key={0} />;
       }
-
       return <BookReviewItem key={bookReview.id} bookReview={bookReview} />;
     })}
   </s.Row>

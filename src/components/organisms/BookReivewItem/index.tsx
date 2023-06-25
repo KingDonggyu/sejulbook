@@ -1,17 +1,17 @@
 import Link from 'next/link';
 import { FaComment } from '@react-icons/all-files/fa/FaComment';
 import { FaHeart } from '@react-icons/all-files/fa/FaHeart';
+import type {
+  GetBookReviewPageResponse,
+  GetLibraryBookReviewResponse,
+} from 'bookReview';
 import SejulThumbnail from '@/components/organisms/SejulThumbnail';
 import Route from '@/constants/routes';
 import { lightTheme as theme } from '@/styles/theme';
-import {
-  LibraryBookReviewSummary,
-  FeedBookReviewSummary,
-} from '@/types/features/bookReview';
 import * as s from './style';
 
 interface BookReviewItemProps {
-  bookReview: LibraryBookReviewSummary | FeedBookReviewSummary;
+  bookReview: GetLibraryBookReviewResponse | GetBookReviewPageResponse;
 }
 
 const BookReviewItem = ({ bookReview }: BookReviewItemProps) => {

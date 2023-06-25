@@ -116,6 +116,8 @@ declare module 'bookReview' {
     sejul: Sejul;
     thumbnail: Thumbnail;
     writer: Writer;
+    likeCount: number;
+    commentCount: number;
   }
 
   /* View */

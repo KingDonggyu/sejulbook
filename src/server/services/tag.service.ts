@@ -10,6 +10,13 @@ import type {
 class TagService {
   private tag = new PrismaClient().tag;
 
+  async findAllBookReviewIdByTagName(tag: Tag) {
+    return this.tag.findMany({
+      select: { bookReviewId: true },
+      where: { tag },
+    });
+  }
+
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<GetTagResponse[]> {

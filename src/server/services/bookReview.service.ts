@@ -333,7 +333,7 @@ class BookReviewService {
       take: 12,
     });
 
-    return this.addWritersToPagedBookReviews(bookReviews);
+    return this.addDetailInfoToPagedBookReviews(bookReviews);
   }
 
   // 카테고리로 독후감 검색 - pagination
@@ -361,7 +361,7 @@ class BookReviewService {
       take: 12,
     });
 
-    return this.addWritersToPagedBookReviews(bookReviews);
+    return this.addDetailInfoToPagedBookReviews(bookReviews);
   }
 
   // 태그로 독후감 검색 - pagination
@@ -379,7 +379,7 @@ class BookReviewService {
       return [];
     }
 
-    const tags = await new TagService().findAllByTagName(tag);
+    const tags = await new TagService().findAllBookReviewIdByTagName(tag);
     const bookReivewIds = tags.map(({ bookReviewId }) => bookReviewId);
 
     const bookReviews = await this.bookReview.findMany({
@@ -391,7 +391,7 @@ class BookReviewService {
       take: 12,
     });
 
-    return this.addWritersToPagedBookReviews(bookReviews);
+    return this.addDetailInfoToPagedBookReviews(bookReviews);
   }
 
   // 관심 서재 독후감 - pagination
@@ -424,7 +424,7 @@ class BookReviewService {
       take: 12,
     });
 
-    return this.addWritersToPagedBookReviews(bookReviews);
+    return this.addDetailInfoToPagedBookReviews(bookReviews);
   }
 
   private async findMaxId(): Promise<Id | null> {
@@ -460,12 +460,20 @@ class BookReviewService {
     return Promise.all(promises);
   }
 
-  private async addWritersToPagedBookReviews(
-    bookReviews: Omit<GetBookReviewPageResponse, 'writer'>[],
+  private async addDetailInfoToPagedBookReviews(
+    bookReviews: Omit<
+      GetBookReviewPageResponse,
+      'writer' | 'commentCount' | 'likeCount'
+    >[],
   ) {
-    const promises = bookReviews.map(async ({ userId, ...bookReview }) => {
-      const { name: writer } = await this.userService.findNameById(userId);
-      return { ...bookReview, userId, writer };
+    const promises = bookReviews.map(async ({ id, userId, ...bookReview }) => {
+      const [{ name: writer }, commentCount, likeCount] = await Promise.all([
+        this.userService.findNameById(userId),
+        new CommentService().countByBookReview(id),
+        new LikeService().countByBookReview(id),
+      ]);
+
+      return { ...bookReview, id, userId, writer, commentCount, likeCount };
     });
 
     return Promise.all(promises);

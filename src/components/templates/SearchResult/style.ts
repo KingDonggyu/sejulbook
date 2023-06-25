@@ -2,14 +2,9 @@ import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
   margin: auto;
-  padding-top: 30px;
+  padding: 7rem 20px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
-
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    padding: 20px 0;
-    padding-bottom: 0;
-  }
 `;
 
 export const Title = styled.h1`
