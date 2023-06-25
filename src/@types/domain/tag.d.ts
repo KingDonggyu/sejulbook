@@ -13,4 +13,9 @@ declare module 'tag' {
     tag: Tag;
     bookReviewId: BookReviewId;
   }
+
+  export interface SearchTagResponse {
+    tag: Tag;
+    count: number;
+  }
 }

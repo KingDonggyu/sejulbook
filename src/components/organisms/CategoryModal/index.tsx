@@ -23,13 +23,11 @@ const CategoryModal = ({
   return (
     <Modal modalKey={modalKey} {...modalProps}>
       <s.Title>카테고리</s.Title>
-      {categories && (
-        <CategoryContainer
-          categories={categories}
-          handleClickCategory={handleClickCategory}
-          css={s.categoryContainerStyle}
-        />
-      )}
+      <CategoryContainer
+        categories={categories}
+        handleClickCategory={handleClickCategory}
+        css={s.categoryContainerStyle}
+      />
     </Modal>
   );
 };

@@ -5,7 +5,7 @@ import { ButtonVariant, ColorVariant } from '@/constants';
 import * as s from './style';
 
 interface CategoryContainerProps extends StyleProps {
-  categories: GetCategoryResponse[];
+  categories?: GetCategoryResponse[];
   handleClickCategory: (category: GetCategoryResponse) => void;
 }
 
@@ -15,18 +15,20 @@ const CategoryContainer = ({
   ...styleProps
 }: CategoryContainerProps) => (
   <s.Wrapper {...styleProps}>
-    {categories.map(({ id, category }) => (
-      <Button
-        key={category}
-        radius={0}
-        variant={ButtonVariant.OUTLINED}
-        color={ColorVariant.LINE}
-        css={s.categoryItemStyle}
-        onClick={() => handleClickCategory({ id, category })}
-      >
-        {category}
-      </Button>
-    ))}
+    {categories
+      ? categories.map(({ id, category }) => (
+          <Button
+            key={category}
+            radius={0}
+            variant={ButtonVariant.OUTLINED}
+            color={ColorVariant.LINE}
+            css={s.categoryItemStyle}
+            onClick={() => handleClickCategory({ id, category })}
+          >
+            {category}
+          </Button>
+        ))
+      : Array.from({ length: 20 }, () => <s.Skeleton />)}
   </s.Wrapper>
 );
 

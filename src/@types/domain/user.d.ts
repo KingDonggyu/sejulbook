@@ -14,6 +14,12 @@ declare module 'user' {
     introduce: Introduce;
   }
 
+  export interface User {
+    id: Id;
+    name: Name;
+    introduce: Introduce;
+  }
+
   /* Request */
 
   export interface CreateUserRequest {

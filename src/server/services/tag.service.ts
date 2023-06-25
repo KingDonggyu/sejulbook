@@ -1,5 +1,11 @@
 import { PrismaClient } from '@prisma/client';
-import type { Tag, BookReviewId, CreateTagReqeust, GetTagResponse } from 'tag';
+import type {
+  Tag,
+  BookReviewId,
+  CreateTagReqeust,
+  GetTagResponse,
+  SearchTagResponse,
+} from 'tag';
 
 class TagService {
   private tag = new PrismaClient().tag;
@@ -10,11 +16,16 @@ class TagService {
     return this.tag.findMany({ where: { bookReviewId } });
   }
 
-  async findAllByTagName(tag: Tag): Promise<GetTagResponse[]> {
-    return this.tag.findMany({
-      where: { tag: { search: `${tag}*` } },
+  async findAllByTagName(tagName: Tag): Promise<SearchTagResponse[]> {
+    const result = await this.tag.groupBy({
+      by: ['tag'],
+      _count: { tag: true },
+      where: { tag: { search: `${tagName}*` } },
+      orderBy: { _count: { tag: 'desc' } },
       take: 10,
     });
+
+    return result.map(({ _count, tag }) => ({ tag, count: _count.tag }));
   }
 
   async create({ bookReviewId, tags }: CreateTagReqeust) {

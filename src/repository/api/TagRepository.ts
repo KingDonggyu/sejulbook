@@ -1,6 +1,6 @@
 import HttpClient from '@/lib/HttpClient';
 import TagService from '@/server/services/tag.service';
-import type { BookReviewId, GetTagResponse } from 'tag';
+import type { BookReviewId, GetTagResponse, SearchTagResponse } from 'tag';
 
 class TagRepository extends HttpClient {
   private service: TagService | null;
@@ -19,7 +19,7 @@ class TagRepository extends HttpClient {
     return this.axiosInstance(`${this.baseUrl}/${bookReviewId}`);
   }
 
-  search(query: string) {
+  search(query: string): Promise<SearchTagResponse[]> {
     if (this.service) {
       return this.service.findAllByTagName(query);
     }

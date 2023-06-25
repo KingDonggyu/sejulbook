@@ -11,7 +11,7 @@ import * as s from './style';
 
 const BookReviewSearchTabs = () => {
   const router = useRouter();
-  const categories = useCategories();
+  const { categories } = useCategories();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleSelectTab = (index: number) => {
