@@ -1,30 +1,37 @@
 import { GetServerSidePropsContext } from 'next';
 import { dehydrate } from '@tanstack/react-query';
+import checkIsLoggedIn from '@/server/middlewares/checkIsLoggedIn';
+import type { Id } from 'user';
+
 import SEO from '@/components/atoms/SEO';
 import Button from '@/components/atoms/Button';
 import UserListModal from '@/components/organisms/UserListModal';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscriptionsTemplate from '@/components/templates/Subscriptions';
-import { UserId } from '@/types/features/user';
 import modalStore from '@/stores/modalStore';
 import { ModalKey } from '@/constants/keys';
+import useFollowInfo, {
+  getFollowInfoQuery,
+} from '@/hooks/services/queries/useFollowInfo';
+import useInfiniteFollowingBookReviewList, {
+  getFollowingBookReviewListInfinityQuery,
+} from '@/hooks/services/infiniteQueries/useInfiniteFollowingBookReviewList';
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
+import Route from '@/constants/routes';
 
-import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
-import useInfinityFollowingBookReviewList from '@/hooks/services/infinityQueries/useInfinityFollowingBookReviewList';
-import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
-import prefetchQuery from '@/services/prefetchQuery';
-import { getFollowInfoQuery } from '@/services/queries/follow';
-import { getFollowingBookReviewListInfinityQuery } from '@/services/queries/bookReview';
-
-const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
+const SubscriptionsPage = ({ userId }: { userId: Id }) => {
   const { openModal } = modalStore();
-  const { followingCount } = useFollowInfo(myUserId);
+  const { followInfo } = useFollowInfo(userId);
 
   const {
     followingBookReviewList,
     refetchNextFollowingBookReviewList,
     isLoading,
-  } = useInfinityFollowingBookReviewList(myUserId);
+  } = useInfiniteFollowingBookReviewList();
+
+  if (!followInfo) {
+    return null;
+  }
 
   return (
     <>
@@ -32,7 +39,7 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
       <SubscriptionsTemplate
         followingUserListModalButton={
           <Button onClick={() => openModal(ModalKey.FOLLOWING_USER_LIST)}>
-            관심서재 {followingCount}
+            관심서재 {followInfo.followingCount}
           </Button>
         }
         bookshelf={
@@ -45,7 +52,7 @@ const SubscriptionsPage = ({ myUserId }: { myUserId: UserId }) => {
         }
       />
       <UserListModal
-        userId={myUserId}
+        userId={userId}
         modalKey={ModalKey.FOLLOWING_USER_LIST}
         isFollowing
       />
@@ -63,21 +70,25 @@ interface ExtendedGetServerSidePropsContext
 export const getServerSideProps = async (
   ctx: ExtendedGetServerSidePropsContext,
 ) => {
-  const serverSideProps = await checkLogin(ctx);
+  const { isLoggedIn, userId } = await checkIsLoggedIn(ctx);
 
-  if (checkRedirect(serverSideProps) || !serverSideProps.props.userId) {
-    return serverSideProps;
+  if (!isLoggedIn) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: Route.HOME,
+      },
+      props: {},
+    };
   }
 
-  const myUserId = serverSideProps.props.userId;
-
   const queryClient = await prefetchQuery(
-    [getFollowInfoQuery({ targetUserId: myUserId, myUserId })],
-    [getFollowingBookReviewListInfinityQuery({ userId: myUserId })],
+    [getFollowInfoQuery({ targetUserId: userId, myUserId: userId })],
+    [getFollowingBookReviewListInfinityQuery({ myUserId: userId })],
   );
 
   return {
-    props: { dehydratedState: dehydrate(queryClient), myUserId },
+    props: { dehydratedState: dehydrate(queryClient), userId },
   };
 };
 

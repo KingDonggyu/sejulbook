@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Router } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Id as UserId } from 'user';
 
+import spinnerSrc from '@public/images/animation-spinner.svg';
 import Route from '@/constants/routes';
 import { ModalKey } from '@/constants/keys';
 import useUserStatus from '@/hooks/useUserStatus';
@@ -27,7 +29,8 @@ const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
   const { user } = useUser(userId);
   const { session, isLogin } = useUserStatus();
   const { followInfo } = useFollowInfo(userId);
-  const { followUserList, refetchNextFollowUserList } =
+
+  const { followUserList, refetchNextFollowUserList, isLoading } =
     useInfinityFollowUserList({
       userId,
       isFollowing,
@@ -86,6 +89,15 @@ const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
               )}
             </s.UserItem>
           ))}
+          {isLoading && (
+            <Image
+              src={spinnerSrc}
+              alt="로딩 이미지"
+              width={70}
+              height={70}
+              css={s.spinnerStyle}
+            />
+          )}
           <s.IntersectTarget ref={intersectRef} />
         </ul>
       </s.Wrapper>

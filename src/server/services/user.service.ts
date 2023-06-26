@@ -89,12 +89,12 @@ class UserService {
     const emptyArray: number[] = [];
     const followService = new FollowService();
 
-    const [followerIds, followingIds] = await Promise.all([
+    const [followerIds, myFollowingIds] = await Promise.all([
       followService.findPagedFollowers({ followingId: id, targetId }),
       myUserId ? followService.findAllFollowingId(myUserId) : emptyArray,
     ]);
 
-    const promises = followerIds.map(async ({ followerId }) => {
+    const promises = followerIds.map(async ({ id: followId, followerId }) => {
       const follower = await this.user.findUnique({
         select: { id: true, name: true, introduce: true },
         where: { id: followerId },
@@ -104,7 +104,11 @@ class UserService {
         throw new NotFoundException(`${followerId} 사용자를 찾을 수 없습니다.`);
       }
 
-      return { ...follower, isFollow: followingIds.includes(follower.id) };
+      return {
+        ...follower,
+        followId,
+        isFollow: myFollowingIds.includes(follower.id),
+      };
     });
 
     return Promise.all(promises);
@@ -118,12 +122,12 @@ class UserService {
     const emptyArray: number[] = [];
     const followService = new FollowService();
 
-    const [followingIds, followerIds] = await Promise.all([
+    const [followingIds, myFollowingIds] = await Promise.all([
       followService.findPagedFollowings({ followerId: id, targetId }),
-      myUserId ? followService.findAllFollowerId(myUserId) : emptyArray,
+      myUserId ? followService.findAllFollowingId(myUserId) : emptyArray,
     ]);
 
-    const promises = followingIds.map(async ({ followingId }) => {
+    const promises = followingIds.map(async ({ id: followId, followingId }) => {
       const following = await this.user.findUnique({
         select: { id: true, name: true, introduce: true },
         where: { id: followingId },
@@ -135,7 +139,11 @@ class UserService {
         );
       }
 
-      return { ...following, isFollow: followerIds.includes(following.id) };
+      return {
+        ...following,
+        followId,
+        isFollow: myFollowingIds.includes(following.id),
+      };
     });
 
     return Promise.all(promises);

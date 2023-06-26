@@ -17,6 +17,7 @@ const useInfiniteQuery = <TQueryFnData extends Array<TQueryFnData[number]>>({
       setIsLoading(false);
       return data;
     },
+    enabled: false,
     ...options,
   });
 

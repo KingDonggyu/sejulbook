@@ -1,4 +1,4 @@
-import type { FollowDefaultReqeust, UserId } from 'follow';
+import type { UserId } from 'follow';
 import type { InfiniteQuery } from '@/lib/react-query/types/query';
 import useInfiniteQuery from '@/lib/react-query/hooks/useInfiniteQuery';
 import UserRepository from '@/repository/api/UserRepository';
@@ -12,10 +12,15 @@ type FollowingResponse = Awaited<
   ReturnType<UserRepository['getPagedFollowings']>
 >;
 
+interface FollowUserListRequest {
+  targetUserId: UserId;
+  myUserId: UserId | null;
+}
+
 export const getFollowerListInfiniteQuery = ({
   targetUserId,
   myUserId,
-}: FollowDefaultReqeust): InfiniteQuery<FollowerResponse> => ({
+}: FollowUserListRequest): InfiniteQuery<FollowerResponse> => ({
   queryKey: ['user_getPagedFollowers', targetUserId],
   queryFn: ({ pageParam }) => {
     if (!targetUserId) {
@@ -32,7 +37,7 @@ export const getFollowerListInfiniteQuery = ({
 export const getFollowingListInfiniteQuery = ({
   targetUserId,
   myUserId,
-}: FollowDefaultReqeust): InfiniteQuery<FollowingResponse> => ({
+}: FollowUserListRequest): InfiniteQuery<FollowingResponse> => ({
   queryKey: ['user_getPagedFollowings', targetUserId],
   queryFn: ({ pageParam }) => {
     if (!targetUserId) {
@@ -69,8 +74,9 @@ const useInfiniteFollowUserList = ({
         if (!lastPage || !lastPage.length) {
           return null;
         }
-        return lastPage[lastPage.length - 1].id;
+        return lastPage[lastPage.length - 1].followId;
       },
+      enabled: !!myUserId,
     },
   });
 

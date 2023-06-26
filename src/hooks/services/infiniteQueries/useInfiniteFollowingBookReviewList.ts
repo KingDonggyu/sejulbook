@@ -2,14 +2,13 @@ import useInfiniteQuery from '@/lib/react-query/hooks/useInfiniteQuery';
 import type { InfiniteQuery } from '@/lib/react-query/types/query';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
 import useUserStatus from '@/hooks/useUserStatus';
-
-type Response = Awaited<ReturnType<BookReviewRepository['getFollowingPages']>>;
+import { GetBookReviewPageResponse } from 'bookReview';
 
 export const getFollowingBookReviewListInfinityQuery = ({
   myUserId,
 }: {
   myUserId?: number;
-}): InfiniteQuery<Response> => ({
+}): InfiniteQuery<GetBookReviewPageResponse[]> => ({
   queryKey: ['bookReview_getFollowingPages'],
   queryFn: ({ pageParam }) => {
     if (!myUserId) {
@@ -26,7 +25,9 @@ const useInfiniteFollowingBookReviewList = () => {
   const { session, isLogin } = useUserStatus();
   const myUserId = isLogin ? session.id : undefined;
 
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery<Response>({
+  const { data, fetchNextPage, isLoading } = useInfiniteQuery<
+    GetBookReviewPageResponse[]
+  >({
     ...getFollowingBookReviewListInfinityQuery({ myUserId }),
     options: {
       getNextPageParam: (lastPage) => {

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const Wrapper = styled.div`
   margin: auto;
-  padding-top: 30px;
+  padding: 7rem 20px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
   max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
 
@@ -10,11 +10,6 @@ export const Wrapper = styled.div`
     margin-left: auto;
     font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
     font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};
-  }
-
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
-    padding: 20px 0;
-    padding-bottom: 0;
   }
 `;
 

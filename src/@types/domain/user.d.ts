@@ -57,6 +57,7 @@ declare module 'user' {
   }
 
   export interface GetUserPageResponse extends GetSearchedUserResponse {
+    followId: number;
     isFollow: boolean;
   }
 }

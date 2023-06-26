@@ -69,3 +69,9 @@ export const buttonStyle = (theme: Theme) => css`
   padding: 6px;
   font-size: ${theme.FONT_SIZE.EXTRA_SMALL};
 `;
+
+export const spinnerStyle = css`
+  margin: auto;
+  margin-top: 20px;
+  display: block;
+`;
