@@ -12,14 +12,14 @@ interface UseMutationOptions<TQueryFnData, TVariables> {
   mutationFn: (userId: number, args: TVariables) => Promise<TQueryFnData>;
   onSuccess?: (data: TQueryFnData) => void;
   onError?: (error: ExceptionBase) => void;
-  noLoginRequired?: boolean;
+  loginRequired?: boolean;
 }
 
 const useMutation = <TQueryFnData, TVariables>({
   mutationFn,
   onSuccess,
   onError,
-  noLoginRequired = false,
+  loginRequired = true,
 }: UseMutationOptions<TQueryFnData, TVariables>) => {
   const [isLoading, setIsLoading] = useState(false);
   const { session, isLogin } = useUserStatus();
@@ -36,12 +36,16 @@ const useMutation = <TQueryFnData, TVariables>({
 
       setIsLoading(true);
 
-      if (!noLoginRequired && !isLogin) {
+      if (!loginRequired) {
+        return mutationFn(NaN, args);
+      }
+
+      if (!isLogin) {
         toast.error(userError.NOT_LOGGED);
         return new MutationFail();
       }
 
-      return mutationFn(isLogin ? session.id : null, args);
+      return mutationFn(session.id, args);
     },
 
     onSuccess: (data) => {

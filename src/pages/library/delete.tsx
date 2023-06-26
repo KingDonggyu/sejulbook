@@ -1,36 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 import DeleteTemplate from '@/components/templates/Delete';
-import checkLogin from '@/services/middlewares/checkLogin';
-import { UserId } from '@/types/features/user';
 import Route from '@/constants/routes';
 import useUserDeletion from '@/hooks/services/mutations/useUserDeletion';
+import checkIsLoggedIn from '@/server/middlewares/checkIsLoggedIn';
 
-interface DeletePageProps {
-  myId: UserId | null;
-}
-
-const DeletePage = ({ myId }: DeletePageProps) => {
+const DeletePage = () => {
   const [isAgree, setIsAgree] = useState(false);
   const router = useRouter();
 
   const deleteUser = useUserDeletion({
     onSuccess: () => {
-      router.replace(Route.HOME);
+      signOut().then(() => router.replace(Route.HOME));
     },
   });
-
-  useEffect(() => {
-    if (!myId) {
-      router.replace(Route.HOME);
-    }
-  }, [myId, router]);
-
-  if (!myId) {
-    return null;
-  }
 
   const handleClickAgreeCheckBox = () => {
     setIsAgree(!isAgree);
@@ -42,7 +27,6 @@ const DeletePage = ({ myId }: DeletePageProps) => {
       return;
     }
 
-    signOut();
     deleteUser();
   };
 
@@ -56,21 +40,19 @@ const DeletePage = ({ myId }: DeletePageProps) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const serverSideProps = await checkLogin(ctx);
+  const { isLoggedIn } = await checkIsLoggedIn(ctx);
 
-  if (!serverSideProps.props.userId) {
+  if (!isLoggedIn) {
     return {
-      props: {
-        myId: null,
+      redirect: {
+        permanent: false,
+        destination: Route.HOME,
       },
+      props: {},
     };
   }
 
-  return {
-    props: {
-      myId: serverSideProps.props.userId,
-    },
-  };
+  return { props: {} };
 };
 
 export default DeletePage;

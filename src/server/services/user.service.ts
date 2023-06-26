@@ -45,16 +45,6 @@ class UserService {
     return { ...user, joindated: user.joindated.toString() };
   }
 
-  async findByName(name: Name): Promise<GetUserResponse> {
-    const user = await this.user.findUnique({ where: { name } });
-
-    if (!user) {
-      throw new NotFoundException(this.notFoundMessage);
-    }
-
-    return { ...user, joindated: user.joindated?.toString() };
-  }
-
   async findIdBySub(sub: Sub) {
     const user = await this.user.findFirst({
       select: { id: true },
@@ -157,7 +147,14 @@ class UserService {
     }
 
     await this.user.create({
-      data: { ...user, age: user.age || 'null' },
+      data: {
+        sub: user.sub,
+        name: user.name,
+        introduce: user.introduce,
+        email: user.email,
+        gender: user.gender,
+        age: user.age || 'null',
+      },
     });
   }
 
@@ -187,6 +184,11 @@ class UserService {
     ]);
   }
 
+  async checkDuplicateName(name: Name): Promise<boolean> {
+    const user = await this.user.findUnique({ where: { name } });
+    return !!user;
+  }
+
   private async validate(
     name: Name,
     introduce: Introduce,
@@ -211,8 +213,8 @@ class UserService {
     }
 
     if (checkNameDuplicate) {
-      const isDuplicateName = !!(await this.findByName(lowerCaseName));
-      if (!isDuplicateName) {
+      const isDuplicateName = await this.checkDuplicateName(lowerCaseName);
+      if (isDuplicateName) {
         throw new BadRequestException(
           '해당 이름은 이미 다른 사용자가 사용하고 있습니다.',
         );

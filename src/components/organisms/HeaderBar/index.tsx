@@ -6,7 +6,7 @@ import useUserStatus from '@/hooks/useUserStatus';
 import * as s from './style';
 
 const HeaderBar = () => {
-  const { session, isLogin, isLoading } = useUserStatus();
+  const { isLogin, isLoading } = useUserStatus();
 
   return (
     <s.Background>

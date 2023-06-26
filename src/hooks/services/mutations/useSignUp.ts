@@ -22,7 +22,7 @@ const useSignUp = () => {
     onError: (error) => {
       toast.error(error.message);
     },
-    noLoginRequired: true,
+    loginRequired: false,
   });
 
   return mutate;
