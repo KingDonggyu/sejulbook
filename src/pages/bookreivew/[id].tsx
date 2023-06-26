@@ -83,10 +83,6 @@ const BookreviewPage = () => {
     });
   };
 
-  if (!bookReview) {
-    return null;
-  }
-
   return (
     <>
       <SEO

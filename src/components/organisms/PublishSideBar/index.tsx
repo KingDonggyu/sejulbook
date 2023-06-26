@@ -5,6 +5,8 @@ import Route from '@/constants/routes';
 import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
 import useBookReviewPublication from '@/hooks/services/mutations/useBookReviewPublication';
+import useBookReviewEdit from '@/hooks/services/mutations/useBookReviewEdit';
+import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
@@ -38,6 +40,7 @@ const PublishSideBar = ({
     setRating,
     setTags: setTag,
     getBookReviewToPublish,
+    getBookReviewToUpdate,
   } = bookReviewStore();
 
   const handleSuccess = (bookReviewId: Id) => {
@@ -52,11 +55,28 @@ const PublishSideBar = ({
     router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
 
+  const { savedBookReviewId } = useSavedBookReviewId();
+
   const publishBookReview = useBookReviewPublication({
     onSuccess: handleSuccess,
   });
 
+  const editBookReview = useBookReviewEdit({
+    onSuccess: () => {
+      if (savedBookReviewId) {
+        handleSuccess(savedBookReviewId);
+      }
+    },
+  });
+
   const handleClickPublishButton = () => {
+    if (savedBookReviewId) {
+      editBookReview({
+        isPublished: true,
+        bookReview: getBookReviewToUpdate(savedBookReviewId, bookReview),
+      });
+      return;
+    }
     publishBookReview(getBookReviewToPublish(bookReview));
   };
 

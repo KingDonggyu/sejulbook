@@ -7,10 +7,11 @@ import type {
   GetBookReviewPageByBookNameRequest,
   GetBookReviewPageByCategoryRequest,
   GetBookReviewPageByTagRequest,
+  GetPublishedBookReviewResponse,
 } from 'bookReview';
 
 import BookReviewService from '@/server/services/bookReview.service';
-import HttpClient from '../../lib/HttpClient';
+import HttpClient from '@/lib/HttpClient';
 
 class BookReviewRepository extends HttpClient {
   private service: BookReviewService | null;
@@ -72,11 +73,16 @@ class BookReviewRepository extends HttpClient {
     });
   }
 
-  get(id: Id): ReturnType<BookReviewService['find']> {
+  async get(id: Id): Promise<GetPublishedBookReviewResponse> {
     if (this.service) {
-      return this.service.find(id);
+      const bookReview = await this.service.find(id);
+      return bookReview;
     }
-    return this.axiosInstance.get(`${this.baseUrl}/${id}`);
+    const bookReview = await this.axiosInstance.get<
+      never,
+      GetPublishedBookReviewResponse
+    >(`${this.baseUrl}/${id}`);
+    return bookReview;
   }
 
   getLatests(): ReturnType<BookReviewService['findTenLatest']> {
@@ -182,11 +188,11 @@ class BookReviewRepository extends HttpClient {
     });
   }
 
-  getIds(): ReturnType<BookReviewService['findAllId']> | undefined {
+  async getIds(): Promise<{ id: Id }[]> {
     if (this.service) {
       return this.service.findAllId();
     }
-    return undefined;
+    return [];
   }
 }
 

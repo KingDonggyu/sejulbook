@@ -121,7 +121,14 @@ class BookReviewService {
     const promises = [
       this.bookReview.update({
         where: { id },
-        data: bookReview,
+        data: {
+          sejul: bookReview.sejul,
+          content: bookReview.content,
+          thumbnail: bookReview.thumbnail,
+          categoryId: bookReview.categoryId,
+          rating: bookReview.rating,
+          type: this.type.published,
+        },
       }),
       tagService.create({ bookReviewId: id, tags: bookReview.tags }),
       tagService.deleteAllByBookReview(id),
@@ -180,7 +187,7 @@ class BookReviewService {
       where: { id },
     });
 
-    if (!bookReview) {
+    if (!bookReview || bookReview.type === this.type.draftSaved) {
       throw new NotFoundException('존재하지 않는 독후감입니다.');
     }
 

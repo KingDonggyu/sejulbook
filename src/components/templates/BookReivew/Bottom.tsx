@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { BookReviewResponse } from '@/types/features/bookReview';
+import type { GetPublishedBookReviewResponse } from 'bookReview';
 import Route from '@/constants/routes';
 import * as s from './style';
 
 export interface BookReviewBottomProps {
-  bookReivew: BookReviewResponse;
+  bookReivew: GetPublishedBookReviewResponse;
   ratingViewer: ReactNode;
   tagList: ReactNode;
   comment: ReactNode;

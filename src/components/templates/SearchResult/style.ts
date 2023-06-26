@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.main`
   margin: auto;
   padding: 7rem 20px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.nanumMyeongjo};

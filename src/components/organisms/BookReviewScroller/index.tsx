@@ -1,10 +1,10 @@
 import CardScoller from '@/components/molecules/CardScroller';
-import { HomeBookReview } from '@/@types/domain/bookReview';
+import type { GetHomeBookReviewResponse } from 'bookReview';
 import SejulThumbnail from '../SejulThumbnail';
 import * as s from './style';
 
 interface BookReviewScrollerProps {
-  bookReviewList?: HomeBookReview[];
+  bookReviewList?: GetHomeBookReviewResponse[];
 }
 
 const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {

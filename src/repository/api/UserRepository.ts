@@ -46,11 +46,11 @@ class UserRepository extends HttpClient {
     });
   }
 
-  getIds(): ReturnType<UserService['findAllId']> | undefined {
+  async getIds(): Promise<{ id: Id }[]> {
     if (this.service) {
       return this.service.findAllId();
     }
-    return undefined;
+    return [];
   }
 
   getPagedFollowers({

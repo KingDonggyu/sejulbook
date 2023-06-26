@@ -16,6 +16,7 @@ import useS3GarbageCollection from '@/hooks/useS3GarbageCollection';
 import useNewBookStorage from '@/hooks/useNewBookStorage';
 import useNewBookReview from '@/hooks/useNewBookReview';
 import useHiddenLayout from '@/hooks/useHiddenLayout';
+import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import { getBookReviewQuery } from '@/hooks/services/queries/useBookReview';
@@ -30,20 +31,23 @@ const NewbookWritePage = ({
   bookReviewId?: Id;
   isPublished?: boolean;
 }) => {
-  const { newBook, isLoading: loading1 } = useNewBookStorage();
-  const { newBookReview, isLoading: loading2 } = useNewBookReview(bookReviewId);
+  const { newBook } = useNewBookStorage();
+  const { newBookReview } = useNewBookReview(bookReviewId);
+  const { savedBookReviewId } = useSavedBookReviewId();
 
   useHiddenLayout();
   useS3GarbageCollection(); // 페이지 이동, 새로고침, 탭 닫기 동작시 불필요한 S3 이미지 제거
 
   const { setBook, setBookReivew, initBookReview } = bookReviewStore();
 
-  const isLoading = loading1 || loading2;
-  const book = newBook || newBookReview?.book;
+  const book = (isPublished ? newBookReview?.book : newBook) || null;
+  const isLoading = !book && !newBookReview;
 
   useEffect(() => {
-    initBookReview();
-  }, [initBookReview]);
+    if (!isPublished && !savedBookReviewId) {
+      initBookReview();
+    }
+  }, [initBookReview, isPublished, savedBookReviewId]);
 
   useEffect(() => {
     if (newBookReview) {

@@ -3,11 +3,13 @@ import type { Book } from 'book';
 import type {
   BookReviewToPublish,
   Content,
+  Id,
   NewBookReview,
   PublishOption,
   Rating,
   Sejul,
   Thumbnail,
+  UpdateBookReviewRequest,
 } from 'bookReview';
 import type { Tag } from 'tag';
 import type { GetCategoryResponse } from 'category';
@@ -44,10 +46,18 @@ interface BookReviewState {
   setBookReivew: (bookReview: NewBookReview) => void;
   initBookReview: () => void;
   getBookReviewToPublish: (bookReview: NewBookReview) => BookReviewToPublish;
+  getBookReviewToUpdate: (
+    id: Id,
+    bookReview: NewBookReview,
+  ) => UpdateBookReviewRequest;
 }
 
 const bookReviewStore = create<BookReviewState>((set) => ({
   bookReview: initlializedBookReview,
+
+  initBookReview: () => {
+    set({ bookReview: initlializedBookReview });
+  },
 
   setBook: (book) => {
     set((state) => ({
@@ -91,12 +101,24 @@ const bookReviewStore = create<BookReviewState>((set) => ({
     set({ bookReview });
   },
 
-  initBookReview: () => {
-    set({ bookReview: initlializedBookReview });
-  },
-
   getBookReviewToPublish: (bookReview) => ({
     id: bookReview.id,
+    bookname: bookReview.book.title,
+    authors: bookReview.book.authors.join(' '),
+    publisher: bookReview.book.publisher,
+    publication: bookReview.book.datetime,
+    originThumbnail: bookReview.book.thumbnail,
+
+    sejul: bookReview.sejul,
+    content: bookReview.content,
+    thumbnail: bookReview.thumbnail,
+    categoryId: bookReview.category.id,
+    rating: bookReview.rating,
+    tags: bookReview.tags,
+  }),
+
+  getBookReviewToUpdate: (id, bookReview) => ({
+    id,
     bookname: bookReview.book.title,
     authors: bookReview.book.authors.join(' '),
     publisher: bookReview.book.publisher,

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { FeedBookReviewSummary } from '@/types/features/bookReview';
+import type { GetBookReviewPageResponse } from 'bookReview';
 
 const useSortedBookReviewList = (
-  initBookReviewList: FeedBookReviewSummary[],
+  initBookReviewList: GetBookReviewPageResponse[],
 ) => {
   const [isLikeSorted, setIsLikeSorted] = useState(false);
   const [bookReviewList, setBookReviewList] = useState(initBookReviewList);
