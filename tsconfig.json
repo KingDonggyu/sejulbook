@@ -22,13 +22,6 @@
     "jsxImportSource": "@emotion/react",
     "types": ["@emotion/react/types/css-prop"]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "next.config.js",
-    "src",
-    "src/server"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "src"],
   "exclude": ["node_modules"]
 }

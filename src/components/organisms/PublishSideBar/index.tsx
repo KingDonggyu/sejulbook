@@ -40,7 +40,6 @@ const PublishSideBar = ({
     setRating,
     setTags: setTag,
     getBookReviewToPublish,
-    getBookReviewToUpdate,
   } = bookReviewStore();
 
   const handleSuccess = (bookReviewId: Id) => {
@@ -73,7 +72,10 @@ const PublishSideBar = ({
     if (savedBookReviewId) {
       editBookReview({
         isPublished: true,
-        bookReview: getBookReviewToUpdate(savedBookReviewId, bookReview),
+        bookReview: {
+          ...getBookReviewToPublish(bookReview),
+          id: savedBookReviewId,
+        },
       });
       return;
     }
