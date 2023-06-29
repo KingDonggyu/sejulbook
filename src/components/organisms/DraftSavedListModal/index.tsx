@@ -1,15 +1,15 @@
+import type { GetDraftSavedBookReviewResponse } from 'bookReview';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import { ModalKey } from '@/constants/keys';
 import modalStore from '@/stores/modalStore';
-import { DraftSavedBookReview } from '@/types/features/bookReview';
 import DraftSavedItem from './DraftSavedItem';
 import * as s from './style';
 
 interface DraftSavedListModalProps
   extends Omit<ModalProps, 'modalKey' | 'children'> {
-  draftSavedList: DraftSavedBookReview[];
+  draftSavedList: GetDraftSavedBookReviewResponse[];
 }
 
 const DraftSavedListModal = ({
@@ -45,7 +45,7 @@ const DraftSavedListModal = ({
 );
 
 interface DraftSavedListModalButtonProps extends ButtonProps {
-  draftSavedList: DraftSavedBookReview[];
+  draftSavedList: GetDraftSavedBookReviewResponse[];
 }
 
 const DraftSavedListModalButton = ({

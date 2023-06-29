@@ -1,39 +1,48 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bookReviewService from 'server/features/bookReview/bookReview.service';
-import tagService from 'server/features/tag/tag.service';
-import checkAuth from '@/services/middlewares/checkAuth';
-import { PublishRequest } from '@/types/features/bookReview';
+import BookReviewService from '@/server/services/bookReview.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import authentication from '@/server/middlewares/authentication';
+import errorHandler from '@/server/middlewares/errorHandler';
+import HttpMethods from '@/constants/httpMethods';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
-  body: PublishRequest;
+  method: HttpMethods.POST;
+  body: {
+    id?: string;
+    bookname: string;
+    authors: string;
+    publication: string;
+    publisher: string;
+    thumbnail: string;
+    rating: string;
+    sejul: string;
+    content: string;
+    userId: string;
+    categoryId: string;
+    originThumbnail: string;
+    tags: string[];
+  };
 }
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  if (!(await checkAuth(req, res, req.body.userId))) {
-    return;
+  if (req.method !== HttpMethods.POST) {
+    const error = new MethodNotAllowedException();
+    res.status(error.code).send(error);
   }
 
-  const service = req.body.isDraftSave
-    ? bookReviewService.draftSaveBookReview
-    : bookReviewService.publishBookReview;
+  const { id, userId, rating, categoryId } = req.body;
 
-  const result = await service(req.body);
+  await authentication(req, res, +userId);
 
-  if (result.error) {
-    res.status(result.code).json(result);
-    return;
-  }
-
-  if (req.body.id) {
-    await tagService.deleteTags({ bookReviewId: req.body.id });
-  }
-
-  await tagService.writeTags({
-    tags: req.body.tags,
-    bookReviewId: result.data,
+  const bookReviewId = await new BookReviewService().createPublished({
+    ...req.body,
+    id: id ? +id : undefined,
+    userId: +userId,
+    rating: +rating,
+    categoryId: +categoryId,
   });
 
-  res.status(200).json(result);
+  res.status(200).json({ bookReviewId });
 };
 
-export default handler;
+export default errorHandler(handler);

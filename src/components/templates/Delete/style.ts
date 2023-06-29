@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.main`
   max-width: ${({ theme }) => theme.MAX_WIDTH.POST};
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 5rem;
+  padding: 10rem 20px;
   gap: 40px;
 
   button {

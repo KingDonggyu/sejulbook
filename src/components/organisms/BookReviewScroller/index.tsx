@@ -1,16 +1,25 @@
 import CardScoller from '@/components/molecules/CardScroller';
-import { ModalKey } from '@/constants/keys';
-import useUserStatus from '@/hooks/useUserStatus';
-import { HomeBookReviewSummary } from '@/types/features/bookReview';
-import { LoginButton } from '../AccountButton';
+import type { GetHomeBookReviewResponse } from 'bookReview';
 import SejulThumbnail from '../SejulThumbnail';
 import * as s from './style';
 
 interface BookReviewScrollerProps {
-  bookReviewList: HomeBookReviewSummary[];
+  bookReviewList?: GetHomeBookReviewResponse[];
 }
 
 const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
+  const thumbnailSize = { width: 300, height: 400 };
+
+  if (!bookReviewList) {
+    return (
+      <CardScoller css={s.bookReviewListStyle}>
+        {Array.from({ length: 3 }, () => (
+          <s.ThumbnailSkeleton {...thumbnailSize} />
+        ))}
+      </CardScoller>
+    );
+  }
+
   if (!bookReviewList.length) {
     return (
       <s.AltWrapper>
@@ -30,8 +39,8 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
           sejul={sejul}
           src={thumbnail}
           alt={`${bookname} 책 표지 이미지`}
-          width={300}
-          height={400}
+          width={thumbnailSize.width}
+          height={thumbnailSize.height}
           isGrayscale
           isLargeSejul
         >
@@ -46,41 +55,5 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
     </CardScoller>
   );
 };
-
-const SubscribeBookReviewScoller = ({
-  bookReviewList,
-}: BookReviewScrollerProps) => {
-  const { isLogin } = useUserStatus();
-
-  if (!isLogin) {
-    return (
-      <s.AltWrapper>
-        <s.BookReviewListAltText>
-          관심있는 서재의 독후감을 확인하려면 로그인하세요
-        </s.BookReviewListAltText>
-        <LoginButton
-          radius={20}
-          modalKey={ModalKey.ALT_LOGIN}
-          css={s.loginButtonStyle}
-          title="세 줄 독후감 시작하기"
-        />
-      </s.AltWrapper>
-    );
-  }
-
-  if (!bookReviewList.length) {
-    return (
-      <s.AltWrapper>
-        <s.BookReviewListAltText>
-          관심 서재 독후감이 없습니다
-        </s.BookReviewListAltText>
-      </s.AltWrapper>
-    );
-  }
-
-  return <BookReviewScroller bookReviewList={bookReviewList} />;
-};
-
-BookReviewScroller.Subscribe = SubscribeBookReviewScoller;
 
 export default BookReviewScroller;

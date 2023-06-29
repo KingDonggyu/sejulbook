@@ -1,5 +1,5 @@
 import { ChangeEvent, TextareaHTMLAttributes } from 'react';
-import { StyleProps } from '@/types/style';
+import type { StyleProps } from '@emotion/react';
 import useAutoResizeTextarea from '@/hooks/useAutoResizeTextarea';
 import { Alignment, ColorVariant, TextFieldVariant } from '@/constants';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';

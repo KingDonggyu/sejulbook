@@ -1,9 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
+import type { Id as UserId } from 'user';
+import type { Id as BookReviewId } from 'bookReview';
 import Route from '@/constants/routes';
-import { getAllUserId } from '@/services/api/user';
-import { UserId } from '@/types/features/user';
-import { BookReviewId } from '@/types/features/bookReview';
-import { getAllBookReviewId } from '@/services/api/bookReview';
+import UserRepository from '@/repository/api/UserRepository';
+import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
 const BASE_URL = process.env.SEJULBOOK_BASE_URL;
 
@@ -58,14 +58,10 @@ const SiteMap = () => {};
 export const getServerSideProps = async ({
   res,
 }: GetServerSidePropsContext) => {
-  const result = await Promise.allSettled([
-    getAllUserId(),
-    getAllBookReviewId(),
+  const [allUserId, allBookReviewId] = await Promise.all([
+    new UserRepository().getIds(),
+    new BookReviewRepository().getIds(),
   ]);
-
-  const allUserId = result[0].status === 'fulfilled' ? result[0].value : [];
-  const allBookReviewId =
-    result[1].status === 'fulfilled' ? result[1].value : [];
 
   const sitemap = generateSiteMap({ allUserId, allBookReviewId });
 

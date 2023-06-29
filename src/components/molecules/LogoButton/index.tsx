@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { css } from '@emotion/react';
+import { css, StyleProps } from '@emotion/react';
 import Route from '@/constants/routes';
-import { StyleProps } from '@/types/style';
 import Logo from '@/components/atoms/Logo';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 

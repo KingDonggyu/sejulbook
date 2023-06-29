@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
+import type { User } from 'user';
+import UserRepository from '@/repository/api/UserRepository';
 import { TextFieldProps } from '@/components/atoms/TextField';
 import SearchBar from '@/components/molecules/SearchBar';
-import { User } from '@/types/features/user';
-import { searchUsers } from '@/services/api/user';
 import Route from '@/constants/routes';
 import * as s from './style';
 
@@ -20,15 +20,19 @@ const UserSearchedItem = ({ id, name, introduce }: User) => (
 
 const UserSearchBar = ({ ...textFieldProps }: TextFieldProps) => {
   const [searchedList, setSearchedList] = useState<User[]>([]);
+  const userRepository = useMemo(() => new UserRepository(), []);
 
-  const handleDebounce = useCallback(async (value: string) => {
-    if (!value) {
-      setSearchedList([]);
-      return;
-    }
-    const searchedUsers = await searchUsers(value);
-    setSearchedList(searchedUsers);
-  }, []);
+  const handleDebounce = useCallback(
+    async (value: string) => {
+      if (!value) {
+        setSearchedList([]);
+        return;
+      }
+      const searchedUsers = await userRepository.search(value);
+      setSearchedList(searchedUsers);
+    },
+    [userRepository],
+  );
 
   return (
     <SearchBar onDebounce={handleDebounce} {...textFieldProps}>

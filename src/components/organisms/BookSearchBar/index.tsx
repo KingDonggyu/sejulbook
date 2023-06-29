@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import type { Book } from 'book';
 import SearchBar from '@/components/molecules/SearchBar';
 import { TextFieldProps } from '@/components/atoms/TextField';
-import { getBooks } from '@/services/api/book';
-import { Book } from '@/types/features/book';
+import BookRepository from '@/repository/api/BookRepository';
 import BookSearchedItem from './BookSearchedItem';
 
 interface BookSearchBarProps extends TextFieldProps {
@@ -16,13 +16,14 @@ const BookSearchBar = ({
   ...textFieldProps
 }: BookSearchBarProps) => {
   const [searchedList, setSearchedList] = useState<Book[]>([]);
+  const bookRepositoryRef = useRef(new BookRepository());
 
   const handleDebounce = useCallback(async (value: string) => {
     if (!value) {
       setSearchedList([]);
       return;
     }
-    const { documents } = await getBooks(value);
+    const { documents } = await bookRepositoryRef.current.search(value);
     setSearchedList(documents);
   }, []);
 

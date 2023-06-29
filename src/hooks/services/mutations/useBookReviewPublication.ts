@@ -1,41 +1,30 @@
 import { toast } from 'react-toastify';
-import { publishBookReview } from '@/services/api/bookReview';
-import { BookReviewError } from '@/services/errors/BookReviewError';
-import useMutation from '@/hooks/useMutation';
-import { BookReviewId, NewBookReview } from '@/types/features/bookReview';
+import type { BookReviewToPublish } from 'bookReview';
+import useMutation from '@/lib/react-query/hooks/useMutation';
+import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
-interface BookReviewPublicationProps {
-  bookReview: NewBookReview;
-  savedBookReviewId?: BookReviewId;
-  onSuccess?: (bookReviewId: BookReviewId) => void;
+interface UseBookReviewPublicationOption {
+  onSuccess?: (bookReviewId: number) => void;
 }
 
 const useBookReviewPublication = ({
-  bookReview,
-  savedBookReviewId,
   onSuccess,
-}: BookReviewPublicationProps) => {
-  const { mutate } = useMutation({
-    mutationFn: async (userId) => {
-      const bookReviewId = await publishBookReview({
+}: UseBookReviewPublicationOption) => {
+  const { mutate } = useMutation<number, BookReviewToPublish>({
+    mutationFn: async (userId, bookReview) => {
+      const { bookReviewId } = await new BookReviewRepository().publish({
         userId,
-        bookReview,
-        bookReviewId: savedBookReviewId,
+        ...bookReview,
       });
-
       return bookReviewId;
     },
-
     onSuccess: (data) => {
       if (onSuccess) {
         onSuccess(data);
       }
     },
-
     onError: (error) => {
-      if (error instanceof BookReviewError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 

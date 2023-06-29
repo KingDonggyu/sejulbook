@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
+import type { StyleProps } from '@emotion/react';
 import Button from '@/components/atoms/Button';
-import { StyleProps } from '@/types/style';
 import * as s from './style';
 
 interface TabPanelProps {

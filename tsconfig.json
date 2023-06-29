@@ -16,20 +16,12 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@public/*": ["public/*"],
-      "@server/*": ["src/server/*"]
+      "@public/*": ["public/*"]
     },
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
     "types": ["@emotion/react/types/css-prop"]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "next.config.js",
-    "src",
-    "server"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "src"],
   "exclude": ["node_modules"]
 }

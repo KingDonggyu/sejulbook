@@ -5,86 +5,93 @@ generator client {
 
 datasource db {
   provider     = "mysql"
-  url          = env("NEXT_PUBLIC_DATABASE_URL")
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
-model category {
+model Category {
   id       Int    @id @default(autoincrement()) @db.UnsignedInt
   category String @default("") @db.VarChar(10)
 
   @@fulltext([category], map: "category")
+  @@map("category")
 }
 
-model follow {
+model Follow {
   id           Int @id @default(autoincrement()) @db.UnsignedInt
-  follower_id  Int @db.UnsignedInt
-  following_id Int @db.UnsignedInt
+  followerId   Int @db.UnsignedInt @map("follower_id")
+  followingId Int @db.UnsignedInt @map("following_id")
 
-  @@index([follower_id], map: "follower_id_idx")
-  @@index([following_id], map: "following_id_idx")
+  @@index([followerId], map: "follower_id_idx")
+  @@index([followingId], map: "following_id_idx")
+  @@map("follow")
 }
 
-model likes {
+model Like {
   id           Int @id @default(autoincrement()) @db.UnsignedInt
-  sejulbook_id Int @db.UnsignedInt
-  liker_id     Int @db.UnsignedInt
+  bookReviewId Int @db.UnsignedInt @map("sejulbook_id")
+  likerId      Int @db.UnsignedInt @map("liker_id")
 
-  @@index([liker_id], map: "liker_id_idx")
-  @@index([sejulbook_id], map: "sejulbook_id_idx")
+  @@index([likerId], map: "liker_id_idx")
+  @@index([bookReviewId], map: "sejulbook_id_idx")
+  @@map("likes")
 }
 
-model reply {
+model Comment {
   id           Int       @id @default(autoincrement()) @db.UnsignedInt
-  reply        String    @db.Text
-  replydate    DateTime @default(dbgenerated("(curtime())")) @db.DateTime(0)
-  sejulbook_id Int       @db.UnsignedInt
-  replyer_id   Int       @db.UnsignedInt
+  content      String    @db.Text @map("reply")
+  createdAt    DateTime  @default(dbgenerated("(curtime())")) @db.DateTime(0) @map("replydate")
+  bookReviewId Int       @db.UnsignedInt @map("sejulbook_id")
+  commenterId  Int       @db.UnsignedInt @map("replyer_id")
 
-  @@index([replyer_id], map: "replyer_id_idx")
-  @@index([sejulbook_id], map: "sejulbook_id_idx")
+  @@index([commenterId], map: "replyer_id_idx")
+  @@index([bookReviewId], map: "sejulbook_id_idx")
+  @@map("reply")
 }
 
-model sejulbook {
+model BookReview {
   id               Int       @id @default(autoincrement()) @db.UnsignedInt
   bookname         String    @db.VarChar(50)
-  writer           String    @db.VarChar(50)
-  publication      DateTime? @default(dbgenerated("(curdate())")) @db.Date
+  authors          String    @db.VarChar(50) @map("writer")
+  publication      DateTime  @default(dbgenerated("(curdate())")) @db.Date
   publisher        String    @db.VarChar(20)
-  grade            Int       @default(3) @db.UnsignedInt
+  rating           Int       @default(3) @db.UnsignedInt @map("grade")
   thumbnail        String    @db.VarChar(250)
   sejul            String    @default(" ") @db.VarChar(200)
-  sejulplus        String    @default(dbgenerated("(_utf8mb4\\'\\')")) @db.Text
-  datecreated      DateTime? @default(dbgenerated("(curtime())")) @db.DateTime(0)
-  user_id          Int       @db.UnsignedInt
-  category_id      Int       @default(1) @db.UnsignedInt
-  divide           Int       @db.UnsignedInt
-  origin_thumbnail String?   @db.VarChar(250)
+  content          String    @default(dbgenerated("(_utf8mb4\\'\\')")) @db.Text @map("sejulplus")
+  createdAt        DateTime  @default(dbgenerated("(curtime())")) @db.DateTime(0) @map("datecreated")
+  userId           Int       @db.UnsignedInt @map("user_id")
+  categoryId       Int       @default(1) @db.UnsignedInt @map("category_id")
+  type             Int       @db.UnsignedInt @map("divide")
+  originThumbnail  String?   @db.VarChar(250) @map("origin_thumbnail")
 
-  @@index([category_id], map: "category_id_idx")
-  @@index([user_id], map: "user_id_idx")
+  @@index([categoryId], map: "category_id_idx")
+  @@index([userId], map: "user_id_idx")
   @@fulltext([bookname], map: "bookname")
-  @@fulltext([writer], map: "writer")
+  @@fulltext([authors], map: "writer")
+  @@map("sejulbook")
 }
 
-model tag {
+model Tag {
   id           Int    @id @default(autoincrement()) @db.UnsignedInt
   tag          String @default("") @db.VarChar(15)
-  sejulbook_id Int    @db.UnsignedInt
+  bookReviewId Int    @db.UnsignedInt @map("sejulbook_id")
 
-  @@index([sejulbook_id], map: "sejulbook_id_idx")
+  @@index([bookReviewId], map: "sejulbook_id_idx")
   @@fulltext([tag], map: "tag")
+  @@map("tag")
 }
 
-model user {
+model User {
   id        Int       @id @default(autoincrement()) @db.UnsignedInt
   email     String    @db.VarChar(30)
-  nick      String    @unique(map: "nick") @db.VarChar(10)
+  name      String    @unique(map: "nick") @db.VarChar(10) @map("nick")
   gender    Int       @default(0)
   age       String    @db.VarChar(8)
-  joindated DateTime? @default(dbgenerated("(curdate())")) @db.Date
+  joindated DateTime  @default(dbgenerated("(curdate())")) @db.Date
   introduce String    @db.VarChar(200)
   sub       String    @db.VarChar(50)
 
-  @@fulltext([nick], map: "nick_2")
+  @@fulltext([name], map: "nick_2")
+  @@map("user")
 }

@@ -1,12 +1,12 @@
+import type { StyleProps } from '@emotion/react';
+import type { GetCategoryResponse } from 'category';
 import Button from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { CategoryResponse } from '@/types/features/category';
-import { StyleProps } from '@/types/style';
 import * as s from './style';
 
 interface CategoryContainerProps extends StyleProps {
-  categories: CategoryResponse[];
-  handleClickCategory: (category: CategoryResponse) => void;
+  categories?: GetCategoryResponse[];
+  handleClickCategory: (category: GetCategoryResponse) => void;
 }
 
 const CategoryContainer = ({
@@ -15,18 +15,20 @@ const CategoryContainer = ({
   ...styleProps
 }: CategoryContainerProps) => (
   <s.Wrapper {...styleProps}>
-    {categories.map(({ id, category }) => (
-      <Button
-        key={category}
-        radius={0}
-        variant={ButtonVariant.OUTLINED}
-        color={ColorVariant.LINE}
-        css={s.categoryItemStyle}
-        onClick={() => handleClickCategory({ id, category })}
-      >
-        {category}
-      </Button>
-    ))}
+    {categories
+      ? categories.map(({ id, category }) => (
+          <Button
+            key={category}
+            radius={0}
+            variant={ButtonVariant.OUTLINED}
+            color={ColorVariant.LINE}
+            css={s.categoryItemStyle}
+            onClick={() => handleClickCategory({ id, category })}
+          >
+            {category}
+          </Button>
+        ))
+      : Array.from({ length: 20 }, () => <s.Skeleton />)}
   </s.Wrapper>
 );
 

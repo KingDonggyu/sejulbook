@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.section`
+export const Wrapper = styled.main`
   margin: auto;
-  padding-top: 30px;
+  padding: 6rem 20px;
   display: flex;
   flex-direction: column;
   gap: 50px;
@@ -16,7 +16,7 @@ export const Header = styled.header`
 `;
 
 export const HeaderTop = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   display: flex;
   height: 13px;
 `;

@@ -1,38 +1,34 @@
 import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
-import useMutation from '@/hooks/useMutation';
-import { CommentRequest } from '@/types/features/comment';
-import { addComment } from '@/services/api/comment';
-import { getCommentsQuery } from '@/services/queries/comment';
-import CommentError from '@/services/errors/CommentError';
+import type { CreateCommentRequest } from 'comment';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
+import useMutation from '@/lib/react-query/hooks/useMutation';
+import CommentRepository from '@/repository/api/CommentRepository';
+import { getCommentsQuery } from '../queries/useComments';
 
-interface CommentCreationProps extends Omit<CommentRequest, 'commenterId'> {
+interface UseCommentCreationOption {
   onSuccess?: () => void;
 }
 
-const useCommentCreation = ({
-  bookReviewId,
-  content,
-  onSuccess,
-}: CommentCreationProps) => {
+const useCommentCreation = ({ onSuccess }: UseCommentCreationOption) => {
+  let queryKey: QueryKey;
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: async (userId) => {
-      await addComment({ bookReviewId, content, commenterId: userId });
+  const { mutate } = useMutation<
+    void,
+    Omit<CreateCommentRequest, 'commenterId'>
+  >({
+    mutationFn: async (commenterId, comment) => {
+      queryKey = getCommentsQuery(comment.bookReviewId).queryKey;
+      await new CommentRepository().create({ commenterId, ...comment });
     },
-
     onSuccess: () => {
-      queryClient.invalidateQueries(getCommentsQuery(bookReviewId));
+      queryClient.invalidateQueries(queryKey);
       if (onSuccess) {
         onSuccess();
       }
     },
-
     onError: (error) => {
-      if (error instanceof CommentError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 

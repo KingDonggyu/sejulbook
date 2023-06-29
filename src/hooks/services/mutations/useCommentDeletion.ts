@@ -1,29 +1,25 @@
 import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
-import { CommentDeleteRequest } from '@/types/features/comment';
-import { getCommentsQuery } from '@/services/queries/comment';
-import CommentError from '@/services/errors/CommentError';
-import { deleteComment } from '@/services/api/comment';
-import useMutation from '@/hooks/useMutation';
+import { QueryKey, useQueryClient } from '@tanstack/react-query';
+import useMutation from '@/lib/react-query/hooks/useMutation';
+import CommentRepository from '@/repository/api/CommentRepository';
+import { getCommentsQuery } from '../queries/useComments';
 
-const useCommentDeletion = ({
-  bookReviewId,
-}: Pick<CommentDeleteRequest, 'bookReviewId'>) => {
+type Request = Omit<Parameters<CommentRepository['delete']>[0], 'commenterId'>;
+
+const useCommentDeletion = () => {
+  let queryKey: QueryKey;
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation<void, Pick<CommentDeleteRequest, 'id'>>({
-    mutationFn: async (userId, { id }) => {
-      await deleteComment({ id, bookReviewId, userId });
+  const { mutate } = useMutation<void, Request>({
+    mutationFn: async (commenterId, { id, bookReviewId }) => {
+      queryKey = getCommentsQuery(bookReviewId).queryKey;
+      await new CommentRepository().delete({ commenterId, id, bookReviewId });
     },
-
     onSuccess: () => {
-      queryClient.invalidateQueries(getCommentsQuery(bookReviewId));
+      queryClient.invalidateQueries(queryKey);
     },
-
     onError: (error) => {
-      if (error instanceof CommentError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 

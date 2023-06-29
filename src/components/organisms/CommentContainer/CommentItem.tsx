@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import Link from 'next/link';
-import { CommentResponse } from '@/types/features/comment';
+import type { GetCommentResponse } from 'comment';
 import { ButtonVariant, ColorVariant, TextFieldVariant } from '@/constants';
 import Route from '@/constants/routes';
 import { confirm } from '@/constants/message';
@@ -14,7 +14,7 @@ import useCommentEdit from '@/hooks/services/mutations/useCommentEdit';
 import * as s from './style';
 
 interface CommentItemProps {
-  commentInfo: CommentResponse;
+  commentInfo: GetCommentResponse;
   isEditable: boolean;
   isRemovable: boolean;
 }
@@ -27,9 +27,9 @@ const CommentItem = ({
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
 
-  const commenter = useUser(commenterId);
-  const deleteComment = useCommentDeletion({ bookReviewId });
-  const updateComment = useCommentEdit({ bookReviewId });
+  const { user: commenter } = useUser(commenterId);
+  const deleteComment = useCommentDeletion();
+  const updateComment = useCommentEdit();
 
   const handleChangeEditContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setEditedContent(e.target.value);
@@ -37,7 +37,7 @@ const CommentItem = ({
 
   const handleClickDeleteButton = () => {
     if (window.confirm(confirm.DELETE_COMMENT)) {
-      deleteComment({ id });
+      deleteComment({ id, bookReviewId });
     }
   };
 
@@ -48,7 +48,7 @@ const CommentItem = ({
 
   const handleClickEditCompleteButton = () => {
     if (content !== editedContent) {
-      updateComment({ id, content: editedContent });
+      updateComment({ id, bookReviewId, content: editedContent });
     }
     setIsEditMode(false);
   };

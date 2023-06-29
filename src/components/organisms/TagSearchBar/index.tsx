@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import type { SearchTagResponse, Tag } from 'tag';
+import TagRepository from '@/repository/api/TagRepository';
 import { TextFieldProps } from '@/components/atoms/TextField';
 import SearchBar from '@/components/molecules/SearchBar';
-import { searchTags } from '@/services/api/tag';
-import { SearchedTag, Tag } from '@/types/features/tag';
 import Route from '@/constants/routes';
 import * as s from './style';
 
-interface TagSearchedItemProps extends SearchedTag {
+interface TagSearchedItemProps extends SearchTagResponse {
   onClickSearchedItem: (tag: Tag) => void;
 }
 
@@ -31,16 +31,20 @@ const TagSearchBar = ({
   ...textFieldProps
 }: TagSearchBarProps) => {
   const router = useRouter();
-  const [searchedList, setSearchedList] = useState<SearchedTag[]>([]);
+  const [searchedList, setSearchedList] = useState<SearchTagResponse[]>([]);
+  const tagRepository = useMemo(() => new TagRepository(), []);
 
-  const handleDebounce = useCallback(async (value: string) => {
-    if (!value) {
-      setSearchedList([]);
-      return;
-    }
-    const searchedTags = await searchTags(value);
-    setSearchedList(searchedTags);
-  }, []);
+  const handleDebounce = useCallback(
+    async (query: string) => {
+      if (!query) {
+        setSearchedList([]);
+        return;
+      }
+      const searchedTags = await tagRepository.search(query);
+      setSearchedList(searchedTags);
+    },
+    [tagRepository],
+  );
 
   const handleClickSearchedItem = (tag: Tag) => {
     router.push({

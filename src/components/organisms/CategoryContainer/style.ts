@@ -17,6 +17,12 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const Skeleton = styled.span`
+  width: 130px;
+  height: 50px;
+  background-color: ${({ theme }) => theme.COLOR.LINE};
+`;
+
 export const categoryItemStyle = (theme: Theme) => css`
   line-height: 1.5;
   width: 130px;

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
+import type { Book } from 'book';
 import Thumbnail from '@/components/atoms/Thumbnail';
-import { Book } from '@/types/features/book';
 import Route from '@/constants/routes';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';

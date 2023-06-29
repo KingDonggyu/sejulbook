@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
 import { AiOutlinePlus } from '@react-icons/all-files/ai/AiOutlinePlus';
+import type { UserId } from 'follow';
+
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import { ButtonVariant, ColorVariant } from '@/constants';
-import { UserId } from '@/types/features/user';
 import useSubscribeToggle from '@/hooks/services/mutations/useSubscribeToggle';
 
 const buttonStyle = css`
@@ -22,16 +23,18 @@ const SubscribeToggleButton = ({
   isSubscribed = false,
   ...buttonProps
 }: SubscribeToggleButtonProps) => {
-  const subscribeToggle = useSubscribeToggle({
-    targetUserId: userId,
-    isSubscribed,
-  });
+  const subscribeToggle = useSubscribeToggle();
 
   return isSubscribed ? (
     <Button
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.SECONDARY}
-      onClick={() => subscribeToggle()}
+      onClick={() =>
+        subscribeToggle({
+          targetUserId: userId,
+          isSubscribed,
+        })
+      }
       css={buttonStyle}
       {...buttonProps}
     >
@@ -41,7 +44,12 @@ const SubscribeToggleButton = ({
     <Button
       variant={ButtonVariant.OUTLINED}
       color={ColorVariant.PRIMARY}
-      onClick={() => subscribeToggle()}
+      onClick={() =>
+        subscribeToggle({
+          targetUserId: userId,
+          isSubscribed,
+        })
+      }
       css={buttonStyle}
       {...buttonProps}
     >

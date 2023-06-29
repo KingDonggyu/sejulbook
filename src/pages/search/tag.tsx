@@ -5,19 +5,19 @@ import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SortDropdown from '@/components/molecules/SortDropdown';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
-import prefetchQuery from '@/services/prefetchQuery';
-import { getBookReviewListByTagInfinityQuery } from '@/services/queries/bookReview';
-import useInfinityBookReviewListByTag from '@/hooks/services/infinityQueries/useInfinityBookReviewListByTag';
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
+import useInfiniteBookReviewListByTag, {
+  getBookReviewListByTagInfinityQuery,
+} from '@/hooks/services/infiniteQueries/useInfiniteBookReviewListByTag';
 import useSortedBookReviewList from '@/hooks/useSortedBookReviewList';
-import { Tag } from '@/types/features/tag';
 import Route from '@/constants/routes';
 
-const SearchResultPage = ({ tag }: { tag: Tag }) => {
+const SearchResultPage = ({ tag }: { tag: string }) => {
   const {
     bookReviewList: initBookReviewList,
     refetchBookReviewList,
     isLoading,
-  } = useInfinityBookReviewListByTag(tag);
+  } = useInfiniteBookReviewListByTag(tag);
 
   const {
     bookReviewList,
@@ -60,7 +60,7 @@ const SearchResultPage = ({ tag }: { tag: Tag }) => {
 interface ExtededGetServerSidePropsContext
   extends Omit<GetServerSidePropsContext, 'query'> {
   query: {
-    q: Tag;
+    q: string;
   };
 }
 
@@ -81,7 +81,7 @@ export const getServerSideProps = async ({
 
   const queryClient = await prefetchQuery(
     [],
-    [getBookReviewListByTagInfinityQuery({ query: q })],
+    [getBookReviewListByTagInfinityQuery({ tag: q })],
   );
 
   return {

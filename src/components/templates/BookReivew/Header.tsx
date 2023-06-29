@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { BookReviewResponse } from '@/types/features/bookReview';
+import type { GetPublishedBookReviewResponse } from 'bookReview';
 import Route from '@/constants/routes';
 import formatDate from '@/utils/formatDateToKorean';
 import * as s from './style';
 
 export interface BookReviewHeaderProps {
-  bookReivew: BookReviewResponse;
+  bookReivew: GetPublishedBookReviewResponse;
   bookInfoButton: ReactNode;
   editDeleteButtonSet: ReactNode;
   likeCommentWidget: ReactNode;
@@ -21,9 +21,11 @@ const BookReviewHeader = ({
   <s.Header>
     <s.HeaderTop>
       <s.Category>{bookReivew.category}</s.Category>
-      <s.EditDeleteButtonWrapper>
-        {editDeleteButtonSet}
-      </s.EditDeleteButtonWrapper>
+      {editDeleteButtonSet && (
+        <s.EditDeleteButtonWrapper>
+          {editDeleteButtonSet}
+        </s.EditDeleteButtonWrapper>
+      )}
     </s.HeaderTop>
     <s.BookName>{bookReivew.bookname}</s.BookName>
     <s.HeaderBottom>

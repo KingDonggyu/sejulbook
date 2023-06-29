@@ -1,16 +1,16 @@
+import type { GetCategoryResponse } from 'category';
 import Button, { ButtonProps } from '@/components/atoms/Button';
 import Modal, { ModalProps } from '@/components/molecules/Modal';
 import { ColorVariant } from '@/constants';
 import modalStore from '@/stores/modalStore';
-import bookReviewStore from '@/stores/bookReviewStore';
-import { CategoryResponse } from '@/types/features/category';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import useCategories from '@/hooks/services/queries/useCategories';
 import * as s from './style';
 import CategoryContainer from '../CategoryContainer';
 
 interface CategoryModalProps {
   modalKey: string;
-  handleClickCategory: (category: CategoryResponse) => void;
+  handleClickCategory: (category: GetCategoryResponse) => void;
 }
 
 const CategoryModal = ({
@@ -18,7 +18,7 @@ const CategoryModal = ({
   handleClickCategory,
   ...modalProps
 }: CategoryModalProps & Omit<ModalProps, 'children'>) => {
-  const categories = useCategories();
+  const { categories } = useCategories();
 
   return (
     <Modal modalKey={modalKey} {...modalProps}>
@@ -40,7 +40,7 @@ const CategoryButton = ({
   const { bookReview, setCategory } = bookReviewStore();
   const { openModal, closeModal } = modalStore();
 
-  const handleClick = (selectedCategory: CategoryResponse) => {
+  const handleClick = (selectedCategory: GetCategoryResponse) => {
     setCategory(selectedCategory);
     handleClickCategory(selectedCategory);
     closeModal(modalKey);

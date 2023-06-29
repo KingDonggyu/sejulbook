@@ -9,7 +9,7 @@ const useS3GarbageCollection = () => {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
-        .register(new URL('../services/serviceWorker.ts', import.meta.url))
+        .register(new URL('../lib/serviceWorker.ts', import.meta.url))
         .then((registration) => {
           serviceWorkerController.current = registration.active;
         });

@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import type { StyleProps } from '@emotion/react';
 import { StarIcon } from '@/components/atoms/Icon';
-import { StyleProps } from '@/types/style';
 import useMobile from '@/hooks/useMobile';
 import { lightTheme as theme } from '@/styles/theme';
 import * as s from './style';

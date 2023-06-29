@@ -1,18 +1,19 @@
 import { ChangeEvent, useState } from 'react';
+import type { Id } from 'bookReview';
+import type { GetCommentResponse } from 'comment';
 import Button from '@/components/atoms/Button';
 import TextArea, { TextAreaProps } from '@/components/atoms/TextArea';
 import { ButtonVariant, ColorVariant, TextFieldVariant } from '@/constants';
-import { CommentRequest, CommentResponse } from '@/types/features/comment';
 import useCommentCreation from '@/hooks/services/mutations/useCommentCreation';
 import useUserStatus from '@/hooks/useUserStatus';
 import CommentItem from './CommentItem';
 import * as s from './style';
 
-type CommentContainerProps = {
+interface CommentContainerProps extends TextAreaProps {
   isMyBookReview: boolean;
-  comments: CommentResponse[];
-} & Pick<CommentRequest, 'bookReviewId'> &
-  TextAreaProps;
+  bookReviewId: Id;
+  comments: GetCommentResponse[];
+}
 
 const CommentContainer = ({
   comments,
@@ -21,12 +22,10 @@ const CommentContainer = ({
   ...textAreaProps
 }: CommentContainerProps) => {
   const { session } = useUserStatus();
-  const [writingContent, setWritingContent] = useState('');
+  const [content, setContent] = useState('');
   const myUserId = session ? session.id || undefined : undefined;
 
   const addComment = useCommentCreation({
-    bookReviewId,
-    content: writingContent,
     onSuccess: () => {
       window.scrollTo({
         top: document.body.scrollHeight,
@@ -36,12 +35,12 @@ const CommentContainer = ({
   });
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setWritingContent(e.target.value);
+    setContent(e.target.value);
   };
 
   const handleClickAddButton = () => {
-    addComment();
-    setWritingContent('');
+    addComment({ bookReviewId, content });
+    setContent('');
   };
 
   return (
@@ -50,7 +49,7 @@ const CommentContainer = ({
         <TextArea
           variant={TextFieldVariant.TEXT}
           placeholder="댓글을 작성하세요."
-          value={writingContent}
+          value={content}
           onChange={handleChange}
           {...textAreaProps}
         />

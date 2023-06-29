@@ -6,9 +6,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { useRouter } from 'next/router';
-import { signIn, signOut } from 'next-auth/react';
-import { ToastContainer, toast } from 'react-toastify';
+import { signOut } from 'next-auth/react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Footer from '@/components/atoms/Footer';
 import HeaderBar from '@/components/organisms/HeaderBar';
@@ -16,68 +16,53 @@ import ScreenModeButton from '@/components/organisms/SceenModeButton';
 import ProfileSettingModal from '@/components/organisms/ProfileSettingModal';
 
 import { ModalKey } from '@/constants/keys';
-import Route from '@/constants/routes';
 import useUserStatus from '@/hooks/useUserStatus';
 import modalStore from '@/stores/modalStore';
-import { signUp } from '@/services/api/user';
-import UserError from '@/services/errors/UserError';
-import { Introduce, UserName } from '@/types/features/user';
-import 'react-toastify/dist/ReactToastify.css';
-import MainContainer from '@/components/atoms/MainContainer';
+import useSignUp from '@/hooks/services/mutations/useSignUp';
+import type { Profile } from 'user';
 
 interface LayoutContextProps {
-  isVisibleHeaderBar: boolean;
   showHeaderBar: () => void;
   showScreenModeButton: () => void;
   hideHeaderBar: () => void;
   hideScreenModeButton: () => void;
+  showFooter: () => void;
+  hideFooter: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextProps>({
-  isVisibleHeaderBar: true,
   showHeaderBar: () => {},
   showScreenModeButton: () => {},
   hideHeaderBar: () => {},
   hideScreenModeButton: () => {},
+  showFooter: () => {},
+  hideFooter: () => {},
 });
 
 const LayoutProvider = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
-  const isHome = router.pathname === Route.HOME;
-
   const { session, isSignupRequired } = useUserStatus();
+  const signUp = useSignUp();
   const { openModal } = modalStore();
-  const [isVisibleHeaderBar, setIsVisible] = useState(true);
-  const [isVisibleScreenModeButton, setIsVisibleScreenModeButton] =
-    useState(true);
+
+  const [hasHeaderBar, setHasHeaderBar] = useState(true);
+  const [hasScreenModeButton, setHasScreenModeButton] = useState(true);
+  const [hasFooter, setHasFooter] = useState(false);
 
   const contextProps: LayoutContextProps = useMemo(
     () => ({
-      isVisibleHeaderBar,
-      showHeaderBar: () => setIsVisible(true),
-      hideHeaderBar: () => setIsVisible(false),
-      showScreenModeButton: () => setIsVisibleScreenModeButton(true),
-      hideScreenModeButton: () => setIsVisibleScreenModeButton(false),
+      showHeaderBar: () => setHasHeaderBar(true),
+      hideHeaderBar: () => setHasHeaderBar(false),
+      showFooter: () => setHasFooter(true),
+      hideFooter: () => setHasFooter(false),
+      showScreenModeButton: () => setHasScreenModeButton(true),
+      hideScreenModeButton: () => setHasScreenModeButton(false),
     }),
-    [isVisibleHeaderBar],
+    [],
   );
 
-  const handleSignUp = async ({
-    name,
-    introduce,
-  }: {
-    name: UserName;
-    introduce: Introduce;
-  }) => {
-    try {
-      if (isSignupRequired) {
-        await signUp({ name, introduce, ...session });
-        await signIn(session.oAuth);
-      }
-    } catch (error) {
-      if (error instanceof UserError) {
-        toast.error(error.message);
-      }
+  const handleSignUp = async ({ name, introduce }: Profile) => {
+    if (isSignupRequired) {
+      signUp({ name, introduce, ...session });
     }
   };
 
@@ -89,23 +74,21 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <LayoutContext.Provider value={contextProps}>
-      {isVisibleHeaderBar && <HeaderBar />}
-      <MainContainer isHome={isHome} isVisibleHeaderBar={isVisibleHeaderBar}>
-        {children}
-        <ProfileSettingModal
-          modalKey={ModalKey.SIGNUP}
-          title="회원가입"
-          onComplete={handleSignUp}
-          onCancel={() => signOut()}
-        />
-        {isVisibleScreenModeButton && <ScreenModeButton />}
-        <ToastContainer
-          theme="colored"
-          position="bottom-left"
-          style={{ lineHeight: 1.4 }}
-        />
-      </MainContainer>
-      {isHome && <Footer />}
+      {hasHeaderBar && <HeaderBar />}
+      {children}
+      <ProfileSettingModal
+        modalKey={ModalKey.SIGNUP}
+        title="회원가입"
+        onComplete={handleSignUp}
+        onCancel={() => signOut()}
+      />
+      {hasScreenModeButton && <ScreenModeButton />}
+      <ToastContainer
+        theme="colored"
+        position="bottom-left"
+        style={{ lineHeight: 1.4 }}
+      />
+      {hasFooter && <Footer />}
     </LayoutContext.Provider>
   );
 };

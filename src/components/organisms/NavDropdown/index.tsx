@@ -3,19 +3,19 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { IoIosArrowDown } from '@react-icons/all-files/io/IoIosArrowDown';
 import { IoIosArrowUp } from '@react-icons/all-files/io/IoIosArrowUp';
+
 import { BoxVariant } from '@/constants';
 import Route from '@/constants/routes';
-import useUser from '@/hooks/services/queries/useUser';
 import useOpenClose from '@/hooks/useOpenClose';
+import useMe from '@/hooks/useMe';
 import Button from '@/components/atoms/Button';
 import Menu from '@/components/molecules/Menu';
 import AccountButton from '@/components/organisms/AccountButton';
-import { UserId } from '@/types/features/user';
 import * as s from './style';
 
-const NavDropdown = ({ userId }: { userId: UserId }) => {
+const NavDropdown = () => {
+  const { user } = useMe();
   const router = useRouter();
-  const user = useUser(userId);
   const { anchorEl, handleToggle, handleClose } = useOpenClose();
   const isShowMenu = Boolean(anchorEl);
 
@@ -45,7 +45,7 @@ const NavDropdown = ({ userId }: { userId: UserId }) => {
         handleClose={handleClose}
       >
         <s.MenuItem>
-          <Link href={`${Route.LIBRARY}/${userId}`}>내 서재</Link>
+          <Link href={`${Route.LIBRARY}/${user.id}`}>내 서재</Link>
         </s.MenuItem>
         <s.MenuItem>
           <Link href={`${Route.SUBSCRIPTIONS}`}>관심 서재</Link>

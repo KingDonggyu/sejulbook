@@ -1,38 +1,41 @@
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { dehydrate } from '@tanstack/react-query';
-import NewbookSearch from '@/components/templates/NewbookSearch';
+import checkIsLoggedIn from '@/server/middlewares/checkIsLoggedIn';
+import type { Book } from 'book';
+
+import NewbookSearchTemplate from '@/components/templates/NewbookSearch';
 import SEO from '@/components/atoms/SEO';
 import BookSearchBar from '@/components/organisms/BookSearchBar';
 import DraftSavedListModal from '@/components/organisms/DraftSavedListModal';
-import checkLogin, { checkRedirect } from '@/services/middlewares/checkLogin';
-import prefetchQuery from '@/services/prefetchQuery';
-import { getDraftSavedListQuery } from '@/services/queries/bookReview';
-import useDraftSavedList from '@/hooks/services/queries/useDraftSavedList';
-import { UserId } from '@/types/features/user';
-import { Book } from '@/types/features/book';
-import { useNewbookContext } from '@/contexts/newbookContext';
 import Route from '@/constants/routes';
+import NewBookRepository from '@/repository/localStorage/NewBookRepository';
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
+import useDraftSavedList, {
+  getDraftSavedListQuery,
+} from '@/hooks/services/queries/useDraftSavedList';
 
-const NewbookSearchPage = ({ myId }: { myId: UserId }) => {
+const NewbookSearchPage = () => {
   const router = useRouter();
-  const { setNewbook } = useNewbookContext();
-  const draftSavedList = useDraftSavedList(myId);
+  const { draftSavedList } = useDraftSavedList();
+  const newBookRepository = new NewBookRepository();
 
   const handleClickSearchedItem = (book: Book) => {
-    setNewbook(book);
+    newBookRepository.set(book);
     router.push(Route.NEWBOOK_WRITE);
   };
 
   return (
     <>
       <SEO title="책 선택" />
-      <NewbookSearch
+      <NewbookSearchTemplate
         bookSearchBar={
           <BookSearchBar onClickSearchedItem={handleClickSearchedItem} />
         }
         draftSavedListButton={
-          <DraftSavedListModal.Button draftSavedList={draftSavedList} />
+          draftSavedList && (
+            <DraftSavedListModal.Button draftSavedList={draftSavedList} />
+          )
         }
       />
     </>
@@ -40,21 +43,22 @@ const NewbookSearchPage = ({ myId }: { myId: UserId }) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const serverSideProps = await checkLogin(ctx);
+  const { isLoggedIn, userId } = await checkIsLoggedIn(ctx);
 
-  if (checkRedirect(serverSideProps) || !serverSideProps.props.userId) {
-    return serverSideProps;
+  if (!isLoggedIn) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: Route.HOME,
+      },
+      props: {},
+    };
   }
 
-  const queryClient = await prefetchQuery([
-    getDraftSavedListQuery(serverSideProps.props.userId),
-  ]);
+  const queryClient = await prefetchQuery([getDraftSavedListQuery(userId)]);
 
   return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-      myId: serverSideProps.props.userId,
-    },
+    props: { dehydratedState: dehydrate(queryClient) },
   };
 };
 

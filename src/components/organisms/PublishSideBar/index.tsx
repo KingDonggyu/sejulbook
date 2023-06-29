@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router';
-
+import type { Id } from 'bookReview';
 import { ButtonVariant, ColorVariant } from '@/constants';
 import Route from '@/constants/routes';
 import { ModalKey } from '@/constants/keys';
 import useOpenClose from '@/hooks/useOpenClose';
-import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import useBookReviewPublication from '@/hooks/services/mutations/useBookReviewPublication';
-import bookReviewStore from '@/stores/bookReviewStore';
+import useBookReviewEdit from '@/hooks/services/mutations/useBookReviewEdit';
+import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
-import { BookReviewId } from '@/types/features/bookReview';
 
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
@@ -19,7 +19,6 @@ import ThumbnailUploader from '@/components/organisms/ThumbnailUploader';
 import CategoryModal from '@/components/organisms/CategoryModal';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import { editorElementId } from '@/components/organisms/ContentEditor';
-
 import * as s from './style';
 
 interface PublishSideBarProps {
@@ -34,12 +33,16 @@ const PublishSideBar = ({
   handleClose,
 }: PublishSideBarProps) => {
   const router = useRouter();
-  const { savedBookReviewId } = useSavedBookReviewId();
-
   const { deleteImageKey } = s3ImageURLStore();
-  const { bookReview, setCategory, setRating, setTag } = bookReviewStore();
+  const {
+    bookReview,
+    setCategory,
+    setRating,
+    setTags: setTag,
+    getBookReviewToPublish,
+  } = bookReviewStore();
 
-  const handleSuccess = (bookReviewId: BookReviewId) => {
+  const handleSuccess = (bookReviewId: Id) => {
     if (bookReview.thumbnail) {
       deleteImageKey(bookReview.thumbnail);
     }
@@ -51,11 +54,33 @@ const PublishSideBar = ({
     router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
 
+  const { savedBookReviewId } = useSavedBookReviewId();
+
   const publishBookReview = useBookReviewPublication({
-    bookReview,
-    savedBookReviewId,
     onSuccess: handleSuccess,
   });
+
+  const editBookReview = useBookReviewEdit({
+    onSuccess: () => {
+      if (savedBookReviewId) {
+        handleSuccess(savedBookReviewId);
+      }
+    },
+  });
+
+  const handleClickPublishButton = () => {
+    if (savedBookReviewId) {
+      editBookReview({
+        isPublished: true,
+        bookReview: {
+          ...getBookReviewToPublish(bookReview),
+          id: savedBookReviewId,
+        },
+      });
+      return;
+    }
+    publishBookReview(getBookReviewToPublish(bookReview));
+  };
 
   return (
     <SideBar anchorEl={anchorEl} handleClose={handleClose}>
@@ -83,14 +108,14 @@ const PublishSideBar = ({
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>태그</s.Label>
-          <TagInput initTagList={bookReview.tag} handleUpdate={setTag} />
+          <TagInput initTagList={bookReview.tags} handleUpdate={setTag} />
         </s.PublishInfoItem>
         <s.ButtonWrapper>
           {!isHiddenDraftSaveButton && <DraftSaveButton />}
           <Button
             variant={ButtonVariant.OUTLINED}
             color={ColorVariant.PRIMARY}
-            onClick={() => publishBookReview()}
+            onClick={handleClickPublishButton}
           >
             발행
           </Button>
