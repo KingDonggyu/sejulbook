@@ -1,13 +1,13 @@
+import type { Id as UserId } from 'user';
+import type { GetFollowInfoResponse } from 'follow';
 import useUser from '@/hooks/services/queries/useUser';
-import { UserId } from '@/types/features/user';
-import { FollowInfoResponse } from '@/types/features/follow';
 import modalStore from '@/stores/modalStore';
 import Button from '@/components/atoms/Button';
 import { ModalKey } from '@/constants/keys';
 import * as s from './style';
 import UserListModal from '../UserListModal';
 
-interface ProfileProps extends Omit<FollowInfoResponse, 'isFollow'> {
+interface ProfileProps extends GetFollowInfoResponse {
   userId: UserId;
   bookReviewCount: number;
 }
@@ -18,7 +18,7 @@ const Profile = ({
   followerCount,
   followingCount,
 }: ProfileProps) => {
-  const user = useUser(userId);
+  const { user } = useUser(userId);
   const { openModal } = modalStore();
 
   if (!user) {

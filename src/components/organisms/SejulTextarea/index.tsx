@@ -3,7 +3,7 @@ import Image from 'next/image';
 import TextArea from '@/components/atoms/TextArea';
 import quotesLeftSrc from '@public/images/icon-quotes-left.svg';
 import quotesRightSrc from '@public/images/icon-quotes-right.svg';
-import bookReviewStore from '@/stores/bookReviewStore';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import { TextFieldVariant } from '@/constants';
 import * as s from './style';
 

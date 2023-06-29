@@ -1,11 +1,11 @@
 import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { toast } from 'react-toastify';
-import bookReviewStore from '@/stores/bookReviewStore';
+import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
-import { uploadLocalImage } from '@/services/api/bookReview';
-import { BookReviewError } from '@/services/errors/BookReviewError';
+import { createS3Object } from '@/lib/s3Client';
+import ExceptionBase from '@/lib/HttpErrorException';
 import * as s from './style';
 
 interface ContentEditorProps {
@@ -41,11 +41,11 @@ const ContentEditor = ({
 
   const handleUploadLoacalImage = async (blob: Blob) => {
     try {
-      const url = await uploadLocalImage(blob);
+      const url = await createS3Object(blob);
       addImageKey(url);
       return url;
     } catch (error) {
-      if (error instanceof BookReviewError) {
+      if (error instanceof ExceptionBase) {
         toast.error(error.message);
       }
       return '';

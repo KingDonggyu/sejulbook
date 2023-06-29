@@ -1,43 +1,40 @@
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
-import useMutation from '@/hooks/useMutation';
-import { subscribe, unsubscribe } from '@/services/api/follow';
-import FollowError from '@/services/errors/FollowError';
-import { getFollowInfoQuery } from '@/services/queries/follow';
-import { SubscribeRequest } from '@/types/features/follow';
+import useMutation from '@/lib/react-query/hooks/useMutation';
+import FollowRepository from '@/repository/api/FollowRepository';
+import { getFollowInfoQuery } from '../queries/useFollowInfo';
+import { getFollowerListInfiniteQuery } from '../infiniteQueries/useInfiniteFollowUserList';
 
-interface SubscribeToggleProps extends Pick<SubscribeRequest, 'targetUserId'> {
+interface Request
+  extends Omit<Parameters<FollowRepository['follow']>[0], 'myUserId'> {
   isSubscribed: boolean;
 }
 
-const useSubscribeToggle = ({
-  targetUserId,
-  isSubscribed,
-}: SubscribeToggleProps) => {
+const useSubscribeToggle = () => {
+  const queryKeys: QueryKey[] = [];
   const queryClient = useQueryClient();
-  const [queryKey, setQueryKey] = useState<QueryKey>();
 
-  const { mutate } = useMutation({
-    mutationFn: async (myUserId) => {
-      setQueryKey(getFollowInfoQuery({ targetUserId, myUserId }).queryKey);
+  const { mutate } = useMutation<void, Request>({
+    mutationFn: async (myUserId, { targetUserId, isSubscribed }) => {
+      queryKeys.push(
+        ...[
+          getFollowInfoQuery({ targetUserId, myUserId }).queryKey,
+          getFollowerListInfiniteQuery({ targetUserId, myUserId }).queryKey,
+        ],
+      );
 
       if (isSubscribed) {
-        await unsubscribe({ targetUserId, myUserId });
+        await new FollowRepository().unfollow({ myUserId, targetUserId });
         return;
       }
 
-      await subscribe({ targetUserId, myUserId });
+      await new FollowRepository().follow({ myUserId, targetUserId });
     },
-
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKey);
+      queryKeys.forEach((key) => queryClient.invalidateQueries(key));
     },
-
     onError: (error) => {
-      if (error instanceof FollowError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 

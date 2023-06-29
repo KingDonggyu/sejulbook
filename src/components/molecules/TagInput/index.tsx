@@ -4,17 +4,9 @@ import Button from '@/components/atoms/Button';
 import { TextFieldVariant } from '@/constants';
 import * as s from './style';
 
-type Tag = string;
-type TagList = Set<Tag>;
-
 interface TagItemProps {
   tag: string;
-  handleDelete: (tag: Tag) => void;
-}
-
-interface TagInputProps {
-  initTagList?: TagList;
-  handleUpdate: (tagList: TagList) => void;
+  handleDelete: (tag: string) => void;
 }
 
 const TagItem = ({ tag, handleDelete }: TagItemProps) => (
@@ -24,13 +16,18 @@ const TagItem = ({ tag, handleDelete }: TagItemProps) => (
   </s.HashTag>
 );
 
+interface TagInputProps {
+  initTagList?: string[];
+  handleUpdate: (tagList: string[]) => void;
+}
+
 const TagInput = ({ initTagList, handleUpdate }: TagInputProps) => {
-  const [currentTag, setCurrentTag] = useState<Tag>('');
-  const [tagList, setTagList] = useState<TagList>(new Set<Tag>());
+  const [currentTag, setCurrentTag] = useState<string>('');
+  const [tagList, setTagList] = useState<Set<string>>(new Set<string>());
 
   useEffect(() => {
     if (initTagList) {
-      setTagList(initTagList);
+      setTagList(new Set(initTagList));
     }
   }, [initTagList]);
 
@@ -39,9 +36,16 @@ const TagInput = ({ initTagList, handleUpdate }: TagInputProps) => {
       const newTagList = new Set(tagList);
       newTagList.add(currentTag);
       setTagList(newTagList);
-      handleUpdate(newTagList);
+      handleUpdate(Array.from(newTagList));
     }
     setCurrentTag('');
+  };
+
+  const handleDelete = (targetTag: string) => {
+    const newTagList = new Set(tagList);
+    newTagList.delete(targetTag);
+    setTagList(newTagList);
+    handleUpdate(Array.from(newTagList));
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,13 +61,6 @@ const TagInput = ({ initTagList, handleUpdate }: TagInputProps) => {
     if (e.key === 'Enter' || e.key === ' ') {
       handleComplete();
     }
-  };
-
-  const handleDelete = (targetTag: Tag) => {
-    const newTagList = new Set(tagList);
-    newTagList.delete(targetTag);
-    setTagList(newTagList);
-    handleUpdate(newTagList);
   };
 
   return (

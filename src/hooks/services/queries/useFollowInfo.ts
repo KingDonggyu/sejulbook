@@ -1,18 +1,28 @@
-import useQuery from '@/hooks/useQuery';
+import useQuery from '@/lib/react-query/hooks/useQuery';
+import type { Query } from '@/lib/react-query/types/query';
+import FollowRepository from '@/repository/api/FollowRepository';
 import useUserStatus from '@/hooks/useUserStatus';
-import { getFollowInfoQuery } from '@/services/queries/follow';
-import { FollowInfoResponse } from '@/types/features/follow';
-import { UserId } from '@/types/features/user';
 
-const useFollowInfo = (userId: UserId) => {
-  const { session } = useUserStatus();
-  const myUserId = session ? session.id || undefined : undefined;
+type Request = Parameters<FollowRepository['get']>[0];
+type Response = Awaited<ReturnType<FollowRepository['get']>>;
 
-  const { data: followInfo } = useQuery<FollowInfoResponse>(
-    getFollowInfoQuery({ targetUserId: userId, myUserId }),
+export const getFollowInfoQuery = ({
+  targetUserId,
+  myUserId,
+}: Request): Query<Response> => ({
+  queryKey: ['follow_get', targetUserId],
+  queryFn: () => new FollowRepository().get({ myUserId, targetUserId }),
+});
+
+const useFollowInfo = (targetUserId: number) => {
+  const { session, isLogin } = useUserStatus();
+  const myUserId = isLogin ? session.id : undefined;
+
+  const { data: followInfo, isLoading } = useQuery<Response>(
+    getFollowInfoQuery({ targetUserId, myUserId }),
   );
 
-  return followInfo;
+  return { followInfo, isLoading };
 };
 
 export default useFollowInfo;

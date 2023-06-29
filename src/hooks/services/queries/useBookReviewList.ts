@@ -1,24 +1,33 @@
 import { useMemo } from 'react';
-import useQuery from '@/hooks/useQuery';
-import { getBookReviewListQuery } from '@/services/queries/bookReview';
-import { BookReivewList } from '@/types/features/bookReview';
-import { UserId } from '@/types/features/user';
+import useQuery from '@/lib/react-query/hooks/useQuery';
+import type { Query } from '@/lib/react-query/types/query';
+import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
-const useBookReviewList = (userId: UserId) => {
-  const { data } = useQuery<BookReivewList>(
-    getBookReviewListQuery(Number(userId)),
+type Response = Awaited<
+  ReturnType<BookReviewRepository['getAllPublishedOfUser']>
+>;
+
+export const getBookReviewListQuery = (userId: number): Query<Response> => ({
+  queryKey: ['bookReview_getAllPublishedOfUser', userId],
+  queryFn: () => new BookReviewRepository().getAllPublishedOfUser(userId),
+});
+
+const useBookReviewList = (userId: number) => {
+  const { data, isLoading } = useQuery<Response>(
+    getBookReviewListQuery(userId),
   );
 
-  const bookReviewList = useMemo(
-    () =>
-      data.sort(
+  const bookReviewList = useMemo(() => {
+    if (data) {
+      return data.sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      ),
-    [data],
-  );
+      );
+    }
+    return data;
+  }, [data]);
 
-  return bookReviewList;
+  return { bookReviewList, isLoading };
 };
 
 export default useBookReviewList;

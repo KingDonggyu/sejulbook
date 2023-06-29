@@ -1,38 +1,32 @@
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { QueryKey, useQueryClient } from '@tanstack/react-query';
-import { LikeRequest, LikeResponse } from '@/types/features/like';
-import useMutation from '@/hooks/useMutation';
-import { like, unlike } from '@/services/api/like';
-import { BookReviewError } from '@/services/errors/BookReviewError';
-import { getLikeStatusQuery } from '@/services/queries/like';
+import type { LikeRequest } from 'like';
+import useMutation from '@/lib/react-query/hooks/useMutation';
+import LikeRepository from '@/repository/api/LikeRepository';
+import { getLikeStatusQuery } from '../queries/useLikeStatus';
 
-type LikeToggleProps = LikeRequest & Pick<LikeResponse, 'isLike'>;
+interface Request extends Omit<LikeRequest, 'likerId'> {
+  isLiked: boolean;
+}
 
-const useLikeToggle = ({ isLike, bookReviewId }: LikeToggleProps) => {
+const useLikeToggle = () => {
+  let queryKey: QueryKey;
   const queryClient = useQueryClient();
-  const [queryKey, setQueryKey] = useState<QueryKey>();
 
-  const { mutate } = useMutation({
-    mutationFn: async (userId) => {
-      setQueryKey(getLikeStatusQuery({ userId, bookReviewId }).queryKey);
-
-      if (isLike) {
-        await unlike({ userId, bookReviewId });
+  const { mutate } = useMutation<void, Request>({
+    mutationFn: async (likerId, { bookReviewId, isLiked }) => {
+      queryKey = getLikeStatusQuery({ bookReviewId, likerId }).queryKey;
+      if (isLiked) {
+        await new LikeRepository().unlike({ bookReviewId, likerId });
         return;
       }
-
-      await like({ userId, bookReviewId });
+      await new LikeRepository().like({ bookReviewId, likerId });
     },
-
     onSuccess: () => {
       queryClient.invalidateQueries(queryKey);
     },
-
     onError: (error) => {
-      if (error instanceof BookReviewError) {
-        toast.error(error.message);
-      }
+      toast.error(error.message);
     },
   });
 

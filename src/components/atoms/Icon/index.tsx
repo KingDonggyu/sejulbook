@@ -9,7 +9,7 @@ import { BsTrash } from '@react-icons/all-files/bs/BsTrash';
 import { BsPencil } from '@react-icons/all-files/bs/BsPencil';
 import { HiOutlineArrowRight } from '@react-icons/all-files/hi/HiOutlineArrowRight';
 
-import { StyleProps } from '@/types/style';
+import type { StyleProps } from '@emotion/react';
 import { lightTheme as theme } from '@/styles/theme';
 
 type IconProps = { size?: number; color?: string } & DOMAttributes<SVGElement> &

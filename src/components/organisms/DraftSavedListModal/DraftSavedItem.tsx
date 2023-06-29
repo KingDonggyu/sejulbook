@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { GetDraftSavedBookReviewResponse } from 'bookReview';
 import Button from '@/components/atoms/Button';
 import { DeleteIcon } from '@/components/atoms/Icon';
 import { ModalKey } from '@/constants/keys';
@@ -6,29 +7,21 @@ import Route from '@/constants/routes';
 import { confirm } from '@/constants/message';
 import modalStore from '@/stores/modalStore';
 import formatDateToKorean from '@/utils/formatDateToKorean';
-import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
-import {
-  DraftSavedBookReview,
-  DraftSavedBookReviewURLQuery,
-} from '@/types/features/bookReview';
 import { iconButtonStyle } from '@/styles/common';
+import useBookReviewDeletion from '@/hooks/services/mutations/useBookReviewDeletion';
 import * as s from './style';
 
-const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
+const DraftSavedItem = ({
+  id,
+  bookname,
+  createdAt,
+}: GetDraftSavedBookReviewResponse) => {
   const { closeModal } = modalStore();
-
-  const deleteDraftSavedBookReview = useBookReviewDeletion({
-    bookReviewId: id,
-    isDraftSaved: true,
-  });
-
-  const draftSavedURLQuery: DraftSavedBookReviewURLQuery = {
-    draft: id,
-  };
+  const deleteBookReview = useBookReviewDeletion();
 
   const handleClickDeleteButton = () => {
     if (window.confirm(confirm.DELETE_DRAFT_SAVED)) {
-      deleteDraftSavedBookReview();
+      deleteBookReview(id);
     }
   };
 
@@ -38,7 +31,7 @@ const DraftSavedItem = ({ id, bookname, createdAt }: DraftSavedBookReview) => {
         <Link
           href={{
             pathname: Route.NEWBOOK_WRITE,
-            query: draftSavedURLQuery,
+            query: { draft: id },
           }}
           onClick={() => closeModal(ModalKey.DRAFT_SAVED_LIST)}
         >

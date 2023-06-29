@@ -1,25 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { BookReviewListRequest } from '@/types/features/bookReview';
-import bookReviewService from 'server/features/bookReview/bookReview.service';
+import BookReviewService from '@/server/services/bookReview.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import errorHandler from '@/server/middlewares/errorHandler';
+import HttpMethods from '@/constants/httpMethods';
 
-interface ExtendedNextApiRequest extends Omit<NextApiRequest, 'query'> {
-  query: BookReviewListRequest;
+interface ExtenedNextApiRequest extends Omit<NextApiRequest, 'query'> {
+  query: { query: string; cursor: string };
 }
 
-const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
-  const { query, pageParam = null } = req.query;
-
-  const result = await bookReviewService.getPagingBookReviewListByTag({
-    tag: query,
-    maxId: pageParam,
-  });
-
-  if (!result.error) {
-    res.status(200).json(result);
-    return;
+const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
+  if (req.method !== HttpMethods.GET) {
+    const error = new MethodNotAllowedException();
+    res.status(error.code).send(error);
   }
 
-  res.status(result.code).json(result);
+  const data = await new BookReviewService().findPagesByTag({
+    tag: req.query.query,
+    targetId: +req.query.cursor,
+  });
+
+  res.status(200).json(data);
 };
 
-export default handler;
+export default errorHandler(handler);

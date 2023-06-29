@@ -1,7 +1,7 @@
 import { ForwardedRef, forwardRef } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { AiOutlineQuestionCircle } from '@react-icons/all-files/ai/AiOutlineQuestionCircle';
-import { StyleProps } from '@/types/style';
+import type { StyleProps } from '@emotion/react';
 import getS3DomainAddress from '@/utils/getS3DomainAddress';
 import * as s from './style';
 

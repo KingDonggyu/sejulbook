@@ -1,10 +1,7 @@
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.main`
   margin: auto;
-  padding-top: 30px;
+  padding: 7rem 20px;
   max-width: ${({ theme }) => theme.MAX_WIDTH.CONTENT};
-  @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.TABLET}) {
-    padding-top: 10px;
-  }
 `;

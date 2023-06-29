@@ -1,5 +1,6 @@
 import { InputHTMLAttributes, ReactNode } from 'react';
-import { StyleProps } from '@/types/style';
+import type { StyleProps } from '@emotion/react';
+
 import { Alignment, TextFieldVariant, ColorVariant } from '@/constants';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
 import { useScreenModeContext } from '@/contexts/screenModeContext';

@@ -61,6 +61,14 @@ export const BookReviewListAltText = styled.div`
   }
 `;
 
+export const ThumbnailSkeleton = styled.div<{ width: number; height: number }>`
+  background: ${({ theme }) => theme.COLOR.LINE};
+  width: ${({ width }) => `${width}px`};
+  height: ${({ height }) => `${height}px`};
+  min-width: ${({ width }) => `${width}px`};
+  min-height: ${({ height }) => `${height}px`};
+`;
+
 export const loginButtonStyle = (theme: Theme) => css`
   margin: auto;
   margin-top: 30px;

@@ -8,7 +8,7 @@ export const userError = {
   NOT_LOGGED: '로그인 후 이용해주세요.',
 };
 
-export const bookReviewSussess = {
+export const bookReviewSuccess = {
   DRAFT_SAVE: '작성 중인 독후감이 저장되었습니다.',
 };
 

@@ -3,13 +3,16 @@ import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { dehydrate } from '@tanstack/react-query';
 
-import prefetchQuery from '@/services/prefetchQuery';
-import { getUserQuery } from '@/services/queries/user';
-import { getBookReviewListQuery } from '@/services/queries/bookReview';
+import type { GetLibraryBookReviewResponse, UserId } from 'bookReview';
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import useUserStatus from '@/hooks/useUserStatus';
-import useUser from '@/hooks/services/queries/useUser';
-import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
-import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
+import useUser, { getUserQuery } from '@/hooks/services/queries/useUser';
+import useBookReviewList, {
+  getBookReviewListQuery,
+} from '@/hooks/services/queries/useBookReviewList';
+import useFollowInfo, {
+  getFollowInfoQuery,
+} from '@/hooks/services/queries/useFollowInfo';
 
 import Library from '@/components/templates/Library';
 import SEO from '@/components/atoms/SEO';
@@ -18,27 +21,35 @@ import ProfileEditButton from '@/components/organisms/ProfileEditButton';
 import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscribeToggleButton from '@/components/organisms/SubscribeToggleButton';
-import { getFollowInfoQuery } from '@/services/queries/follow';
-import { UserId } from '@/types/features/user';
-import { BookReivewList } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const LibraryPage = ({ userId }: { userId: UserId }) => {
-  const user = useUser(userId);
-  const { session } = useUserStatus();
-  const initBookReviewList = useBookReviewList(userId);
-  const { followerCount, followingCount, isFollow } = useFollowInfo(userId);
+  const { user } = useUser(userId);
+  const { followInfo } = useFollowInfo(userId);
+  const { bookReviewList: initBookReviewList } = useBookReviewList(userId);
+  const { session, isLogin } = useUserStatus();
 
-  const [bookReviewList, setBookReviewList] = useState<BookReivewList>([]);
-  const isMyLibrary = !!(session && userId === session.id);
+  const [bookReviewList, setBookReviewList] = useState<
+    GetLibraryBookReviewResponse[]
+  >([]);
 
   useEffect(() => {
-    setBookReviewList(initBookReviewList);
+    if (initBookReviewList) {
+      setBookReviewList(initBookReviewList);
+    }
   }, [initBookReviewList]);
 
+  if (!user || !followInfo) {
+    return null;
+  }
+
+  const isMyLibrary = !!(isLogin && userId === session.id);
+
   const handleClickLatestSortButton = () => {
-    setBookReviewList(initBookReviewList);
+    if (initBookReviewList) {
+      setBookReviewList(initBookReviewList);
+    }
   };
 
   const handleClickLikeSortButton = () => {
@@ -63,8 +74,7 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
           <Profile
             userId={userId}
             bookReviewCount={bookReviewList ? bookReviewList.length : 0}
-            followerCount={followerCount}
-            followingCount={followingCount}
+            {...followInfo}
           />
         }
         bookshelf={
@@ -79,7 +89,10 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
           isMyLibrary ? (
             <ProfileEditButton />
           ) : (
-            <SubscribeToggleButton userId={userId} isSubscribed={isFollow} />
+            <SubscribeToggleButton
+              userId={userId}
+              isSubscribed={followInfo.isFollow}
+            />
           )
         }
         bookReivewSortButton={
@@ -105,18 +118,18 @@ export const getServerSideProps = async ({
   res,
   query,
 }: ExtendedGetServerSidePropsContext) => {
-  const userId = Number(query.userId);
   const session = await getServerSession(req, res, authOptions);
-  const myId = session ? session.id || undefined : undefined;
+  const myUserId = session ? session.id || undefined : undefined;
+  const targetUserId = +query.userId;
 
   const queryClient = await prefetchQuery([
-    getUserQuery(userId),
-    getBookReviewListQuery(userId),
-    getFollowInfoQuery({ targetUserId: userId, myUserId: myId }),
+    getUserQuery(targetUserId),
+    getBookReviewListQuery(targetUserId),
+    getFollowInfoQuery({ targetUserId, myUserId }),
   ]);
 
   return {
-    props: { dehydratedState: dehydrate(queryClient), userId },
+    props: { dehydratedState: dehydrate(queryClient), userId: targetUserId },
   };
 };
 

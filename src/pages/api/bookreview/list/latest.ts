@@ -1,15 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bookReviewService from 'server/features/bookReview/bookReview.service';
+import BookReviewService from '@/server/services/bookReview.service';
+import { MethodNotAllowedException } from '@/server/exceptions';
+import errorHandler from '@/server/middlewares/errorHandler';
+import HttpMethods from '@/constants/httpMethods';
 
-const handler = async (_: NextApiRequest, res: NextApiResponse) => {
-  const result = await bookReviewService.getLatestBookReviewList();
-
-  if (!result.error) {
-    res.status(200).json(result);
-    return;
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== HttpMethods.GET) {
+    const error = new MethodNotAllowedException();
+    res.status(error.code).send(error);
   }
 
-  res.status(result.code).json(result);
+  const data = await new BookReviewService().findTenLatest();
+  res.status(200).json(data);
 };
 
-export default handler;
+export default errorHandler(handler);

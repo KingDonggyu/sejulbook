@@ -1,50 +1,48 @@
+import { useEffect } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import Link from 'next/link';
 import { getServerSession } from 'next-auth/next';
 import { dehydrate } from '@tanstack/react-query';
+import Link from 'next/link';
 
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import Home from '@/components/templates/Home';
+import HomeTemplate from '@/components/templates/Home';
 import SEO from '@/components/atoms/SEO';
 import { ArrowRightIcon } from '@/components/atoms/Icon';
 import BookReviewScroller from '@/components/organisms/BookReviewScroller';
-
-import { getUserQuery } from '@/services/queries/user';
-import prefetchQuery from '@/services/prefetchQuery';
-import {
-  getFollowingBookReviewListQuery,
-  getLatestBookReviewListQuery,
-  getMostLikedBookReviewListQuery,
-} from '@/services/queries/bookReview';
-
-import useLatestBookReviewList from '@/hooks/services/queries/useLatestBookReviewList';
-import useMostLikedBookReviewList from '@/hooks/services/queries/useMostLikedBookReviewList';
-import useFollowingBookReviewList from '@/hooks/services/queries/useFollowingBookReviewList';
+import SubscribeBookReviewScoller from '@/components/organisms/BookReviewScroller/Subscribe';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import Route from '@/constants/routes';
-import { UserId } from '@/types/features/user';
+import { useLayoutContext } from '@/contexts/layoutContext';
+import { getUserQuery } from '@/hooks/services/queries/useUser';
+import useLatestBookReviewList, {
+  latestBookReviewListQuery,
+} from '@/hooks/services/queries/useLatestBookReviewList';
+import useMostLikedBookReviewList, {
+  mostLikedBookReviewListQuery,
+} from '@/hooks/services/queries/useMostLikedBookReviewList';
+import { getFollowingBookReviewListQuery } from '@/hooks/services/queries/useFollowingBookReviewList';
 
-const HomePage = ({ myUserId }: { myUserId: UserId | null }) => {
-  const latestBookReviewList = useLatestBookReviewList();
-  const mostLikedBookReviewList = useMostLikedBookReviewList();
-  const followingBookReviewList = useFollowingBookReviewList(
-    myUserId || undefined,
-  );
+const HomePage = ({ myUserId }: { myUserId: number | null }) => {
+  const { showFooter, hideFooter } = useLayoutContext();
+  const { latestBookReviewList } = useLatestBookReviewList();
+  const { mostLikedBookReviewList } = useMostLikedBookReviewList();
+
+  useEffect(() => {
+    showFooter();
+    return () => hideFooter();
+  }, [hideFooter, showFooter]);
 
   return (
     <>
       <SEO />
-      <Home
+      <HomeTemplate
         latestBookReviewScroller={
           <BookReviewScroller bookReviewList={latestBookReviewList} />
         }
         mostLikedBookReviewScroller={
           <BookReviewScroller bookReviewList={mostLikedBookReviewList} />
         }
-        subscribeBookReviewScroller={
-          <BookReviewScroller.Subscribe
-            bookReviewList={followingBookReviewList}
-          />
-        }
+        subscribeBookReviewScroller={<SubscribeBookReviewScoller />}
         subscriptionsPageLink={
           !!myUserId && (
             <Link
@@ -70,8 +68,8 @@ export const getServerSideProps = async ({
   const queryClient = await prefetchQuery([
     getUserQuery(myUserId),
     getFollowingBookReviewListQuery(myUserId),
-    getLatestBookReviewListQuery,
-    getMostLikedBookReviewListQuery,
+    latestBookReviewListQuery,
+    mostLikedBookReviewListQuery,
   ]);
 
   return {

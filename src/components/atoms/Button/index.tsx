@@ -1,7 +1,8 @@
 import { ButtonHTMLAttributes } from 'react';
+import { StyleProps } from '@emotion/react';
 import { HiX } from '@react-icons/all-files/hi/HiX';
+
 import { ColorVariant, ButtonVariant } from '@/constants';
-import { StyleProps } from '@/types/style';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
 import getColorByColorVariant from '@/utils/getColorByColorVariant';
 import useMobile from '@/hooks/useMobile';

@@ -1,12 +1,12 @@
 import { ReactNode, useRef } from 'react';
 import Link from 'next/link';
+import type { Id, Sejul } from 'bookReview';
 import Thumbnail, { ThumbnailProps } from '@/components/atoms/Thumbnail';
-import { BookReviewId, Sejul } from '@/types/features/bookReview';
 import Route from '@/constants/routes';
 import * as s from './style';
 
 type SejulThumbnailProps = {
-  bookReviewId: BookReviewId;
+  bookReviewId: Id;
   sejul: Sejul;
   isGrayscale?: boolean;
   isLargeSejul?: boolean;

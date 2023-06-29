@@ -1,14 +1,17 @@
 import { useEffect } from 'react';
 import { Router } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
+import type { Id as UserId } from 'user';
+
+import spinnerSrc from '@public/images/animation-spinner.svg';
 import Route from '@/constants/routes';
 import { ModalKey } from '@/constants/keys';
-import { UserId } from '@/types/features/user';
 import useUserStatus from '@/hooks/useUserStatus';
 import useIntersect from '@/hooks/useIntersect';
 import useUser from '@/hooks/services/queries/useUser';
 import useFollowInfo from '@/hooks/services/queries/useFollowInfo';
-import useInfinityFollowUserList from '@/hooks/services/queries/useInfinityFollowUserList';
+import useInfinityFollowUserList from '@/hooks/services/infiniteQueries/useInfiniteFollowUserList';
 import modalStore from '@/stores/modalStore';
 import Modal from '@/components/molecules/Modal';
 import SubscribeToggleButton from '../SubscribeToggleButton';
@@ -21,14 +24,15 @@ interface UserListProps {
 }
 
 const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
-  const user = useUser(userId);
-  const { session, isLogin } = useUserStatus();
-  const { followingCount, followerCount } = useFollowInfo(userId);
   const { closeModal } = modalStore();
 
-  const { followUserList, refetchNextFollowUserList } =
+  const { user } = useUser(userId);
+  const { session, isLogin } = useUserStatus();
+  const { followInfo } = useFollowInfo(userId);
+
+  const { followUserList, refetchNextFollowUserList, isLoading } =
     useInfinityFollowUserList({
-      targetUserId: userId,
+      userId,
       isFollowing,
     });
 
@@ -49,39 +53,51 @@ const UserListModal = ({ userId, isFollowing, modalKey }: UserListProps) => {
     };
   }, [closeModal]);
 
+  if (!user || !followInfo) {
+    return null;
+  }
+
   return (
     <Modal modalKey={modalKey}>
       <s.Wrapper>
         {isFollowing ? (
           <s.Title>
             <span>{user?.name}</span>님이 구독하는 서재{' '}
-            <span>{followingCount}</span>
+            <span>{followInfo.followingCount}</span>
           </s.Title>
         ) : (
           <s.Title>
             <span>{user?.name}</span>의 서재를 구독하는 사람{' '}
-            <span>{followerCount}</span>
+            <span>{followInfo.followerCount}</span>
           </s.Title>
         )}
         <ul>
-          {!!followUserList &&
-            followUserList.map(({ id, name, introduce, isFollow }) => (
-              <s.UserItem key={id}>
-                <s.ProfileWrapper>
-                  <Link href={`${Route.LIBRARY}/${id}`}>
-                    <s.Name>{name}</s.Name>
-                  </Link>
-                  {!!introduce && <s.Introduce>{introduce}</s.Introduce>}
-                </s.ProfileWrapper>
-                {isLogin && session.id !== id && (
-                  <SubscribeToggleButton
-                    userId={id}
-                    isSubscribed={isFollow}
-                    css={s.buttonStyle}
-                  />
-                )}
-              </s.UserItem>
-            ))}
+          {followUserList.map(({ id, name, introduce, isFollow }) => (
+            <s.UserItem key={id}>
+              <s.ProfileWrapper>
+                <Link href={`${Route.LIBRARY}/${id}`}>
+                  <s.Name>{name}</s.Name>
+                </Link>
+                {!!introduce && <s.Introduce>{introduce}</s.Introduce>}
+              </s.ProfileWrapper>
+              {isLogin && session.id !== id && (
+                <SubscribeToggleButton
+                  userId={id}
+                  isSubscribed={isFollow}
+                  css={s.buttonStyle}
+                />
+              )}
+            </s.UserItem>
+          ))}
+          {isLoading && (
+            <Image
+              src={spinnerSrc}
+              alt="로딩 이미지"
+              width={70}
+              height={70}
+              css={s.spinnerStyle}
+            />
+          )}
           <s.IntersectTarget ref={intersectRef} />
         </ul>
       </s.Wrapper>
