@@ -15,6 +15,7 @@ import type {
   GetLibraryBookReviewResponse,
   GetPublishedBookReviewResponse,
   UpdateBookReviewRequest,
+  HasBookReviewRequest,
 } from 'bookReview';
 
 import LikeService from './like.service';
@@ -30,6 +31,18 @@ class BookReviewService {
   private userService = new UserService();
 
   private type = { published: 1, draftSaved: 0 };
+
+  async hasBookReview({ userId, id }: HasBookReviewRequest) {
+    const bookReview = await this.bookReview.findUnique({
+      where: { id },
+    });
+
+    if (!bookReview) {
+      throw new NotFoundException('존재하지 않는 독후감입니다.');
+    }
+
+    return bookReview.userId === userId;
+  }
 
   async createDraftSaved(bookReview: CreateBookReviewReqeust) {
     this.validate(bookReview, true);

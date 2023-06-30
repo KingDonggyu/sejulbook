@@ -8,6 +8,7 @@ import type {
   GetBookReviewPageByCategoryRequest,
   GetBookReviewPageByTagRequest,
   GetPublishedBookReviewResponse,
+  HasBookReviewRequest,
 } from 'bookReview';
 
 import BookReviewService from '@/server/services/bookReview.service';
@@ -21,6 +22,16 @@ class BookReviewRepository extends HttpClient {
   constructor() {
     super();
     this.service = this.checkIsSSR() ? new BookReviewService() : null;
+  }
+
+  async checkIsMine({ userId, id }: HasBookReviewRequest) {
+    if (!this.service) {
+      throw new Error(
+        'Client Side Redering 시 해당 method를 사용할 수 없습니다.',
+      );
+    }
+    const isMine = await this.service.hasBookReview({ userId, id });
+    return isMine;
   }
 
   async publish(bookReview: CreateBookReviewReqeust) {
