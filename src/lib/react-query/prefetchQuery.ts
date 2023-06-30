@@ -10,10 +10,10 @@ const prefetchQuery = async (
 
   await Promise.all([
     ...queries.map(({ queryKey, queryFn, options }) =>
-      queryClient.prefetchQuery(queryKey, queryFn, { ...options }),
+      queryClient.fetchQuery(queryKey, queryFn, { ...options }),
     ),
     ...infinityQueries.map(({ queryKey, queryFn, options }) =>
-      queryClient.prefetchInfiniteQuery(
+      queryClient.fetchInfiniteQuery(
         queryKey,
         () => queryFn({ pageParam: null }),
         { ...options },

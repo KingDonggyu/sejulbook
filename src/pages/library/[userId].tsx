@@ -22,6 +22,7 @@ import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscribeToggleButton from '@/components/organisms/SubscribeToggleButton';
 import Route from '@/constants/routes';
+import { userError } from '@/constants/message';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const LibraryPage = ({ userId }: { userId: UserId }) => {
@@ -118,19 +119,33 @@ export const getServerSideProps = async ({
   res,
   query,
 }: ExtendedGetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-  const myUserId = session ? session.id || undefined : undefined;
-  const targetUserId = +query.userId;
+  try {
+    const session = await getServerSession(req, res, authOptions);
+    const myUserId = session ? session.id || undefined : undefined;
+    const targetUserId = +query.userId;
 
-  const queryClient = await prefetchQuery([
-    getUserQuery(targetUserId),
-    getBookReviewListQuery(targetUserId),
-    getFollowInfoQuery({ targetUserId, myUserId }),
-  ]);
+    const queryClient = await prefetchQuery([
+      getUserQuery(targetUserId),
+      getBookReviewListQuery(targetUserId),
+      getFollowInfoQuery({ targetUserId, myUserId }),
+    ]);
 
-  return {
-    props: { dehydratedState: dehydrate(queryClient), userId: targetUserId },
-  };
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+        userId: targetUserId,
+        notFound: false,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        notFound: true,
+        title: userError.NOT_FOUND,
+        errorMessage: '404 - User is not Found',
+      },
+    };
+  }
 };
 
 export default LibraryPage;

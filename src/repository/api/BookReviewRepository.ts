@@ -73,15 +73,18 @@ class BookReviewRepository extends HttpClient {
     });
   }
 
-  async get(id: Id): Promise<GetPublishedBookReviewResponse> {
+  async get(
+    id: Id,
+    isOnlyPublished = false,
+  ): Promise<GetPublishedBookReviewResponse> {
     if (this.service) {
-      const bookReview = await this.service.find(id);
+      const bookReview = await this.service.find(id, isOnlyPublished);
       return bookReview;
     }
     const bookReview = await this.axiosInstance.get<
       never,
       GetPublishedBookReviewResponse
-    >(`${this.baseUrl}/${id}`);
+    >(`${this.baseUrl}/${id}`, { params: { isOnlyPublished } });
     return bookReview;
   }
 

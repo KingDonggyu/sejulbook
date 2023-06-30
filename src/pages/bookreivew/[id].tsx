@@ -16,7 +16,7 @@ import LikeCommentWidget from '@/components/organisms/LikeCommentWidget';
 import BookInfoBox from '@/components/organisms/BookInfoBox';
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import Route from '@/constants/routes';
-import { confirm } from '@/constants/message';
+import { bookReviewError, confirm } from '@/constants/message';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 import useBookReview, {
@@ -39,7 +39,7 @@ const BookreviewPage = () => {
   const { session, isLogin } = useUserStatus();
   const userId = isLogin ? session.id : undefined;
 
-  const { bookReview } = useBookReview(bookReviewId);
+  const { bookReview } = useBookReview(bookReviewId, true);
   const { tags } = useTags(bookReviewId);
   const { comments } = useComments(bookReviewId);
 
@@ -153,21 +153,31 @@ export const getServerSideProps = async ({
   res,
   query,
 }: GetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-  const userId = session ? session.id || undefined : undefined;
-  const bookReviewId = Number(query.id);
+  try {
+    const session = await getServerSession(req, res, authOptions);
+    const userId = session ? session.id || undefined : undefined;
+    const bookReviewId = Number(query.id);
 
-  const queryClient = await prefetchQuery([
-    getUserQuery(userId),
-    getBookReviewQuery(bookReviewId),
-    getTagsQuery(bookReviewId),
-    getCommentsQuery(bookReviewId),
-    getLikeStatusQuery({ likerId: userId, bookReviewId }),
-  ]);
+    const queryClient = await prefetchQuery([
+      getUserQuery(userId),
+      getBookReviewQuery(bookReviewId, true),
+      getTagsQuery(bookReviewId),
+      getCommentsQuery(bookReviewId),
+      getLikeStatusQuery({ likerId: userId, bookReviewId }),
+    ]);
 
-  return {
-    props: { dehydratedState: dehydrate(queryClient) },
-  };
+    return {
+      props: { dehydratedState: dehydrate(queryClient), notFound: false },
+    };
+  } catch {
+    return {
+      props: {
+        notFound: true,
+        title: bookReviewError.NOT_FOUND,
+        errorMessage: '404 - Bookreview is not Found',
+      },
+    };
+  }
 };
 
 export default BookreviewPage;

@@ -182,12 +182,19 @@ class BookReviewService {
     }));
   }
 
-  async find(id: Id): Promise<GetPublishedBookReviewResponse> {
+  async find(
+    id: Id,
+    isOnlyPublished: boolean,
+  ): Promise<GetPublishedBookReviewResponse> {
     const bookReview = await this.bookReview.findUnique({
       where: { id },
     });
 
-    if (!bookReview || bookReview.type === this.type.draftSaved) {
+    if (!bookReview) {
+      throw new NotFoundException('존재하지 않는 독후감입니다.');
+    }
+
+    if (isOnlyPublished && bookReview.type === this.type.draftSaved) {
       throw new NotFoundException('존재하지 않는 독후감입니다.');
     }
 

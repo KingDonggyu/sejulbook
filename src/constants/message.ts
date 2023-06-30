@@ -4,6 +4,7 @@ export const bookReviewError = {
 };
 
 export const userError = {
+  NOT_FOUND: '존재하지 않는 사용자입니다.',
   NO_AUTH: '사용자 인증에 실패했습니다.',
   NOT_LOGGED: '로그인 후 이용해주세요.',
 };
