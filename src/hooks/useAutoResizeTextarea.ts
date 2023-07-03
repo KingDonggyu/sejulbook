@@ -17,7 +17,7 @@ const useAutoResizeTextarea = () => {
     textareaRef.current.style.height = '0px';
     const { scrollHeight } = textareaRef.current;
     textareaRef.current.style.height = `${scrollHeight}px`;
-  }, [textareaRef, textareaValue]);
+  }, [textareaRef, textareaRef.current?.scrollHeight, textareaValue]);
 
   return { textareaRef, handleChange };
 };
