@@ -45,10 +45,12 @@ const DraftSavedListModal = ({
 );
 
 interface DraftSavedListModalButtonProps extends ButtonProps {
+  isLoading?: boolean;
   draftSavedList: GetDraftSavedBookReviewResponse[];
 }
 
 const DraftSavedListModalButton = ({
+  isLoading = false,
   draftSavedList,
   ...buttonProps
 }: DraftSavedListModalButtonProps) => {
@@ -64,7 +66,8 @@ const DraftSavedListModalButton = ({
         {...buttonProps}
       >
         <s.ButtonText>
-          임시저장 독후감 <span>{draftSavedList.length}</span>
+          임시저장 독후감{' '}
+          <span>{isLoading ? '...' : draftSavedList.length}</span>
         </s.ButtonText>
       </Button>
       <DraftSavedListModal draftSavedList={draftSavedList} />
