@@ -6,24 +6,6 @@ export const iconButtonStyle = css`
   text-indent: -9999px;
 `;
 
-export const skeletonStyle = css`
-  animation: skeleton-gradient 1.8s infinite ease-in-out;
-
-  @keyframes skeleton-gradient {
-    0% {
-      opacity: 0.6;
-    }
-
-    50% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 0.6;
-    }
-  }
-`;
-
 export const responsiveMaxWidthStyle = (theme: Theme) => css`
   max-width: ${theme.TUMBNAIL.DEFAULT.W}px;
   @media screen and (max-width: ${theme.MAX_WIDTH.TABLET}) {

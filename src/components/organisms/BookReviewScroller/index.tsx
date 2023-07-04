@@ -1,5 +1,6 @@
-import CardScoller from '@/components/molecules/CardScroller';
 import type { GetHomeBookReviewResponse } from 'bookReview';
+import CardScoller from '@/components/molecules/CardScroller';
+import Skeleton from '@/components/atoms/Skeleton';
 import SejulThumbnail from '../SejulThumbnail';
 import * as s from './style';
 
@@ -14,7 +15,7 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
     return (
       <CardScoller hideButton css={s.bookReviewListStyle}>
         {Array.from({ length: 10 }, (_, i) => (
-          <s.ThumbnailSkeleton key={i} {...thumbnailSize} />
+          <Skeleton key={i} {...thumbnailSize} />
         ))}
       </CardScoller>
     );

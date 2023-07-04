@@ -1,4 +1,3 @@
-import { skeletonStyle } from '@/styles/common';
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -60,15 +59,6 @@ export const BookReviewListAltText = styled.div`
   @media screen and (max-width: ${({ theme }) => theme.MAX_WIDTH.MOBILE}) {
     font-size: ${({ theme }) => theme.FONT_SIZE.SMALL};
   }
-`;
-
-export const ThumbnailSkeleton = styled.div<{ width: number; height: number }>`
-  ${skeletonStyle}
-  width: ${({ width }) => `${width}px`};
-  height: ${({ height }) => `${height}px`};
-  min-width: ${({ width }) => `${width}px`};
-  min-height: ${({ height }) => `${height}px`};
-  background: ${({ theme }) => theme.COLOR.LINE};
 `;
 
 export const loginButtonStyle = (theme: Theme) => css`
