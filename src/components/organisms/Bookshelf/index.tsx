@@ -53,6 +53,26 @@ const BookshelfRow = ({ row }: { row: (BookReview | null)[] }) => (
   </s.Row>
 );
 
+const BookshelfSkeleton = ({
+  hasWriteBookReviewItem,
+}: Pick<BookshelfProps, 'hasWriteBookReviewItem'>) => (
+  <s.Wrapper>
+    <s.Row>
+      {hasWriteBookReviewItem && <WriteBookReviewItem />}
+      {Array.from({ length: hasWriteBookReviewItem ? 2 : 3 }, (_, i) => (
+        <Skeleton key={i} css={(theme) => bookThumbnailStyle(theme)} />
+      ))}
+    </s.Row>
+    <s.Divider />
+    <s.Row>
+      {Array.from({ length: 3 }, (_, i) => (
+        <Skeleton key={i} css={(theme) => bookThumbnailStyle(theme)} />
+      ))}
+    </s.Row>
+    <s.Divider />
+  </s.Wrapper>
+);
+
 const Bookshelf = ({
   showSkeleton = false,
   isLoading = false,
@@ -70,15 +90,7 @@ const Bookshelf = ({
 
   if (showSkeleton) {
     return (
-      <s.Wrapper>
-        <s.Row>
-          {hasWriteBookReviewItem && <WriteBookReviewItem />}
-          {Array.from({ length: hasWriteBookReviewItem ? 2 : 3 }, (_, i) => (
-            <Skeleton key={i} css={(theme) => bookThumbnailStyle(theme)} />
-          ))}
-        </s.Row>
-        <s.Divider />
-      </s.Wrapper>
+      <BookshelfSkeleton hasWriteBookReviewItem={hasWriteBookReviewItem} />
     );
   }
 

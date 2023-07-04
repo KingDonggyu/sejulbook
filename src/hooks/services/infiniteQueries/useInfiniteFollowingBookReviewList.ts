@@ -9,7 +9,7 @@ export const getFollowingBookReviewListInfinityQuery = ({
 }: {
   myUserId?: number;
 }): InfiniteQuery<GetBookReviewPageResponse[]> => ({
-  queryKey: ['bookReview_getFollowingPages'],
+  queryKey: ['bookReview_getFollowingPages', myUserId],
   queryFn: ({ pageParam = null }) => {
     if (!myUserId) {
       return [];
@@ -25,7 +25,7 @@ const useInfiniteFollowingBookReviewList = () => {
   const { session, isLogin } = useUserStatus();
   const myUserId = isLogin ? session.id : undefined;
 
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery<
+  const { data, fetchNextPage, isLoading, isInitialLoading } = useInfiniteQuery<
     GetBookReviewPageResponse[]
   >({
     ...getFollowingBookReviewListInfinityQuery({ myUserId }),
@@ -43,6 +43,7 @@ const useInfiniteFollowingBookReviewList = () => {
     followingBookReviewList: data,
     refetchNextFollowingBookReviewList: fetchNextPage,
     isLoading,
+    isInitialLoading,
   };
 };
 
