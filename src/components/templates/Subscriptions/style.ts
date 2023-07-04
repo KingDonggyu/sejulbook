@@ -15,7 +15,7 @@ export const Wrapper = styled.main`
 
 export const Title = styled.h1`
   text-align: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
   font-size: ${({ theme }) => theme.FONT_SIZE.EXTRA_LARGE};
   font-weight: ${({ theme }) => theme.FONT_WEIGHT.MYEONGJO_BOLD};
 
