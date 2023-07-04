@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useInfiniteQuery as useInfiniteQueryOrigin } from '@tanstack/react-query';
 import ExceptionBase from '@/lib/HttpErrorException';
 import type { InfiniteQuery } from '../types/query';
@@ -8,16 +8,12 @@ const useInfiniteQuery = <TQueryFnData extends Array<TQueryFnData[number]>>({
   queryFn,
   options,
 }: InfiniteQuery<TQueryFnData>) => {
-  const [isLoading, setIsLoading] = useState(false);
   const result = useInfiniteQueryOrigin<TQueryFnData, ExceptionBase>({
     queryKey,
     queryFn: async ({ pageParam }) => {
-      setIsLoading(true);
       const data = await queryFn({ pageParam });
-      setIsLoading(false);
       return data;
     },
-    enabled: false,
     ...options,
   });
 
@@ -26,7 +22,7 @@ const useInfiniteQuery = <TQueryFnData extends Array<TQueryFnData[number]>>({
       return result.data.pages.flatMap<TQueryFnData[number]>((page) => page);
     }
     return [];
-  }, [result.data]);
+  }, [result.data?.pages]);
 
   const fetchNextPage = () => {
     if (result.hasNextPage && !result.isFetching) {
@@ -34,7 +30,7 @@ const useInfiniteQuery = <TQueryFnData extends Array<TQueryFnData[number]>>({
     }
   };
 
-  return { ...result, data, isLoading, fetchNextPage };
+  return { ...result, data, fetchNextPage, isLoading: result.isFetching };
 };
 
 export default useInfiniteQuery;

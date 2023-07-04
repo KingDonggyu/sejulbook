@@ -26,7 +26,7 @@ const useIntersect = (
     observer.observe(containerRef.current);
     // eslint-disable-next-line consistent-return
     return () => observer.disconnect();
-  }, [containerRef, options, handleIntersect]);
+  }, [options, handleIntersect]);
 
   return containerRef;
 };

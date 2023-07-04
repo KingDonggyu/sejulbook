@@ -10,7 +10,7 @@ export const getFollowingBookReviewListInfinityQuery = ({
   myUserId?: number;
 }): InfiniteQuery<GetBookReviewPageResponse[]> => ({
   queryKey: ['bookReview_getFollowingPages'],
-  queryFn: ({ pageParam }) => {
+  queryFn: ({ pageParam = null }) => {
     if (!myUserId) {
       return [];
     }

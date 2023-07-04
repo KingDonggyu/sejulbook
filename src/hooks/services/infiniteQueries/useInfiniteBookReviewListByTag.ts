@@ -10,7 +10,7 @@ export const getBookReviewListByTagInfinityQuery = ({
   tag: string;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getPagesByTag', tag],
-  queryFn: ({ pageParam }) =>
+  queryFn: ({ pageParam = null }) =>
     new BookReviewRepository().getPagesByTag({ tag, targetId: pageParam }),
 });
 
