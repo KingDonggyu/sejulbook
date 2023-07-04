@@ -13,13 +13,15 @@ import spinnerSrc from '@public/images/animation-spinner.svg';
 import Route from '@/constants/routes';
 import convert1DArrayTo2DArray from '@/utils/convert1DArrayTo2DArray';
 import useIntersect from '@/hooks/useIntersect';
-import { iconButtonStyle } from '@/styles/common';
+import Skeleton from '@/components/atoms/Skeleton';
+import { bookThumbnailStyle, iconButtonStyle } from '@/styles/common';
 import BookReviewItem from '../BookReivewItem';
 import * as s from './style';
 
 type BookReview = GetLibraryBookReviewResponse | GetBookReviewPageResponse;
 
 interface BookshelfProps {
+  showSkeleton?: boolean;
   isLoading?: boolean;
   bookReviewList: BookReview[];
   hasWriteBookReviewItem: boolean;
@@ -52,6 +54,7 @@ const BookshelfRow = ({ row }: { row: (BookReview | null)[] }) => (
 );
 
 const Bookshelf = ({
+  showSkeleton = false,
   isLoading = false,
   bookReviewList,
   hasWriteBookReviewItem,
@@ -64,6 +67,20 @@ const Bookshelf = ({
       onRefetch();
     }
   });
+
+  if (showSkeleton) {
+    return (
+      <s.Wrapper>
+        <s.Row>
+          {hasWriteBookReviewItem && <WriteBookReviewItem />}
+          {Array.from({ length: hasWriteBookReviewItem ? 2 : 3 }, (_, i) => (
+            <Skeleton key={i} css={(theme) => bookThumbnailStyle(theme)} />
+          ))}
+        </s.Row>
+        <s.Divider />
+      </s.Wrapper>
+    );
+  }
 
   const bookshelf = convert1DArrayTo2DArray(
     [...initializedBookShelf, ...bookReviewList],
