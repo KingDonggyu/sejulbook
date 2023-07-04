@@ -8,11 +8,13 @@ import * as s from './style';
 
 interface CardScollerProps extends StyleProps {
   gap?: number;
+  hideButton?: boolean;
   children: ReactNode;
 }
 
 const CardScoller = ({
   gap = 20,
+  hideButton = false,
   children,
   ...styleProps
 }: CardScollerProps) => {
@@ -68,7 +70,7 @@ const CardScoller = ({
 
   return (
     <s.Wrapper>
-      {isVisiblePrevButton && (
+      {isVisiblePrevButton && !hideButton && (
         <Button radius={50} style={{ left: '30px' }} css={iconButtonStyle}>
           오른쪽 슬라이드 버튼
           <HiOutlineArrowLeft
@@ -85,7 +87,7 @@ const CardScoller = ({
       >
         {children}
       </s.Scoller>
-      {isVisibleNextButton && (
+      {isVisibleNextButton && !hideButton && (
         <Button radius={50} style={{ right: '30px' }} css={iconButtonStyle}>
           왼쪽 슬라이드 버튼
           <HiOutlineArrowRight

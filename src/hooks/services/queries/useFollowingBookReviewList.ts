@@ -10,7 +10,7 @@ type Response = Awaited<
 export const getFollowingBookReviewListQuery = (
   userId?: number,
 ): Query<Response> => ({
-  queryKey: ['bookReview_getFollowings'],
+  queryKey: ['bookReview_getFollowings', userId],
   queryFn: () =>
     userId ? new BookReviewRepository().getFollowings(userId) : null,
 });

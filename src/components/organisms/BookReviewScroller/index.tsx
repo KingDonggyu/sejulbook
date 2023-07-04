@@ -12,9 +12,9 @@ const BookReviewScroller = ({ bookReviewList }: BookReviewScrollerProps) => {
 
   if (!bookReviewList) {
     return (
-      <CardScoller css={s.bookReviewListStyle}>
-        {Array.from({ length: 3 }, () => (
-          <s.ThumbnailSkeleton {...thumbnailSize} />
+      <CardScoller hideButton css={s.bookReviewListStyle}>
+        {Array.from({ length: 10 }, (_, i) => (
+          <s.ThumbnailSkeleton key={i} {...thumbnailSize} />
         ))}
       </CardScoller>
     );
