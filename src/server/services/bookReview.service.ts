@@ -15,6 +15,7 @@ import type {
   GetLibraryBookReviewResponse,
   GetPublishedBookReviewResponse,
   UpdateBookReviewRequest,
+  HasBookReviewRequest,
 } from 'bookReview';
 
 import LikeService from './like.service';
@@ -30,6 +31,18 @@ class BookReviewService {
   private userService = new UserService();
 
   private type = { published: 1, draftSaved: 0 };
+
+  async hasBookReview({ userId, id }: HasBookReviewRequest) {
+    const bookReview = await this.bookReview.findUnique({
+      where: { id },
+    });
+
+    if (!bookReview) {
+      throw new NotFoundException('존재하지 않는 독후감입니다.');
+    }
+
+    return bookReview.userId === userId;
+  }
 
   async createDraftSaved(bookReview: CreateBookReviewReqeust) {
     this.validate(bookReview, true);
@@ -81,11 +94,11 @@ class BookReviewService {
           type: this.type.draftSaved,
         },
       }),
-      tagService.create({ bookReviewId: id, tags: bookReview.tags }),
       tagService.deleteAllByBookReview(id),
     ];
 
     await Promise.all(promises);
+    await tagService.create({ bookReviewId: id, tags: bookReview.tags });
   }
 
   async createPublished(bookReview: CreateBookReviewReqeust) {
@@ -130,11 +143,11 @@ class BookReviewService {
           type: this.type.published,
         },
       }),
-      tagService.create({ bookReviewId: id, tags: bookReview.tags }),
       tagService.deleteAllByBookReview(id),
     ];
 
     await Promise.all(promises);
+    await tagService.create({ bookReviewId: id, tags: bookReview.tags });
   }
 
   async delete(id: Id) {
@@ -182,12 +195,19 @@ class BookReviewService {
     }));
   }
 
-  async find(id: Id): Promise<GetPublishedBookReviewResponse> {
+  async find(
+    id: Id,
+    isOnlyPublished: boolean,
+  ): Promise<GetPublishedBookReviewResponse> {
     const bookReview = await this.bookReview.findUnique({
       where: { id },
     });
 
-    if (!bookReview || bookReview.type === this.type.draftSaved) {
+    if (!bookReview) {
+      throw new NotFoundException('존재하지 않는 독후감입니다.');
+    }
+
+    if (isOnlyPublished && bookReview.type === this.type.draftSaved) {
       throw new NotFoundException('존재하지 않는 독후감입니다.');
     }
 

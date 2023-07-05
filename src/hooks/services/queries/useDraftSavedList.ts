@@ -8,20 +8,27 @@ type Response = Awaited<
 >;
 
 export const getDraftSavedListQuery = (userId?: number): Query<Response> => ({
-  queryKey: ['bookReveiw_getAllDraftSavedOfUser'],
-  queryFn: () =>
-    userId ? new BookReviewRepository().getAllDraftSavedOfUser(userId) : [],
+  queryKey: ['bookReveiw_getAllDraftSavedOfUser', userId],
+  queryFn: async () => {
+    if (!userId) {
+      return [];
+    }
+    const data = await new BookReviewRepository().getAllDraftSavedOfUser(
+      userId,
+    );
+    return data;
+  },
 });
 
 const useDraftSavedList = () => {
   const { session, isLogin } = useUserStatus();
   const myUserId = isLogin ? session.id : undefined;
 
-  const { data: draftSavedList, isLoading } = useQuery<Response>(
+  const { data, isLoading } = useQuery<Response>(
     getDraftSavedListQuery(myUserId),
   );
 
-  return { draftSavedList, isLoading };
+  return { draftSavedList: data || [], isLoading };
 };
 
 export default useDraftSavedList;

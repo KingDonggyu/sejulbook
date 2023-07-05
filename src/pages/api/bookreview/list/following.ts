@@ -21,7 +21,7 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   if ('cursor' in req.query) {
     const data = await new BookReviewService().findFollowingPages({
       followerId: userId,
-      targetId: +req.query.cursor,
+      targetId: +req.query.cursor || null,
     });
     res.status(200).json(data);
     return;

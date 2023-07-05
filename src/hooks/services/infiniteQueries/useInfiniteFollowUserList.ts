@@ -22,7 +22,7 @@ export const getFollowerListInfiniteQuery = ({
   myUserId,
 }: FollowUserListRequest): InfiniteQuery<FollowerResponse> => ({
   queryKey: ['user_getPagedFollowers', targetUserId],
-  queryFn: ({ pageParam }) => {
+  queryFn: ({ pageParam = null }) => {
     if (!targetUserId) {
       return [];
     }
@@ -39,7 +39,7 @@ export const getFollowingListInfiniteQuery = ({
   myUserId,
 }: FollowUserListRequest): InfiniteQuery<FollowingResponse> => ({
   queryKey: ['user_getPagedFollowings', targetUserId],
-  queryFn: ({ pageParam }) => {
+  queryFn: ({ pageParam = null }) => {
     if (!targetUserId) {
       return [];
     }

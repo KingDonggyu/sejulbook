@@ -7,7 +7,7 @@ import HttpMethods from '@/constants/httpMethods';
 
 interface GetApiRequest extends Omit<NextApiRequest, 'query'> {
   method: HttpMethods.GET;
-  query: { id: string };
+  query: { id: string; isOnlyPublished: string };
 }
 
 interface DeleteApiRequest extends Omit<NextApiRequest, 'query'> {
@@ -35,7 +35,8 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
   const id = +req.query.id;
 
   if (req.method === HttpMethods.GET) {
-    const data = await bookReviewService.find(id);
+    const isOnlyPublished = req.query.isOnlyPublished === 'true';
+    const data = await bookReviewService.find(id, isOnlyPublished);
     res.status(200).json(data);
     return;
   }

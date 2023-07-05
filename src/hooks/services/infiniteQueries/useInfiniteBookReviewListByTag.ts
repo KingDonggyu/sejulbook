@@ -10,27 +10,29 @@ export const getBookReviewListByTagInfinityQuery = ({
   tag: string;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getPagesByTag', tag],
-  queryFn: ({ pageParam }) =>
+  queryFn: ({ pageParam = null }) =>
     new BookReviewRepository().getPagesByTag({ tag, targetId: pageParam }),
 });
 
 const useInfiniteBookReviewListByTag = (tag: string) => {
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery<Response>({
-    ...getBookReviewListByTagInfinityQuery({ tag }),
-    options: {
-      getNextPageParam: (lastPage) => {
-        if (!lastPage || !lastPage.length) {
-          return undefined;
-        }
-        return lastPage[lastPage.length - 1].id;
+  const { data, fetchNextPage, isLoading, isInitialLoading } =
+    useInfiniteQuery<Response>({
+      ...getBookReviewListByTagInfinityQuery({ tag }),
+      options: {
+        getNextPageParam: (lastPage) => {
+          if (!lastPage || !lastPage.length) {
+            return undefined;
+          }
+          return lastPage[lastPage.length - 1].id;
+        },
       },
-    },
-  });
+    });
 
   return {
     bookReviewList: data,
     refetchBookReviewList: fetchNextPage,
     isLoading,
+    isInitialLoading,
   };
 };
 

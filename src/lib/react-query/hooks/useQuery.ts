@@ -13,7 +13,7 @@ const useQuery = <TQueryFnData>({
     ...options,
   });
 
-  return { ...result, data: result.data };
+  return result;
 };
 
 export default useQuery;

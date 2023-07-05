@@ -1,10 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
-import { dehydrate } from '@tanstack/react-query';
 import SEO from '@/components/atoms/SEO';
-import prefetchQuery from '@/lib/react-query/prefetchQuery';
-import useInfiniteBookReviewListByBookname, {
-  getBookReviewListByBooknameInfiniteQuery,
-} from '@/hooks/services/infiniteQueries/useInfiniteBookReviewListByBookname';
+import useInfiniteBookReviewListByBookname from '@/hooks/services/infiniteQueries/useInfiniteBookReviewListByBookname';
 import useSortedBookReviewList from '@/hooks/useSortedBookReviewList';
 import SearchResultTemplate from '@/components/templates/SearchResult';
 import Bookshelf from '@/components/organisms/Bookshelf';
@@ -17,6 +13,7 @@ const SearchResultPage = ({ title }: { title: string }) => {
     bookReviewList: initBookReviewList,
     refetchBookReviewList,
     isLoading,
+    isInitialLoading,
   } = useInfiniteBookReviewListByBookname(title);
 
   const {
@@ -43,8 +40,9 @@ const SearchResultPage = ({ title }: { title: string }) => {
           />
         }
         bookshelf={
-          !!bookReviewList.length && (
+          (isInitialLoading || !!bookReviewList.length) && (
             <Bookshelf
+              showSkeleton={isInitialLoading}
               isLoading={isLoading}
               hasWriteBookReviewItem={false}
               bookReviewList={bookReviewList}
@@ -79,17 +77,7 @@ export const getServerSideProps = async ({
     };
   }
 
-  const queryClient = await prefetchQuery(
-    [],
-    [getBookReviewListByBooknameInfiniteQuery({ bookname: q })],
-  );
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-      title: q,
-    },
-  };
+  return { props: { title: q } };
 };
 
 export default SearchResultPage;

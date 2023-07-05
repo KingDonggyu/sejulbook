@@ -9,7 +9,7 @@ import * as s from './style';
 
 interface LikeCommentWidgetProps {
   bookReviewId: Id;
-  commentCount: number;
+  commentCount?: number;
   onClickLikeButton?: () => void;
   onClickCommentButton?: () => void;
 }
@@ -50,7 +50,9 @@ const LikeCommentWidget = ({
               댓글
               <CommentIcon />
             </Button>
-            <s.Count>{commentCount}</s.Count>
+            <s.Count>
+              {commentCount === undefined ? '...' : commentCount}
+            </s.Count>
           </s.WidgetItem>
         </Box>
       </s.Widget>

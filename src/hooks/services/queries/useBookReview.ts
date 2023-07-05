@@ -1,30 +1,24 @@
 import type { GetPublishedBookReviewResponse, Id } from 'bookReview';
 import useQuery from '@/lib/react-query/hooks/useQuery';
 import type { Query } from '@/lib/react-query/types/query';
-import ExceptionBase from '@/lib/HttpErrorException';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
-import redirectAfterShowingErrorToast from '@/utils/redirectAfterShowingErrorToast';
 
 export const getBookReviewQuery = (
   bookReviewId?: Id,
+  isOnlyPublished = false,
 ): Query<GetPublishedBookReviewResponse | null> => ({
   queryKey: ['bookReview_get', bookReviewId],
   queryFn: () =>
     bookReviewId
-      ? new BookReviewRepository()
-          .get(bookReviewId)
-          .catch((error: ExceptionBase) => {
-            redirectAfterShowingErrorToast(error.message);
-            return null;
-          })
+      ? new BookReviewRepository().get(bookReviewId, isOnlyPublished)
       : null,
   options: { enabled: !!bookReviewId },
 });
 
-const useBookReview = (bookReviewId?: Id) => {
+const useBookReview = (bookReviewId?: Id, isOnlyPublished = false) => {
   const { data: bookReview, isLoading } =
     useQuery<GetPublishedBookReviewResponse | null>(
-      getBookReviewQuery(bookReviewId),
+      getBookReviewQuery(bookReviewId, isOnlyPublished),
     );
 
   return { bookReview, isLoading };

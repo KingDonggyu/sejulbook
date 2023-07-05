@@ -32,6 +32,7 @@ export const ButtonWrapper = styled.div`
 export const ContentWrapper = styled.main`
   margin: auto;
   margin-top: 5rem;
+  padding: 0 20px;
   gap: 50px;
   display: flex;
   flex-direction: column;

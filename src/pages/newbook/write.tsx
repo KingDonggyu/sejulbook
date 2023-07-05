@@ -11,6 +11,7 @@ import ContentEditor from '@/components/organisms/ContentEditor';
 import PublishSideBar from '@/components/organisms/PublishSideBar';
 import DraftSaveButton from '@/components/organisms/DraftSaveButton';
 import Route from '@/constants/routes';
+import { bookReviewError } from '@/constants/message';
 
 import useS3GarbageCollection from '@/hooks/useS3GarbageCollection';
 import useNewBookStorage from '@/hooks/useNewBookStorage';
@@ -20,15 +21,17 @@ import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import { getBookReviewQuery } from '@/hooks/services/queries/useBookReview';
-import { getTagsQuery } from '@/hooks/services/queries/useTags';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import { useEffect } from 'react';
+import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
 const NewbookWritePage = ({
   bookReviewId,
+  isSaved,
   isPublished,
 }: {
   bookReviewId?: Id;
+  isSaved?: boolean;
   isPublished?: boolean;
 }) => {
   const { newBook } = useNewBookStorage();
@@ -40,14 +43,14 @@ const NewbookWritePage = ({
 
   const { setBook, setBookReivew, initBookReview } = bookReviewStore();
 
-  const book = (isPublished ? newBookReview?.book : newBook) || null;
+  const book = (isSaved ? newBookReview?.book : newBook) || null;
   const isLoading = !book && !newBookReview;
 
   useEffect(() => {
-    if (!isPublished && !savedBookReviewId) {
+    if (!isSaved && !savedBookReviewId) {
       initBookReview();
     }
-  }, [initBookReview, isPublished, savedBookReviewId]);
+  }, [initBookReview, isSaved, savedBookReviewId]);
 
   useEffect(() => {
     if (newBookReview) {
@@ -79,7 +82,7 @@ const NewbookWritePage = ({
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { isLoggedIn } = await checkIsLoggedIn(ctx);
+  const { isLoggedIn, userId } = await checkIsLoggedIn(ctx);
 
   if (!isLoggedIn) {
     return {
@@ -91,24 +94,49 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  const bookReviewId = ctx.query.draft || ctx.query.publish;
+  try {
+    const bookReviewId = ctx.query.draft || ctx.query.publish;
 
-  if (bookReviewId) {
+    if (!bookReviewId) {
+      return { props: {} };
+    }
+
+    const isMine = await new BookReviewRepository().checkIsMine({
+      userId,
+      id: +bookReviewId,
+    });
+
+    if (!isMine) {
+      return {
+        props: {
+          notFound: true,
+          title: '잘못된 접근입니다.',
+          errorMessage: '인증에 실패하여 페이지에 접근할 수 없습니다.',
+        },
+      };
+    }
+
     const queryClient = await prefetchQuery([
       getBookReviewQuery(+bookReviewId),
-      getTagsQuery(+bookReviewId),
     ]);
 
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        isSaved: !!bookReviewId,
         isPublished: !!ctx.query.publish,
         bookReviewId,
       },
     };
+  } catch {
+    return {
+      props: {
+        notFound: true,
+        title: bookReviewError.NOT_FOUND,
+        errorMessage: '404 - Bookreview is not Found',
+      },
+    };
   }
-
-  return { props: {} };
 };
 
 export default NewbookWritePage;

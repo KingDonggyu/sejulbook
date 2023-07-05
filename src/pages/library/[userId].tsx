@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import { getServerSession } from 'next-auth/next';
 import { dehydrate } from '@tanstack/react-query';
 
 import type { GetLibraryBookReviewResponse, UserId } from 'bookReview';
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
-import useUserStatus from '@/hooks/useUserStatus';
 import useUser, { getUserQuery } from '@/hooks/services/queries/useUser';
-import useBookReviewList, {
-  getBookReviewListQuery,
-} from '@/hooks/services/queries/useBookReviewList';
+import useBookReviewList from '@/hooks/services/queries/useBookReviewList';
 import useFollowInfo, {
   getFollowInfoQuery,
 } from '@/hooks/services/queries/useFollowInfo';
@@ -22,13 +18,21 @@ import SortDropdown from '@/components/molecules/SortDropdown';
 import Bookshelf from '@/components/organisms/Bookshelf';
 import SubscribeToggleButton from '@/components/organisms/SubscribeToggleButton';
 import Route from '@/constants/routes';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { userError } from '@/constants/message';
+import checkIsLoggedIn from '@/server/middlewares/checkIsLoggedIn';
 
-const LibraryPage = ({ userId }: { userId: UserId }) => {
-  const { user } = useUser(userId);
-  const { followInfo } = useFollowInfo(userId);
-  const { bookReviewList: initBookReviewList } = useBookReviewList(userId);
-  const { session, isLogin } = useUserStatus();
+const LibraryPage = ({
+  targetUserId,
+  myUserId,
+}: {
+  targetUserId: UserId;
+  myUserId?: UserId;
+}) => {
+  const { user } = useUser(targetUserId);
+  const { followInfo } = useFollowInfo(targetUserId);
+
+  const { bookReviewList: initBookReviewList, isLoading } =
+    useBookReviewList(targetUserId);
 
   const [bookReviewList, setBookReviewList] = useState<
     GetLibraryBookReviewResponse[]
@@ -44,7 +48,7 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
     return null;
   }
 
-  const isMyLibrary = !!(isLogin && userId === session.id);
+  const isMyLibrary = !!(myUserId && targetUserId === myUserId);
 
   const handleClickLatestSortButton = () => {
     if (initBookReviewList) {
@@ -66,31 +70,30 @@ const LibraryPage = ({ userId }: { userId: UserId }) => {
             ? `${user.name}의 서재 ${!!user.introduce && `- ${user.introduce}`}`
             : undefined
         }
-        url={`${Route.LIBRARY}/${userId}`}
+        url={`${Route.LIBRARY}/${targetUserId}`}
       />
       <Library
         hasUser={!!user}
         profile={
           <Profile
-            userId={userId}
+            userId={targetUserId}
             bookReviewCount={bookReviewList ? bookReviewList.length : 0}
             {...followInfo}
           />
         }
         bookshelf={
-          bookReviewList && (
-            <Bookshelf
-              hasWriteBookReviewItem={isMyLibrary}
-              bookReviewList={bookReviewList}
-            />
-          )
+          <Bookshelf
+            showSkeleton={isLoading}
+            hasWriteBookReviewItem={isMyLibrary}
+            bookReviewList={bookReviewList}
+          />
         }
         profileEditButton={
           isMyLibrary ? (
             <ProfileEditButton />
           ) : (
             <SubscribeToggleButton
-              userId={userId}
+              userId={targetUserId}
               isSubscribed={followInfo.isFollow}
             />
           )
@@ -113,24 +116,35 @@ interface ExtendedGetServerSidePropsContext
   };
 }
 
-export const getServerSideProps = async ({
-  req,
-  res,
-  query,
-}: ExtendedGetServerSidePropsContext) => {
-  const session = await getServerSession(req, res, authOptions);
-  const myUserId = session ? session.id || undefined : undefined;
-  const targetUserId = +query.userId;
+export const getServerSideProps = async (
+  ctx: ExtendedGetServerSidePropsContext,
+) => {
+  try {
+    const { userId } = await checkIsLoggedIn(ctx);
+    const myUserId = userId || undefined;
+    const targetUserId = +ctx.query.userId;
 
-  const queryClient = await prefetchQuery([
-    getUserQuery(targetUserId),
-    getBookReviewListQuery(targetUserId),
-    getFollowInfoQuery({ targetUserId, myUserId }),
-  ]);
+    const queryClient = await prefetchQuery([
+      getUserQuery(targetUserId),
+      getFollowInfoQuery({ targetUserId, myUserId }),
+    ]);
 
-  return {
-    props: { dehydratedState: dehydrate(queryClient), userId: targetUserId },
-  };
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+        targetUserId,
+        myUserId,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        notFound: true,
+        title: userError.NOT_FOUND,
+        errorMessage: '404 - User is not Found',
+      },
+    };
+  }
 };
 
 export default LibraryPage;

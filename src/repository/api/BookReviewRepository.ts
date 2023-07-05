@@ -8,6 +8,7 @@ import type {
   GetBookReviewPageByCategoryRequest,
   GetBookReviewPageByTagRequest,
   GetPublishedBookReviewResponse,
+  HasBookReviewRequest,
 } from 'bookReview';
 
 import BookReviewService from '@/server/services/bookReview.service';
@@ -21,6 +22,16 @@ class BookReviewRepository extends HttpClient {
   constructor() {
     super();
     this.service = this.checkIsSSR() ? new BookReviewService() : null;
+  }
+
+  async checkIsMine({ userId, id }: HasBookReviewRequest) {
+    if (!this.service) {
+      throw new Error(
+        'Client Side Redering 시 해당 method를 사용할 수 없습니다.',
+      );
+    }
+    const isMine = await this.service.hasBookReview({ userId, id });
+    return isMine;
   }
 
   async publish(bookReview: CreateBookReviewReqeust) {
@@ -73,15 +84,18 @@ class BookReviewRepository extends HttpClient {
     });
   }
 
-  async get(id: Id): Promise<GetPublishedBookReviewResponse> {
+  async get(
+    id: Id,
+    isOnlyPublished = false,
+  ): Promise<GetPublishedBookReviewResponse> {
     if (this.service) {
-      const bookReview = await this.service.find(id);
+      const bookReview = await this.service.find(id, isOnlyPublished);
       return bookReview;
     }
     const bookReview = await this.axiosInstance.get<
       never,
       GetPublishedBookReviewResponse
-    >(`${this.baseUrl}/${id}`);
+    >(`${this.baseUrl}/${id}`, { params: { isOnlyPublished } });
     return bookReview;
   }
 
@@ -142,7 +156,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findFollowingPages({ followerId, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
-      params: { userId: followerId, cursor: targetId },
+      params: { userId: followerId, cursor: `${targetId}` },
     });
   }
 
@@ -156,7 +170,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findPagesByBookname({ bookname, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/search/book`, {
-      params: { query: bookname, cursor: targetId },
+      params: { query: bookname, cursor: `${targetId}` },
     });
   }
 
@@ -170,7 +184,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findPagesByCategory({ category, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/search/category`, {
-      params: { query: category, cursor: targetId },
+      params: { query: category, cursor: `${targetId}` },
     });
   }
 
@@ -184,7 +198,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findPagesByTag({ tag, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/search/tag`, {
-      params: { query: tag, cursor: targetId },
+      params: { query: tag, cursor: `${targetId}` },
     });
   }
 

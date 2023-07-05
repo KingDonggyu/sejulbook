@@ -20,6 +20,11 @@ declare module 'bookReview' {
 
   /* Request */
 
+  interface HasBookReviewRequest {
+    id: Id;
+    userId: UserId;
+  }
+
   interface CreateBookReviewReqeust {
     id?: Id;
     userId: UserId;

@@ -8,12 +8,13 @@ import useBookReviewDraftSave from '@/hooks/services/mutations/useBookReviewDraf
 import useBookReviewEdit from '@/hooks/services/mutations/useBookReviewEdit';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
+import { getBookReviewToPublish } from '@/utils/bookReviewDataConverter';
 
 const DraftSaveButton = ({ ...buttonProps }: ButtonProps) => {
   const router = useRouter();
   const { savedBookReviewId, setSavedBookReviewId } = useSavedBookReviewId();
 
-  const { bookReview, getBookReviewToPublish } = bookReviewStore();
+  const { bookReview } = bookReviewStore();
   const { emptyImageKeySet } = s3ImageURLStore();
 
   const handleSuccess = (bookReviewId?: Id) => {
