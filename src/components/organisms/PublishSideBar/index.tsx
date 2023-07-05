@@ -10,6 +10,7 @@ import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
+import { getBookReviewToPublish } from '@/utils/bookReviewDataConverter';
 
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
@@ -39,18 +40,15 @@ const PublishSideBar = ({
     setCategory,
     setRating,
     setTags: setTag,
-    getBookReviewToPublish,
   } = bookReviewStore();
 
   const handleSuccess = (bookReviewId: Id) => {
     if (bookReview.thumbnail) {
       deleteImageKey(bookReview.thumbnail);
     }
-
     getUsedS3ImageURLs(editorElementId).forEach((url) => {
       deleteImageKey(url);
     });
-
     router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
 
@@ -69,17 +67,17 @@ const PublishSideBar = ({
   });
 
   const handleClickPublishButton = () => {
-    if (savedBookReviewId) {
-      editBookReview({
-        isPublished: true,
-        bookReview: {
-          ...getBookReviewToPublish(bookReview),
-          id: savedBookReviewId,
-        },
-      });
+    if (!savedBookReviewId) {
+      publishBookReview(getBookReviewToPublish(bookReview));
       return;
     }
-    publishBookReview(getBookReviewToPublish(bookReview));
+    editBookReview({
+      isPublished: true,
+      bookReview: {
+        ...getBookReviewToPublish(bookReview),
+        id: savedBookReviewId,
+      },
+    });
   };
 
   return (
