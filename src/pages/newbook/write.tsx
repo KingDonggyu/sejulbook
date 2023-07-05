@@ -28,9 +28,11 @@ import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
 const NewbookWritePage = ({
   bookReviewId,
+  isSaved,
   isPublished,
 }: {
   bookReviewId?: Id;
+  isSaved?: boolean;
   isPublished?: boolean;
 }) => {
   const { newBook } = useNewBookStorage();
@@ -42,14 +44,14 @@ const NewbookWritePage = ({
 
   const { setBook, setBookReivew, initBookReview } = bookReviewStore();
 
-  const book = (isPublished ? newBookReview?.book : newBook) || null;
+  const book = (isSaved ? newBookReview?.book : newBook) || null;
   const isLoading = !book && !newBookReview;
 
   useEffect(() => {
-    if (!isPublished && !savedBookReviewId) {
+    if (!isSaved && !savedBookReviewId) {
       initBookReview();
     }
-  }, [initBookReview, isPublished, savedBookReviewId]);
+  }, [initBookReview, isSaved, savedBookReviewId]);
 
   useEffect(() => {
     if (newBookReview) {
@@ -123,6 +125,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        isSaved: !!bookReviewId,
         isPublished: !!ctx.query.publish,
         bookReviewId,
       },
