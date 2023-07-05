@@ -21,7 +21,6 @@ import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import { getBookReviewQuery } from '@/hooks/services/queries/useBookReview';
-import { getTagsQuery } from '@/hooks/services/queries/useTags';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import { useEffect } from 'react';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
@@ -119,7 +118,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     const queryClient = await prefetchQuery([
       getBookReviewQuery(+bookReviewId),
-      getTagsQuery(+bookReviewId),
     ]);
 
     return {

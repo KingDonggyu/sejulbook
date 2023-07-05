@@ -34,13 +34,10 @@ const PublishSideBar = ({
   handleClose,
 }: PublishSideBarProps) => {
   const router = useRouter();
+  const { savedBookReviewId } = useSavedBookReviewId();
+
   const { deleteImageKey } = s3ImageURLStore();
-  const {
-    bookReview,
-    setCategory,
-    setRating,
-    setTags: setTag,
-  } = bookReviewStore();
+  const { bookReview, setCategory, setRating, setTags } = bookReviewStore();
 
   const handleSuccess = (bookReviewId: Id) => {
     if (bookReview.thumbnail) {
@@ -51,8 +48,6 @@ const PublishSideBar = ({
     });
     router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
-
-  const { savedBookReviewId } = useSavedBookReviewId();
 
   const publishBookReview = useBookReviewPublication({
     onSuccess: handleSuccess,
@@ -106,7 +101,7 @@ const PublishSideBar = ({
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>태그</s.Label>
-          <TagInput initTagList={bookReview.tags} handleUpdate={setTag} />
+          <TagInput initTagList={bookReview.tags} handleUpdate={setTags} />
         </s.PublishInfoItem>
         <s.ButtonWrapper>
           {!isHiddenDraftSaveButton && <DraftSaveButton />}
