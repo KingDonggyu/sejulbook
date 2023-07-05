@@ -94,11 +94,11 @@ class BookReviewService {
           type: this.type.draftSaved,
         },
       }),
-      tagService.create({ bookReviewId: id, tags: bookReview.tags }),
       tagService.deleteAllByBookReview(id),
     ];
 
     await Promise.all(promises);
+    await tagService.create({ bookReviewId: id, tags: bookReview.tags });
   }
 
   async createPublished(bookReview: CreateBookReviewReqeust) {
@@ -143,11 +143,11 @@ class BookReviewService {
           type: this.type.published,
         },
       }),
-      tagService.create({ bookReviewId: id, tags: bookReview.tags }),
       tagService.deleteAllByBookReview(id),
     ];
 
     await Promise.all(promises);
+    await tagService.create({ bookReviewId: id, tags: bookReview.tags });
   }
 
   async delete(id: Id) {

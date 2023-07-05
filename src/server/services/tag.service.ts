@@ -36,11 +36,10 @@ class TagService {
   }
 
   async create({ bookReviewId, tags }: CreateTagReqeust) {
-    const promises = tags.map(async (tag) =>
-      this.tag.create({ data: { bookReviewId, tag } }),
-    );
-
-    await Promise.all(promises);
+    await tags.reduce(async (previousPromise, tag) => {
+      await previousPromise;
+      await this.tag.create({ data: { bookReviewId, tag } });
+    }, Promise.resolve());
   }
 
   async deleteAllByBookReview(bookReviewId: BookReviewId) {

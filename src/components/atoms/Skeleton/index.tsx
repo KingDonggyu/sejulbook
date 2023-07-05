@@ -7,7 +7,7 @@ const SkeletonBox = styled.div<{ width?: number; height?: number }>`
   min-width: ${({ width }) => `${width}px`};
   min-height: ${({ height }) => `${height}px`};
   background: ${({ theme }) => theme.COLOR.LINE};
-  animation: skeleton-gradient 1.5s infinite ease-in-out;
+  animation: skeleton-gradient 1s infinite ease-in-out;
   @keyframes skeleton-gradient {
     0% {
       opacity: 0.5;
