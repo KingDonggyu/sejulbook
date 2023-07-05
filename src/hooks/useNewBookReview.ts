@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Book } from 'book';
 import type { Id, NewBookReview } from 'bookReview';
 import NewBookRepository from '@/repository/localStorage/NewBookRepository';
+import { getPublishedBookReviewToBook } from '@/utils/bookReviewDataConverter';
 import useBookReview from './services/queries/useBookReview';
 import useTags from './services/queries/useTags';
 
@@ -27,14 +28,7 @@ const useNewBookReview = (bookReviewId?: Id) => {
       return;
     }
 
-    const savedBook: Book = {
-      title: fetchedBookReview.bookname,
-      authors: fetchedBookReview.authors.split(', '),
-      publisher: fetchedBookReview.publisher,
-      datetime: fetchedBookReview.publication,
-      thumbnail: fetchedBookReview.originThumbnail,
-    };
-
+    const savedBook: Book = getPublishedBookReviewToBook(fetchedBookReview);
     newBookRepository.set(savedBook);
 
     setFetchInfo({

@@ -13,9 +13,7 @@ import { ModalKey } from '@/constants/keys';
 import useFollowInfo, {
   getFollowInfoQuery,
 } from '@/hooks/services/queries/useFollowInfo';
-import useInfiniteFollowingBookReviewList, {
-  getFollowingBookReviewListInfinityQuery,
-} from '@/hooks/services/infiniteQueries/useInfiniteFollowingBookReviewList';
+import useInfiniteFollowingBookReviewList from '@/hooks/services/infiniteQueries/useInfiniteFollowingBookReviewList';
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import Route from '@/constants/routes';
 
@@ -27,6 +25,7 @@ const SubscriptionsPage = ({ userId }: { userId: Id }) => {
     followingBookReviewList,
     refetchNextFollowingBookReviewList,
     isLoading,
+    isInitialLoading,
   } = useInfiniteFollowingBookReviewList();
 
   if (!followInfo) {
@@ -44,6 +43,7 @@ const SubscriptionsPage = ({ userId }: { userId: Id }) => {
         }
         bookshelf={
           <Bookshelf
+            showSkeleton={isInitialLoading}
             isLoading={isLoading}
             hasWriteBookReviewItem={false}
             bookReviewList={followingBookReviewList}
@@ -82,10 +82,9 @@ export const getServerSideProps = async (
     };
   }
 
-  const queryClient = await prefetchQuery(
-    [getFollowInfoQuery({ targetUserId: userId, myUserId: userId })],
-    [getFollowingBookReviewListInfinityQuery({ myUserId: userId })],
-  );
+  const queryClient = await prefetchQuery([
+    getFollowInfoQuery({ targetUserId: userId, myUserId: userId }),
+  ]);
 
   return {
     props: { dehydratedState: dehydrate(queryClient), userId },

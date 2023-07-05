@@ -10,7 +10,7 @@ export const getBookReviewListByBooknameInfiniteQuery = ({
   bookname: string;
 }): InfiniteQuery<Response> => ({
   queryKey: ['bookReview_getPagesByBookname', bookname],
-  queryFn: ({ pageParam }) =>
+  queryFn: ({ pageParam = null }) =>
     new BookReviewRepository().getPagesByBookname({
       bookname,
       targetId: pageParam,
@@ -18,22 +18,24 @@ export const getBookReviewListByBooknameInfiniteQuery = ({
 });
 
 const useInfiniteBookReviewListByBookname = (bookname: string) => {
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery<Response>({
-    ...getBookReviewListByBooknameInfiniteQuery({ bookname }),
-    options: {
-      getNextPageParam: (lastPage) => {
-        if (!lastPage || !lastPage.length) {
-          return null;
-        }
-        return lastPage[lastPage.length - 1].id;
+  const { data, fetchNextPage, isLoading, isInitialLoading } =
+    useInfiniteQuery<Response>({
+      ...getBookReviewListByBooknameInfiniteQuery({ bookname }),
+      options: {
+        getNextPageParam: (lastPage) => {
+          if (!lastPage || !lastPage.length) {
+            return null;
+          }
+          return lastPage[lastPage.length - 1].id;
+        },
       },
-    },
-  });
+    });
 
   return {
     bookReviewList: data,
     refetchBookReviewList: fetchNextPage,
     isLoading,
+    isInitialLoading,
   };
 };
 

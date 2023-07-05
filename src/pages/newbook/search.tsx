@@ -1,6 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { dehydrate } from '@tanstack/react-query';
 import checkIsLoggedIn from '@/server/middlewares/checkIsLoggedIn';
 import type { Book } from 'book';
 
@@ -10,14 +9,11 @@ import BookSearchBar from '@/components/organisms/BookSearchBar';
 import DraftSavedListModal from '@/components/organisms/DraftSavedListModal';
 import Route from '@/constants/routes';
 import NewBookRepository from '@/repository/localStorage/NewBookRepository';
-import prefetchQuery from '@/lib/react-query/prefetchQuery';
-import useDraftSavedList, {
-  getDraftSavedListQuery,
-} from '@/hooks/services/queries/useDraftSavedList';
+import useDraftSavedList from '@/hooks/services/queries/useDraftSavedList';
 
 const NewbookSearchPage = () => {
   const router = useRouter();
-  const { draftSavedList } = useDraftSavedList();
+  const { draftSavedList, isLoading } = useDraftSavedList();
   const newBookRepository = new NewBookRepository();
 
   const handleClickSearchedItem = (book: Book) => {
@@ -33,9 +29,10 @@ const NewbookSearchPage = () => {
           <BookSearchBar onClickSearchedItem={handleClickSearchedItem} />
         }
         draftSavedListButton={
-          draftSavedList && (
-            <DraftSavedListModal.Button draftSavedList={draftSavedList} />
-          )
+          <DraftSavedListModal.Button
+            draftSavedList={draftSavedList}
+            isLoading={isLoading}
+          />
         }
       />
     </>
@@ -43,7 +40,7 @@ const NewbookSearchPage = () => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { isLoggedIn, userId } = await checkIsLoggedIn(ctx);
+  const { isLoggedIn } = await checkIsLoggedIn(ctx);
 
   if (!isLoggedIn) {
     return {
@@ -55,11 +52,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  const queryClient = await prefetchQuery([getDraftSavedListQuery(userId)]);
-
-  return {
-    props: { dehydratedState: dehydrate(queryClient) },
-  };
+  return { props: {} };
 };
 
 export default NewbookSearchPage;

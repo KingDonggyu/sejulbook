@@ -21,16 +21,17 @@ import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 
 import prefetchQuery from '@/lib/react-query/prefetchQuery';
 import { getBookReviewQuery } from '@/hooks/services/queries/useBookReview';
-import { getTagsQuery } from '@/hooks/services/queries/useTags';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import { useEffect } from 'react';
 import BookReviewRepository from '@/repository/api/BookReviewRepository';
 
 const NewbookWritePage = ({
   bookReviewId,
+  isSaved,
   isPublished,
 }: {
   bookReviewId?: Id;
+  isSaved?: boolean;
   isPublished?: boolean;
 }) => {
   const { newBook } = useNewBookStorage();
@@ -42,14 +43,14 @@ const NewbookWritePage = ({
 
   const { setBook, setBookReivew, initBookReview } = bookReviewStore();
 
-  const book = (isPublished ? newBookReview?.book : newBook) || null;
+  const book = (isSaved ? newBookReview?.book : newBook) || null;
   const isLoading = !book && !newBookReview;
 
   useEffect(() => {
-    if (!isPublished && !savedBookReviewId) {
+    if (!isSaved && !savedBookReviewId) {
       initBookReview();
     }
-  }, [initBookReview, isPublished, savedBookReviewId]);
+  }, [initBookReview, isSaved, savedBookReviewId]);
 
   useEffect(() => {
     if (newBookReview) {
@@ -117,12 +118,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     const queryClient = await prefetchQuery([
       getBookReviewQuery(+bookReviewId),
-      getTagsQuery(+bookReviewId),
     ]);
 
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        isSaved: !!bookReviewId,
         isPublished: !!ctx.query.publish,
         bookReviewId,
       },

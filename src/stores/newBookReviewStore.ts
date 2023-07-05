@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import type { Book } from 'book';
 import type {
-  BookReviewToPublish,
   Content,
   NewBookReview,
   PublishOption,
@@ -43,7 +42,6 @@ interface BookReviewState {
   setPublishInfo: (publishInfo: PublishOption) => void;
   setBookReivew: (bookReview: NewBookReview) => void;
   initBookReview: () => void;
-  getBookReviewToPublish: (bookReview: NewBookReview) => BookReviewToPublish;
 }
 
 const bookReviewStore = create<BookReviewState>((set) => ({
@@ -94,22 +92,6 @@ const bookReviewStore = create<BookReviewState>((set) => ({
   setBookReivew: (bookReview: NewBookReview) => {
     set({ bookReview });
   },
-
-  getBookReviewToPublish: (bookReview) => ({
-    id: bookReview.id,
-    bookname: bookReview.book.title,
-    authors: bookReview.book.authors.join(', '),
-    publisher: bookReview.book.publisher,
-    publication: bookReview.book.datetime,
-    originThumbnail: bookReview.book.thumbnail,
-
-    sejul: bookReview.sejul,
-    content: bookReview.content,
-    thumbnail: bookReview.thumbnail,
-    categoryId: bookReview.category.id,
-    rating: bookReview.rating,
-    tags: bookReview.tags,
-  }),
 }));
 
 export default bookReviewStore;

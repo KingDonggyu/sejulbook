@@ -156,7 +156,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findFollowingPages({ followerId, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
-      params: { userId: followerId, cursor: targetId },
+      params: { userId: followerId, cursor: `${targetId}` },
     });
   }
 
@@ -170,7 +170,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findPagesByBookname({ bookname, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/search/book`, {
-      params: { query: bookname, cursor: targetId },
+      params: { query: bookname, cursor: `${targetId}` },
     });
   }
 
@@ -184,7 +184,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findPagesByCategory({ category, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/search/category`, {
-      params: { query: category, cursor: targetId },
+      params: { query: category, cursor: `${targetId}` },
     });
   }
 
@@ -198,7 +198,7 @@ class BookReviewRepository extends HttpClient {
       return this.service.findPagesByTag({ tag, targetId });
     }
     return this.axiosInstance.get(`${this.baseUrl}/search/tag`, {
-      params: { query: tag, cursor: targetId },
+      params: { query: tag, cursor: `${targetId}` },
     });
   }
 

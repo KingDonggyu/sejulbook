@@ -10,6 +10,7 @@ import useSavedBookReviewId from '@/hooks/useSavedBookReviewId';
 import bookReviewStore from '@/stores/newBookReviewStore';
 import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import getUsedS3ImageURLs from '@/utils/getUsedS3ImageURLs';
+import { getBookReviewToPublish } from '@/utils/bookReviewDataConverter';
 
 import Button from '@/components/atoms/Button';
 import SideBar from '@/components/molecules/SideBar';
@@ -33,28 +34,20 @@ const PublishSideBar = ({
   handleClose,
 }: PublishSideBarProps) => {
   const router = useRouter();
+  const { savedBookReviewId } = useSavedBookReviewId();
+
   const { deleteImageKey } = s3ImageURLStore();
-  const {
-    bookReview,
-    setCategory,
-    setRating,
-    setTags: setTag,
-    getBookReviewToPublish,
-  } = bookReviewStore();
+  const { bookReview, setCategory, setRating, setTags } = bookReviewStore();
 
   const handleSuccess = (bookReviewId: Id) => {
     if (bookReview.thumbnail) {
       deleteImageKey(bookReview.thumbnail);
     }
-
     getUsedS3ImageURLs(editorElementId).forEach((url) => {
       deleteImageKey(url);
     });
-
     router.replace(`${Route.BOOKREVIEW}/${bookReviewId}`);
   };
-
-  const { savedBookReviewId } = useSavedBookReviewId();
 
   const publishBookReview = useBookReviewPublication({
     onSuccess: handleSuccess,
@@ -69,17 +62,17 @@ const PublishSideBar = ({
   });
 
   const handleClickPublishButton = () => {
-    if (savedBookReviewId) {
-      editBookReview({
-        isPublished: true,
-        bookReview: {
-          ...getBookReviewToPublish(bookReview),
-          id: savedBookReviewId,
-        },
-      });
+    if (!savedBookReviewId) {
+      publishBookReview(getBookReviewToPublish(bookReview));
       return;
     }
-    publishBookReview(getBookReviewToPublish(bookReview));
+    editBookReview({
+      isPublished: true,
+      bookReview: {
+        ...getBookReviewToPublish(bookReview),
+        id: savedBookReviewId,
+      },
+    });
   };
 
   return (
@@ -108,7 +101,7 @@ const PublishSideBar = ({
         </s.PublishInfoItem>
         <s.PublishInfoItem>
           <s.Label>태그</s.Label>
-          <TagInput initTagList={bookReview.tags} handleUpdate={setTag} />
+          <TagInput initTagList={bookReview.tags} handleUpdate={setTags} />
         </s.PublishInfoItem>
         <s.ButtonWrapper>
           {!isHiddenDraftSaveButton && <DraftSaveButton />}

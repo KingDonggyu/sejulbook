@@ -15,20 +15,26 @@ const Wrapper = styled.div`
   gap: 8px;
 `;
 
-const TagList = ({ tags, onClickTag }: TagListProps) => (
-  <Wrapper>
-    {tags.map((name) => (
-      <Button
-        key={name}
-        elevation={0}
-        variant={ButtonVariant.CONTAINED}
-        color={ColorVariant.LINE}
-        onClick={() => onClickTag && onClickTag(name)}
-      >
-        #{name}
-      </Button>
-    ))}
-  </Wrapper>
-);
+const TagList = ({ tags, onClickTag }: TagListProps) => {
+  if (tags.length === 0) {
+    return null;
+  }
+
+  return (
+    <Wrapper>
+      {tags.map((name) => (
+        <Button
+          key={name}
+          elevation={0}
+          variant={ButtonVariant.CONTAINED}
+          color={ColorVariant.LINE}
+          onClick={() => onClickTag && onClickTag(name)}
+        >
+          #{name}
+        </Button>
+      ))}
+    </Wrapper>
+  );
+};
 
 export default TagList;

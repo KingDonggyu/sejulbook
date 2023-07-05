@@ -16,7 +16,7 @@ const handler = async (req: ExtenedNextApiRequest, res: NextApiResponse) => {
 
   const data = await new BookReviewService().findPagesByBookname({
     bookname: req.query.query,
-    targetId: +req.query.cursor,
+    targetId: +req.query.cursor || null,
   });
 
   res.status(200).json(data);

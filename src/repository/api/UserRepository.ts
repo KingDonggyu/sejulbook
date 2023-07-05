@@ -65,7 +65,7 @@ class UserRepository extends HttpClient {
       params: {
         myUserId,
         targetUserId: id,
-        cursor: targetId,
+        cursor: `${targetId}`,
       },
     });
   }
@@ -82,7 +82,7 @@ class UserRepository extends HttpClient {
       params: {
         myUserId,
         targetUserId: id,
-        cursor: targetId,
+        cursor: `${targetId}`,
       },
     });
   }
