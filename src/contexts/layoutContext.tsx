@@ -42,7 +42,7 @@ const LayoutContext = createContext<LayoutContextProps>({
 const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const { session, isSignupRequired } = useUserStatus();
   const signUp = useSignUp();
-  const { openModal } = modalStore();
+  const { openModal, modalSet } = modalStore();
 
   const [hasHeaderBar, setHasHeaderBar] = useState(true);
   const [hasScreenModeButton, setHasScreenModeButton] = useState(true);
@@ -76,12 +76,14 @@ const LayoutProvider = ({ children }: { children: ReactNode }) => {
     <LayoutContext.Provider value={contextProps}>
       {hasHeaderBar && <HeaderBar />}
       {children}
-      <ProfileSettingModal
-        modalKey={ModalKey.SIGNUP}
-        title="회원가입"
-        onComplete={handleSignUp}
-        onCancel={() => signOut()}
-      />
+      {modalSet.has(ModalKey.SIGNUP) && (
+        <ProfileSettingModal
+          modalKey={ModalKey.SIGNUP}
+          title="회원가입"
+          onComplete={handleSignUp}
+          onCancel={() => signOut()}
+        />
+      )}
       {hasScreenModeButton && <ScreenModeButton />}
       <ToastContainer
         theme="colored"
