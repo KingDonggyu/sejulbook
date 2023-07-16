@@ -5,7 +5,7 @@ import { UserId } from '@/types/features/user';
 import { BookReviewId } from '@/types/features/bookReview';
 import { getAllBookReviewId } from '@/services/api/bookReview';
 
-const BASE_URL = process.env.SEJULBOOK_BASE_URL;
+const BASE_URL = process.env.SEJULBOOK_OLD_BASE_URL;
 
 interface GenerateSiteMapParams {
   allUserId: { id: UserId }[];
