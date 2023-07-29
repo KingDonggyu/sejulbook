@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import BookReviewService from '@/server/services/bookReview.service';
+import { BookReviewService } from '@/server/services';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
 import errorHandler from '@/server/middlewares/errorHandler';

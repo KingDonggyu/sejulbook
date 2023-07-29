@@ -18,19 +18,54 @@ import type {
   HasBookReviewRequest,
 } from 'bookReview';
 
-import LikeService from './like.service';
-import UserService from './user.service';
-import FollowService from './follow.service';
-import CategoryService from './category.service';
-import TagService from './tag.service';
-import CommentService from './comment.service';
+import type LikeService from './like.service';
+import type UserService from './user.service';
+import type FollowService from './follow.service';
+import type CategoryService from './category.service';
+import type TagService from './tag.service';
+import type CommentService from './comment.service';
+
+interface Services {
+  userService: UserService;
+  likeService: LikeService;
+  followService: FollowService;
+  categoryService: CategoryService;
+  tagService: TagService;
+  commentService: CommentService;
+}
 
 class BookReviewService {
   private bookReview = new PrismaClient().bookReview;
 
-  private userService = new UserService();
+  private userService: UserService;
+
+  private likeService: LikeService;
+
+  private followService: FollowService;
+
+  private categoryService: CategoryService;
+
+  private tagService: TagService;
+
+  private commentService: CommentService;
 
   private type = { published: 1, draftSaved: 0 };
+
+  constructor({
+    userService,
+    likeService,
+    followService,
+    categoryService,
+    tagService,
+    commentService,
+  }: Services) {
+    this.userService = userService;
+    this.likeService = likeService;
+    this.followService = followService;
+    this.categoryService = categoryService;
+    this.tagService = tagService;
+    this.commentService = commentService;
+  }
 
   async hasBookReview({ userId, id }: HasBookReviewRequest) {
     const bookReview = await this.bookReview.findUnique({
@@ -74,14 +109,13 @@ class BookReviewService {
       },
     });
 
-    await new TagService().create({ bookReviewId, tags: bookReview.tags });
+    await this.tagService.create({ bookReviewId, tags: bookReview.tags });
     return bookReviewId;
   }
 
   async updateDraftSaved(id: Id, bookReview: UpdateBookReviewRequest) {
     this.validate(bookReview, true);
 
-    const tagService = new TagService();
     const promises = [
       this.bookReview.update({
         where: { id },
@@ -94,11 +128,11 @@ class BookReviewService {
           type: this.type.draftSaved,
         },
       }),
-      tagService.deleteAllByBookReview(id),
+      this.tagService.deleteAllByBookReview(id),
     ];
 
     await Promise.all(promises);
-    await tagService.create({ bookReviewId: id, tags: bookReview.tags });
+    await this.tagService.create({ bookReviewId: id, tags: bookReview.tags });
   }
 
   async createPublished(bookReview: CreateBookReviewReqeust) {
@@ -124,13 +158,13 @@ class BookReviewService {
       bookReview.id && this.delete(bookReview.id),
     ]);
 
-    await new TagService().create({ bookReviewId, tags: bookReview.tags });
+    await this.tagService.create({ bookReviewId, tags: bookReview.tags });
     return bookReviewId;
   }
 
   async updatePublished(id: Id, bookReview: UpdateBookReviewRequest) {
     this.validate(bookReview);
-    const tagService = new TagService();
+
     const promises = [
       this.bookReview.update({
         where: { id },
@@ -143,18 +177,18 @@ class BookReviewService {
           type: this.type.published,
         },
       }),
-      tagService.deleteAllByBookReview(id),
+      this.tagService.deleteAllByBookReview(id),
     ];
 
     await Promise.all(promises);
-    await tagService.create({ bookReviewId: id, tags: bookReview.tags });
+    await this.tagService.create({ bookReviewId: id, tags: bookReview.tags });
   }
 
   async delete(id: Id) {
     await Promise.all([
-      new CommentService().deleteAllByBookreview(id),
-      new TagService().deleteAllByBookReview(id),
-      new LikeService().deleteAllByBookReview(id),
+      this.commentService.deleteAllByBookreview(id),
+      this.tagService.deleteAllByBookReview(id),
+      this.likeService.deleteAllByBookReview(id),
       this.bookReview.delete({ where: { id } }),
     ]);
   }
@@ -213,7 +247,7 @@ class BookReviewService {
 
     const [{ name: writer }, { category }] = await Promise.all([
       this.userService.findNameById(bookReview.userId),
-      new CategoryService().findById(bookReview.categoryId),
+      this.categoryService.findById(bookReview.categoryId),
     ]);
 
     return {
@@ -240,13 +274,10 @@ class BookReviewService {
       where: { userId, type: this.type.published },
     });
 
-    const likeService = new LikeService();
-    const commentService = new CommentService();
-
     const promises = bookReviews.map(async (bookReview) => {
       const [likeCount, commentCount] = await Promise.all([
-        likeService.countByBookReview(bookReview.id),
-        commentService.countByBookReview(bookReview.id),
+        this.likeService.countByBookReview(bookReview.id),
+        this.commentService.countByBookReview(bookReview.id),
       ]);
 
       return {
@@ -262,7 +293,7 @@ class BookReviewService {
 
   // 좋아요 순의 10개 독후감
   async findTenMostLike(): Promise<GetHomeBookReviewResponse[]> {
-    const ids = await new LikeService().findTenMostBookReviewId();
+    const ids = await this.likeService.findTenMostBookReviewId();
     const promises = ids.map(async (id) => {
       const bookReview = await this.bookReview.findUnique({
         select: {
@@ -315,7 +346,7 @@ class BookReviewService {
 
   // 최신 순의 10개 구독 독후감
   async findTenFollowing(userId: UserId): Promise<GetHomeBookReviewResponse[]> {
-    const followingIds = await new FollowService().findAllFollowingId(userId);
+    const followingIds = await this.followService.findAllFollowingId(userId);
     const bookReviews = await this.bookReview.findMany({
       select: {
         id: true,
@@ -378,7 +409,7 @@ class BookReviewService {
       return [];
     }
 
-    const { id: categoryId } = await new CategoryService().findId(category);
+    const { id: categoryId } = await this.categoryService.findId(category);
     const bookReviews = await this.bookReview.findMany({
       select: { id: true, thumbnail: true, userId: true, sejul: true },
       where: { categoryId, type: this.type.published },
@@ -406,7 +437,7 @@ class BookReviewService {
       return [];
     }
 
-    const tags = await new TagService().findAllBookReviewIdByTagName(tag);
+    const tags = await this.tagService.findAllBookReviewIdByTagName(tag);
     const bookReivewIds = tags.map(({ bookReviewId }) => bookReviewId);
 
     const bookReviews = await this.bookReview.findMany({
@@ -436,7 +467,7 @@ class BookReviewService {
       return [];
     }
 
-    const followingIds = await new FollowService().findAllFollowingId(
+    const followingIds = await this.followService.findAllFollowingId(
       followerId,
     );
     const bookReviews = await this.bookReview.findMany({
@@ -496,8 +527,8 @@ class BookReviewService {
     const promises = bookReviews.map(async ({ id, userId, ...bookReview }) => {
       const [{ name: writer }, commentCount, likeCount] = await Promise.all([
         this.userService.findNameById(userId),
-        new CommentService().countByBookReview(id),
-        new LikeService().countByBookReview(id),
+        this.commentService.countByBookReview(id),
+        this.likeService.countByBookReview(id),
       ]);
 
       return { ...bookReview, id, userId, writer, commentCount, likeCount };
