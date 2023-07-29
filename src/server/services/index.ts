@@ -1,17 +1,18 @@
 // eslint-disable-next-line max-classes-per-file
-import UserServiceOrigin from './user.service';
-import LikeServiceOrigin from './like.service';
-import FollowServiceOrigin from './follow.service';
-import CategoryServiceOrigin from './category.service';
-import TagServiceOrigin from './tag.service';
-import CommentServiceOrigin from './comment.service';
 import BookReviewServiceOrigin from './bookReview.service';
+import UserServiceOrigin from './user.service';
+
+import LikeService from './like.service';
+import FollowService from './follow.service';
+import CategoryService from './category.service';
+import TagService from './tag.service';
+import CommentService from './comment.service';
 
 export class BookReviewService extends BookReviewServiceOrigin {
   constructor() {
-    const followService = new FollowServiceOrigin();
-    const commentService = new CommentServiceOrigin();
-    const likeService = new LikeServiceOrigin();
+    const followService = new FollowService();
+    const commentService = new CommentService();
+    const likeService = new LikeService();
 
     super({
       userService: new UserServiceOrigin({
@@ -22,8 +23,8 @@ export class BookReviewService extends BookReviewServiceOrigin {
       followService,
       commentService,
       likeService,
-      categoryService: new CategoryServiceOrigin(),
-      tagService: new TagServiceOrigin(),
+      categoryService: new CategoryService(),
+      tagService: new TagService(),
     });
   }
 }
@@ -31,9 +32,17 @@ export class BookReviewService extends BookReviewServiceOrigin {
 export class UserService extends UserServiceOrigin {
   constructor() {
     super({
-      followService: new FollowServiceOrigin(),
-      commentService: new CommentServiceOrigin(),
-      likeService: new LikeServiceOrigin(),
+      followService: new FollowService(),
+      commentService: new CommentService(),
+      likeService: new LikeService(),
     });
   }
 }
+
+export {
+  CategoryService,
+  CommentService,
+  FollowService,
+  LikeService,
+  TagService,
+};

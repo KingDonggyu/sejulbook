@@ -1,5 +1,5 @@
 import HttpClient from '@/lib/HttpClient';
-import TagService from '@/server/services/tag.service';
+import { TagService } from '@/server/services';
 import type { BookReviewId, GetTagResponse, SearchTagResponse } from 'tag';
 
 class TagRepository extends HttpClient {

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import CommentService from '@/server/services/comment.service';
+import { CommentService } from '@/server/services';
 import authentication from '@/server/middlewares/authentication';
 import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';

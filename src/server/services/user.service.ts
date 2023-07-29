@@ -25,7 +25,7 @@ interface Services {
 }
 
 class UserService {
-  private user = new PrismaClient().user;
+  private userRepository = new PrismaClient().user;
 
   private followService: FollowService;
 
@@ -42,11 +42,11 @@ class UserService {
   }
 
   async findAllId() {
-    return this.user.findMany({ select: { id: true } });
+    return this.userRepository.findMany({ select: { id: true } });
   }
 
   async findAllByNamePrefix(name: Name): Promise<GetSearchedUserResponse[]> {
-    return this.user.findMany({
+    return this.userRepository.findMany({
       select: { id: true, name: true, introduce: true },
       where: { name: { search: `${name}*` } },
       take: 10,
@@ -54,7 +54,7 @@ class UserService {
   }
 
   async findById(id: Id): Promise<GetUserResponse> {
-    const user = await this.user.findUnique({ where: { id } });
+    const user = await this.userRepository.findUnique({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(this.notFoundMessage);
@@ -64,7 +64,7 @@ class UserService {
   }
 
   async findIdBySub(sub: Sub) {
-    const user = await this.user.findFirst({
+    const user = await this.userRepository.findFirst({
       select: { id: true },
       where: { sub },
     });
@@ -77,7 +77,7 @@ class UserService {
   }
 
   async findNameById(id: Id) {
-    const user = await this.user.findUnique({
+    const user = await this.userRepository.findUnique({
       select: { name: true },
       where: { id },
     });
@@ -101,7 +101,7 @@ class UserService {
     ]);
 
     const promises = followerIds.map(async ({ id: followId, followerId }) => {
-      const follower = await this.user.findUnique({
+      const follower = await this.userRepository.findUnique({
         select: { id: true, name: true, introduce: true },
         where: { id: followerId },
       });
@@ -132,7 +132,7 @@ class UserService {
     ]);
 
     const promises = followingIds.map(async ({ id: followId, followingId }) => {
-      const following = await this.user.findUnique({
+      const following = await this.userRepository.findUnique({
         select: { id: true, name: true, introduce: true },
         where: { id: followingId },
       });
@@ -160,7 +160,7 @@ class UserService {
       throw new BadRequestException('잘못된 성별 형식입니다.');
     }
 
-    await this.user.create({
+    await this.userRepository.create({
       data: {
         sub: user.sub,
         name: user.name,
@@ -173,7 +173,7 @@ class UserService {
   }
 
   async update({ id, name, introduce }: UpdateUserRequest) {
-    const user = await this.user.findUnique({
+    const user = await this.userRepository.findUnique({
       select: { name: true },
       where: { id },
     });
@@ -183,7 +183,7 @@ class UserService {
     }
 
     await this.validate(name, introduce, name !== user.name);
-    await this.user.update({
+    await this.userRepository.update({
       data: { name, introduce },
       where: { id },
     });
@@ -194,12 +194,12 @@ class UserService {
       this.commentService.deleteAllByUser(id),
       this.likeService.deleteAllByUser(id),
       this.followService.deleteAllByUser(id),
-      this.user.delete({ where: { id } }),
+      this.userRepository.delete({ where: { id } }),
     ]);
   }
 
   async checkDuplicateName(name: Name): Promise<boolean> {
-    const user = await this.user.findUnique({ where: { name } });
+    const user = await this.userRepository.findUnique({ where: { name } });
     return !!user;
   }
 
