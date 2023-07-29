@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import UserServiceOrigin from './user.service';
 import LikeServiceOrigin from './like.service';
 import FollowServiceOrigin from './follow.service';
@@ -8,22 +9,31 @@ import BookReviewServiceOrigin from './bookReview.service';
 
 export class BookReviewService extends BookReviewServiceOrigin {
   constructor() {
+    const followService = new FollowServiceOrigin();
+    const commentService = new CommentServiceOrigin();
+    const likeService = new LikeServiceOrigin();
+
     super({
-      userService: new UserServiceOrigin(),
-      likeService: new LikeServiceOrigin(),
-      followService: new FollowServiceOrigin(),
+      userService: new UserServiceOrigin({
+        followService,
+        commentService,
+        likeService,
+      }),
+      followService,
+      commentService,
+      likeService,
       categoryService: new CategoryServiceOrigin(),
       tagService: new TagServiceOrigin(),
-      commentService: new CommentServiceOrigin(),
     });
   }
 }
 
-// export const bookReviewService = new BookReviewService({
-//   userService: new UserService(),
-//   likeService: new LikeService(),
-//   followService: new FollowService(),
-//   categoryService: new CategoryService(),
-//   tagService: new TagService(),
-//   commentService: new CommentService(),
-// });
+export class UserService extends UserServiceOrigin {
+  constructor() {
+    super({
+      followService: new FollowServiceOrigin(),
+      commentService: new CommentServiceOrigin(),
+      likeService: new LikeServiceOrigin(),
+    });
+  }
+}

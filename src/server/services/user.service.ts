@@ -14,14 +14,32 @@ import type {
   UpdateUserRequest,
 } from 'user';
 
-import FollowService from './follow.service';
-import CommentService from './comment.service';
-import LikeService from './like.service';
+import type FollowService from './follow.service';
+import type CommentService from './comment.service';
+import type LikeService from './like.service';
+
+interface Services {
+  followService: FollowService;
+  commentService: CommentService;
+  likeService: LikeService;
+}
 
 class UserService {
   private user = new PrismaClient().user;
 
+  private followService: FollowService;
+
+  private commentService: CommentService;
+
+  private likeService: LikeService;
+
   private notFoundMessage = '사용자를 찾을 수 없습니다.';
+
+  constructor({ followService, commentService, likeService }: Services) {
+    this.followService = followService;
+    this.commentService = commentService;
+    this.likeService = likeService;
+  }
 
   async findAllId() {
     return this.user.findMany({ select: { id: true } });
@@ -77,11 +95,9 @@ class UserService {
     targetId,
   }: GetUserPageRequest): Promise<GetUserPageResponse[]> {
     const emptyArray: number[] = [];
-    const followService = new FollowService();
-
     const [followerIds, myFollowingIds] = await Promise.all([
-      followService.findPagedFollowers({ followingId: id, targetId }),
-      myUserId ? followService.findAllFollowingId(myUserId) : emptyArray,
+      this.followService.findPagedFollowers({ followingId: id, targetId }),
+      myUserId ? this.followService.findAllFollowingId(myUserId) : emptyArray,
     ]);
 
     const promises = followerIds.map(async ({ id: followId, followerId }) => {
@@ -110,11 +126,9 @@ class UserService {
     targetId,
   }: GetUserPageRequest): Promise<GetUserPageResponse[]> {
     const emptyArray: number[] = [];
-    const followService = new FollowService();
-
     const [followingIds, myFollowingIds] = await Promise.all([
-      followService.findPagedFollowings({ followerId: id, targetId }),
-      myUserId ? followService.findAllFollowingId(myUserId) : emptyArray,
+      this.followService.findPagedFollowings({ followerId: id, targetId }),
+      myUserId ? this.followService.findAllFollowingId(myUserId) : emptyArray,
     ]);
 
     const promises = followingIds.map(async ({ id: followId, followingId }) => {
@@ -177,9 +191,9 @@ class UserService {
 
   async delete(id: Id) {
     await Promise.all([
-      new CommentService().deleteAllByUser(id),
-      new LikeService().deleteAllByUser(id),
-      new FollowService().deleteAllByUser(id),
+      this.commentService.deleteAllByUser(id),
+      this.likeService.deleteAllByUser(id),
+      this.followService.deleteAllByUser(id),
       this.user.delete({ where: { id } }),
     ]);
   }

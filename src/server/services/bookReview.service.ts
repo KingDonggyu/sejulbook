@@ -193,6 +193,11 @@ class BookReviewService {
     ]);
   }
 
+  async deleteAllByUser(userId: UserId) {
+    const ids = await this.findAllIdByUser(userId);
+    await Promise.all(ids.map(async (id) => this.delete(id)));
+  }
+
   async findAllId() {
     return this.bookReviewRepository.findMany({ select: { id: true } });
   }
