@@ -11,7 +11,7 @@ import type {
 } from 'follow';
 
 class FollowService {
-  private follow = new PrismaClient().follow;
+  private followRepository = new PrismaClient().follow;
 
   async findFollowInfo({
     myUserId,
@@ -27,7 +27,7 @@ class FollowService {
   }
 
   async findAllFollowingId(followerId: UserId): Promise<UserId[]> {
-    const result = await this.follow.findMany({
+    const result = await this.followRepository.findMany({
       select: { followingId: true },
       where: { followerId },
     });
@@ -36,7 +36,7 @@ class FollowService {
   }
 
   async findAllFollowerId(followingId: UserId): Promise<UserId[]> {
-    const result = await this.follow.findMany({
+    const result = await this.followRepository.findMany({
       select: { followerId: true },
       where: { followingId },
     });
@@ -58,7 +58,7 @@ class FollowService {
       return [];
     }
 
-    return this.follow.findMany({
+    return this.followRepository.findMany({
       select: { id: true, followingId: true },
       where: { followerId },
       orderBy: { id: 'desc' },
@@ -82,7 +82,7 @@ class FollowService {
       return [];
     }
 
-    return this.follow.findMany({
+    return this.followRepository.findMany({
       select: { id: true, followerId: true },
       where: { followingId },
       orderBy: { id: 'desc' },
@@ -93,7 +93,7 @@ class FollowService {
   }
 
   async has({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    const follow = await this.follow.findFirst({
+    const follow = await this.followRepository.findFirst({
       where: { followerId: myUserId, followingId: targetUserId },
     });
 
@@ -101,27 +101,27 @@ class FollowService {
   }
 
   async countFollwing(followerId: UserId) {
-    return this.follow.count({ where: { followerId } });
+    return this.followRepository.count({ where: { followerId } });
   }
 
   async countFollower(followingId: UserId) {
-    return this.follow.count({ where: { followingId } });
+    return this.followRepository.count({ where: { followingId } });
   }
 
   async create({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    await this.follow.create({
+    await this.followRepository.create({
       data: { followerId: myUserId, followingId: targetUserId },
     });
   }
 
   async delete({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    await this.follow.deleteMany({
+    await this.followRepository.deleteMany({
       where: { followerId: myUserId, followingId: targetUserId },
     });
   }
 
   async deleteAllByUser(userId: UserId) {
-    await this.follow.deleteMany({
+    await this.followRepository.deleteMany({
       where: {
         OR: [{ followerId: userId }, { followingId: userId }],
       },
@@ -129,7 +129,7 @@ class FollowService {
   }
 
   private async findMaxIdByFollowingId(followingId: UserId) {
-    const result = await this.follow.findFirst({
+    const result = await this.followRepository.findFirst({
       select: { id: true },
       where: { followingId },
       orderBy: { id: 'desc' },
@@ -143,7 +143,7 @@ class FollowService {
   }
 
   private async findMaxIdByFollowerId(followerId: UserId) {
-    const result = await this.follow.findFirst({
+    const result = await this.followRepository.findFirst({
       select: { id: true },
       where: { followerId },
       orderBy: { id: 'desc' },

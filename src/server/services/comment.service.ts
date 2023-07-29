@@ -9,12 +9,14 @@ import type {
 } from 'comment';
 
 class CommentService {
-  private comment = new PrismaClient().comment;
+  private commentRepository = new PrismaClient().comment;
 
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<GetCommentResponse[]> {
-    const comments = await this.comment.findMany({ where: { bookReviewId } });
+    const comments = await this.commentRepository.findMany({
+      where: { bookReviewId },
+    });
     return comments.map(({ createdAt, ...others }) => ({
       ...others,
       createdAt: createdAt.toString(),
@@ -22,27 +24,29 @@ class CommentService {
   }
 
   async countByBookReview(bookReviewId: BookReviewId) {
-    return this.comment.count({ where: { bookReviewId } });
+    return this.commentRepository.count({ where: { bookReviewId } });
   }
 
   async deleteAllByBookreview(bookReviewId: BookReviewId) {
-    await this.comment.deleteMany({ where: { bookReviewId } });
+    await this.commentRepository.deleteMany({ where: { bookReviewId } });
   }
 
   async deleteAllByUser(commenterId: CommenterId) {
-    await this.comment.deleteMany({ where: { commenterId } });
+    await this.commentRepository.deleteMany({ where: { commenterId } });
   }
 
   async delete(id: Id) {
-    await this.comment.delete({ where: { id } });
+    await this.commentRepository.delete({ where: { id } });
   }
 
   async create({ bookReviewId, commenterId, content }: CreateCommentRequest) {
-    await this.comment.create({ data: { bookReviewId, commenterId, content } });
+    await this.commentRepository.create({
+      data: { bookReviewId, commenterId, content },
+    });
   }
 
   async update({ id, content }: UpdateCommentRequest) {
-    await this.comment.update({
+    await this.commentRepository.update({
       where: { id },
       data: { content },
     });

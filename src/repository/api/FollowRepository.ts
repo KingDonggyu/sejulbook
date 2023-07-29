@@ -1,4 +1,4 @@
-import FollowService from '@/server/services/follow.service';
+import { FollowService } from '@/server/services';
 import HttpClient from '@/lib/HttpClient';
 import type { FollowDefaultReqeust, GetFollowInfoRequest } from 'follow';
 

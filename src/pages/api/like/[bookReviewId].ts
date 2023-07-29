@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import LikeService from '@/server/services/like.service';
+import { LikeService } from '@/server/services';
 import authentication from '@/server/middlewares/authentication';
 import HttpMethods from '@/constants/httpMethods';
 import { MethodNotAllowedException } from '@/server/exceptions';

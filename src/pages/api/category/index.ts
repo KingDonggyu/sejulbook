@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import CategoryService from '@/server/services/category.service';
+import { CategoryService } from '@/server/services';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import errorHandler from '@/server/middlewares/errorHandler';
 import HttpMethods from '@/constants/httpMethods';
