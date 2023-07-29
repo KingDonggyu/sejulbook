@@ -11,7 +11,7 @@ import type {
   HasBookReviewRequest,
 } from 'bookReview';
 
-import BookReviewService from '@/server/services/bookReview.service';
+import { BookReviewService } from '@/server/services';
 import HttpClient from '@/lib/HttpClient';
 
 class BookReviewRepository extends HttpClient {

@@ -8,10 +8,10 @@ import type {
 } from 'tag';
 
 class TagService {
-  private tag = new PrismaClient().tag;
+  private tagRepository = new PrismaClient().tag;
 
   async findAllBookReviewIdByTagName(tag: Tag) {
-    return this.tag.findMany({
+    return this.tagRepository.findMany({
       select: { bookReviewId: true },
       where: { tag },
     });
@@ -20,11 +20,11 @@ class TagService {
   async findAllByBookReview(
     bookReviewId: BookReviewId,
   ): Promise<GetTagResponse[]> {
-    return this.tag.findMany({ where: { bookReviewId } });
+    return this.tagRepository.findMany({ where: { bookReviewId } });
   }
 
   async findAllByTagName(tagName: Tag): Promise<SearchTagResponse[]> {
-    const result = await this.tag.groupBy({
+    const result = await this.tagRepository.groupBy({
       by: ['tag'],
       _count: { tag: true },
       where: { tag: { search: `${tagName}*` } },
@@ -38,12 +38,12 @@ class TagService {
   async create({ bookReviewId, tags }: CreateTagReqeust) {
     await tags.reduce(async (previousPromise, tag) => {
       await previousPromise;
-      await this.tag.create({ data: { bookReviewId, tag } });
+      await this.tagRepository.create({ data: { bookReviewId, tag } });
     }, Promise.resolve());
   }
 
   async deleteAllByBookReview(bookReviewId: BookReviewId) {
-    await this.tag.deleteMany({ where: { bookReviewId } });
+    await this.tagRepository.deleteMany({ where: { bookReviewId } });
   }
 }
 

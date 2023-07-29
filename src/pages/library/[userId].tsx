@@ -26,7 +26,7 @@ const LibraryPage = ({
   myUserId,
 }: {
   targetUserId: UserId;
-  myUserId?: UserId;
+  myUserId: UserId | null;
 }) => {
   const { user } = useUser(targetUserId);
   const { followInfo } = useFollowInfo(targetUserId);
@@ -132,8 +132,8 @@ export const getServerSideProps = async (
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        myUserId: myUserId || null,
         targetUserId,
-        myUserId,
       },
     };
   } catch {

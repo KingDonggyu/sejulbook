@@ -8,7 +8,7 @@ import type {
 } from 'like';
 
 class LikeService {
-  private like = new PrismaClient().like;
+  private likeRespository = new PrismaClient().like;
 
   async has({
     bookReviewId,
@@ -16,7 +16,7 @@ class LikeService {
   }: LikeStatusRequest): Promise<LikeStatusResponse> {
     const [like, likeCount] = await Promise.all([
       likerId
-        ? this.like.findFirst({ where: { bookReviewId, likerId } })
+        ? this.likeRespository.findFirst({ where: { bookReviewId, likerId } })
         : false,
       this.countByBookReview(bookReviewId),
     ]);
@@ -25,7 +25,7 @@ class LikeService {
   }
 
   async findTenMostBookReviewId(): Promise<BookReviewId[]> {
-    const result = await this.like.groupBy({
+    const result = await this.likeRespository.groupBy({
       by: ['bookReviewId'],
       _count: { bookReviewId: true },
       orderBy: [{ _count: { bookReviewId: 'desc' } }, { bookReviewId: 'desc' }],
@@ -36,23 +36,23 @@ class LikeService {
   }
 
   async countByBookReview(bookReviewId: BookReviewId) {
-    return this.like.count({ where: { bookReviewId } });
+    return this.likeRespository.count({ where: { bookReviewId } });
   }
 
   async deleteAllByBookReview(bookReviewId: BookReviewId) {
-    await this.like.deleteMany({ where: { bookReviewId } });
+    await this.likeRespository.deleteMany({ where: { bookReviewId } });
   }
 
   async deleteAllByUser(likerId: LikerId) {
-    await this.like.deleteMany({ where: { likerId } });
+    await this.likeRespository.deleteMany({ where: { likerId } });
   }
 
   async delete({ bookReviewId, likerId }: LikeRequest) {
-    await this.like.deleteMany({ where: { bookReviewId, likerId } });
+    await this.likeRespository.deleteMany({ where: { bookReviewId, likerId } });
   }
 
   async create({ bookReviewId, likerId }: LikeRequest) {
-    await this.like.create({ data: { bookReviewId, likerId } });
+    await this.likeRespository.create({ data: { bookReviewId, likerId } });
   }
 }
 
