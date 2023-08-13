@@ -4,17 +4,11 @@
 > 
 > **1명의 개발자, 1명의 데이터 분석가**가 함께 만들어가는 프로젝트입니다.
 
-<br />
-
-# 바로가기
-
 - [세 줄 독후감](https://www.sejulbook.com)
 - [팀 노션](https://sejulbook.notion.site/b187913986de4428903c6f4410e1bc53)
 - [인스타그램](https://www.instagram.com/sejulbook)
 
-<br />
-
-# 프로젝트 소개
+# Introduction
 
 책 읽는 걸 좋아하는 저에게도 책을 기록한다는 것에 대한 부담감이 있었어요.
 
@@ -40,9 +34,7 @@
 
 책을 통해 받은 온기가 조금 더 머물렀으면 좋겠어요.
 
-<br />
-
-# 프로젝트 기능
+# Features
 
 ### ✍️ 독후감 작성
 
@@ -61,32 +53,44 @@
 - 관심있는 서재를 구독
 - 구독한 관심서재들의 독후감 모아보기
 
-<br />
+# Tech stack
 
-# 기술 스택
+<img width="1390" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/55889557-089c-451b-a9e6-cb3f8bd4b4a5">
 
-<img width="907" alt="기술스택" src="https://user-images.githubusercontent.com/33220404/229418292-ba0e2381-87a7-41c3-8e3a-d9b8c5b40775.png">
+# Structure
 
-<br />
+<img width="889" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/1922a498-0b9b-4b23-bf4a-cb43c2e797ee">
 
-# 관련 포스트
+# Demo
 
-- [NextJS에서 로컬 스토리지 똑똑하게 다루기](https://east-star.tistory.com/40)
-- [AWS S3 용량 최적화 Hook 구현기 (with Service Worker)](https://east-star.tistory.com/41)
-- [아토믹 디자인 시스템 잘써보기 (with NextJS)](https://east-star.tistory.com/42)
-- [성능 분석](https://sejulbook.notion.site/d666ac5460b441c09a9a2aafa254d4e7)
+### 홈 페이지
+<img width="1440" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/c335b6d7-956a-4f82-820e-3e19cba1b94a">
 
-<br />
+### 서재 페이지
+<img width="1439" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/3a0e18bd-737f-4df0-b607-e7add80e9b8a">
 
-# 관련 문서
+### 독후감 페이지
+<img width="1440" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/aba7413f-2086-446e-97ba-da3cff199d0c">
+
+### 독후감 작성 페이지
+<img width="1440" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/777654df-4571-45b7-b5bf-93692bf8319e">
+
+### 관심서재 페이지
+<img width="1439" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/e2f685d2-d59e-4559-8c21-ebdc90faebd9">
+
+### 검색 페이지
+<img width="1440" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/b03c6601-caca-42c7-8392-8036b9bde8b2">
+
+### 검색 결과 페이지
+<img width="1440" alt="image" src="https://github.com/KingDonggyu/sejulbook/assets/33220404/6769d448-820d-48d3-95ee-1a4ecb277b04">
+
+# Documents
 
 - [기획서](https://sejulbook.notion.site/1b7d94359f7b43f3805c86983b38251c)
 - [프로토타입](https://www.figma.com/file/VCPF3tJjTA6TIbkcGFAvAG/%EC%84%B8-%EC%A4%84-%EB%8F%85%ED%9B%84%EA%B0%90?node-id=0-1&t=RNEJgoJTTkL2fJ7O-0)
 - [ERD](https://sejulbook.notion.site/ERD-678013c840534c6db204a9eead62eff6)
 
-<br />
-
-# 팀 소개
+# Team
 
 |[김동규](https://github.com/KingDonggyu)|[최준철](https://github.com/jjeori)|
 | :-----------: | :-------------: |

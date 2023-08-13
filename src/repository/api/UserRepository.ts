@@ -1,4 +1,4 @@
-import UserService from '@/server/services/user.service';
+import { UserService } from '@/server/services';
 import HttpClient from '@/lib/HttpClient';
 
 import type {

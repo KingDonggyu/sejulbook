@@ -1,4 +1,4 @@
-import CommentService from '@/server/services/comment.service';
+import { CommentService } from '@/server/services';
 import HttpClient from '@/lib/HttpClient';
 
 import type {

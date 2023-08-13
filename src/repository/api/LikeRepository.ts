@@ -1,4 +1,4 @@
-import LikeService from '@/server/services/like.service';
+import { LikeService } from '@/server/services';
 import HttpClient from '@/lib/HttpClient';
 import type { LikeRequest, LikeStatusRequest, LikeStatusResponse } from 'like';
 

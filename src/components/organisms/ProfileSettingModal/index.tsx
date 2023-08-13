@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { FormEvent, useRef } from 'react';
 import Link from 'next/link';
 import Button from '@/components/atoms/Button';
 import TextField from '@/components/atoms/TextField';
@@ -27,37 +27,35 @@ const ProfileSettingModal = ({
   isLogged = false,
   ...modalProps
 }: ProfileSettingModalProps & Omit<ModalProps, 'children'>) => {
-  let name = initName;
-  let introduce = initIntroduce;
-
-  const handleClose = () => {
-    name = '';
-    introduce = '';
-  };
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onComplete({ name, introduce });
+
+    if (!formRef.current) {
+      return;
+    }
+
+    const values: string[] = [];
+
+    Array.from(formRef.current.elements).forEach((element) => {
+      if (
+        element instanceof HTMLInputElement ||
+        element instanceof HTMLTextAreaElement
+      ) {
+        values.push(element.value);
+      }
+    });
+
+    onComplete({ name: values[0], introduce: values[1] });
   };
 
   return (
-    <Modal modalKey={modalKey} onCancel={handleClose} {...modalProps}>
-      <s.Form onSubmit={handleSubmit}>
+    <Modal modalKey={modalKey} {...modalProps}>
+      <s.Form ref={formRef} onSubmit={handleSubmit}>
         <s.Title>{title}</s.Title>
-        <TextField
-          label="이름"
-          defaultValue={initName}
-          onChange={(e) => {
-            name = e.target.value;
-          }}
-        />
-        <TextArea
-          label="소개"
-          defaultValue={initIntroduce}
-          onChange={(e) => {
-            introduce = e.target.validationMessage;
-          }}
-        />
+        <TextField label="이름" defaultValue={initName} />
+        <TextArea label="소개" defaultValue={initIntroduce} />
         <Button
           type="submit"
           color={ColorVariant.PRIMARY}

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import UserService from '@/server/services/user.service';
+import { BookReviewService, UserService } from '@/server/services';
 import { MethodNotAllowedException } from '@/server/exceptions';
 import authentication from '@/server/middlewares/authentication';
 import errorHandler from '@/server/middlewares/errorHandler';
@@ -45,7 +45,10 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === HttpMethods.DELETE) {
-    await userService.delete(id);
+    await Promise.all([
+      new BookReviewService().deleteAllByUser(id),
+      userService.delete(id),
+    ]);
     res.status(200).end();
     return;
   }
