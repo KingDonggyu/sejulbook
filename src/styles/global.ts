@@ -12,9 +12,10 @@ const globalStyle = (theme: Theme) => css`
     -webkit-font-smoothing: antialiased;
   }
 
-  html {
+  :root {
     font-size: 80%;
     overflow-y: scroll;
+    transition: background-color 0.3s ease;
     color: ${theme.COLOR.TEXT};
     background-color: ${theme.COLOR.BACKGROUND};
     font-family: ${theme.FONT_FAMILY.notoSansKR};
