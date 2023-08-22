@@ -13,7 +13,7 @@ class FollowRepository extends HttpClient {
   }
 
   async follow({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    await this.axiosInstance.post(
+    await this.postRequset(
       `${this.baseUrl}/${myUserId}`,
       {},
       { params: { targetUserId } },
@@ -21,19 +21,19 @@ class FollowRepository extends HttpClient {
   }
 
   async unfollow({ myUserId, targetUserId }: FollowDefaultReqeust) {
-    await this.axiosInstance.delete(`${this.baseUrl}/${myUserId}`, {
+    await this.deleteRequest(`${this.baseUrl}/${myUserId}`, {
       params: { targetUserId },
     });
   }
 
-  get({
+  httpGet({
     myUserId,
     targetUserId,
   }: GetFollowInfoRequest): ReturnType<FollowService['findFollowInfo']> {
     if (this.service) {
       return this.service.findFollowInfo({ targetUserId, myUserId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/${myUserId}`, {
+    return this.getRequest(`${this.baseUrl}/${myUserId}`, {
       params: { targetUserId },
     });
   }

@@ -30,7 +30,7 @@ class CommentRepository extends HttpClient {
   }
 
   async create({ bookReviewId, commenterId, content }: CreateCommentRequest) {
-    await this.axiosInstance.post(
+    await this.postRequset(
       `${this.baseUrl}/${bookReviewId}`,
       { content },
       { params: { commenterId } },
@@ -38,7 +38,7 @@ class CommentRepository extends HttpClient {
   }
 
   async update({ id, bookReviewId, commenterId, content }: UpdateRequest) {
-    await this.axiosInstance.put(
+    await this.putRequest(
       `${this.baseUrl}/${bookReviewId}`,
       { id, content },
       { params: { commenterId } },
@@ -46,18 +46,18 @@ class CommentRepository extends HttpClient {
   }
 
   async delete({ id, bookReviewId, commenterId }: DeleteRequest) {
-    await this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
+    await this.deleteRequest(`${this.baseUrl}/${bookReviewId}`, {
       params: { id, commenterId },
     });
   }
 
-  get(
+  httpGet(
     bookReviewId: BookReviewId,
   ): ReturnType<CommentService['findAllByBookReview']> {
     if (this.service) {
       return this.service.findAllByBookReview(bookReviewId);
     }
-    return this.axiosInstance.get(`${this.baseUrl}/${bookReviewId}`);
+    return this.getRequest(`${this.baseUrl}/${bookReviewId}`);
   }
 }
 

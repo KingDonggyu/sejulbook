@@ -7,7 +7,7 @@ class BookRepository extends HttpClient {
   private authToken = `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}`;
 
   search(query: string) {
-    return this.axiosInstance.get<never, GetBookResponse>(this.baseUrl, {
+    return this.getRequest<GetBookResponse>(this.baseUrl, {
       params: { query },
       headers: { Authorization: this.authToken },
     });

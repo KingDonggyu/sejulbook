@@ -19,29 +19,29 @@ class UserRepository extends HttpClient {
   }
 
   async signUp(user: CreateUserRequest) {
-    await this.axiosInstance.post(`${this.baseUrl}/signup`, user);
+    await this.postRequset(`${this.baseUrl}/signup`, user);
   }
 
   async update(user: UpdateUserRequest) {
-    await this.axiosInstance.put(`${this.baseUrl}/${user.id}`, user);
+    await this.putRequest(`${this.baseUrl}/${user.id}`, user);
   }
 
   async delete(userId: Id) {
-    await this.axiosInstance.delete(`${this.baseUrl}/${userId}`);
+    await this.deleteRequest(`${this.baseUrl}/${userId}`);
   }
 
-  get(userId: Id): ReturnType<UserService['findById']> {
+  httpGet(userId: Id): ReturnType<UserService['findById']> {
     if (this.service) {
       return this.service.findById(userId);
     }
-    return this.axiosInstance.get(`${this.baseUrl}/${userId}`);
+    return this.getRequest(`${this.baseUrl}/${userId}`);
   }
 
   search(query: string): ReturnType<UserService['findAllByNamePrefix']> {
     if (this.service) {
       return this.service.findAllByNamePrefix(query);
     }
-    return this.axiosInstance.get(`${this.baseUrl}/search`, {
+    return this.getRequest(`${this.baseUrl}/search`, {
       params: { query },
     });
   }
@@ -61,7 +61,7 @@ class UserRepository extends HttpClient {
     if (this.service) {
       return this.service.findPagedFollowers({ id, targetId, myUserId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/follower`, {
+    return this.getRequest(`${this.baseUrl}/list/follower`, {
       params: {
         myUserId,
         targetUserId: id,
@@ -78,7 +78,7 @@ class UserRepository extends HttpClient {
     if (this.service) {
       return this.service.findPagedFollowings({ id, targetId, myUserId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
+    return this.getRequest(`${this.baseUrl}/list/following`, {
       params: {
         myUserId,
         targetUserId: id,

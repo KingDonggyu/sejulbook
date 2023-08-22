@@ -11,11 +11,11 @@ class CategoryRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new CategoryService() : null;
   }
 
-  get(): ReturnType<CategoryService['findAll']> {
+  httpGet(): ReturnType<CategoryService['findAll']> {
     if (this.service) {
       return this.service.findAll();
     }
-    return this.axiosInstance(this.baseUrl);
+    return this.getRequest(this.baseUrl);
   }
 }
 
