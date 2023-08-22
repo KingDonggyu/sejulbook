@@ -11,8 +11,9 @@ declare namespace NodeJS {
 
     NEXT_PUBLIC_KAKAO_REST_API_KEY: string;
     NEXT_PUBLIC_TINY_API_KEY: string;
-    NEXT_PUBLIC_AWS_ACCESS_KEY: string;
-    NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: string;
+    SEJULBOOK_AWS_ACCESS_KEY: string;
+    SEJULBOOK_AWS_SECRET_ACCESS_KEY: string;
+
     NEXT_PUBLIC_AWS_REGION: string;
     NEXT_PUBLIC_S3_BUCKET_NAME: string;
     NEXT_PUBLIC_GA_ID: string;
