@@ -10,7 +10,7 @@ export const getBookReviewQuery = (
   queryKey: ['bookReview_get', bookReviewId],
   queryFn: () =>
     bookReviewId
-      ? new BookReviewRepository().get(bookReviewId, isOnlyPublished)
+      ? new BookReviewRepository().httpGet(bookReviewId, isOnlyPublished)
       : null,
   options: { enabled: !!bookReviewId },
 });

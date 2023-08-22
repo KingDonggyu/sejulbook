@@ -5,7 +5,7 @@ import type { GetCategoryResponse } from 'category';
 
 export const CategoriesQuery: Query<GetCategoryResponse[]> = {
   queryKey: ['category_get'],
-  queryFn: () => new CategoryRepository().get(),
+  queryFn: () => new CategoryRepository().httpGet(),
 };
 
 const useCategories = () => {
