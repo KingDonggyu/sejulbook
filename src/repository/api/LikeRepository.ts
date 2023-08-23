@@ -13,7 +13,7 @@ class LikeRepository extends HttpClient {
   }
 
   async like({ bookReviewId, likerId }: LikeRequest) {
-    await this.axiosInstance.post(
+    await this.postRequset(
       `${this.baseUrl}/${bookReviewId}`,
       {},
       {
@@ -23,7 +23,7 @@ class LikeRepository extends HttpClient {
   }
 
   async unlike({ bookReviewId, likerId }: LikeRequest) {
-    await this.axiosInstance.delete(`${this.baseUrl}/${bookReviewId}`, {
+    await this.deleteRequest(`${this.baseUrl}/${bookReviewId}`, {
       params: { likerId },
     });
   }
@@ -35,7 +35,7 @@ class LikeRepository extends HttpClient {
     if (this.service) {
       return this.service.has({ bookReviewId, likerId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/${bookReviewId}`, {
+    return this.getRequest(`${this.baseUrl}/${bookReviewId}`, {
       params: { likerId },
     });
   }

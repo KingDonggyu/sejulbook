@@ -3,15 +3,15 @@ import type { Query } from '@/lib/react-query/types/query';
 import FollowRepository from '@/repository/api/FollowRepository';
 import useUserStatus from '@/hooks/useUserStatus';
 
-type Request = Parameters<FollowRepository['get']>[0];
-type Response = Awaited<ReturnType<FollowRepository['get']>>;
+type Request = Parameters<FollowRepository['httpGet']>[0];
+type Response = Awaited<ReturnType<FollowRepository['httpGet']>>;
 
 export const getFollowInfoQuery = ({
   targetUserId,
   myUserId,
 }: Request): Query<Response> => ({
   queryKey: ['follow_get', targetUserId],
-  queryFn: () => new FollowRepository().get({ myUserId, targetUserId }),
+  queryFn: () => new FollowRepository().httpGet({ myUserId, targetUserId }),
 });
 
 const useFollowInfo = (targetUserId: number) => {

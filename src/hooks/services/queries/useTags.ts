@@ -7,7 +7,8 @@ export const getTagsQuery = (
   bookReviewId?: BookReviewId,
 ): Query<GetTagResponse[]> => ({
   queryKey: ['tag_get', bookReviewId],
-  queryFn: () => (bookReviewId ? new TagRepository().get(bookReviewId) : []),
+  queryFn: () =>
+    bookReviewId ? new TagRepository().httpGet(bookReviewId) : [],
 });
 
 const useTags = (bookReviewId?: BookReviewId) => {

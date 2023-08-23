@@ -1,11 +1,8 @@
 import { Editor } from '@tinymce/tinymce-react';
 import { sanitize } from 'isomorphic-dompurify';
-import { toast } from 'react-toastify';
 import bookReviewStore from '@/stores/newBookReviewStore';
-import s3ImageURLStore from '@/stores/s3ImageKeyStore';
 import { useScreenModeContext } from '@/contexts/screenModeContext';
-import { createS3Object } from '@/lib/s3Client';
-import ExceptionBase from '@/lib/HttpErrorException';
+import useLocalImageUploader from '@/hooks/useLocalImageUploader';
 import * as s from './style';
 
 interface ContentEditorProps {
@@ -32,24 +29,11 @@ const ContentEditor = ({
   readonly = false,
 }: ContentEditorProps) => {
   const { bookReview, setContent } = bookReviewStore();
-  const { addImageKey } = s3ImageURLStore();
   const { isDarkMode } = useScreenModeContext();
+  const uploadLocalImage = useLocalImageUploader();
 
   const handleEditorChange = (content: string) => {
     setContent(content);
-  };
-
-  const handleUploadLoacalImage = async (blob: Blob) => {
-    try {
-      const url = await createS3Object(blob);
-      addImageKey(url);
-      return url;
-    } catch (error) {
-      if (error instanceof ExceptionBase) {
-        toast.error(error.message);
-      }
-      return '';
-    }
   };
 
   return (
@@ -83,8 +67,10 @@ const ContentEditor = ({
             block_formats: editorOption.blockFormats,
             images_file_types: editorOption.imageFileTypes,
             file_picker_types: 'image',
-            images_upload_handler: async (blobInfo) =>
-              handleUploadLoacalImage(blobInfo.blob()),
+            images_upload_handler: async (blobInfo) => {
+              const url = await uploadLocalImage(blobInfo.blob());
+              return url;
+            },
           }}
         />
       )}
