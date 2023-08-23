@@ -1,6 +1,6 @@
-import { deleteS3Objects } from './s3Client';
+import ImageRepository from '@/repository/api/ImageRepository';
 
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener('message', (event: MessageEvent<string[]>) => {
-  deleteS3Objects(event.data);
+  new ImageRepository().delete(event.data);
 });

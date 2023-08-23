@@ -12,18 +12,18 @@ class TagRepository extends HttpClient {
     this.service = this.checkIsSSR() ? new TagService() : null;
   }
 
-  get(bookReviewId: BookReviewId): Promise<GetTagResponse[]> {
+  httpGet(bookReviewId: BookReviewId): Promise<GetTagResponse[]> {
     if (this.service) {
       return this.service.findAllByBookReview(bookReviewId);
     }
-    return this.axiosInstance(`${this.baseUrl}/${bookReviewId}`);
+    return this.getRequest(`${this.baseUrl}/${bookReviewId}`);
   }
 
   search(query: string): Promise<SearchTagResponse[]> {
     if (this.service) {
       return this.service.findAllByTagName(query);
     }
-    return this.axiosInstance(`${this.baseUrl}/search`, { params: { query } });
+    return this.getRequest(`${this.baseUrl}/search`, { params: { query } });
   }
 }
 

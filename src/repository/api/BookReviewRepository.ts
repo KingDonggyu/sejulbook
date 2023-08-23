@@ -35,7 +35,7 @@ class BookReviewRepository extends HttpClient {
   }
 
   async publish(bookReview: CreateBookReviewReqeust) {
-    const data = await this.axiosInstance.post<never, { bookReviewId: Id }>(
+    const data = await this.postRequset<{ bookReviewId: Id }>(
       `${this.baseUrl}/publish`,
       bookReview,
     );
@@ -43,7 +43,7 @@ class BookReviewRepository extends HttpClient {
   }
 
   async draftSave(bookReview: CreateBookReviewReqeust) {
-    const data = await this.axiosInstance.post<never, { bookReviewId: Id }>(
+    const data = await this.postRequset<{ bookReviewId: Id }>(
       `${this.baseUrl}/draftsave`,
       bookReview,
     );
@@ -51,7 +51,7 @@ class BookReviewRepository extends HttpClient {
   }
 
   async delete(id: Id, userId: UserId) {
-    await this.axiosInstance.delete(`${this.baseUrl}/${id}`, {
+    await this.deleteRequest(`${this.baseUrl}/${id}`, {
       params: { userId },
     });
   }
@@ -65,7 +65,7 @@ class BookReviewRepository extends HttpClient {
     userId: UserId;
     bookReview: UpdateBookReviewRequest;
   }) {
-    await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
+    await this.putRequest(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: true },
     });
   }
@@ -79,12 +79,12 @@ class BookReviewRepository extends HttpClient {
     userId: UserId;
     bookReview: UpdateBookReviewRequest;
   }) {
-    await this.axiosInstance.put(`${this.baseUrl}/${id}`, bookReview, {
+    await this.putRequest(`${this.baseUrl}/${id}`, bookReview, {
       params: { userId, isPublished: false },
     });
   }
 
-  async get(
+  async httpGet(
     id: Id,
     isOnlyPublished = false,
   ): Promise<GetPublishedBookReviewResponse> {
@@ -92,10 +92,10 @@ class BookReviewRepository extends HttpClient {
       const bookReview = await this.service.find(id, isOnlyPublished);
       return bookReview;
     }
-    const bookReview = await this.axiosInstance.get<
-      never,
-      GetPublishedBookReviewResponse
-    >(`${this.baseUrl}/${id}`, { params: { isOnlyPublished } });
+    const bookReview = await this.getRequest<GetPublishedBookReviewResponse>(
+      `${this.baseUrl}/${id}`,
+      { params: { isOnlyPublished } },
+    );
     return bookReview;
   }
 
@@ -103,14 +103,14 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findTenLatest();
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/latest`);
+    return this.getRequest(`${this.baseUrl}/list/latest`);
   }
 
   getMostLikes(): ReturnType<BookReviewService['findTenMostLike']> {
     if (this.service) {
       return this.service.findTenMostLike();
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/mostlike`);
+    return this.getRequest(`${this.baseUrl}/list/mostlike`);
   }
 
   getAllPublishedOfUser(
@@ -119,7 +119,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findAllByUser(userId);
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/published`, {
+    return this.getRequest(`${this.baseUrl}/list/published`, {
       params: { userId },
     });
   }
@@ -130,7 +130,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findAllDraftSavedByUser(userId);
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/draftsaved`, {
+    return this.getRequest(`${this.baseUrl}/list/draftsaved`, {
       params: { userId },
     });
   }
@@ -141,7 +141,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findTenFollowing(userId);
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
+    return this.getRequest(`${this.baseUrl}/list/following`, {
       params: { userId },
     });
   }
@@ -155,7 +155,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findFollowingPages({ followerId, targetId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/list/following`, {
+    return this.getRequest(`${this.baseUrl}/list/following`, {
       params: { userId: followerId, cursor: `${targetId}` },
     });
   }
@@ -169,7 +169,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findPagesByBookname({ bookname, targetId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/search/book`, {
+    return this.getRequest(`${this.baseUrl}/search/book`, {
       params: { query: bookname, cursor: `${targetId}` },
     });
   }
@@ -183,7 +183,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findPagesByCategory({ category, targetId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/search/category`, {
+    return this.getRequest(`${this.baseUrl}/search/category`, {
       params: { query: category, cursor: `${targetId}` },
     });
   }
@@ -197,7 +197,7 @@ class BookReviewRepository extends HttpClient {
     if (this.service) {
       return this.service.findPagesByTag({ tag, targetId });
     }
-    return this.axiosInstance.get(`${this.baseUrl}/search/tag`, {
+    return this.getRequest(`${this.baseUrl}/search/tag`, {
       params: { query: tag, cursor: `${targetId}` },
     });
   }
