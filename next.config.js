@@ -15,14 +15,6 @@ const nextConfig = {
       'search1.kakaocdn.net',
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/books/title',
-        destination: `https://dapi.kakao.com/v3/search/book?target=people`,
-      },
-    ];
-  },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
