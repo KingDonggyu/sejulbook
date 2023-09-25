@@ -17,7 +17,6 @@ export const ThumnailWrapper = styled.div<{ isGrayscale: boolean }>`
     :hover {
       img {
         filter: brightness(0.3) !important;
-        transform: scale(1.07);
         transition: 0.5s;
       }
       & > p {
